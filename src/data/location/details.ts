@@ -2,8 +2,8 @@ import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 import { shareLocationPermalink, showLocationPermalinkQRCode } from '../../interface/location-details/index';
 import { openSaveToFolder } from '../../interface/save-to-folder/index';
 import { hasOwnProperty } from '../../tools/index';
+import { Progress, ProgressCallback } from '../../tools/progress';
 import { getLocation, MergedLocation } from '../apis/getLocation/index';
-import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 
 export interface IntegratedLocationDetailsAction {
   icon: MaterialSymbol;
@@ -20,10 +20,9 @@ export interface IntegratedLocationDetails {
   hash: string;
 }
 
-export async function integrateLocationDetails(hash: string, requestID: string): Promise<IntegratedLocationDetails> {
-  const Location = (await getLocation(requestID, 1)) as MergedLocation;
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
+export async function integrateLocationDetails(hash: string, progressCallback: ProgressCallback): Promise<IntegratedLocationDetails> {
+  const progress = new Progress(1, progressCallback);
+  const Location = (await getLocation(progress, 1)) as MergedLocation;
   const thisLocationKey = `ml_${hash}`;
   if (!hasOwnProperty(Location, thisLocationKey)) {
     return {
@@ -63,5 +62,6 @@ export async function integrateLocationDetails(hash: string, requestID: string):
     actionsQuantity: actions.length,
     hash: hash
   };
+  progress.terminate();
   return result;
 }

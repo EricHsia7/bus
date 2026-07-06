@@ -1,14 +1,14 @@
 import { getIntersection } from '../../tools/array';
-import { generateIdentifier, hasOwnProperty } from '../../tools/index';
+import { hasOwnProperty } from '../../tools/index';
+import { Progress } from '../../tools/progress';
 import { getUnicodes } from '../../tools/text';
 import { getCarInfo, SimplifiedCarInfo } from '../apis/getCarInfo/index';
 import { getLocation, MergedLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
-import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 
 export async function searchRouteByName(query: string): Promise<Array<SimplifiedRouteItem>> {
-  const requestID = generateIdentifier();
-  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
+  const progress = new Progress(2, function () {});
+  const Route = (await getRoute(progress, true)) as SimplifiedRoute;
   let result: Array<SimplifiedRouteItem> = [];
   for (const key in Route) {
     const thisRoute = Route[key];
@@ -16,30 +16,26 @@ export async function searchRouteByName(query: string): Promise<Array<Simplified
       result.push(thisRoute);
     }
   }
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
+  progress.terminate();
   return result;
 }
 
 export async function searchRouteByRouteID(RouteID: number): Promise<SimplifiedRouteItem | false> {
-  const requestID = generateIdentifier();
-  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
+  const progress = new Progress(2, function () {});
+  const Route = (await getRoute(progress, true)) as SimplifiedRoute;
   let result = {} as SimplifiedRouteItem;
   const routeKey = `r_${RouteID}`;
   if (!hasOwnProperty(Route, routeKey)) {
     return false;
   }
   result = Route[routeKey];
+  progress.terminate();
   return result;
 }
 
 export async function searchRouteByPathAttributeId(PathAttributeId: number): Promise<Array<SimplifiedRouteItem>> {
-  const requestID = generateIdentifier();
-  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
+  const progress = new Progress(2, function () {});
+  const Route = (await getRoute(progress, true)) as SimplifiedRoute;
   let result: Array<SimplifiedRouteItem> = [];
   for (const key in Route) {
     const thisRoute = Route[key];
@@ -47,6 +43,7 @@ export async function searchRouteByPathAttributeId(PathAttributeId: number): Pro
       result.push(thisRoute);
     }
   }
+  progress.terminate();
   return result;
 }
 
@@ -80,12 +77,9 @@ export async function prepareForSearch() {
     return;
   }
 
-  const requestID = generateIdentifier();
-  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
-  const mergedLocation = (await getLocation(requestID, 1)) as MergedLocation;
-  const CarInfo = (await getCarInfo(requestID, true)) as SimplifiedCarInfo;
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
+  const progress = new Progress(6, function () {});
+  const [Route, mergedLocation, CarInfo] = (await Promise.all([await getRoute(progress, true), await getLocation(progress, 1), await getCarInfo(progress, true)])) as [SimplifiedRoute, MergedLocation, SimplifiedCarInfo];
+  progress.terminate();
 
   let index: SearchIndex = {};
   let list: Array<SearchItem> = [];

@@ -1,9 +1,9 @@
 import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
-import { generateIdentifier, hasOwnProperty, isValidURL } from '../../tools/index';
+import { hasOwnProperty, isValidURL } from '../../tools/index';
+import { Progress, ProgressCallback } from '../../tools/progress';
 import { getLocation, SimplifiedLocation, SimplifiedLocationItem } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getStop, SimplifiedStop, SimplifiedStopItem } from '../apis/getStop/index';
-import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { getSettingOptionValue } from '../settings/index';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 import { scheduleNotification } from './apis/scheduleNotification/index';
@@ -271,10 +271,10 @@ export interface IntegratedNotificationSchedules {
   dataUpdateTime: number;
 }
 
-export async function integrateNotifcationSchedules(requestID: string): Promise<IntegratedNotificationSchedules> {
-  setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
-  setDataReceivingProgress(requestID, 'getRoute_1', 0, false);
-  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
+export async function integrateNotifcationSchedules(progressCallback: ProgressCallback): Promise<IntegratedNotificationSchedules> {
+  const progress = new Progress(2, progressCallback);
+  const Route = (await getRoute(progress, true)) as SimplifiedRoute;
+
   const notificationSchedules = listNotifcationSchedules();
   const now = new Date().getTime();
 
@@ -337,11 +337,10 @@ export async function integrateNotifcationSchedules(requestID: string): Promise<
   const result: IntegratedNotificationSchedules = {
     items: items,
     itemQuantity: items.length,
-    dataUpdateTime: Math.max(getDataUpdateTime(requestID), now)
+    dataUpdateTime: Math.max(progress.getTime(), now)
   };
 
-  deleteDataUpdateTime(requestID);
-  deleteDataReceivingProgress(requestID);
+  progress.terminate();
 
   return result;
 }
@@ -397,14 +396,11 @@ export const scheduleNotificationOptions: ScheduleNotificationOptions = [
 export async function scheduleNotificationForStop(StopID: number, RouteID: number, EstimateTime: number, index: number): Promise<0 | 1 | 2> {
   if (getNotificationClientStatus()) {
     const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
-    const requestID = generateIdentifier();
-    const Stop = (await getStop(requestID)) as SimplifiedStop;
-    const Location = (await getLocation(requestID, 0)) as SimplifiedLocation;
-    const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
-
-    deleteDataReceivingProgress(requestID);
-    deleteDataUpdateTime(requestID);
-
+    const progress = new Progress(6, function () {});
+    const Stop = (await getStop(progress)) as SimplifiedStop;
+    const Location = (await getLocation(progress, 0)) as SimplifiedLocation;
+    const Route = (await getRoute(progress, true)) as SimplifiedRoute;
+    progress.terminate();
     // Collect data from Stop
     const StopKey = `s_${StopID}`;
     let thisStop = {} as SimplifiedStopItem;

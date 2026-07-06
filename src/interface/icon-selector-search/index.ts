@@ -1,8 +1,7 @@
 import { getMaterialSymbolsSearchIndex } from '../../data/apis/getMaterialSymbolsSearchIndex';
-import { deleteDataReceivingProgress } from '../../data/apis/loader';
 import { MaterialSymbolsSearchResult, MaterialSymbolsSearchResults, prepareForMaterialSymbolsSearch, searchForMaterialSymbols } from '../../data/search/searchMaterialSymbols';
-import { generateIdentifier } from '../../tools';
-import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
+import { Progress } from '../../tools/progress';
 import { containPhoneticSymbols } from '../../tools/text';
 import { closeIconSelector } from '../icon-selector';
 import { getBlankIconElement, setIcon } from '../icons';
@@ -163,11 +162,11 @@ function updateResults(): void {
 async function initializeIconSelectorSearchField(query: string, inputElement: HTMLInputElement) {
   previousInputElement = inputElement;
   searchInputElement.value = query;
-  const requestID = generateIdentifier();
-  const materialSymbolsSearchIndex = await getMaterialSymbolsSearchIndex(requestID);
+  const progress = new Progress(1, function () {});
+  const materialSymbolsSearchIndex = await getMaterialSymbolsSearchIndex(progress);
+  progress.terminate();
   prepareForMaterialSymbolsSearch(materialSymbolsSearchIndex);
   updateResults();
-  deleteDataReceivingProgress(requestID);
 }
 
 function selectIcon(icon: MaterialSymbol, inputElement: HTMLInputElement): void {

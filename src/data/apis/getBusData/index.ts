@@ -1,5 +1,6 @@
+import { Progress } from '../../../tools/progress';
 import { getAPIURL } from '../getAPIURL/index';
-import { LoaderMessageProgress, fetchInflate, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { fetchInflate } from '../loader';
 
 export interface BusDataItem {
   ProviderID: number;
@@ -20,7 +21,7 @@ export interface BusDataItem {
 
 export type BusData = Array<BusDataItem>;
 
-export async function getBusData(requestID: string): Promise<BusData> {
+export async function getBusData(progress: Progress): Promise<BusData> {
   const apis = [
     [0, 0],
     [1, 0]
@@ -29,14 +30,15 @@ export async function getBusData(requestID: string): Promise<BusData> {
   const decoder = new TextDecoder();
   for (const api of apis) {
     const url = getAPIURL(api[0], api[1]);
+    const listenID = progress.listen();
     const inflatedData = await fetchInflate(url, function (message) {
-      setDataReceivingProgress(requestID, `getBusData_${api[0]}`, message.percent, false);
+      progress.update(listenID, message.loaded, message.total);
     });
     const data = JSON.parse(decoder.decode(inflatedData));
     for (let i = 0, l = data.BusInfo.length; i < l; i++) {
       result.push(data.BusInfo[i]);
     }
-    setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime, -480); // UTC+8
+    progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
   }
   return result;
 }

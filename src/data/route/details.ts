@@ -3,8 +3,8 @@ import { openRouteCalendar } from '../../interface/route-calendar/index';
 import { shareRoutePermalink, showRoutePermalinkQRCode } from '../../interface/route-details/index';
 import { openSaveToFolder } from '../../interface/save-to-folder/index';
 import { hasOwnProperty } from '../../tools/index';
+import { Progress, ProgressCallback } from '../../tools/progress';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
-import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 
 /*
 function findProvider(Provider: Provider, providerId: number): ProviderItem {
@@ -49,10 +49,10 @@ export interface IntegratedRouteDetails {
   RouteID: SimplifiedRouteItem['id'];
 }
 
-export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], PathAttributeId: SimplifiedRouteItem['pid'], requestID: string): Promise<IntegratedRouteDetails> {
-  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
+export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], PathAttributeId: SimplifiedRouteItem['pid'], progressCallback: ProgressCallback): Promise<IntegratedRouteDetails> {
+  const progress = new Progress(2, progressCallback);
+  const Route = (await getRoute(progress, true)) as SimplifiedRoute;
+  progress.terminate();
   const thisRouteKey = `r_${RouteID}`;
   if (!hasOwnProperty(Route, thisRouteKey)) {
     return {

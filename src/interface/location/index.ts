@@ -1,5 +1,4 @@
 import { getUpdateRate } from '../../data/analytics/update-rate/index';
-import { DataReceivingProgressEvent } from '../../data/apis/loader';
 import { isFolderContentSaved } from '../../data/folder/index';
 import { IntegratedLocation, IntegratedLocationItem, integrateLocation, LocationGroupProperty } from '../../data/location/index';
 import { stopHasNotifcationSchedules } from '../../data/notification/index';
@@ -8,7 +7,7 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { deepEqual } from '../../tools/deep-equal';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
 import { getTextWidth } from '../../tools/graphic';
-import { booleanToString, generateIdentifier, getSubpixelPrecision, hasOwnProperty } from '../../tools/index';
+import { booleanToString, getSubpixelPrecision, hasOwnProperty } from '../../tools/index';
 import { Tick } from '../../tools/tick';
 import { indexToDay, timeObjectToString } from '../../tools/time';
 import { VisibilityMonitor } from '../../tools/visibility-monitor';
@@ -50,7 +49,7 @@ let locationSliding_sliding: boolean = false;
 
 const locationTick = new Tick(refreshLocation, 15 * 1000);
 const locationVisibilityMonitor = new VisibilityMonitor({ root: LocationGroupsElement, threshold: 0.5 });
-const decoder = new TextDecoder()
+const decoder = new TextDecoder();
 
 let currentHashSet_hash: string = '';
 
@@ -123,14 +122,6 @@ export function updateLocationCSS(groupQuantity: number, offset: number, tabLine
 function animateUpdateTimer(interval: number): void {
   LocationUpdateTimerElement.style.setProperty('--b-cssvar-location-update-timer-interval', `${interval}ms`);
   LocationUpdateTimerElement.classList.add('css_location_update_timer_slide_rtl');
-}
-
-function handleDataReceivingProgressUpdates(event: Event): void {
-  const CustomEvent = event as DataReceivingProgressEvent;
-  LocationUpdateTimerElement.style.setProperty('--b-cssvar-location-update-timer-scale-x', CustomEvent.detail.progress.toString());
-  if (CustomEvent.detail.stage === 'end') {
-    document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
-  }
 }
 
 function generateElementOfItem(): HTMLElement {
@@ -996,11 +987,11 @@ async function refreshLocation(): Promise<number> {
     const playing_animation = getSettingOptionValue('playing_animation') as boolean;
     const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
     const busArrivalTimeChartSize = querySize('location-bus-arrival-time-chart');
-    const requestID = generateIdentifier();
     LocationUpdateTimerElement.setAttribute('refreshing', 'true');
     LocationUpdateTimerElement.classList.remove('css_location_update_timer_slide_rtl');
-    document.addEventListener(requestID, handleDataReceivingProgressUpdates);
-    const integration = await integrateLocation(currentHashSet_hash, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, requestID);
+    const integration = await integrateLocation(currentHashSet_hash, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, function (message) {
+      LocationUpdateTimerElement.style.setProperty('--b-cssvar-location-update-timer-scale-x', message.percent.toString());
+    });
     updateLocationField(integration, false, playing_animation);
     let updateRate = 0;
     if (refresh_interval_setting.dynamic) {

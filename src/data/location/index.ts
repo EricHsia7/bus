@@ -4,6 +4,7 @@ import { CardinalDirection, getCardinalDirectionFromVector } from '../../tools/c
 import { hasOwnProperty } from '../../tools/index';
 import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
 import { normalizeVector } from '../../tools/math';
+import { Progress, ProgressCallback } from '../../tools/progress';
 import { getBusArrivalTimes } from '../analytics/bus-arrival-time/getBusArrivalTimes';
 import { BusArrivalTime } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
@@ -13,7 +14,6 @@ import { getLocation, MergedLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getStop, SimplifiedStop, SimplifiedStopItem } from '../apis/getStop/index';
 import { batchFindBusesForLocation, EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime } from '../apis/index';
-import { deleteDataReceivingProgress, deleteDataUpdateTime, getDataUpdateTime, setDataReceivingProgress } from '../apis/loader';
 import { getSettingOptionValue } from '../settings/index';
 import { getUserOrientation } from '../user-orientation/index';
 
@@ -115,22 +115,10 @@ export interface IntegratedLocation {
   hash: string;
 }
 
-export async function integrateLocation(hash: string, chartWidth: number, chartHeight: number, requestID: string): Promise<IntegratedLocation> {
-  setDataReceivingProgress(requestID, 'getLocation_0', 0, false);
-  setDataReceivingProgress(requestID, 'getLocation_1', 0, false);
-  setDataReceivingProgress(requestID, 'getRoute_0', 0, false);
-  setDataReceivingProgress(requestID, 'getRoute_1', 0, false);
-  setDataReceivingProgress(requestID, 'getStop_0', 0, false);
-  setDataReceivingProgress(requestID, 'getStop_1', 0, false);
-  setDataReceivingProgress(requestID, 'getEstimateTime_0', 0, false);
-  setDataReceivingProgress(requestID, 'getEstimateTime_1', 0, false);
-  setDataReceivingProgress(requestID, 'getBusEvent_0', 0, false);
-  setDataReceivingProgress(requestID, 'getBusEvent_1', 0, false);
-  setDataReceivingProgress(requestID, 'getBusData_0', 0, false);
-  setDataReceivingProgress(requestID, 'getBusData_1', 0, false);
-
-  const [Route, Stop, Location] = (await Promise.all([await getRoute(requestID, true), await getStop(requestID), await getLocation(requestID, 1)])) as [SimplifiedRoute, SimplifiedStop, MergedLocation];
-  const [EstimateTime, BusEvent, BusData, BusArrivalTimes] = await Promise.all([getEstimateTime(requestID), getBusEvent(requestID), getBusData(requestID), getBusArrivalTimes(chartWidth, chartHeight)]);
+export async function integrateLocation(hash: string, chartWidth: number, chartHeight: number, progressCallback: ProgressCallback): Promise<IntegratedLocation> {
+  const progress = new Progress(12, progressCallback); // getLocation: 2 + getRoute: 2 + getStop: 2 + getEstimateTime: 2 + getBusEvent: 2 + getBusData_0: 2
+  const [Route, Stop, Location] = (await Promise.all([await getRoute(progress, true), await getStop(progress), await getLocation(progress, 1)])) as [SimplifiedRoute, SimplifiedStop, MergedLocation];
+  const [EstimateTime, BusEvent, BusData, BusArrivalTimes] = await Promise.all([getEstimateTime(progress), getBusEvent(progress), getBusData(progress), getBusArrivalTimes(chartWidth, chartHeight)]);
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
   const location_labels = getSettingOptionValue('location_labels') as string;
@@ -310,10 +298,10 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
     itemQuantity: itemQuantity,
     LocationName: thisLocationName,
     hash: hash,
-    dataUpdateTime: getDataUpdateTime(requestID)
+    dataUpdateTime: progress.getTime()
   };
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
+
+  progress.terminate();
   // await recordEstimateTimeForUpdateRate(EstimateTime);
   return result;
 }

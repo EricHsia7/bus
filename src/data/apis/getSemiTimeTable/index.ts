@@ -1,6 +1,7 @@
+import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchInflate, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { fetchInflate } from '../loader';
 
 let SemiTimetableAPIVariableCache_available: boolean = false;
 let SemiTimetableAPIVariableCache_data: object = {};
@@ -18,7 +19,7 @@ export interface SemiTimetableItem {
 
 export type SemiTimeTable = Array<SemiTimetableItem>;
 
-export async function getSemiTimeTable(requestID: string): Promise<SemiTimeTable> {
+export async function getSemiTimeTable(progress: Progress): Promise<SemiTimeTable> {
   async function getData() {
     const apis = [
       [0, 12],
@@ -28,14 +29,15 @@ export async function getSemiTimeTable(requestID: string): Promise<SemiTimeTable
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
+      const listenID = progress.listen();
       const inflatedData = await fetchInflate(url, function (message) {
-        setDataReceivingProgress(requestID, `getSemiTimeTable_${api[0]}`, message.percent, false);
+        progress.update(listenID, message.loaded, message.total);
       });
       const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
         result.push(data.BusInfo[i]);
       }
-      setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime, -480); // UTC+8
+      progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }
     return result;
   }
@@ -64,9 +66,8 @@ export async function getSemiTimeTable(requestID: string): Promise<SemiTimeTable
         SemiTimetableAPIVariableCache_available = true;
         SemiTimetableAPIVariableCache_data = JSON.parse(cache);
       }
-      setDataReceivingProgress(requestID, 'getSemiTimeTable_0', 0, true);
-      setDataReceivingProgress(requestID, 'getSemiTimeTable_1', 0, true);
-      setDataUpdateTime(requestID, -1);
+      progress.update(progress.listen(), 1, 1);
+      progress.update(progress.listen(), 1, 1);
       return SemiTimetableAPIVariableCache_data;
     }
   }

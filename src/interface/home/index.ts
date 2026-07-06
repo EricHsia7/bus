@@ -5,10 +5,9 @@ import { getMaterialSymbolsList } from '../../data/apis/getMaterialSymbolsList';
 import { getMaterialSymbolsSearchIndex } from '../../data/apis/getMaterialSymbolsSearchIndex/index';
 import { getMaterialSymbolsSimilarity } from '../../data/apis/getMaterialSymbolsSimilarity';
 import { getRoute } from '../../data/apis/getRoute/index';
-import { DataReceivingProgressEvent, deleteDataReceivingProgress, deleteDataUpdateTime, getDataReceivingProgress, setDataReceivingProgress } from '../../data/apis/loader';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
+import { Progress } from '../../tools/progress';
 
-const dataDownloadRequestID = 'downloadData';
 export let dataDownloadCompleted = false;
 
 const HomeField = documentQuerySelector('.css_home_field');
@@ -16,34 +15,19 @@ const HomeHeadElement = elementQuerySelector(HomeField, '.css_home_head');
 const homeButtonRightElement = elementQuerySelector(HomeHeadElement, '.css_home_button_right');
 const progressElement = elementQuerySelector(homeButtonRightElement, 'svg#download-svg path[component="progress"]');
 
-function handleDataReceivingProgressUpdates(event: Event): void {
-  const CustomEvent = event as DataReceivingProgressEvent;
-  const pixels = (1 - getDataReceivingProgress(dataDownloadRequestID)) * 189;
-  progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${pixels}px`);
-  if (CustomEvent.detail.stage === 'end') {
-    document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
-    homeButtonRightElement.setAttribute('complete', 'true');
-    progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${0}px`);
-    dataDownloadCompleted = true;
-  }
-}
-
 export async function downloadData() {
-  setDataReceivingProgress(dataDownloadRequestID, 'getRoute_0', 0, false);
-  setDataReceivingProgress(dataDownloadRequestID, 'getRoute_1', 0, false);
-  setDataReceivingProgress(dataDownloadRequestID, 'getLocation_0', 0, false);
-  setDataReceivingProgress(dataDownloadRequestID, 'getLocation_1', 0, false);
-  setDataReceivingProgress(dataDownloadRequestID, 'getCarInfo_0', 0, false);
-  setDataReceivingProgress(dataDownloadRequestID, 'getCarInfo_1', 0, false);
-  setDataReceivingProgress(dataDownloadRequestID, 'getMaterialSymbolsSearchIndex', 0, false);
-  setDataReceivingProgress(dataDownloadRequestID, 'getMaterialSymbolsDescription', 0, false);
-  setDataReceivingProgress(dataDownloadRequestID, 'getMaterialSymbolsSimilarity', 0, false);
-  setDataReceivingProgress(dataDownloadRequestID, 'getMaterialSymbolsList', 0, false);
-  document.addEventListener(dataDownloadRequestID, handleDataReceivingProgressUpdates);
-  await Promise.all([getRoute(dataDownloadRequestID, true), getLocation(dataDownloadRequestID, 1), getCarInfo(dataDownloadRequestID, true)]);
-  await Promise.all([getMaterialSymbolsSearchIndex(dataDownloadRequestID), getMaterialSymbolsDescription(dataDownloadRequestID), getMaterialSymbolsList(dataDownloadRequestID), getMaterialSymbolsSimilarity(dataDownloadRequestID)]);
-  deleteDataReceivingProgress(dataDownloadRequestID);
-  deleteDataUpdateTime(dataDownloadRequestID);
+  const progress = new Progress(10, function (message) {
+    const pixels = (1 - message.percent) * 189;
+    progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${pixels}px`);
+    if (message.type === 'end') {
+      homeButtonRightElement.setAttribute('complete', 'true');
+      progressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${0}px`);
+      dataDownloadCompleted = true;
+    }
+  }); // getRoute: 2 + getLocation: 2 + getCarInfo: 2 + getMaterialSymbolsSearchIndex: 1 + getMaterialSymbolsDescription: 1 + getMaterialSymbolsSimilarity: 1 + getMaterialSymbolsList: 1
+  await Promise.all([getRoute(progress, true), getLocation(progress, 1), getCarInfo(progress, true)]);
+  await Promise.all([getMaterialSymbolsSearchIndex(progress), getMaterialSymbolsDescription(progress), getMaterialSymbolsList(progress), getMaterialSymbolsSimilarity(progress)]);
+  progress.terminate();
 }
 
 export function showHome(): void {

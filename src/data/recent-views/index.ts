@@ -1,9 +1,9 @@
-import { generateIdentifier, hasOwnProperty } from '../../tools/index';
+import { hasOwnProperty } from '../../tools/index';
+import { Progress, ProgressCallback } from '../../tools/progress';
 import { dateToRelativeTime } from '../../tools/time';
 import { getCarInfo, SimplifiedCarInfo } from '../apis/getCarInfo/index';
 import { getLocation, MergedLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute } from '../apis/getRoute/index';
-import { deleteDataReceivingProgress, deleteDataUpdateTime } from '../apis/loader';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 
 interface RecentViewRoute {
@@ -75,7 +75,7 @@ export async function discardExpiredRecentViews() {
 }
 
 export async function logRecentView(type: RecentView['type'], param: RecentViewRoute['id'] | RecentViewLocation['hash'] | RecentViewBus['id']) {
-  const requestID = generateIdentifier();
+  const progress = new Progress(2, function () {});
   const key = `${type}_${param}`;
   const time = new Date().toISOString();
   const existingJSON = await lfGetItem(8, key);
@@ -86,9 +86,7 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
   } else {
     switch (type) {
       case 'route': {
-        const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
-        deleteDataReceivingProgress(requestID);
-        deleteDataUpdateTime(requestID);
+        const Route = (await getRoute(progress, true)) as SimplifiedRoute;
         const RouteKey = `r_${param}`;
         if (hasOwnProperty(Route, RouteKey)) {
           const thisRoute = Route[RouteKey];
@@ -104,9 +102,7 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
         break;
       }
       case 'location': {
-        const Location = (await getLocation(requestID, 1)) as MergedLocation;
-        deleteDataReceivingProgress(requestID);
-        deleteDataUpdateTime(requestID);
+        const Location = (await getLocation(progress, 1)) as MergedLocation;
         const LocationKey = `ml_${param}`;
         if (hasOwnProperty(Location, LocationKey)) {
           const thisLocation = Location[LocationKey];
@@ -122,9 +118,7 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
         break;
       }
       case 'bus': {
-        const CarInfo = (await getCarInfo(requestID, true)) as SimplifiedCarInfo;
-        deleteDataReceivingProgress(requestID);
-        deleteDataUpdateTime(requestID);
+        const CarInfo = (await getCarInfo(progress, true)) as SimplifiedCarInfo;
         const CarKey = `c_${param}`;
         if (hasOwnProperty(CarInfo, CarKey)) {
           const thisCar = CarInfo[CarKey];
@@ -197,9 +191,10 @@ export interface integratedRecentViews {
   dataUpdateTime: number;
 }
 
-export async function integrateRecentViews(requestID: string): Promise<integratedRecentViews> {
+export async function integrateRecentViews(progressCallback: ProgressCallback): Promise<integratedRecentViews> {
   const recentViewList = await listRecentViews();
-  const Route = (await getRoute(requestID, true)) as SimplifiedRoute;
+  const progress = new Progress(2, progressCallback);
+  const Route = (await getRoute(progress, true)) as SimplifiedRoute;
   const items: Array<integratedRecentView> = [];
   let itemQuantity: number = 0;
   for (const recentView of recentViewList) {
@@ -272,7 +267,7 @@ export async function integrateRecentViews(requestID: string): Promise<integrate
     itemQuantity: itemQuantity,
     dataUpdateTime: new Date().getTime()
   };
-  deleteDataReceivingProgress(requestID);
-  deleteDataUpdateTime(requestID);
+
+  progress.terminate();
   return result;
 }

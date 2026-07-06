@@ -1,6 +1,7 @@
+import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getAPIURL } from '../getAPIURL/index';
-import { fetchInflate, setDataReceivingProgress, setDataUpdateTime } from '../loader';
+import { fetchInflate } from '../loader';
 
 export interface StopItem {
   Id: number; // StopID
@@ -53,7 +54,7 @@ async function simplifyStop(array: Stop): Promise<SimplifiedStop> {
   return result;
 }
 
-export async function getStop(requestID: string): Promise<SimplifiedStop> {
+export async function getStop(progress: Progress): Promise<SimplifiedStop> {
   async function getData() {
     const apis = [
       [0, 11],
@@ -63,14 +64,15 @@ export async function getStop(requestID: string): Promise<SimplifiedStop> {
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
+      const listenID = progress.listen();
       const inflatedData = await fetchInflate(url, function (message) {
-        setDataReceivingProgress(requestID, `getStop_${api[0]}`, message.percent, false);
+        progress.update(listenID, message.loaded, message.total);
       });
       const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i += 64) {
         Array.prototype.push.apply(result, data.BusInfo.slice(i, i + 64));
       }
-      setDataUpdateTime(requestID, data.EssentialInfo.UpdateTime, -480); // UTC+8
+      progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }
     return result;
   }
@@ -101,9 +103,8 @@ export async function getStop(requestID: string): Promise<SimplifiedStop> {
         StopAPIVariableCache_available = true;
         StopAPIVariableCache_data = JSON.parse(cache);
       }
-      setDataReceivingProgress(requestID, 'getStop_0', 0, true);
-      setDataReceivingProgress(requestID, 'getStop_1', 0, true);
-      setDataUpdateTime(requestID, -1);
+      progress.update(progress.listen(), 1, 1);
+      progress.update(progress.listen(), 1, 1);
       return StopAPIVariableCache_data;
     }
   }

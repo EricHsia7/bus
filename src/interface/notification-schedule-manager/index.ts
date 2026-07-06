@@ -1,10 +1,9 @@
 import { getUpdateRate } from '../../data/analytics/update-rate/index';
-import { DataReceivingProgressEvent } from '../../data/apis/loader';
 import { cancelNotification } from '../../data/notification/apis/cancelNotification/index';
 import { IntegratedNotificationScheduleItem, IntegratedNotificationSchedules, integrateNotifcationSchedules, NotificationSchedule } from '../../data/notification/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
-import { booleanToString, generateIdentifier, hasOwnProperty } from '../../tools/index';
+import { booleanToString, hasOwnProperty } from '../../tools/index';
 import { Tick } from '../../tools/tick';
 import { getIconElement } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
@@ -28,14 +27,6 @@ const notifcationScheduleManagerTick = new Tick(refreshNotificationScheduleManag
 function animateUpdateTimer(interval: number): void {
   NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-notification-schedule-manager-update-timer-interval', `${interval}ms`);
   NotificationScheduleManagerUpdateTimerElement.classList.add('css_notification_schedule_manager_update_timer_scale_down');
-}
-
-function handleDataReceivingProgressUpdates(event: Event): void {
-  const CustomEvent = event as DataReceivingProgressEvent;
-  NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-notification-schedule-manager-update-timer-scale-x', CustomEvent.detail.progress.toString());
-  if (CustomEvent.detail.stage === 'end') {
-    document.removeEventListener(CustomEvent.detail.target, handleDataReceivingProgressUpdates);
-  }
 }
 
 function generateElementOfItem(): HTMLElement {
@@ -226,11 +217,11 @@ async function refreshNotificationScheduleManager(): Promise<number> {
   try {
     const playing_animation = getSettingOptionValue('playing_animation') as boolean;
     const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
-    const requestID = generateIdentifier();
     NotificationScheduleManagerUpdateTimerElement.setAttribute('refreshing', 'true');
     NotificationScheduleManagerUpdateTimerElement.classList.remove('css_notification_schedule_manager_update_timer_scale_down');
-    document.addEventListener(requestID, handleDataReceivingProgressUpdates);
-    const integration = await integrateNotifcationSchedules(requestID);
+    const integration = await integrateNotifcationSchedules(function (message) {
+      NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-notification-schedule-manager-update-timer-scale-x', message.percent.toString());
+    });
     updateNotificationScheduleManagerField(integration, false, playing_animation);
     let updateRate = 0;
     if (refresh_interval_setting.dynamic) {

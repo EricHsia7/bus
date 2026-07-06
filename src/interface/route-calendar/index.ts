@@ -2,7 +2,6 @@ import { SimplifiedRouteItem } from '../../data/apis/getRoute/index';
 import { integratedRouteCalendar, integrateRouteCalendar } from '../../data/route/calendar';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { generateRoundedRectPath } from '../../tools/graphic';
-import { generateIdentifier } from '../../tools/index';
 import { dateToString, offsetDate } from '../../tools/time';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
@@ -135,8 +134,7 @@ async function initializeRouteCalendar(PathAttributeId: SimplifiedRouteItem['pid
   const FieldSize = querySize('window');
   routeCalendarSliding_fieldWidth = FieldSize.width;
   currentDate = new Date();
-  const requestID = generateIdentifier();
-  const integration = await integrateRouteCalendar(PathAttributeId, requestID);
+  const integration = await integrateRouteCalendar(PathAttributeId, function () {});
   currentIntegration = integration;
   for (let i = 0; i < 3; i++) {
     const date = offsetDate(currentDate, i - 1, 0, 0);
