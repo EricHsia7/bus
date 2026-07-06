@@ -34,7 +34,8 @@ export class Progress {
 
   listen(): number {
     const id = this.nextId++;
-    this.sources.set(id, [0, 0, false]);
+    this.sources.set(id, [0, 0]);
+    console.log(this.count, id);
     return id;
   }
 

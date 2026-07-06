@@ -3,8 +3,8 @@ import { hasOwnProperty } from '../../tools/index';
 import { clamp } from '../../tools/math';
 import { Progress, ProgressCallback } from '../../tools/progress';
 import { getBusArrivalTimes } from '../analytics/bus-arrival-time/getBusArrivalTimes';
-import { BusArrivalTime } from '../analytics/bus-arrival-time/index';
-import { getBusData } from '../apis/getBusData/index';
+import { BusArrivalTime, BusArrivalTimes } from '../analytics/bus-arrival-time/index';
+import { BusData, getBusData } from '../apis/getBusData/index';
 import { BusEvent, getBusEvent } from '../apis/getBusEvent/index';
 import { EstimateTime, getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation, IndexedLocation, IndexedLocationItem, MergedLocation, SimplifiedLocation, SimplifiedLocationItem } from '../apis/getLocation/index';
@@ -73,10 +73,10 @@ export interface IntegratedRoute {
 }
 
 export async function integrateRoute(RouteID: number, PathAttributeId: Array<number>, chartWidth: number, chartHeight: number, progressCallback: ProgressCallback): Promise<IntegratedRoute> {
-  const progress = new Progress(14, progressCallback); // getRoute: 2 + getStop: 2 + getLocation: 2 + getSegmentBuffers: 2 + getEstimateTime: 2 + getBusEvent: 2 + getBusData: 2
-  const [Route, Stop, SegmentBuffers, EstimateTime] = (await Promise.all([getRoute(progress, true), getStop(progress), getSegmentBuffers(progress), getEstimateTime(progress)])) as [SimplifiedRoute, SimplifiedStop, SimplifiedSegmentBuffer, EstimateTime];
-  const [SimplifiedLocation, MergedLocation, IndexedLocation, BusEvent] = (await Promise.all([getLocation(progress, 0), getLocation(progress, 1), getLocation(progress, 2), getBusEvent(progress)])) as [SimplifiedLocation, MergedLocation, IndexedLocation, BusEvent];
-  const [BusData, BusArrivalTimes] = await Promise.all([getBusData(progress), getBusArrivalTimes(chartWidth, chartHeight)]);
+  const progress = new Progress(18, progressCallback); // getRoute: 2 + getStop: 2 + getLocation: 2 * 3 + getSegmentBuffers: 2 + getEstimateTime: 2 + getBusEvent: 2 + getBusData: 2
+  const [Route, Stop, SegmentBuffers, SimplifiedLocation] = (await Promise.all([getRoute(progress, true), getStop(progress), getSegmentBuffers(progress), getLocation(progress, 0)])) as [SimplifiedRoute, SimplifiedStop, SimplifiedSegmentBuffer, SimplifiedLocation];
+  const [EstimateTime, MergedLocation, BusEvent] = (await Promise.all([getEstimateTime(progress), getLocation(progress, 1), getBusEvent(progress)])) as [EstimateTime, MergedLocation, BusEvent];
+  const [BusData, BusArrivalTimes, IndexedLocation] = (await Promise.all([getBusData(progress), getBusArrivalTimes(chartWidth, chartHeight), getLocation(progress, 2)])) as [BusData, BusArrivalTimes, IndexedLocation];
   const batchFoundBuses = batchFindBusesForRoute(BusEvent, BusData, Route, RouteID, PathAttributeId);
 
   let hasSegmentBuffers: boolean = false;
