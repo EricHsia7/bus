@@ -1,36 +1,12 @@
 import { hasOwnProperty } from '../../../tools/index';
 import { PersonalScheduleArray } from '../../personal-schedule/index';
+import { getBusArrivalTimesMessageDone, getBusArrivalTimesMessageError } from './getBusArrivalTimes';
 import { BusArrivalTimeDataGroupArray, BusArrivalTimes } from './index';
 
-interface task {
-  personalSchedules: PersonalScheduleArray;
-  busArrivalTimeDataGroups: BusArrivalTimeDataGroupArray;
-  chartWidth: number;
-  chartHeight: number;
-  port: any;
-}
-
-const taskQueue: Array<task> = [];
-let isProcessing: boolean = false;
-
-// Setup message handling (works for dedicated or shared workers)
-if ('onconnect' in self) {
-  self.onconnect = function (e: MessageEvent) {
-    const port = e.ports[0];
-    port.onmessage = function (event: MessageEvent) {
-      const [personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight] = event.data;
-      taskQueue.push({ personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, port });
-      processWorkerTask();
-    };
-  };
-} else {
-  const port = self;
-  self.onmessage = function (event: MessageEvent) {
-    const [personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight] = event.data;
-    taskQueue.push({ personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, port });
-    processWorkerTask();
-  };
-}
+self.onmessage = function (event: MessageEvent): void {
+  const { id, personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight } = event.data;
+  createCharts(id, personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight).catch((error: Error) => self.postMessage({ id, type: 'error', error: error.message } as getBusArrivalTimesMessageError));
+};
 
 const fontWeight = 400;
 const fontSize = 10;
@@ -49,17 +25,10 @@ if (typeof OffscreenCanvas !== 'undefined') {
 
 const encoder = new TextEncoder();
 
-// Main processing function
-function processWorkerTask(): void {
-  if (isProcessing || taskQueue.length === 0) return;
-  isProcessing = true;
-
-  // Dequeue the next task
-  const { personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight, port } = taskQueue.shift() as task;
-
+async function createCharts(id: number, personalSchedules: PersonalScheduleArray, busArrivalTimeDataGroups: BusArrivalTimeDataGroupArray, chartWidth: number, chartHeight: number) {
   const result: BusArrivalTimes = {};
 
-  const transferableObjects = [];
+  const transferableObjects: Array<ArrayBuffer> = [];
 
   // For each personalSchedule, build an SVG graph
   for (const personalSchedule of personalSchedules) {
@@ -154,7 +123,7 @@ function processWorkerTask(): void {
       state.set(counts, 2 + numbers.length + 1);
       result[stopKey].push({
         personalSchedule: personalSchedule,
-        chart: encodedSvg.buffer,
+        chart: encodedSvg,
         state: state,
         day: busArrivalTimeDataGroup.day
       });
@@ -163,8 +132,5 @@ function processWorkerTask(): void {
   }
 
   // Send the complete SVG back to the main thread
-  port.postMessage(result, transferableObjects);
-
-  isProcessing = false;
-  processWorkerTask(); // Process next task in the queue if any
+  self.postMessage({ id, type: 'done', result } as getBusArrivalTimesMessageDone, transferableObjects);
 }

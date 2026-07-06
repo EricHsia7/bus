@@ -43,7 +43,7 @@ export interface BusArrivalTimeDataWriteAheadLog {
 
 export interface BusArrivalTime {
   personalSchedule: PersonalSchedule;
-  chart: ArrayBuffer; // encoded svg string
+  chart: Uint8Array; // encoded svg string
   state: Int32Array;
   day: WeekDayIndex;
 }

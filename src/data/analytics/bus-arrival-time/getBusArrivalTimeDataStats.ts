@@ -14,7 +14,7 @@ if (supportSharedWorker) {
   (worker as SharedWorker).port.onmessage = function (event: MessageEvent) {
     const callback = workerCallback.shift();
     if (callback) {
-      callback[0](event.data); // Resolve the promise
+      callback[0](Array.from(event.data)); // Resolve the promise
     }
   };
 
@@ -29,7 +29,7 @@ if (supportSharedWorker) {
   (worker as Worker).onmessage = function (event: MessageEvent) {
     const callback = workerCallback.shift();
     if (callback) {
-      callback[0](event.data); // Resolve the promise
+      callback[0](Array.from(event.data)); // Resolve the promise
     }
   };
 

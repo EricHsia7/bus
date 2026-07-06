@@ -43,25 +43,25 @@ let nextId: number = 0;
 const pending = new Map<number, LoaderJob>();
 
 worker.onmessage = (event: MessageEvent) => {
-  const msg = event.data as LoaderMessage;
-  const job = pending.get(msg.id);
+  const message = event.data as LoaderMessage;
+  const job = pending.get(message.id);
   if (!job) return;
 
-  switch (msg.type) {
+  switch (message.type) {
     case 'progress':
-      job.onProgress?.(msg);
+      job.onProgress?.(message);
       break;
     case 'data':
-      job.chunks.push(msg.chunk); // inflated Uint8Array
+      job.chunks.push(message.chunk); // inflated Uint8Array
       break;
     case 'done':
-      pending.delete(msg.id);
-      recordDataUsage(msg.loaded, new Date());
+      pending.delete(message.id);
+      recordDataUsage(message.loaded, new Date());
       job.resolve(concatChunks(job.chunks));
       break;
     case 'error':
-      pending.delete(msg.id);
-      job.reject(new Error(msg.error));
+      pending.delete(message.id);
+      job.reject(new Error(message.error));
       break;
   }
 };
