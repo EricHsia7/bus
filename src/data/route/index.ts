@@ -74,10 +74,18 @@ export interface IntegratedRoute {
 
 export async function integrateRoute(RouteID: number, PathAttributeId: Array<number>, chartWidth: number, chartHeight: number, progressCallback: ProgressCallback): Promise<IntegratedRoute> {
   const progress = new Progress(14, progressCallback); // getRoute: 2 + getStop: 2 + getLocation: 2 + getSegmentBuffers: 2 + getEstimateTime: 2 + getBusEvent: 2 + getBusData: 2
+  console.log(33, 0)
   const [Route, Stop, SegmentBuffers, EstimateTime] = (await Promise.all([getRoute(progress, true), getStop(progress), getSegmentBuffers(progress), getEstimateTime(progress)])) as [SimplifiedRoute, SimplifiedStop, SimplifiedSegmentBuffer, EstimateTime];
+  console.log(33, 1)
+
   const [SimplifiedLocation, MergedLocation, IndexedLocation, BusEvent] = (await Promise.all([getLocation(progress, 0), getLocation(progress, 1), getLocation(progress, 2), getBusEvent(progress)])) as [SimplifiedLocation, MergedLocation, IndexedLocation, BusEvent];
+    console.log(33, 2)
+
   const [BusData, BusArrivalTimes] = await Promise.all([getBusData(progress), getBusArrivalTimes(chartWidth, chartHeight)]);
+    console.log(33, 3)
+
   const batchFoundBuses = batchFindBusesForRoute(BusEvent, BusData, Route, RouteID, PathAttributeId);
+  console.log(33, 4)
 
   let hasSegmentBuffers: boolean = false;
   let thisSegmentBuffers: SimplifiedSegmentBufferItem = {};
