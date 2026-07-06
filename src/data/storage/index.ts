@@ -60,7 +60,7 @@ export async function lfGetItem(store: number, key: string): Promise<any> {
     return operation;
   } catch (err) {
     console.error(err);
-    // lfDummyOpen();
+    lfDummyOpen();
     return null;
   }
 }
@@ -77,7 +77,7 @@ export async function lfRemoveItem(store: number, key: string): Promise<any> {
     return operation;
   } catch (err) {
     console.error(err);
-    // lfDummyOpen(store);
+    lfDummyOpen();
     return null;
   }
 }
@@ -94,7 +94,7 @@ export async function lfListItemKeys(store: number): Promise<Array<string>> {
     return keys;
   } catch (err) {
     console.error(err);
-    // lfDummyOpen(store);
+    lfDummyOpen();
     return [];
   }
 }
