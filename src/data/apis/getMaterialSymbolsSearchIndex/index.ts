@@ -36,9 +36,9 @@ export async function getMaterialSymbolsSearchIndex(progress: Progress): Promise
   async function getData(): Promise<MaterialSymbolsSearchIndex> {
     const apiurl = getMaterialSymbolsAPIURL(0);
     const decoder = new TextDecoder();
-    const listenID = progress.listen();
+    const sourceId = progress.listen();
     const inflatedData = await fetchInflate(apiurl, function (message) {
-      progress.update(listenID, message.loaded, message.total);
+      progress.update(sourceId, message.loaded, message.total);
     });
     const data = JSON.parse(decoder.decode(inflatedData)) as MaterialSymbolsSearchIndex;
     return data;

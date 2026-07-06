@@ -77,9 +77,9 @@ export async function getSegmentBuffers(progress: Progress): Promise<SimplifiedS
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
-      const listenID = progress.listen();
+      const sourceId = progress.listen();
       const inflatedData = await fetchInflate(url, function (message) {
-        progress.update(listenID, message.loaded, message.total);
+        progress.update(sourceId, message.loaded, message.total);
       });
       const data = decoder.decode(inflatedData); // xml
       result += data;

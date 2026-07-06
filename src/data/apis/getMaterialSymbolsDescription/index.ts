@@ -62,9 +62,9 @@ export async function getMaterialSymbolsDescription(progress: Progress): Promise
   async function getData(): Promise<MaterialSymbolsDescription> {
     const apiurl = getMaterialSymbolsAPIURL(1);
     const decoder = new TextDecoder();
-    const listenID = progress.listen();
+    const sourceId = progress.listen();
     const inflatedData = await fetchInflate(apiurl, function (message) {
-      progress.update(listenID, message.loaded, message.total);
+      progress.update(sourceId, message.loaded, message.total);
     });
     const data = JSON.parse(decoder.decode(inflatedData)) as MaterialSymbolsDescription;
     return data;

@@ -19,6 +19,11 @@ export class Progress {
   total: number;
   time: number;
 
+  /**
+   * Track the progress of sources
+   * @param count the number of listened sources in expectation
+   * @param callback function to receive ProgressMessage
+   */
   constructor(count: number, callback: ProgressCallback) {
     this.callback = callback;
     this.sources = new Map();
@@ -32,12 +37,24 @@ export class Progress {
     });
   }
 
+  /**
+   * listen to a source
+   * @returns source identifier
+   */
   listen(): number {
     const id = this.nextId++;
     this.sources.set(id, [0, 0]);
     return id;
   }
 
+  /**
+   * update the progress of a source
+   * @param id source identifier
+   * @param loaded index or quantity representing current progress
+   * @param total index or quantity representing the end of the process
+   * @example
+   * update(sourceId, receivedByteLength, totalByteLength)
+   */
   update(id: number, loaded: number, total: number): void {
     const previous = this.sources.get(id);
     if (previous) {
@@ -53,6 +70,11 @@ export class Progress {
     });
   }
 
+  /**
+   * record timestamp of sources; most recent one takes precedence
+   * @param value timestamp
+   * @param timeZoneOffset time zone offset in minutes
+   */
   timestamp(value: string | number, timeZoneOffset: number): void {
     let timeNumber = 0;
     if (typeof value === 'string') {
@@ -63,10 +85,17 @@ export class Progress {
     }
   }
 
+  /**
+   * get the most recent timestamp in milliseconds
+   * @returns timestamp
+   */
   getTime(): number {
     return this.time;
   }
 
+  /**
+   * send the 'end' message
+   */
   terminate(): void {
     this.callback({
       type: 'end',
@@ -74,6 +103,10 @@ export class Progress {
     });
   }
 
+  /**
+   * get the average progress of sources
+   * @returns percent
+   */
   getPercent(): number {
     if (this.count > 0) {
       return this.total / this.count;

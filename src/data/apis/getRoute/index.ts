@@ -94,9 +94,9 @@ export async function getRoute(progress: Progress, simplify: boolean = true): Pr
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
-      const listenID = progress.listen();
+      const sourceId = progress.listen();
       const inflatedData = await fetchInflate(url, function (message) {
-        progress.update(listenID, message.loaded, message.total);
+        progress.update(sourceId, message.loaded, message.total);
       });
       const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
