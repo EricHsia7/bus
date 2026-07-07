@@ -351,7 +351,7 @@ export function openSearch(): void {
 
     hidePreviousPage();
   } else {
-    promptMessage('download_for_offline', '資料還在下載中');
+    promptMessage('arrow_circle_down', '正在下載資料');
   }
 }
 
