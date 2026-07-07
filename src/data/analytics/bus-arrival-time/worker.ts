@@ -34,6 +34,16 @@ async function initialize(id: number, personalSchedules: PersonalScheduleArray, 
   for (const item of existing) {
     memoryCache_existing.set(item.id, item);
   }
+  for (const item of tracking) {
+    if (!memoryCache_existing.has(item)) {
+      memoryCache_existing.set(item, {
+        stats: [new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24)],
+        min: new Array(7).fill(0) as WeeklyArray<number>,
+        max: new Array(7).fill(0) as WeeklyArray<number>,
+        id: item
+      });
+    }
+  }
   self.postMessage({ id, type: 'done', job: 'initialize' } as BusArrivalTimeWorkerMessageDoneInitialize);
 }
 
@@ -45,7 +55,7 @@ async function record(id: number, records: Array<BusArrivalTimeRecord>) {
 
     if (!memoryCache_existing.has(record.id)) {
       memoryCache_existing.set(record.id, {
-        stats: new Array(7).fill(new Uint32Array(60 * 24)) as WeeklyArray<BusArrivalTimeStats>,
+        stats: [new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24)],
         min: new Array(7).fill(0) as WeeklyArray<number>,
         max: new Array(7).fill(0) as WeeklyArray<number>,
         id: record.id
@@ -56,7 +66,7 @@ async function record(id: number, records: Array<BusArrivalTimeRecord>) {
     const dataLength = record.estimate.length;
     for (let i = dataLength - 1; i >= 0; i--) {
       if (record.estimate[i] > 0) {
-        const date = new Date((record.time[i] + record.estimate[i]) * 1000);
+        const date = new Date((record.start + record.time[i] + record.estimate[i]) * 1000);
         const index = date.getHours() * 60 + date.getMinutes();
         existingRecord.stats[date.getDay()][index] += 1;
       }
@@ -89,8 +99,6 @@ async function checkout(id: number) {
   }
 
   self.postMessage({ id, type: 'done', job: 'checkout', result: result } as BusArrivalTimeWorkerMessageDoneCheckout, transfer);
-
-  console.log(memoryCache_existing.entries());
 }
 
 const fontWeight = 400;
@@ -128,7 +136,6 @@ async function plot(id: number, width: number, height: number) {
         const statsMax = BusArrivalTimeStatsGroup.max[i];
         const stats = BusArrivalTimeStatsGroup.stats[i].slice(startIndex, endIndex);
         const statsLength = stats.length;
-
         // Gridline and labels
         let verticalGridlineLabels = '';
         let verticalGridlinePathCommand = '';

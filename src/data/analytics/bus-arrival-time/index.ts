@@ -120,11 +120,11 @@ worker.onmessage = (event: MessageEvent) => {
         break;
       case 'checkout':
         pending.delete(message.id);
-        job.resolve();
+        job.resolve(message.result);
         break;
       case 'plot':
         pending.delete(message.id);
-        job.resolve();
+        job.resolve(message.result);
         break;
     }
   } else {
@@ -142,9 +142,10 @@ interface BusArrivalTimeCollection {
   id: number; // stop id
 }
 
-const DataLength = 8;
+const DataLength = 3; // 8;
 const collections = new Map<number, BusArrivalTimeCollection>();
 let currentDataLength = 0;
+let count = 0;
 
 export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
   const now = new Date();
@@ -181,6 +182,13 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
       });
     }
     currentDataLength = 0;
+    count++;
+  }
+
+  if (count > 3) {
+    const groups = await checkoutBusArrivalTime();
+    await saveBusArrivalTimeStatsGroups(groups);
+    count = 0;
   }
 }
 
@@ -257,16 +265,13 @@ export async function listBusArrivalTimeStatsGroups(): Promise<Array<BusArrivalT
   const keys = await lfListItemKeys(6);
   const result: Array<BusArrivalTimeStatsGroup> = [];
   for (const key of keys) {
-    if (key.startsWith('stop_')) {
-      // TODO: create new database
-      const json = await lfGetItem(6, key);
-      if (json) {
-        const object = JSON.parse(json) as BusArrivalTimeStatsGroup;
-        for (let i = 0; i < 7; i++) {
-          object.stats[i] = new Uint32Array(object.stats[i]); // convert to typed array
-        }
-        result.push(object);
+    const json = await lfGetItem(6, key);
+    if (json) {
+      const object = JSON.parse(json) as BusArrivalTimeStatsGroup;
+      for (let i = 0; i < 7; i++) {
+        object.stats.splice(i, 1, new Uint32Array(object.stats[i])); // convert to typed array
       }
+      result.push(object);
     }
   }
   return result;

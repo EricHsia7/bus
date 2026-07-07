@@ -7,7 +7,7 @@ let storage = {
   updateRateDataStore: false, // 3
   updateRateDataWriteAheadLogStore: false, // 4
   busArrivalTimeDataWriteAheadLogStore: false, // 5
-  busArrivalTimeDataStore: false, // 6
+  busArrivalTimeStatsGroupStore: false, // 6
   personalScheduleStore: false, // 7
   recentViewsStore: false, // 8
   notificationStore: false, // 9
@@ -18,7 +18,7 @@ let storage = {
   folderContentStore: false // 14
 };
 
-const stores = ['cacheStore', 'settingsStore', 'dataUsageStatsStore', 'updateRateDataStore', 'updateRateDataWriteAheadLogStore', 'busArrivalTimeDataWriteAheadLogStore', 'busArrivalTimeDataStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderIndexStore', 'folderListStore', 'folderContentIndexStore', 'folderContentStore'];
+const stores = ['cacheStore', 'settingsStore', 'dataUsageStatsStore', 'updateRateDataStore', 'updateRateDataWriteAheadLogStore', 'busArrivalTimeDataWriteAheadLogStore', 'busArrivalTimeStatsGroupStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderIndexStore', 'folderListStore', 'folderContentIndexStore', 'folderContentStore'];
 
 function promiseWithTimeout<T>(p: Promise<T>, ms: number = 5000): Promise<T> {
   return new Promise<T>((resolve, reject) => {
