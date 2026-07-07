@@ -142,11 +142,9 @@ interface BusArrivalTimeCollection {
   id: number; // stop id
 }
 
-const DataLength = 8;
-const Count = 3;
+const DataLength = 10;
 const collections = new Map<number, BusArrivalTimeCollection>();
 let currentDataLength = 0;
-let currentCount = 0;
 
 export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
   const now = new Date();
@@ -182,14 +180,9 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
         id: key
       });
     }
-    currentDataLength = 0;
-    currentCount++;
-  }
-
-  if (currentCount >= Count) {
     const groups = await checkoutBusArrivalTime();
     await saveBusArrivalTimeStatsGroups(groups);
-    currentCount = 0;
+    currentDataLength = 0;
   }
 }
 
