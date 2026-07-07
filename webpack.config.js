@@ -72,7 +72,7 @@ module.exports = (env, argv) => {
             urlPattern: /^https:\/\/fonts\.gstatic\.com/,
             handler: 'StaleWhileRevalidate',
             options: {
-              cacheName: 'google-fonts-sources'
+              cacheName: 'google-fonts-resources'
             }
           },
           {
