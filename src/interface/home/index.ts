@@ -26,13 +26,8 @@ export async function downloadData() {
     }
   });
   // getRoute: 2 + getLocation: 2 + getCarInfo: 2 + getMaterialSymbolsSearchIndex: 1 + getMaterialSymbolsDescription: 1 + getMaterialSymbolsSimilarity: 1 + getMaterialSymbolsList: 1
-  await getRoute(progress, true);
-  await getLocation(progress, 1);
-  await getCarInfo(progress, true);
-  await getMaterialSymbolsSearchIndex(progress);
-  await getMaterialSymbolsDescription(progress);
-  await getMaterialSymbolsList(progress);
-  await getMaterialSymbolsSimilarity(progress);
+  await Promise.allSettled([getRoute(progress, true), getLocation(progress, 1), getCarInfo(progress, true)]);
+  await Promise.allSettled([getMaterialSymbolsSearchIndex(progress), getMaterialSymbolsDescription(progress), getMaterialSymbolsList(progress), getMaterialSymbolsSimilarity(progress)]);
   progress.terminate();
 }
 
