@@ -34,7 +34,6 @@ function storeIndexToCategory(store: number): StoreCategory {
     ['分析', 'analytics'],
     ['分析', 'analytics'],
     ['分析', 'analytics'],
-    ['分析', 'analytics'],
     ['個人化行程', 'personalSchedule'],
     ['最近檢視', 'recentViews'],
     ['通知', 'notification'],

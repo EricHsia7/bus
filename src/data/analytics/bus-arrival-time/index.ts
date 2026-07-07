@@ -256,10 +256,10 @@ export interface BusArrivalTimes {
 }
 
 export async function listBusArrivalTimeStatsGroups(): Promise<Array<BusArrivalTimeStatsGroup>> {
-  const keys = await lfListItemKeys(6);
+  const keys = await lfListItemKeys(5);
   const result: Array<BusArrivalTimeStatsGroup> = [];
   for (const key of keys) {
-    const json = await lfGetItem(6, key);
+    const json = await lfGetItem(5, key);
     if (json) {
       const object = JSON.parse(json) as BusArrivalTimeStatsGroup;
       for (let i = 0; i < 7; i++) {
@@ -276,6 +276,6 @@ export async function saveBusArrivalTimeStatsGroups(groups: Array<BusArrivalTime
     for (let i = 0; i < 7; i++) {
       group.stats.splice(i, 1, Array.from(group.stats[i])); // convert to standard array
     }
-    await lfSetItem(6, `stop_${group.id}`, JSON.stringify(group));
+    await lfSetItem(5, `stop_${group.id}`, JSON.stringify(group));
   }
 }
