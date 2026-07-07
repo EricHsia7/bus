@@ -88,10 +88,10 @@
 }
 
 .css_home_field .css_home_head .css_home_button_right svg#download-svg path[component="track"] {
-  stroke: var(--b-cssvar-333333-60-flattened);
+  stroke: var(--b-cssvar-333333-15-flattened);
 }
 
-.css_home_field .css_home_head .css_home_button_right svg path[component="progress"] {
+.css_home_field .css_home_head .css_home_button_right svg#download-svg path[component="progress"] {
   stroke: var(--b-cssvar-333333);
   stroke-dasharray: 189px;
   stroke-dashoffset: var(--b-cssvar-stroke-dashoffset);
