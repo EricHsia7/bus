@@ -5,7 +5,7 @@ import { isInPersonalSchedule, listPersonalSchedules, PersonalSchedule, Personal
 import { lfGetItem, lfListItemKeys, lfSetItem } from '../../storage/index';
 
 /**
- * stop-based record per day
+ * record per stop per day
  */
 export interface BusArrivalTimeRecord {
   estimate: Int32Array; // estimate time (in seconds)
@@ -22,7 +22,7 @@ export type BusArrivalTimeTrackingList = Array<BusArrivalTimeRecord['id']>;
 export type BusArrivalTimeStats = Uint32Array;
 
 /**
- * stop-based record per week
+ * record per stop per week
  */
 export interface BusArrivalTimeStatsGroup {
   stats: WeeklyArray<BusArrivalTimeStats>;
