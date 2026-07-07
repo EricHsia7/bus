@@ -146,6 +146,8 @@ export interface WeekDay {
   code: string;
 }
 
+export type WeeklyArray<T> = [sun: T, mon: T, tue: T, wed: T, thu: T, fri: T, sat: T];
+
 export function indexToDay(index: WeekDayIndex): WeekDay {
   const days = [
     {

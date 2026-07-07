@@ -1,6 +1,6 @@
 import { IntervalArray, union } from '../../tools/array';
 import { generateIdentifier, hasOwnProperty } from '../../tools/index';
-import { TimePeriod, WeekDayIndexArray } from '../../tools/time';
+import { TimePeriod, WeekDayIndexArray, WeeklyArray } from '../../tools/time';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 
 export interface PersonalSchedule {
@@ -13,7 +13,7 @@ export interface PersonalSchedule {
 export type PersonalScheduleArray = Array<PersonalSchedule>;
 
 const PersonalSchedules: { [id: string]: PersonalSchedule } = {};
-const PersonalSchedulesTimeline: [sun: IntervalArray, mon: IntervalArray, tue: IntervalArray, wed: IntervalArray, thu: IntervalArray, fri: IntervalArray, sat: IntervalArray] = [[], [], [], [], [], [], []];
+const PersonalSchedulesTimeline: WeeklyArray<IntervalArray> = [[], [], [], [], [], [], []];
 
 export async function initializePersonalSchedules() {
   const keys = await lfListItemKeys(7);
@@ -30,7 +30,7 @@ export async function initializePersonalSchedules() {
 
 export function initializePersonalSchedulesTimeline(): void {
   const personalSchedules = listPersonalSchedules();
-  const timeline: [sun: IntervalArray, mon: IntervalArray, tue: IntervalArray, wed: IntervalArray, thu: IntervalArray, fri: IntervalArray, sat: IntervalArray] = ([[], [], [], [], [], [], []] = [[], [], [], [], [], [], []]);
+  const timeline: WeeklyArray<IntervalArray> = ([[], [], [], [], [], [], []] = [[], [], [], [], [], [], []]);
   for (const personalSchedule of personalSchedules) {
     for (const day of personalSchedule.days) {
       timeline[day].push([personalSchedule.period.start.hours * 60 + personalSchedule.period.start.minutes, personalSchedule.period.end.hours * 60 + personalSchedule.period.end.minutes]);

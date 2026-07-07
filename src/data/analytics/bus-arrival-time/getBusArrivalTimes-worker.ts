@@ -5,7 +5,7 @@ import { BusArrivalTimeDataGroupArray, BusArrivalTimes } from './index';
 
 self.onmessage = function (event: MessageEvent): void {
   const { id, personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight } = event.data;
-  createCharts(id, personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight).catch((error: Error) => self.postMessage({ id, type: 'error', error: error.message } as getBusArrivalTimesMessageError));
+  processJob(id, personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight).catch((error: Error) => self.postMessage({ id, type: 'error', error: error.message } as getBusArrivalTimesMessageError));
 };
 
 const fontWeight = 400;
@@ -25,7 +25,7 @@ if (typeof OffscreenCanvas !== 'undefined') {
 
 const encoder = new TextEncoder();
 
-async function createCharts(id: number, personalSchedules: PersonalScheduleArray, busArrivalTimeDataGroups: BusArrivalTimeDataGroupArray, chartWidth: number, chartHeight: number) {
+async function processJob(id: number, personalSchedules: PersonalScheduleArray, busArrivalTimeDataGroups: BusArrivalTimeDataGroupArray, chartWidth: number, chartHeight: number) {
   const result: BusArrivalTimes = {};
 
   const transferableObjects: Array<ArrayBuffer> = [];
