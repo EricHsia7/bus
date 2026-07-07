@@ -1,10 +1,14 @@
+/// <reference lib="webworker" />
+declare const self: DedicatedWorkerGlobalScope;
+// export {}; // make a script a module if no any export or import
+
 import { findGlobalExtrema } from '../../../tools/math';
 import { Segments, segmentsToPath, simplifyPath } from '../../../tools/path';
 import { createDateObjectFromDate } from '../../../tools/time';
 import { DataUsagePeriod, DataUsageStats, DataUsageStatsChunkArray } from './index';
 
-self.onmessage = function (e) {
-  processWorkerTask(e.data);
+self.onmessage = function (event: MessageEvent) {
+  processWorkerTask(event.data);
 };
 
 type data = [dataUsageStatsChunks: DataUsageStatsChunkArray, width: number, height: number, padding: number];

@@ -1,12 +1,15 @@
+/// <reference lib="webworker" />
+declare const self: DedicatedWorkerGlobalScope;
+// export {}; // make a script a module if no any export or import
+
 import { hasOwnProperty } from '../../../tools/index';
 import { SegmentBuffers, SimplifiedSegmentBuffer } from './index';
 
-self.onmessage = function (e) {
-  const result = processWorkerTask(e.data);
-  self.postMessage(result); // Send the result back to the main thread
+self.onmessage = function (event: MessageEvent) {
+  processWorkerTask(event.data);
 };
 
-function processWorkerTask(array: SegmentBuffers): SimplifiedSegmentBuffer {
+function processWorkerTask(array: SegmentBuffers): void {
   const result: SimplifiedSegmentBuffer = {};
   for (const item of array) {
     if (hasOwnProperty(item, 'BufferZones')) {
@@ -24,5 +27,6 @@ function processWorkerTask(array: SegmentBuffers): SimplifiedSegmentBuffer {
       }
     }
   }
-  return result;
+
+  self.postMessage(result); // Send the result back to the main thread
 }

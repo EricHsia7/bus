@@ -1,14 +1,17 @@
+/// <reference lib="webworker" />
+declare const self: DedicatedWorkerGlobalScope;
+// export {}; // make a script a module if no any export or import
+
 import { geohashEncode } from '../../../tools/geohash';
 import { hasOwnProperty } from '../../../tools/index';
 import { normalizeVector } from '../../../tools/math';
 import { Location, SimplifiedLocation, SimplifiedLocationItem } from './index';
 
 self.onmessage = function (e) {
-  const result = processWorkerTask(e.data);
-  self.postMessage(result); // Send the result back to the main thread
+  processWorkerTask(e.data);
 };
 
-function processWorkerTask(Location: Location): SimplifiedLocation {
+function processWorkerTask(Location: Location): void {
   const locationsByRoute = {};
   for (const item of Location) {
     const thisRouteID = item.routeId;
@@ -73,5 +76,5 @@ function processWorkerTask(Location: Location): SimplifiedLocation {
       result[key].a.push(item.address);
     }
   }
-  return result;
+  self.postMessage(result); // Send the result back to the main thread
 }

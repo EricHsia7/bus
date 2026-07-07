@@ -1,3 +1,7 @@
+/// <reference lib="webworker" />
+declare const self: DedicatedWorkerGlobalScope;
+// export {}; // make a script a module if no any export or import
+
 import { getUpdateRateMessageDone, getUpdateRateMessageError, UpdateRateDataGroupArray } from './index';
 
 self.onmessage = function (event: MessageEvent): void {

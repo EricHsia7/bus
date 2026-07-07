@@ -1,3 +1,7 @@
+/// <reference lib="webworker" />
+declare const self: DedicatedWorkerGlobalScope;
+// export {}; // make a script a module if no any export or import
+
 import { Decompress } from 'fflate';
 import { LoaderMessageData, LoaderMessageDone, LoaderMessageError, LoaderMessageProgress } from './loader';
 

@@ -1,7 +1,11 @@
+/// <reference lib="webworker" />
+declare const self: DedicatedWorkerGlobalScope;
+// export {}; // make a script a module if no any export or import
+
 import { BusArrivalTimeRecord, BusArrivalTimes, BusArrivalTimeStats, BusArrivalTimeStatsGroup, BusArrivalTimeWorkerMessageDoneCheckout, BusArrivalTimeWorkerMessageDoneInitialize, BusArrivalTimeWorkerMessageDonePlot, BusArrivalTimeWorkerMessageDoneRecord, BusArrivalTimeWorkerMessageError, BusArrivalTimeWorkerRequest } from '.';
 import { hasOwnProperty } from '../../../tools';
 import { findGlobalExtrema } from '../../../tools/math';
-import { WeekDayIndex, WeekDayIndexArray, WeeklyArray } from '../../../tools/time';
+import { WeekDayIndex, WeeklyArray } from '../../../tools/time';
 import { PersonalScheduleArray } from '../../personal-schedule';
 
 self.onmessage = function (event: MessageEvent): void {

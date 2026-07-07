@@ -1,15 +1,18 @@
+/// <reference lib="webworker" />
+declare const self: DedicatedWorkerGlobalScope;
+// export {}; // make a script a module if no any export or import
+
 import { hasOwnProperty } from '../../../tools/index';
 import { CarInfo, SimplifiedCarInfo, SimplifiedCarInfoItem } from './index';
 
 self.onmessage = function (e) {
-  const result = processWorkerTask(e.data);
-  self.postMessage(result); // Send the result back to the main thread
+  processWorkerTask(e.data);
 };
 
-function processWorkerTask(CarInfo: CarInfo): SimplifiedCarInfo {
+function processWorkerTask(CarInfo: CarInfo): void {
   const result: SimplifiedCarInfo = {};
   for (const item of CarInfo) {
-    const simplifiedItem: SimplifiedCarInfoItem = {};
+    const simplifiedItem = {} as SimplifiedCarInfoItem;
     simplifiedItem.BusId = item.BusId;
     simplifiedItem.CarNum = item.CarNum;
     simplifiedItem.CarType = item.CarType;
@@ -19,5 +22,5 @@ function processWorkerTask(CarInfo: CarInfo): SimplifiedCarInfo {
       result[carKey] = simplifiedItem;
     }
   }
-  return result;
+  self.postMessage(result); // Send the result back to the main thread
 }

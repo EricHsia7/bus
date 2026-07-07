@@ -1,11 +1,14 @@
+/// <reference lib="webworker" />
+declare const self: DedicatedWorkerGlobalScope;
+// export {}; // make a script a module if no any export or import
+
 import { SimplifiedStop, SimplifiedStopItem, Stop } from './index';
 
-self.onmessage = function (e) {
-  const result = processWorkerTask(e.data);
-  self.postMessage(result); // Send the result back to the main thread
+self.onmessage = function (event: MessageEvent) {
+  processWorkerTask(event.data);
 };
 
-function processWorkerTask(array: Stop): SimplifiedStop {
+function processWorkerTask(array: Stop): void {
   const result: SimplifiedStop = {};
   for (const item of array) {
     const key = `s_${item.Id}`;
@@ -15,5 +18,5 @@ function processWorkerTask(array: Stop): SimplifiedStop {
     simplifiedItem.stopLocationId = item.stopLocationId;
     result[key] = simplifiedItem;
   }
-  return result;
+  self.postMessage(result); // Send the result back to the main thread
 }

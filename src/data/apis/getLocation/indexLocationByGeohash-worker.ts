@@ -1,12 +1,15 @@
+/// <reference lib="webworker" />
+declare const self: DedicatedWorkerGlobalScope;
+// export {}; // make a script a module if no any export or import
+
 import { hasOwnProperty } from '../../../tools/index';
 import { IndexedLocation, IndexedLocationItem, MergedLocation } from './index';
 
 self.onmessage = function (e) {
-  const result = processWorkerTask(e.data);
-  self.postMessage(result); // Send the result back to the main thread
+  processWorkerTask(e.data);
 };
 
-function processWorkerTask(object: MergedLocation): IndexedLocation {
+function processWorkerTask(object: MergedLocation): void {
   const result: IndexedLocation = {};
   for (const key in object) {
     const indexedLocationItem = {} as IndexedLocationItem;
@@ -33,5 +36,5 @@ function processWorkerTask(object: MergedLocation): IndexedLocation {
       result[geohash].push(indexedLocationItem);
     }
   }
-  return result;
+  self.postMessage(result); // Send the result back to the main thread
 }

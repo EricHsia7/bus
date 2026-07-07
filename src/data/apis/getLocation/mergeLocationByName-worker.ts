@@ -1,13 +1,16 @@
+/// <reference lib="webworker" />
+declare const self: DedicatedWorkerGlobalScope;
+// export {}; // make a script a module if no any export or import
+
 import { mergeAddressesIntoOne } from '../../../tools/address';
 import { hasOwnProperty, md5 } from '../../../tools/index';
 import { MergedLocation, SimplifiedLocation } from './index';
 
 self.onmessage = function (e) {
-  const result = processWorkerTask(e.data);
-  self.postMessage(result); // Send the result back to the main thread
+  processWorkerTask(e.data);
 };
 
-function processWorkerTask(object: SimplifiedLocation): MergedLocation {
+function processWorkerTask(object: SimplifiedLocation): void {
   const result: MergedLocation = {};
   for (const key in object) {
     const hash = md5(
@@ -42,5 +45,5 @@ function processWorkerTask(object: SimplifiedLocation): MergedLocation {
       result[nameKey].id.push(object[key].id);
     }
   }
-  return result;
+  self.postMessage(result); // Send the result back to the main thread
 }
