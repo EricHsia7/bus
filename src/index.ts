@@ -1,4 +1,4 @@
-import { recoverBusArrivalTimeDataFromWriteAheadLog } from './data/analytics/bus-arrival-time/index';
+import { initializeBusArrivalTime } from './data/analytics/bus-arrival-time';
 import { discardExpiredDataUsageStats } from './data/analytics/data-usage/index';
 import { discardUpdateRateDataGroups, initializeUpdateRateDataGroups, recoverUpdateRateDataFromWriteAheadLog } from './data/analytics/update-rate/index';
 import { initializeFolderList } from './data/folder/index';
@@ -247,6 +247,9 @@ interface BusWindow extends Window {
     await initializePersonalSchedules();
     initializePersonalSchedulesTimeline();
 
+    // initialize bus arrival time
+    await initializeBusArrivalTime();
+
     // setup skeleton screen
     setupRecentViewsFieldSkeletonScreen();
     setupFolderFieldSkeletonScreen();
@@ -303,8 +306,6 @@ interface BusWindow extends Window {
     await discardExpiredNotificationSchedules();
 
     await downloadData();
-
-    await recoverBusArrivalTimeDataFromWriteAheadLog();
 
     await discardUpdateRateDataGroups();
     await discardExpiredRecentViews();

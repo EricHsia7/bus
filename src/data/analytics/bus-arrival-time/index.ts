@@ -149,7 +149,6 @@ let currentDataLength = 0;
 export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
   const now = new Date();
   const currentTime = Math.floor(now.getTime() / 1000);
-  const day = now.getDay() as WeekDayIndex;
   if (isInPersonalSchedule(now)) {
     for (const item of EstimateTime) {
       const id = item.StopID;
