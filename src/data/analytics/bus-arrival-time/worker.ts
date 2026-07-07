@@ -27,13 +27,11 @@ self.onmessage = function (event: MessageEvent): void {
 };
 
 let memoryCache_personalSchedules: PersonalScheduleArray = [];
-let memoryCache_tracking: Array<number> = [];
 let memoryCache_existing = new Map<BusArrivalTimeStatsGroup['id'], BusArrivalTimeStatsGroup>();
 let memoryCache_modified = new Map<BusArrivalTimeStatsGroup['id'], boolean>();
 
 async function initialize(id: number, personalSchedules: PersonalScheduleArray, tracking: Array<number>, existing: Array<BusArrivalTimeStatsGroup>) {
   memoryCache_personalSchedules = personalSchedules;
-  memoryCache_tracking = tracking;
   for (const item of existing) {
     memoryCache_existing.set(item.id, item);
   }
