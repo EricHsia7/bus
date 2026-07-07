@@ -6,7 +6,6 @@ import { PersonalScheduleArray } from '../../personal-schedule';
 
 self.onmessage = function (event: MessageEvent): void {
   const request = event.data as BusArrivalTimeWorkerRequest;
-
   switch (request.type) {
     case 'initialize':
       initialize(request.id, request.schedules, request.tracking, request.existing).catch((error: Error) => self.postMessage({ id: request.id, type: 'error', error: error.message } as BusArrivalTimeWorkerMessageError));
@@ -14,11 +13,11 @@ self.onmessage = function (event: MessageEvent): void {
     case 'record':
       record(request.id, request.records).catch((error: Error) => self.postMessage({ id: request.id, type: 'error', error: error.message } as BusArrivalTimeWorkerMessageError));
       break;
-    case 'plot':
-      plot(request.id, request.width, request.height).catch((error: Error) => self.postMessage({ id: request.id, type: 'error', error: error.message } as BusArrivalTimeWorkerMessageError));
-      break;
     case 'checkout':
       checkout(request.id).catch((error: Error) => self.postMessage({ id: request.id, type: 'error', error: error.message } as BusArrivalTimeWorkerMessageError));
+      break;
+    case 'plot':
+      plot(request.id, request.width, request.height).catch((error: Error) => self.postMessage({ id: request.id, type: 'error', error: error.message } as BusArrivalTimeWorkerMessageError));
       break;
   }
 };
@@ -99,6 +98,8 @@ async function checkout(id: number) {
   }
 
   self.postMessage({ id, type: 'done', job: 'checkout', result: result } as BusArrivalTimeWorkerMessageDoneCheckout, transfer);
+
+  memoryCache_modified.clear();
 }
 
 const fontWeight = 400;
