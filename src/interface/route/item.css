@@ -954,14 +954,13 @@
   width: calc(100% - 20px);
   height: 40px;
   font-size: 20px;
-  display: flex;
   white-space: nowrap;
   word-break: keep-all;
-  justify-content: space-between;
   color: var(--b-cssvar-333333-80-flattened);
+  text-overflow: ellipsis;
+  line-height: 40px;
   overflow: clip;
   contain: layout;
-  align-items: center;
 }
 
 /* body > overlapping routes, nearby locations > overlapping route, nearby location > actions */
