@@ -133,7 +133,7 @@ worker.onmessage = (event: MessageEvent) => {
   }
 };
 
-worker.onerror = (e) => console.log('Worker crashed:', e.message);
+worker.onerror = (e) => console.error('Worker crashed:', e.message);
 
 interface BusArrivalTimeCollection {
   estimate: Array<number>; // estimate time (in seconds)
@@ -142,10 +142,11 @@ interface BusArrivalTimeCollection {
   id: number; // stop id
 }
 
-const DataLength = 3; // 8;
+const DataLength = 8;
+const Count = 3;
 const collections = new Map<number, BusArrivalTimeCollection>();
 let currentDataLength = 0;
-let count = 0;
+let currentCount = 0;
 
 export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
   const now = new Date();
@@ -182,13 +183,13 @@ export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
       });
     }
     currentDataLength = 0;
-    count++;
+    currentCount++;
   }
 
-  if (count > 3) {
+  if (currentCount >= Count) {
     const groups = await checkoutBusArrivalTime();
     await saveBusArrivalTimeStatsGroups(groups);
-    count = 0;
+    currentCount = 0;
   }
 }
 
