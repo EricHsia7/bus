@@ -1,4 +1,3 @@
-import { generateIdentifier, hasOwnProperty } from '../../../tools/index';
 import { findGlobalExtrema } from '../../../tools/math';
 import { WeekDayIndex, WeeklyArray } from '../../../tools/time';
 import { EstimateTime } from '../../apis/getEstimateTime/index';
@@ -7,17 +6,6 @@ import { isInPersonalSchedule, listPersonalSchedules, PersonalSchedule, Personal
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../../storage/index';
 import { getBusArrivalTimeDataStats } from './getBusArrivalTimeDataStats';
 
-const busArrivalTimeData_writeAheadLog_maxDataLength: number = 32;
-let busArrivalTimeData_writeAheadLog_id: string = '';
-let busArrivalTimeData_writeAheadLog_tracking: boolean = false;
-let busArrivalTimeData_trackedStops: Array<number> = [];
-let busArrivalTimeData_writeAheadLog_group: BusArrivalTimeDataWriteAheadLog = {
-  data: {},
-  timestamp: 0,
-  id: ''
-};
-let busArrivalTimeData_writeAheadLog_currentDataLength: number = 0;
-
 /**
  * stop-based record per day
  */
@@ -25,7 +13,6 @@ export interface BusArrivalTimeRecord {
   estimate: Int32Array; // estimate time (in seconds)
   time: Uint32Array; // time elapsed (in seconds)
   start: number; // timestamp in milliseconds representing the time when the record starts
-  day: WeekDayIndex;
   id: number; // stop id
 }
 
@@ -74,6 +61,8 @@ export interface BusArrivalTimeWorkerRequestCheckout {
 export interface BusArrivalTimeWorkerRequestPlot {
   type: 'plot';
   id: number;
+  width: number;
+  height: number;
 }
 
 export type BusArrivalTimeWorkerRequest = BusArrivalTimeWorkerRequestInitialize | BusArrivalTimeWorkerRequestRecord | BusArrivalTimeWorkerRequestCheckout | BusArrivalTimeWorkerRequestPlot;
@@ -146,9 +135,61 @@ worker.onmessage = (event: MessageEvent) => {
   }
 };
 
-worker.onerror = (e) => console.error('Worker crashed:', e.message);
+worker.onerror = (e) => console.log('Worker crashed:', e.message);
+
+interface BusArrivalTimeCollection {
+  estimate: Array<number>; // estimate time (in seconds)
+  time: Array<number>; // time elapsed (in seconds)
+  start: number; // timestamp representing the time when the record starts (in seconds)
+  id: number; // stop id
+}
+
+const DataLength = 8;
+const collections = new Map<number, BusArrivalTimeCollection>();
+let currentDataLength = 0;
+
+export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
+  const now = new Date();
+  const currentTime = Math.floor(now.getTime() / 1000);
+  const day = now.getDay() as WeekDayIndex;
+  if (isInPersonalSchedule(now)) {
+    for (const item of EstimateTime) {
+      const id = item.StopID;
+      if (collections.has(id)) {
+        const collection = collections.get(id) as BusArrivalTimeCollection;
+        collection.estimate.push(parseInt(item.EstimateTime, 10));
+        collection.time.push(currentTime - collection.start);
+      }
+    }
+    currentDataLength++;
+  }
+
+  if (currentDataLength >= DataLength) {
+    const records: Array<BusArrivalTimeRecord> = [];
+    for (const collection of collections.values()) {
+      records.push({
+        estimate: new Int32Array(collection.estimate),
+        time: new Uint32Array(collection.time),
+        start: collection.start,
+        id: collection.id
+      });
+    }
+    await recordBusArrivalTime(records);
+    for (const key of collections.keys()) {
+      collections.set(key, {
+        estimate: [],
+        time: [],
+        start: currentTime,
+        id: key
+      });
+    }
+    currentDataLength = 0;
+  }
+}
 
 export async function initializeBusArrivalTime(): Promise<boolean> {
+  const now = new Date();
+  const currentTime = Math.floor(now.getTime() / 1000);
   const schedules = listPersonalSchedules();
   const stops = (await listAllFolderContent(['stop'])) as Array<FolderContentStop>;
   const tracking = stops.map((e) => e.id);
@@ -159,6 +200,14 @@ export async function initializeBusArrivalTime(): Promise<boolean> {
     for (let j = 0; j < 7; j++) {
       transfer.push(existing[i].stats[j].buffer as ArrayBuffer);
     }
+  }
+  for (const id of tracking) {
+    collections.set(id, {
+      estimate: [],
+      time: [],
+      start: currentTime,
+      id: id
+    });
   }
   return new Promise((resolve, reject) => {
     const id = nextId++;
@@ -180,11 +229,11 @@ export async function recordBusArrivalTime(records: Array<BusArrivalTimeRecord>)
   });
 }
 
-export async function plotBusArrivalTime(): Promise<BusArrivalTimes> {
+export async function plotBusArrivalTime(width: number, height: number): Promise<BusArrivalTimes> {
   return new Promise((resolve, reject) => {
     const id = nextId++;
     pending.set(id, { resolve, reject, type: 'plot' });
-    worker.postMessage({ id, type: 'plot' } as BusArrivalTimeWorkerRequestPlot);
+    worker.postMessage({ id, type: 'plot', width, height } as BusArrivalTimeWorkerRequestPlot);
   });
 }
 
@@ -196,16 +245,7 @@ export async function checkoutBusArrivalTime(): Promise<Array<BusArrivalTimeStat
   });
 }
 
-export async function getBusArrivalTimes(chartWidth: number, chartHeight: number): Promise<BusArrivalTimes> {
-  const personalSchedules = listPersonalSchedules();
-  const busArrivalTimeDataGroups = await listBusArrivalTimeDataGroups();
-  return new Promise((resolve, reject) => {
-    const id = nextId++;
-    pending.set(id, { resolve, reject });
-    worker.postMessage({ id, personalSchedules, busArrivalTimeDataGroups, chartWidth, chartHeight });
-  });
-}
-
+// ---
 export type BusArrivalTimeData = [estimateTime: number, timestamp: number]; // EstimateTime (seconds), timestamp (milliseconds)
 
 export type BusArrivalTimeDataGroupStats = Array<number>;
@@ -229,6 +269,8 @@ export interface BusArrivalTimeDataWriteAheadLog {
   id: string;
 }
 
+// ---
+
 export interface BusArrivalTime {
   personalSchedule: PersonalSchedule;
   chart: Uint8Array; // encoded svg string
@@ -246,82 +288,6 @@ function mergeBusArrivalTimeDataStats(targetStats: BusArrivalTimeDataGroupStats,
     mergedArray[i] = targetStats[i] + sourceStats[i];
   }
   return Array.from(mergedArray);
-}
-
-export async function collectBusArrivalTimeData(EstimateTime: EstimateTime) {
-  const now = new Date();
-  const currentTimestamp: number = now.getTime();
-  const currentDay = now.getDay();
-  let needToReset = false;
-  // Initialize
-  if (!busArrivalTimeData_writeAheadLog_tracking) {
-    busArrivalTimeData_writeAheadLog_tracking = true;
-    busArrivalTimeData_writeAheadLog_id = generateIdentifier();
-    busArrivalTimeData_writeAheadLog_group = {
-      id: busArrivalTimeData_writeAheadLog_id,
-      timestamp: currentTimestamp,
-      data: {}
-    };
-    busArrivalTimeData_writeAheadLog_currentDataLength = 0;
-    const allFolderContent = await listAllFolderContent(['stop']);
-    busArrivalTimeData_trackedStops = allFolderContent.map((e) => e.id);
-  }
-
-  // Record EstimateTime
-  if (isInPersonalSchedule(now)) {
-    for (const item of EstimateTime) {
-      const stopID = item.StopID;
-      const stopKey = `s_${stopID}_${currentDay}`;
-      if (busArrivalTimeData_trackedStops.indexOf(stopID) > -1) {
-        if (!hasOwnProperty(busArrivalTimeData_writeAheadLog_group.data, stopKey)) {
-          busArrivalTimeData_writeAheadLog_group.data[stopKey] = [];
-        }
-        busArrivalTimeData_writeAheadLog_group.data[stopKey].push([parseInt(item.EstimateTime, 10), currentTimestamp]);
-      }
-    }
-
-    busArrivalTimeData_writeAheadLog_currentDataLength += 1;
-    if (busArrivalTimeData_writeAheadLog_currentDataLength > busArrivalTimeData_writeAheadLog_maxDataLength) {
-      needToReset = true;
-    }
-
-    if (needToReset || busArrivalTimeData_writeAheadLog_currentDataLength % 8 === 0) {
-      await lfSetItem(5, busArrivalTimeData_writeAheadLog_id, JSON.stringify(busArrivalTimeData_writeAheadLog_group));
-    }
-
-    if (needToReset) {
-      for (const stopID of busArrivalTimeData_trackedStops) {
-        const stopKey = `s_${stopID}_${currentDay}`;
-        const data = busArrivalTimeData_writeAheadLog_group.data[stopKey];
-        const dataGroup = {} as BusArrivalTimeDataGroup;
-        const existingData = await lfGetItem(6, stopKey);
-        if (existingData) {
-          const existingDataObject = JSON.parse(existingData) as BusArrivalTimeDataGroup;
-          const newStats = await getBusArrivalTimeDataStats(data);
-          const mergedStats = mergeBusArrivalTimeDataStats(existingDataObject.stats, newStats);
-          dataGroup.stats = mergedStats;
-          const mergedExtrema = findGlobalExtrema(mergedStats);
-          dataGroup.min = mergedExtrema[0];
-          dataGroup.max = mergedExtrema[1];
-          dataGroup.day = currentDay as WeekDayIndex;
-          dataGroup.timestamp = existingDataObject.timestamp;
-          dataGroup.id = stopID;
-        } else {
-          const newStats = await getBusArrivalTimeDataStats(data);
-          dataGroup.stats = newStats;
-          const newExtrema = findGlobalExtrema(newStats);
-          dataGroup.min = newExtrema[0];
-          dataGroup.max = newExtrema[1];
-          dataGroup.day = currentDay as WeekDayIndex;
-          dataGroup.timestamp = currentTimestamp;
-          dataGroup.id = stopID;
-        }
-        await lfSetItem(6, stopKey, JSON.stringify(dataGroup));
-        await lfRemoveItem(5, busArrivalTimeData_writeAheadLog_id);
-      }
-      busArrivalTimeData_writeAheadLog_tracking = false;
-    }
-  }
 }
 
 export async function recoverBusArrivalTimeDataFromWriteAheadLog() {

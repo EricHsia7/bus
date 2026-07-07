@@ -1,3 +1,5 @@
+import { TypedArray } from 'fast-equals';
+
 export function calculateStandardDeviation(arr: Array<number>): number {
   // Step 1: Calculate the mean
   const mean = arr.reduce((acc, val) => acc + val, 0) / arr.length;
@@ -163,7 +165,7 @@ export function calculateAverage(array: Array<number>): number {
   }
 }
 
-export function findGlobalExtrema(array: Array<number>): [minimum: number, maximum: number] {
+export function findGlobalExtrema(array: Array<number> | Float32Array | Float64Array | Int8Array | Int16Array | Int32Array | Uint16Array | Uint32Array | Uint8Array): [minimum: number, maximum: number] {
   const arrayLength = array.length;
   if (arrayLength === 0) {
     return [0, 0];
