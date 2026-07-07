@@ -83,7 +83,7 @@ export interface BusArrivalTimeWorkerMessageDoneCheckout {
   type: 'done';
   id: number;
   job: 'checkout';
-  artifact: Array<BusArrivalTimeStatsGroup>;
+  result: Array<BusArrivalTimeStatsGroup>;
 }
 
 export interface BusArrivalTimeWorkerMessageDonePlot {
