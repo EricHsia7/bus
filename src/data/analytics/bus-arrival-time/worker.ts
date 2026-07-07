@@ -1,7 +1,7 @@
-import { BusArrivalTimeRecord, BusArrivalTimes, BusArrivalTimeStatsGroup, BusArrivalTimeWorkerMessageDoneCheckout, BusArrivalTimeWorkerMessageDoneInitialize, BusArrivalTimeWorkerMessageDonePlot, BusArrivalTimeWorkerMessageDoneRecord, BusArrivalTimeWorkerMessageError, BusArrivalTimeWorkerRequest } from '.';
+import { BusArrivalTimeRecord, BusArrivalTimes, BusArrivalTimeStats, BusArrivalTimeStatsGroup, BusArrivalTimeWorkerMessageDoneCheckout, BusArrivalTimeWorkerMessageDoneInitialize, BusArrivalTimeWorkerMessageDonePlot, BusArrivalTimeWorkerMessageDoneRecord, BusArrivalTimeWorkerMessageError, BusArrivalTimeWorkerRequest } from '.';
 import { hasOwnProperty } from '../../../tools';
 import { findGlobalExtrema } from '../../../tools/math';
-import { WeekDayIndex, WeeklyArray } from '../../../tools/time';
+import { WeekDayIndex, WeekDayIndexArray, WeeklyArray } from '../../../tools/time';
 import { PersonalScheduleArray } from '../../personal-schedule';
 
 self.onmessage = function (event: MessageEvent): void {
@@ -90,9 +90,15 @@ async function checkout(id: number) {
   for (const key of memoryCache_modified.keys()) {
     if (memoryCache_existing.has(key)) {
       const group = memoryCache_existing.get(key) as BusArrivalTimeStatsGroup;
-      result.push(group);
+      const stats = group.stats.map((e) => new Uint32Array(e)) as WeeklyArray<BusArrivalTimeStats>;
+      result.push({
+        stats: stats,
+        max: group.max,
+        min: group.min,
+        id: group.id
+      });
       for (let i = 0; i < 7; i++) {
-        transfer.push(new Uint32Array(group.stats[i]).buffer as ArrayBuffer);
+        transfer.push(stats[i].buffer as ArrayBuffer);
       }
     }
   }
