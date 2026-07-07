@@ -753,7 +753,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         const saveToFolderButtonElement = elementQuerySelector(actionsElement, '.css_route_group_item_overlapping_route_action_button[type="save-to-folder"]');
 
         routeNameElement.innerText = overlappingRouteItem.name;
-        routeEndPoindsElement.innerText = overlappingRouteItem.RouteEndPoints.text; // TODO: html
+        routeEndPoindsElement.innerText = overlappingRouteItem.RouteEndPoints.text;
 
         (function (thisViewRouteButtonElement, thisOverlappingRouteID, thisOverlappingRoutePathAttributeID) {
           thisViewRouteButtonElement.onclick = function () {

@@ -20,7 +20,7 @@ export interface DataUsageStats {
     min: number;
   };
   period: TimeStampPeriod;
-  chart: ArrayBuffer; // encoded svg string
+  chart: Uint8Array; // encoded svg string
 }
 
 export const DataUsagePeriod = 7; // days

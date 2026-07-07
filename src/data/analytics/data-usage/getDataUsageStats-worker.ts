@@ -89,7 +89,7 @@ function processWorkerTask(data: data): void {
       start: startDate,
       end: endDate
     },
-    chart: encodedSvg.buffer
+    chart: encodedSvg
   };
 
   // Send the result back to the main thread
