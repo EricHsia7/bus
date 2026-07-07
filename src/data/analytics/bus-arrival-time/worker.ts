@@ -116,15 +116,15 @@ const fontWeight = 400;
 const fontSize = 10;
 const fontFamily: string = "'Noto Sans TC', sans-serif";
 
-let canvas;
-let ctx;
-let supportOffscreenCanvas: boolean = false;
-if (typeof OffscreenCanvas !== 'undefined') {
+const supportOffscreenCanvas: boolean = typeof OffscreenCanvas !== 'undefined';
+let canvas: OffscreenCanvas;
+let ctx: OffscreenCanvasRenderingContext2D;
+
+if (supportOffscreenCanvas) {
   canvas = new OffscreenCanvas(64, 64);
   ctx = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
   ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
   ctx.textBaseline = 'top';
-  supportOffscreenCanvas = true;
 }
 
 const encoder = new TextEncoder();
