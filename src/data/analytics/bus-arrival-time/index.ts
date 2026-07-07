@@ -1,10 +1,8 @@
-import { findGlobalExtrema } from '../../../tools/math';
 import { WeekDayIndex, WeeklyArray } from '../../../tools/time';
 import { EstimateTime } from '../../apis/getEstimateTime/index';
 import { FolderContentStop, listAllFolderContent } from '../../folder/index';
 import { isInPersonalSchedule, listPersonalSchedules, PersonalSchedule, PersonalScheduleArray } from '../../personal-schedule/index';
-import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../../storage/index';
-import { getBusArrivalTimeDataStats } from './getBusArrivalTimeDataStats';
+import { lfGetItem, lfListItemKeys, lfSetItem } from '../../storage/index';
 
 /**
  * stop-based record per day
@@ -245,32 +243,6 @@ export async function checkoutBusArrivalTime(): Promise<Array<BusArrivalTimeStat
   });
 }
 
-// ---
-export type BusArrivalTimeData = [estimateTime: number, timestamp: number]; // EstimateTime (seconds), timestamp (milliseconds)
-
-export type BusArrivalTimeDataGroupStats = Array<number>;
-
-export interface BusArrivalTimeDataGroup {
-  stats: BusArrivalTimeDataGroupStats;
-  day: WeekDayIndex;
-  max: number;
-  min: number;
-  timestamp: number;
-  id: number; // stop id
-}
-
-export type BusArrivalTimeDataGroupArray = Array<BusArrivalTimeDataGroup>;
-
-export interface BusArrivalTimeDataWriteAheadLog {
-  data: {
-    [key: string]: Array<BusArrivalTimeData>;
-  };
-  timestamp: number;
-  id: string;
-}
-
-// ---
-
 export interface BusArrivalTime {
   personalSchedule: PersonalSchedule;
   chart: Uint8Array; // encoded svg string
@@ -280,66 +252,6 @@ export interface BusArrivalTime {
 
 export interface BusArrivalTimes {
   [stopKey: string]: Array<BusArrivalTime>;
-}
-
-function mergeBusArrivalTimeDataStats(targetStats: BusArrivalTimeDataGroupStats, sourceStats: BusArrivalTimeDataGroupStats): BusArrivalTimeDataGroupStats {
-  const mergedArray = new Uint32Array(60 * 24);
-  for (let i = 60 * 24 - 1; i >= 0; i--) {
-    mergedArray[i] = targetStats[i] + sourceStats[i];
-  }
-  return Array.from(mergedArray);
-}
-
-export async function recoverBusArrivalTimeDataFromWriteAheadLog() {
-  const keys = await lfListItemKeys(5);
-  for (const key of keys) {
-    const json = await lfGetItem(5, key);
-    const object = JSON.parse(json) as BusArrivalTimeDataWriteAheadLog;
-    const thisID = object.id;
-    for (const stopKey in object.data) {
-      const thisStopData = object.data[stopKey];
-      const dataGroup = {} as BusArrivalTimeDataGroup;
-      const existingData = await lfGetItem(6, stopKey);
-      const stopKeyComponents = stopKey.split('_');
-      const stopID = parseInt(stopKeyComponents[1], 10);
-      const day = parseInt(stopKeyComponents[2], 10);
-      if (existingData) {
-        const existingDataObject = JSON.parse(existingData) as BusArrivalTimeDataGroup;
-        const newStats = await getBusArrivalTimeDataStats(thisStopData);
-        const mergedStats = mergeBusArrivalTimeDataStats(existingDataObject.stats, newStats);
-        dataGroup.stats = mergedStats;
-        const newExtremum = findGlobalExtrema(mergedStats);
-        dataGroup.min = newExtremum[0];
-        dataGroup.max = newExtremum[1];
-        dataGroup.day = existingDataObject.day;
-        dataGroup.timestamp = existingDataObject.timestamp;
-        dataGroup.id = stopID;
-      } else {
-        const newStats = await getBusArrivalTimeDataStats(thisStopData);
-        dataGroup.stats = newStats;
-        const newExtremum = findGlobalExtrema(newStats);
-        dataGroup.min = newExtremum[0];
-        dataGroup.max = newExtremum[1];
-        dataGroup.day = day as WeekDayIndex;
-        dataGroup.timestamp = object.timestamp;
-        dataGroup.id = stopID;
-      }
-      await lfSetItem(6, stopKey, JSON.stringify(dataGroup));
-    }
-    await lfRemoveItem(5, thisID);
-  }
-}
-
-export async function listBusArrivalTimeDataGroups(): Promise<BusArrivalTimeDataGroupArray> {
-  const keys = await lfListItemKeys(6);
-  const result: BusArrivalTimeDataGroupArray = [];
-  for (const key of keys) {
-    const json = await lfGetItem(6, key);
-    if (json) {
-      result.push(JSON.parse(json) as BusArrivalTimeDataGroup);
-    }
-  }
-  return result;
 }
 
 export async function listBusArrivalTimeStatsGroups(): Promise<Array<BusArrivalTimeStatsGroup>> {

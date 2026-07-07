@@ -5,8 +5,7 @@ import { hasOwnProperty } from '../../tools/index';
 import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
 import { normalizeVector } from '../../tools/math';
 import { Progress, ProgressCallback } from '../../tools/progress';
-import { getBusArrivalTimes } from '../analytics/bus-arrival-time/getBusArrivalTimes';
-import { BusArrivalTime } from '../analytics/bus-arrival-time/index';
+import { BusArrivalTime, plotBusArrivalTime } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
 import { EstimateTime, EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
@@ -118,7 +117,7 @@ export interface IntegratedLocation {
 export async function integrateLocation(hash: string, chartWidth: number, chartHeight: number, progressCallback: ProgressCallback): Promise<IntegratedLocation> {
   const progress = new Progress(12, progressCallback); // getLocation: 2 + getRoute: 2 + getStop: 2 + getEstimateTime: 2 + getBusEvent: 2 + getBusData_0: 2
   const [Route, Stop, Location] = (await Promise.all([await getRoute(progress, true), await getStop(progress), await getLocation(progress, 1)])) as [SimplifiedRoute, SimplifiedStop, MergedLocation];
-  const [EstimateTime, BusEvent, BusData, BusArrivalTimes] = await Promise.all([getEstimateTime(progress), getBusEvent(progress), getBusData(progress), getBusArrivalTimes(chartWidth, chartHeight)]);
+  const [EstimateTime, BusEvent, BusData, BusArrivalTimes] = await Promise.all([getEstimateTime(progress), getBusEvent(progress), getBusData(progress), plotBusArrivalTime(chartWidth, chartHeight)]);
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
   const location_labels = getSettingOptionValue('location_labels') as string;
