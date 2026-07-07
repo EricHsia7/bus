@@ -38,7 +38,7 @@ async function initialize(id: number, personalSchedules: PersonalScheduleArray, 
   for (const item of tracking) {
     if (!memoryCache_existing.has(item)) {
       memoryCache_existing.set(item, {
-        stats: [new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24)],
+        stats: [new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24), new Uint32Array(60 * 24)], // using new Array(7).fill(new Uint32Array(60 * 24)) results in pollution (all arrays refer to a single array)
         min: new Array(7).fill(0) as WeeklyArray<number>,
         max: new Array(7).fill(0) as WeeklyArray<number>,
         id: item
