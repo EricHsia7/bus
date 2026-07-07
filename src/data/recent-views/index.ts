@@ -41,9 +41,9 @@ export type RecentViewArray = Array<RecentView>;
 export async function listRecentViews(): Promise<RecentViewArray> {
   const result: RecentViewArray = [];
   const now = new Date().getTime();
-  const keys = await lfListItemKeys(8);
+  const keys = await lfListItemKeys(7);
   for (const key of keys) {
-    const item = await lfGetItem(8, key);
+    const item = await lfGetItem(7, key);
     const itemObject = JSON.parse(item) as RecentView;
     const itemObjectTime = new Date(itemObject.time).getTime();
     if (now - itemObjectTime <= 24 * 60 * 60 * 14 * 1000) {
@@ -63,13 +63,13 @@ export async function listRecentViews(): Promise<RecentViewArray> {
 
 export async function discardExpiredRecentViews() {
   const now = new Date().getTime();
-  const keys = await lfListItemKeys(8);
+  const keys = await lfListItemKeys(7);
   for (const key of keys) {
-    const item = await lfGetItem(8, key);
+    const item = await lfGetItem(7, key);
     const itemObject = JSON.parse(item) as RecentView;
     const itemObjectTime = new Date(itemObject.time).getTime();
     if (now - itemObjectTime > 24 * 60 * 60 * 14 * 1000) {
-      await lfRemoveItem(8, key);
+      await lfRemoveItem(7, key);
     }
   }
 }
@@ -78,11 +78,11 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
   const progress = new Progress(2, function () {});
   const key = `${type}_${param}`;
   const time = new Date().toISOString();
-  const existingJSON = await lfGetItem(8, key);
+  const existingJSON = await lfGetItem(7, key);
   if (existingJSON) {
     const existingRecentViewObject = JSON.parse(existingJSON) as RecentView;
     existingRecentViewObject.time = time;
-    await lfSetItem(8, key, JSON.stringify(existingRecentViewObject));
+    await lfSetItem(7, key, JSON.stringify(existingRecentViewObject));
   } else {
     switch (type) {
       case 'route': {
@@ -97,7 +97,7 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
             name: name,
             id: param as number
           };
-          await lfSetItem(8, key, JSON.stringify(recentViewRouteObject));
+          await lfSetItem(7, key, JSON.stringify(recentViewRouteObject));
         }
         break;
       }
@@ -113,7 +113,7 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
             name: name,
             hash: param as string
           };
-          await lfSetItem(8, key, JSON.stringify(recentViewLocationObject));
+          await lfSetItem(7, key, JSON.stringify(recentViewLocationObject));
         }
         break;
       }
@@ -129,7 +129,7 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
             name: name,
             id: param as number
           };
-          await lfSetItem(8, key, JSON.stringify(recentViewBusObject));
+          await lfSetItem(7, key, JSON.stringify(recentViewBusObject));
         }
         break;
       }
@@ -141,7 +141,7 @@ export async function logRecentView(type: RecentView['type'], param: RecentViewR
 
 export async function getRecentView(type: RecentView['type'], param: RecentViewRoute['id'] | RecentViewLocation['hash'] | RecentViewBus['id']): Promise<RecentView | boolean> {
   const key = `${type}_${param}`;
-  const existingRecentViewRoute = await lfGetItem(8, key);
+  const existingRecentViewRoute = await lfGetItem(7, key);
   if (existingRecentViewRoute) {
     return JSON.parse(existingRecentViewRoute);
   } else {

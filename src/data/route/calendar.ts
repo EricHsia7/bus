@@ -1,4 +1,5 @@
 import { Progress, ProgressCallback } from '../../tools/progress';
+import { WeeklyArray } from '../../tools/time';
 import { SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getSemiTimeTable } from '../apis/getSemiTimeTable/index';
 import { getTimeTable } from '../apis/getTimeTable/index';
@@ -29,9 +30,9 @@ export interface integratedRouteCalendarScheduledEvent {
 export type integratedRouteCalendarDay = Array<integratedRouteCalendarRepeatedEvent>;
 
 export interface integratedRouteCalendar {
-  repeated: [sun: integratedRouteCalendarDay, mon: integratedRouteCalendarDay, tue: integratedRouteCalendarDay, wed: integratedRouteCalendarDay, thu: integratedRouteCalendarDay, fri: integratedRouteCalendarDay, sat: integratedRouteCalendarDay];
+  repeated: WeeklyArray<integratedRouteCalendarDay>;
   scheduled: Array<integratedRouteCalendarScheduledEvent>;
-  trackQuantity: [sun: number, mon: number, tue: number, wed: number, thu: number, fri: number, sat: number];
+  trackQuantity: WeeklyArray<number>;
   timeZoneOffset: -480;
 }
 

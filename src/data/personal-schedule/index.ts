@@ -1,6 +1,6 @@
 import { IntervalArray, union } from '../../tools/array';
 import { generateIdentifier, hasOwnProperty } from '../../tools/index';
-import { TimePeriod, WeekDayIndexArray } from '../../tools/time';
+import { TimePeriod, WeekDayIndexArray, WeeklyArray } from '../../tools/time';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 
 export interface PersonalSchedule {
@@ -13,12 +13,12 @@ export interface PersonalSchedule {
 export type PersonalScheduleArray = Array<PersonalSchedule>;
 
 const PersonalSchedules: { [id: string]: PersonalSchedule } = {};
-const PersonalSchedulesTimeline: [sun: IntervalArray, mon: IntervalArray, tue: IntervalArray, wed: IntervalArray, thu: IntervalArray, fri: IntervalArray, sat: IntervalArray] = [[], [], [], [], [], [], []];
+const PersonalSchedulesTimeline: WeeklyArray<IntervalArray> = [[], [], [], [], [], [], []];
 
 export async function initializePersonalSchedules() {
-  const keys = await lfListItemKeys(7);
+  const keys = await lfListItemKeys(6);
   for (const key of keys) {
-    const thisPersonalScheduleJSON = await lfGetItem(7, key);
+    const thisPersonalScheduleJSON = await lfGetItem(6, key);
     if (thisPersonalScheduleJSON) {
       const thisPersonalScheduleObject = JSON.parse(thisPersonalScheduleJSON) as PersonalSchedule;
       if (!hasOwnProperty(PersonalSchedules, key)) {
@@ -30,7 +30,7 @@ export async function initializePersonalSchedules() {
 
 export function initializePersonalSchedulesTimeline(): void {
   const personalSchedules = listPersonalSchedules();
-  const timeline: [sun: IntervalArray, mon: IntervalArray, tue: IntervalArray, wed: IntervalArray, thu: IntervalArray, fri: IntervalArray, sat: IntervalArray] = ([[], [], [], [], [], [], []] = [[], [], [], [], [], [], []]);
+  const timeline: WeeklyArray<IntervalArray> = ([[], [], [], [], [], [], []] = [[], [], [], [], [], [], []]);
   for (const personalSchedule of personalSchedules) {
     for (const day of personalSchedule.days) {
       timeline[day].push([personalSchedule.period.start.hours * 60 + personalSchedule.period.start.minutes, personalSchedule.period.end.hours * 60 + personalSchedule.period.end.minutes]);
@@ -48,7 +48,7 @@ export async function createPersonalSchedule(name: string, startHours: number, s
     return false;
   }
 
-  const existence = await lfGetItem(7, identifier);
+  const existence = await lfGetItem(6, identifier);
   if (existence) {
     return false;
   }
@@ -88,7 +88,7 @@ export async function createPersonalSchedule(name: string, startHours: number, s
     days: days,
     id: identifier
   };
-  await lfSetItem(7, identifier, JSON.stringify(object));
+  await lfSetItem(6, identifier, JSON.stringify(object));
   PersonalSchedules[identifier] = object;
   initializePersonalSchedulesTimeline();
 
@@ -113,7 +113,7 @@ export async function updatePersonalSchedule(personalSchedule: PersonalSchedule)
     return false;
   }
 
-  await lfSetItem(7, personalSchedule.id, JSON.stringify(personalSchedule));
+  await lfSetItem(6, personalSchedule.id, JSON.stringify(personalSchedule));
   PersonalSchedules[personalSchedule.id].name = personalSchedule.name;
   PersonalSchedules[personalSchedule.id].days = personalSchedule.days;
   PersonalSchedules[personalSchedule.id].period = personalSchedule.period;
@@ -127,12 +127,12 @@ export async function removePersonalSchedule(personalScheduleID: PersonalSchedul
     return false;
   }
 
-  const existence = await lfGetItem(7, personalScheduleID);
+  const existence = await lfGetItem(6, personalScheduleID);
   if (!existence) {
     return false;
   }
 
-  await lfRemoveItem(7, personalScheduleID);
+  await lfRemoveItem(6, personalScheduleID);
   delete PersonalSchedules[personalScheduleID];
   initializePersonalSchedulesTimeline();
 

@@ -6,19 +6,18 @@ let storage = {
   dataUsageStatsStore: false, // 2
   updateRateDataStore: false, // 3
   updateRateDataWriteAheadLogStore: false, // 4
-  busArrivalTimeDataWriteAheadLogStore: false, // 5
-  busArrivalTimeDataStore: false, // 6
-  personalScheduleStore: false, // 7
-  recentViewsStore: false, // 8
-  notificationStore: false, // 9
-  notificationScheduleStore: false, // 10
-  folderIndexStore: false, // 11
-  folderListStore: false, // 12
-  folderContentIndexStore: false, // 13
-  folderContentStore: false // 14
+  busArrivalTimeStatsGroupStore: false, // 5
+  personalScheduleStore: false, // 6
+  recentViewsStore: false, // 7
+  notificationStore: false, // 8
+  notificationScheduleStore: false, // 9
+  folderIndexStore: false, // 10
+  folderListStore: false, // 11
+  folderContentIndexStore: false, // 12
+  folderContentStore: false // 13
 };
 
-const stores = ['cacheStore', 'settingsStore', 'dataUsageStatsStore', 'updateRateDataStore', 'updateRateDataWriteAheadLogStore', 'busArrivalTimeDataWriteAheadLogStore', 'busArrivalTimeDataStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderIndexStore', 'folderListStore', 'folderContentIndexStore', 'folderContentStore'];
+const stores = ['cacheStore', 'settingsStore', 'dataUsageStatsStore', 'updateRateDataStore', 'updateRateDataWriteAheadLogStore', 'busArrivalTimeStatsGroupStore', 'personalScheduleStore', 'recentViewsStore', 'notificationStore', 'notificationScheduleStore', 'folderIndexStore', 'folderListStore', 'folderContentIndexStore', 'folderContentStore'];
 
 function promiseWithTimeout<T>(p: Promise<T>, ms: number = 5000): Promise<T> {
   return new Promise<T>((resolve, reject) => {
