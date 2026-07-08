@@ -3,31 +3,28 @@ import { documentCreateDivElement, documentQuerySelector, documentQuerySelectorA
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { initializeSettingsField } from './index';
 
-const SettingsOptionsField = documentQuerySelector('.css_settings_options_field');
-const SettingsOptionsBodyElement = elementQuerySelector(SettingsOptionsField, '.css_settings_options_body');
-const SettingsOptionsOptionsElement = elementQuerySelector(SettingsOptionsBodyElement, '.css_settings_options');
-const SettingsOptionsDescriptionElement = elementQuerySelector(SettingsOptionsBodyElement, '.css_options_description');
-const SettingsOptionsHeadElement = elementQuerySelector(SettingsOptionsField, '.css_settings_options_head');
-const SettingsOptionsTitleElement = elementQuerySelector(SettingsOptionsHeadElement, '.css_settings_options_title');
-const SettingsOptionsLeftButtonElement = elementQuerySelector(SettingsOptionsHeadElement, '.css_settings_options_button_left');
+const Field = documentQuerySelector('.css_settings_options_field');
+const BodyElement = elementQuerySelector(Field, '.css_settings_options_body');
+const OptionsElement = elementQuerySelector(BodyElement, '.css_settings_options');
+const DescriptionElement = elementQuerySelector(BodyElement, '.css_options_description');
+const HeadElement = elementQuerySelector(Field, '.css_settings_options_head');
+const TitleElement = elementQuerySelector(HeadElement, '.css_settings_options_title');
+const LeftButtonElement = elementQuerySelector(HeadElement, '.css_settings_options_button_left');
 
-function generateElementOfItem(setting: SettingSelect, item: SettingSelectOption, index: number): HTMLElement {
+const optionElements: Array<HTMLElement> = [];
+
+function generateElementOfItem(): HTMLElement {
   const optionElement = documentCreateDivElement();
   optionElement.classList.add('css_option');
 
   const nameElement = documentCreateDivElement();
   nameElement.classList.add('css_option_name');
-  nameElement.innerText = item.name;
 
   const checkboxContainerElement = documentCreateDivElement();
   checkboxContainerElement.classList.add('css_option_checkbox');
 
   const checkboxElement = document.createElement('input');
   checkboxElement.type = 'checkbox';
-  checkboxElement.checked = setting.option === index;
-  checkboxElement.onclick = (event) => {
-    settingsOptionsHandler(event, setting.key, index);
-  };
 
   checkboxContainerElement.appendChild(checkboxElement);
   optionElement.appendChild(nameElement);
@@ -38,30 +35,72 @@ function generateElementOfItem(setting: SettingSelect, item: SettingSelectOption
 
 function initializeSettingsOptionsField(settingKey: string): void {
   const setting = getSetting(settingKey) as SettingSelect;
-  SettingsOptionsLeftButtonElement.onclick = function () {
+  updateSettingsOptionsField(setting);
+}
+
+function updateSettingsOptionsField(setting: SettingSelect): void {
+  function updateItem(thisElement: HTMLElement, thisItem: SettingSelectOption, index: number): void {
+    function updateName(thisElement: HTMLElement, thisItem: SettingSelectOption): void {
+      const nameElement = elementQuerySelector(thisElement, '.css_option_name');
+      nameElement.innerText = thisItem.name;
+    }
+
+    function updateCheckbox(thisElement: HTMLElement, setting: SettingSelect, index: number): void {
+      const checkboxContainerElement = elementQuerySelector(thisElement, '.css_option_checkbox');
+      const checkboxElement = elementQuerySelector(checkboxContainerElement, 'input') as HTMLInputElement;
+      checkboxElement.checked = setting.option === index;
+      checkboxElement.onclick = (event) => {
+        settingsOptionsHandler(event, setting.key, index);
+      };
+    }
+
+    updateName(thisElement, thisItem);
+    updateCheckbox(thisElement, setting, index);
+  }
+
+  LeftButtonElement.onclick = function () {
     closeSettingsOptions();
     // callback
     initializeSettingsField();
   };
-  SettingsOptionsTitleElement.innerText = setting.name;
-  SettingsOptionsDescriptionElement.innerText = setting.description;
-  SettingsOptionsOptionsElement.innerHTML = '';
-  const fragment = new DocumentFragment();
-  let index: number = 0;
-  for (const item of setting.options) {
-    const thisElement = generateElementOfItem(setting, item, index);
-    fragment.appendChild(thisElement);
-    index += 1;
+  TitleElement.innerText = setting.name;
+  DescriptionElement.innerText = setting.description;
+
+  const options = setting.options;
+  const optionsLength = options.length;
+
+  const optionElementsLength = optionElements.length;
+  if (optionsLength !== optionElementsLength) {
+    const difference = optionElementsLength - optionsLength;
+    if (difference < 0) {
+      const fragment = new DocumentFragment();
+      for (let o = 0; o > difference; o--) {
+        const newOptionElement = generateElementOfItem();
+        fragment.appendChild(newOptionElement);
+        optionElements.push(newOptionElement);
+      }
+      OptionsElement.append(fragment);
+    } else if (difference > 0) {
+      for (let p = optionElementsLength - 1, q = optionElementsLength - difference - 1; p > q; p--) {
+        optionElements[p].remove();
+        optionElements.splice(p, 1);
+      }
+    }
   }
-  SettingsOptionsOptionsElement.append(fragment);
+
+  for (let i = 0; i < optionsLength; i++) {
+    const thisElement = optionElements[i];
+    const thisItem = options[i];
+    updateItem(thisElement, thisItem, i);
+  }
 }
 
 export function showSettingsOptions(): void {
-  SettingsOptionsField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hideSettingsOptions(): void {
-  SettingsOptionsField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openSettingsOptions(settingKey: string): void {
