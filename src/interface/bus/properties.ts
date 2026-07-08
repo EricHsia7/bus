@@ -49,7 +49,7 @@ export function updateBusPropertiesField(properties: integratedBus['properties']
     }
 
     function updateValue(thisElement: HTMLElement, thisProperty: integratedBusProperty): void {
-      elementQuerySelector(thisElement, '.css_bus_property_value').innerText = thisProperty.value;
+      elementQuerySelector(thisElement, '.css_bus_property_value').textContent = thisProperty.value;
     }
 
     function updateAnimation(thisElement: HTMLElement, animation: boolean): void {

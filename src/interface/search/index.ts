@@ -99,7 +99,7 @@ function initializeKeyboard(): void {
             break;
           case '清空':
             newButtonElement.addEventListener(eventName, emptyInput);
-            newButtonElement.innerText = item;
+            newButtonElement.textContent = item;
             break;
           case '鍵盤':
             newButtonElement.addEventListener(eventName, openSystemKeyboard);
@@ -115,7 +115,7 @@ function initializeKeyboard(): void {
                 };
               })(item)
             );
-            newButtonElement.innerText = item;
+            newButtonElement.textContent = item;
             break;
         }
 
@@ -236,7 +236,7 @@ export function updateSearchResult(): void {
 
     function updateName(thisElement: HTMLElement, thisItem: SearchResult): void {
       const nameElement = elementQuerySelector(thisElement, '.css_search_search_result_name');
-      nameElement.innerText = thisItem.item.n;
+      nameElement.textContent = thisItem.item.n;
     }
 
     function updateClickHandler(thisElement: HTMLElement, thisItem: SearchResult): void {

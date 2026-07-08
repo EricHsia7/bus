@@ -107,18 +107,18 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
         default:
           break;
       }
-      thisTitleElement.innerText = title;
+      thisTitleElement.textContent = title;
     }
 
     function updateTime(thisElement: HTMLElement, thisItem: integratedRecentView): void {
       const thisHeadElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_head');
       const thisTimeElement = elementQuerySelector(thisHeadElement, '.css_home_recent_views_item_time');
-      thisTimeElement.innerText = thisItem.time.relative;
+      thisTimeElement.textContent = thisItem.time.relative;
     }
 
     function updateName(thisElement: HTMLElement, thisItem: integratedRecentView): void {
       const thisNameElement = elementQuerySelector(thisElement, '.css_home_recent_views_item_name');
-      thisNameElement.innerText = thisItem.name;
+      thisNameElement.textContent = thisItem.name;
     }
 
     function updateOnclick(thisElement: HTMLElement, thisItem: integratedRecentView, skeletonScreen: boolean): void {

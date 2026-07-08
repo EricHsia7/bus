@@ -74,19 +74,19 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
     function updateTime(thisElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
       const headElement = elementQuerySelector(thisElement, '.css_notification_schedule_manager_item_head');
       const timeElement = elementQuerySelector(headElement, '.css_notification_schedule_manager_item_time');
-      timeElement.innerText = `${thisItem.hours}:${thisItem.minutes}`;
+      timeElement.textContent = `${thisItem.hours}:${thisItem.minutes}`;
     }
 
     function updateMain(thisElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
       const headElement = elementQuerySelector(thisElement, '.css_notification_schedule_manager_item_head');
       const mainElement = elementQuerySelector(headElement, '.css_notification_schedule_manager_item_main');
-      mainElement.innerText = thisItem.name;
+      mainElement.textContent = thisItem.name;
     }
 
     function updateContext(thisElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {
       const headElement = elementQuerySelector(thisElement, '.css_notification_schedule_manager_item_head');
       const contextElement = elementQuerySelector(headElement, '.css_notification_schedule_manager_item_context');
-      contextElement.innerText = `${thisItem.route.name} - 往${thisItem.route.direction}`;
+      contextElement.textContent = `${thisItem.route.name} - 往${thisItem.route.direction}`;
     }
 
     function updateButton(thisElement: HTMLElement, thisItem: IntegratedNotificationScheduleItem): void {

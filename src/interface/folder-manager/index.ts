@@ -100,13 +100,13 @@ function updateFolderManagerField(foldersWithContentLength: FolderWithContentLen
     function updateName(thisElement: HTMLElement, thisItem: FolderWithContentLength): void {
       const headElement = elementQuerySelector(thisElement, '.css_folder_manager_folder_item_head');
       const nameElement = elementQuerySelector(headElement, '.css_folder_manager_folder_item_name');
-      nameElement.innerText = thisItem.name;
+      nameElement.textContent = thisItem.name;
     }
 
     function updateStatus(thisElement: HTMLElement, thisItem: FolderWithContentLength): void {
       const headElement = elementQuerySelector(thisElement, '.css_folder_manager_folder_item_head');
       const statusElement = elementQuerySelector(headElement, '.css_folder_manager_folder_item_status');
-      statusElement.innerText = thisItem.contentLength.toString();
+      statusElement.textContent = thisItem.contentLength.toString();
     }
 
     function updateDrawer(thisElement: HTMLElement, thisItem: FolderWithContentLength): void {

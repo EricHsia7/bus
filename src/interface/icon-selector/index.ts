@@ -115,7 +115,7 @@ function generateElementOfItem(): HTMLElement {
 
   const mainElement = documentCreateDivElement();
   mainElement.classList.add('css_icon_selector_item_capsule_main');
-  mainElement.innerText = '使用圖標';
+  mainElement.textContent = '使用圖標';
   capsuleElement.appendChild(mainElement);
 
   const stretchElement = documentCreateDivElement();
@@ -233,12 +233,12 @@ function generateElementOfRelatedItem(): HTMLElement {
 
   const selectIconButtonElement = documentCreateDivElement();
   selectIconButtonElement.classList.add('css_icon_selector_item_related_item_action_button');
-  selectIconButtonElement.innerText = '使用圖標';
+  selectIconButtonElement.textContent = '使用圖標';
   actionsElement.appendChild(selectIconButtonElement);
 
   const searchButtonElement = documentCreateDivElement();
   searchButtonElement.classList.add('css_icon_selector_item_related_item_action_button');
-  searchButtonElement.innerText = '搜尋';
+  searchButtonElement.textContent = '搜尋';
   actionsElement.appendChild(searchButtonElement);
 
   element.appendChild(headElement);
@@ -268,7 +268,7 @@ function generateElementOfKeywordItem(): HTMLElement {
 
   const searchButtonElement = documentCreateDivElement();
   searchButtonElement.classList.add('css_icon_selector_item_keywords_item_action_button');
-  searchButtonElement.innerText = '搜尋';
+  searchButtonElement.textContent = '搜尋';
   actionsElement.appendChild(searchButtonElement);
 
   element.appendChild(headElement);
@@ -288,7 +288,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     function updateName(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
       const headElement = elementQuerySelector(thisElement, '.css_icon_selector_item_head');
       const nameElement = elementQuerySelector(headElement, '.css_icon_selector_item_name');
-      nameElement.innerText = thisItem.name;
+      nameElement.textContent = thisItem.name;
     }
 
     function updateDescription(thisElement: HTMLElement, thisItem: IntegratedMaterialSymbolsItem): void {
@@ -296,10 +296,10 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
       const descriptionElement = elementQuerySelector(bodyElement, '.css_icon_selector_item_description');
       if (thisItem.description === false) {
         descriptionElement.setAttribute('empty', 'true');
-        descriptionElement.innerText = '';
+        descriptionElement.textContent = '';
       } else {
         descriptionElement.setAttribute('empty', 'false');
-        descriptionElement.innerText = thisItem.description;
+        descriptionElement.textContent = thisItem.description;
       }
     }
 
@@ -335,7 +335,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
         const actionsElement = elementQuerySelector(relatedItemElement, '.css_icon_selector_item_related_item_actions');
         const [selectIconButtonElement, searchButtonElement] = elementQuerySelectorAll(actionsElement, '.css_icon_selector_item_related_item_action_button');
         setIcon(iconElement, thisName);
-        nameElement.innerText = thisName;
+        nameElement.textContent = thisName;
         selectIconButtonElement.onclick = function () {
           selectIcon(thisName, inputElement);
         };
@@ -378,7 +378,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
         const keywordElement = elementQuerySelector(headElement, '.css_icon_selector_item_keywords_item_head_keyword');
         const actionsElement = elementQuerySelector(keywordItemElement, '.css_icon_selector_item_keywords_item_actions');
         const searchButtonElement = elementQuerySelector(actionsElement, '.css_icon_selector_item_keywords_item_action_button');
-        keywordElement.innerText = thisKeyword;
+        keywordElement.textContent = thisKeyword;
         searchButtonElement.onclick = function () {
           openIconSelectorSearch(thisKeyword, inputElement);
         };

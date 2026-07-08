@@ -4,7 +4,7 @@ import { MaterialSymbol } from './material-symbols-type';
 export function getIconElement(identifier: MaterialSymbol): HTMLSpanElement {
   const iconElement = document.createElement('span');
   iconElement.classList.add('css_material_symbols_rounded');
-  iconElement.innerText = identifier;
+  iconElement.textContent = identifier;
   return iconElement;
 }
 
@@ -16,5 +16,5 @@ export function getBlankIconElement(): HTMLSpanElement {
 
 export function setIcon(parentElement: HTMLElement, identifier: MaterialSymbol): void {
   const thisSpanElement = elementQuerySelector(parentElement, 'span.css_material_symbols_rounded');
-  thisSpanElement.innerText = identifier;
+  thisSpanElement.textContent = identifier;
 }

@@ -59,7 +59,7 @@ function updatePersonalScheduleManagerField(personalSchedules: PersonalScheduleA
     function updateName(thisElement: HTMLElement, thisItem: PersonalSchedule): void {
       const headElement = elementQuerySelector(thisElement, '.css_personal_schedule_manager_item_head');
       const nameElement = elementQuerySelector(headElement, '.css_personal_schedule_manager_item_name');
-      nameElement.innerText = thisItem.name;
+      nameElement.textContent = thisItem.name;
     }
 
     function updateDrawer(thisElement: HTMLElement, thisItem: PersonalSchedule): void {

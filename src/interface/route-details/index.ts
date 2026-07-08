@@ -47,7 +47,7 @@ function updateRouteDetailsField(integration: IntegratedRouteDetails, skeletonSc
 
     function updateName(thisElement: HTMLElement, thisItem: IntegratedRouteDetailsAction): void {
       const nameElement = elementQuerySelector(thisElement, '.css_route_details_action_name');
-      nameElement.innerText = thisItem.name;
+      nameElement.textContent = thisItem.name;
     }
 
     function updateOnclick(thisElement: HTMLElement, thisItem: IntegratedRouteDetailsAction): void {

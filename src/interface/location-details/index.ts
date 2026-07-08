@@ -47,7 +47,7 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
 
     function updateName(thisElement: HTMLElement, thisItem: IntegratedLocationDetailsAction): void {
       const nameElement = elementQuerySelector(thisElement, '.css_location_details_action_name');
-      nameElement.innerText = thisItem.name;
+      nameElement.textContent = thisItem.name;
     }
 
     function updateOnclick(thisElement: HTMLElement, thisItem: IntegratedLocationDetailsAction): void {

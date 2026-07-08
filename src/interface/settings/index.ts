@@ -63,12 +63,12 @@ function updateSettingsField(list: SettingsArray): void {
 
     function updateName(thisElement: HTMLElement, thisItem: Setting): void {
       const nameElement = elementQuerySelector(thisElement, '.css_setting_name');
-      nameElement.innerText = thisItem.name;
+      nameElement.textContent = thisItem.name;
     }
 
     function updateStatus(thisElement: HTMLElement, thisItem: Setting): void {
       const statusElement = elementQuerySelector(thisElement, '.css_setting_status');
-      statusElement.innerText = thisItem.status;
+      statusElement.textContent = thisItem.status;
     }
 
     function updateType(thisElement: HTMLElement, thisItem: Setting): void {
