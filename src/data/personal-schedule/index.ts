@@ -30,7 +30,7 @@ export async function initializePersonalSchedules() {
 
 export function initializePersonalSchedulesTimeline(): void {
   const personalSchedules = listPersonalSchedules();
-  const timeline: WeeklyArray<IntervalArray> = ([[], [], [], [], [], [], []] = [[], [], [], [], [], [], []]);
+  const timeline: WeeklyArray<IntervalArray> = [[], [], [], [], [], [], []];
   for (const personalSchedule of personalSchedules) {
     for (const day of personalSchedule.days) {
       timeline[day].push([personalSchedule.period.start.hours * 60 + personalSchedule.period.start.minutes, personalSchedule.period.end.hours * 60 + personalSchedule.period.end.minutes]);
