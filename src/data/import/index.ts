@@ -91,27 +91,22 @@ export async function importData(data: string): Promise<boolean> {
     case 1:
       await importFolders(parsedData.folders);
       return true;
-      break;
     case 2:
       await importFolders(parsedData.folders);
       await importSettings(parsedData.settings);
       return true;
-      break;
     case 3:
       await importFolders(parsedData.folders);
       await importSettings(parsedData.settings);
       await importPersonalSchedules(parsedData.personal_schedules);
       return true;
-      break;
     case 4:
       await importFolders(parsedData.folders);
       await importSettings(parsedData.settings);
       await importPersonalSchedules(parsedData.personal_schedules);
       await importRecentViews(parsedData.recent_views);
       return true;
-      break;
     default:
       return false;
-      break;
   }
 }

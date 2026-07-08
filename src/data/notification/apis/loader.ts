@@ -72,22 +72,16 @@ export async function makeNotificationRequest(method: NotificationResponse['meth
       switch (method) {
         case 'cancel':
           return json as NotificationResponseCancel;
-          break;
         case 'register':
           return json as NotificationResponseRegister;
-          break;
         case 'schedule':
           return json as NotificationResponseSchedule;
-          break;
         case 'rotate':
           return json as NotificationResponseRotate;
-          break;
         case 'reschedule':
           return json as NotificationResponseReschedule;
-          break;
         default:
           return false;
-          break;
       }
     } catch (jsonError) {
       console.error('Failed to parse JSON response', jsonError);

@@ -269,69 +269,50 @@ interface FormattedBusPosition {
 }
 
 export function parseCarType(CarType: '0' | '1' | '2' | '3'): '一般' | '低底盤' | '大復康巴士' | '狗狗友善專車' | '未知類型' {
-  let type = '';
   switch (CarType) {
     case '0':
-      type = '一般';
-      break;
+      return '一般';
     case '1':
-      type = '低底盤';
-      break;
+      return '低底盤';
     case '2':
-      type = '大復康巴士';
-      break;
+      return '大復康巴士';
     case '3':
-      type = '狗狗友善專車';
-      break;
+      return '狗狗友善專車';
     default:
-      type = '未知類型';
+      return '未知類型';
   }
-  return type;
 }
 
 export function parseCarOnStop(CarOnStop: '0' | '1'): string {
-  let onStop = '';
   switch (CarOnStop) {
     case '0':
-      onStop = '離站';
-      break;
+      return '離站';
     case '1':
-      onStop = '進站';
-      break;
+      return '進站';
     default:
-      onStop = '未知狀態'; // Handle unexpected values if necessary
+      return '未知狀態'; // Handle unexpected values if necessary
   }
-  return onStop;
 }
 
 export function parseBusStatus(BusStatus: '0' | '1' | '2' | '3' | '4' | '5' | '99'): string {
-  let situation = '';
   switch (BusStatus) {
     case '0':
-      situation = '正常';
-      break;
+      return '正常';
     case '1':
-      situation = '車禍';
-      break;
+      return '車禍';
     case '2':
-      situation = '故障';
-      break;
+      return '故障';
     case '3':
-      situation = '塞車';
-      break;
+      return '塞車';
     case '4':
-      situation = '緊急求援';
-      break;
+      return '緊急求援';
     case '5':
-      situation = '加油';
-      break;
+      return '加油';
     case '99':
-      situation = '非營運狀態';
-      break;
+      return '非營運狀態';
     default:
-      situation = '未知狀態'; // Handle unexpected values if necessary
+      return '未知狀態'; // Handle unexpected values if necessary
   }
-  return situation;
 }
 
 export interface FormattedBus {
