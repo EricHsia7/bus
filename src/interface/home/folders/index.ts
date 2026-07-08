@@ -228,7 +228,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
         const currentSlideElement = elementQuerySelector(thisItemStatusElement, '.css_current_slide');
 
         nextSlideElement.setAttribute('code', thisItem.status.code.toString());
-        nextSlideElement.innerText = thisItem.status.text;
+        nextSlideElement.textContent = thisItem.status.text;
 
         if (!skeletonScreen) {
           if (animation) {
@@ -237,7 +237,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
                 'animationend',
                 function () {
                   currentSlideElement.setAttribute('code', thisItem.status.code.toString());
-                  currentSlideElement.innerText = thisItem.status.text;
+                  currentSlideElement.textContent = thisItem.status.text;
                   currentSlideElement.classList.remove('css_slide_fade_out');
                   nextSlideElement.setAttribute('displayed', 'false');
                 },
@@ -250,7 +250,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
           }
         }
         currentSlideElement.setAttribute('code', thisItem.status.code.toString());
-        currentSlideElement.innerText = thisItem.status.text;
+        currentSlideElement.textContent = thisItem.status.text;
       }
     }
 
@@ -277,7 +277,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
           main = 'null';
           break;
       }
-      mainElement.innerText = main;
+      mainElement.textContent = main;
     }
 
     function updateContext(thisElement: HTMLElement, thisItem: integratedFolderContent): void {
@@ -303,7 +303,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
           context = 'null';
           break;
       }
-      contextElement.innerText = context;
+      contextElement.textContent = context;
     }
 
     function updateButton(thisElement: HTMLElement, thisItem: integratedFolderContent, skeletonScreen: boolean): void {
@@ -437,7 +437,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
     function updateName(thisElement: HTMLElement, thisFolder: Folder): void {
       const thisHeadElement = elementQuerySelector(thisElement, '.css_home_folder_head');
       const thisNameElement = elementQuerySelector(thisHeadElement, '.css_home_folder_name');
-      thisNameElement.innerText = thisFolder.name;
+      thisNameElement.textContent = thisFolder.name;
     }
 
     function updateIcon(thisElement: HTMLElement, thisFolder: Folder): void {

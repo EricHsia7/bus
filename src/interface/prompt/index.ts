@@ -32,12 +32,12 @@ export function promptMessage(icon: MaterialSymbol, message: string, button?: Pr
 
   promptElement.setAttribute('animation', booleanToString(playing_animation));
 
-  promptIconSpanElement.innerText = icon;
-  promptMessageElement.innerText = message;
+  promptIconSpanElement.textContent = icon;
+  promptMessageElement.textContent = message;
 
   if (typeof button === 'object' && button !== null && button !== undefined) {
     if (typeof button?.action === 'function') {
-      promptButtonElement.innerText = button.text;
+      promptButtonElement.textContent = button.text;
       promptButtonElement.onclick = function () {
         button.action();
       };

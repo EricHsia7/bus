@@ -42,7 +42,7 @@ function updateSettingsOptionsField(setting: SettingSelect): void {
   function updateItem(thisElement: HTMLElement, thisItem: SettingSelectOption, index: number): void {
     function updateName(thisElement: HTMLElement, thisItem: SettingSelectOption): void {
       const nameElement = elementQuerySelector(thisElement, '.css_option_name');
-      nameElement.innerText = thisItem.name;
+      nameElement.textContent = thisItem.name;
     }
 
     function updateCheckbox(thisElement: HTMLElement, setting: SettingSelect, index: number): void {
@@ -63,8 +63,8 @@ function updateSettingsOptionsField(setting: SettingSelect): void {
     // callback
     initializeSettingsField();
   };
-  TitleElement.innerText = setting.name;
-  DescriptionElement.innerText = setting.description;
+  TitleElement.textContent = setting.name;
+  DescriptionElement.textContent = setting.description;
 
   const options = setting.options;
   const optionsLength = options.length;

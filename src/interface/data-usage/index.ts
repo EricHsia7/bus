@@ -19,11 +19,11 @@ async function initializeDataUsage() {
   const graphWidth = WindowSize.width;
   const graphHeight = Math.min((5 / 18) * graphWidth, WindowSize.height * 0.33);
   const stats = await getDataUsageStats(graphWidth, graphHeight, 20);
-  totalDataUsageElement.innerText = convertBytes(stats.stats.sum);
-  maxDataUsagePerMinuteElement.innerText = convertBytes(stats.stats.max);
-  minDataUsagePerMinuteElement.innerText = convertBytes(stats.stats.min);
-  startTimeElement.innerText = dateToString(stats.period.start, 'YYYY-MM-DD');
-  endTimeElement.innerText = dateToString(stats.period.end, 'YYYY-MM-DD');
+  totalDataUsageElement.textContent = convertBytes(stats.stats.sum);
+  maxDataUsagePerMinuteElement.textContent = convertBytes(stats.stats.max);
+  minDataUsagePerMinuteElement.textContent = convertBytes(stats.stats.min);
+  startTimeElement.textContent = dateToString(stats.period.start, 'YYYY-MM-DD');
+  endTimeElement.textContent = dateToString(stats.period.end, 'YYYY-MM-DD');
   chartElement.innerHTML = new TextDecoder().decode(stats.chart);
 }
 

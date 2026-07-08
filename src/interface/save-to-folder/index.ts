@@ -51,7 +51,7 @@ function updateSaveToFolderField(folders: Array<Folder>, type: FolderContent['ty
 
     function updateName(thisElement: HTMLElement, thisItem: Folder): void {
       const nameElement = elementQuerySelector(thisElement, '.css_save_to_folder_item_name');
-      nameElement.innerText = thisItem.name;
+      nameElement.textContent = thisItem.name;
     }
 
     function updateOnclick(thisElement: HTMLElement, thisItem: Folder, type: FolderContent['type'], parameters: Array<any>, saveToFolderButtonElement?: HTMLElement | null | undefined): void {

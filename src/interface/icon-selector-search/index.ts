@@ -93,7 +93,7 @@ function updateResults(): void {
 
     function updateName(thisElement: HTMLElement, thisItem: MaterialSymbolsSearchResult): void {
       const nameElement = elementQuerySelector(thisElement, '.css_icon_selector_search_result_name');
-      nameElement.innerText = thisItem.item;
+      nameElement.textContent = thisItem.item;
     }
 
     function updateOnclick(thisElement: HTMLElement, inputElement: HTMLInputElement, thisItem: MaterialSymbolsSearchResult): void {

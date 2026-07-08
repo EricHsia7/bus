@@ -39,12 +39,12 @@ function updateStorageField(statistics: StoreSizeStatistics, skeletonScreen: boo
   function updateItem(element: HTMLElement, currentItem: StoreSize, previousItem: StoreSize | null): void {
     function updateValue(element: HTMLElement, item: StoreSize): void {
       const typeElement = elementQuerySelector(element, '.css_storage_statistics_item_value');
-      typeElement.innerText = item.size;
+      typeElement.textContent = item.size;
     }
 
     function updateName(element: HTMLElement, item: StoreSize): void {
       const nameElement = elementQuerySelector(element, '.css_storage_statistics_item_name');
-      nameElement.innerText = item.category.name;
+      nameElement.textContent = item.category.name;
     }
 
     function updateAnimation(element: HTMLElement, animation: boolean): void {

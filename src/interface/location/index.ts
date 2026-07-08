@@ -511,7 +511,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       const currentSlideElement = elementQuerySelector(thisItemStatusElement, '.css_current_slide');
 
       nextSlideElement.setAttribute('code', thisItem.status.code.toString());
-      nextSlideElement.innerText = thisItem.status.text;
+      nextSlideElement.textContent = thisItem.status.text;
 
       if (!skeletonScreen) {
         if (animation) {
@@ -520,7 +520,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
               'animationend',
               function () {
                 currentSlideElement.setAttribute('code', thisItem.status.code.toString());
-                currentSlideElement.innerText = thisItem.status.text;
+                currentSlideElement.textContent = thisItem.status.text;
                 currentSlideElement.classList.remove('css_slide_fade_out');
                 nextSlideElement.setAttribute('displayed', 'false');
               },
@@ -534,7 +534,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       }
 
       currentSlideElement.setAttribute('code', thisItem.status.code.toString());
-      currentSlideElement.innerText = thisItem.status.text;
+      currentSlideElement.textContent = thisItem.status.text;
     }
 
     function updateRank(thisElement: HTMLElement, thisItem: IntegratedLocationItem, skeletonScreen: boolean, animation: boolean): void {
@@ -544,7 +544,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       const currentSlideElement = elementQuerySelector(thisRankElement, '.css_location_group_item_rank_current_slide');
 
       nextSlideElement.setAttribute('code', thisItem.ranking.code.toString());
-      nextSlideElement.innerText = thisItem.ranking.text;
+      nextSlideElement.textContent = thisItem.ranking.text;
 
       if (!skeletonScreen) {
         if (animation) {
@@ -553,7 +553,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
               'animationend',
               function () {
                 currentSlideElement.setAttribute('code', thisItem.ranking.code.toString());
-                currentSlideElement.innerText = thisItem.ranking.text;
+                currentSlideElement.textContent = thisItem.ranking.text;
                 currentSlideElement.classList.remove('css_location_group_item_rank_current_slide_fade_out');
                 nextSlideElement.setAttribute('displayed', 'false');
               },
@@ -567,19 +567,19 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       }
 
       currentSlideElement.setAttribute('code', thisItem.ranking.code.toString());
-      currentSlideElement.innerText = thisItem.ranking.text;
+      currentSlideElement.textContent = thisItem.ranking.text;
     }
 
     function updateRouteDirection(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       const thisHeadElement = elementQuerySelector(thisElement, '.css_location_group_item_head');
       const thisRouteDirectionElement = elementQuerySelector(thisHeadElement, '.css_location_group_item_route_direction');
-      thisRouteDirectionElement.innerText = thisItem.route_direction;
+      thisRouteDirectionElement.textContent = thisItem.route_direction;
     }
 
     function updateRouteName(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       const thisHeadElement = elementQuerySelector(thisElement, '.css_location_group_item_head');
       const thisRouteNameElement = elementQuerySelector(thisHeadElement, '.css_location_group_item_route_name');
-      thisRouteNameElement.innerText = thisItem.route_name;
+      thisRouteNameElement.textContent = thisItem.route_name;
     }
 
     function updateBuses(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
@@ -614,10 +614,10 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         const carStatusAttributeElement = elementQuerySelector(attributesElement, '.css_location_group_item_bus_car_status');
         const carTypeAttributeElement = elementQuerySelector(attributesElement, '.css_location_group_item_bus_car_type');
         busElement.setAttribute('on-this-route', booleanToString(busItem.onThisRoute));
-        carNumberElement.innerText = busItem.carNumber;
-        routeAttributeElement.innerText = `路線：${busItem.RouteName}`;
-        carStatusAttributeElement.innerText = `狀態：${busItem.status.text}`;
-        carTypeAttributeElement.innerText = `類型：${busItem.type}`;
+        carNumberElement.textContent = busItem.carNumber;
+        routeAttributeElement.textContent = `路線：${busItem.RouteName}`;
+        carStatusAttributeElement.textContent = `狀態：${busItem.status.text}`;
+        carTypeAttributeElement.textContent = `類型：${busItem.type}`;
       }
 
       thisBusesElement.setAttribute('empty', booleanToString(busesQuantity === 0));
@@ -652,8 +652,8 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         const personalScheduleNameElement = elementQuerySelector(titleElement, '.css_location_group_item_bus_arrival_time_personal_schedule_name');
         const personalScheduleTimeElement = elementQuerySelector(titleElement, '.css_location_group_item_bus_arrival_time_personal_schedule_time');
         const chartElement = elementQuerySelector(busArrivalTimeElement, '.css_location_group_item_bus_arrival_time_chart');
-        personalScheduleNameElement.innerText = busArrivalTimeItem.personalSchedule.name;
-        personalScheduleTimeElement.innerText = `週${indexToDay(busArrivalTimeItem.day).name} ${timeObjectToString(busArrivalTimeItem.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTimeItem.personalSchedule.period.end)}`;
+        personalScheduleNameElement.textContent = busArrivalTimeItem.personalSchedule.name;
+        personalScheduleTimeElement.textContent = `週${indexToDay(busArrivalTimeItem.day).name} ${timeObjectToString(busArrivalTimeItem.personalSchedule.period.start)} - ${timeObjectToString(busArrivalTimeItem.personalSchedule.period.end)}`;
         chartElement.innerHTML = decoder.decode(busArrivalTimeItem.chart);
       }
 
@@ -829,7 +829,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
   }
 
   if (previousIntegration?.LocationName !== integration.LocationName) {
-    LocationNameSpanElement.innerText = integration.LocationName;
+    LocationNameSpanElement.textContent = integration.LocationName;
   }
 
   if (previousAnimation !== animation) {
@@ -927,7 +927,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     const thisTabElement = tabElements[i];
     const thisTabSpanElement = elementQuerySelector(thisTabElement, 'span');
 
-    thisTabSpanElement.innerText = groups[groupKey].name;
+    thisTabSpanElement.textContent = groups[groupKey].name;
     thisTabElement.style.setProperty('--b-cssvar-location-tab-offset', `${locationSliding_groupStyles[`gs_${i}`].offset}px`);
     thisTabElement.style.setProperty('--b-cssvar-location-tab-width', `${locationSliding_groupStyles[`gs_${i}`].width}px`);
     thisTabElement.style.setProperty('--b-cssvar-location-tab-index', i.toString());

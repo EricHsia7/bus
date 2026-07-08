@@ -135,7 +135,7 @@ function updateFolderEditorField(folder: Folder, content: Array<FolderContent>, 
         default:
           break;
       }
-      contextElement.innerText = context;
+      contextElement.textContent = context;
     }
 
     function updateMain(thisElement: HTMLElement, thisItem: FolderContent): void {
@@ -161,7 +161,7 @@ function updateFolderEditorField(folder: Folder, content: Array<FolderContent>, 
         default:
           break;
       }
-      mainElement.innerText = main;
+      mainElement.textContent = main;
     }
 
     function updateDrawer(thisElement: HTMLElement, thisItem: FolderContent): void {

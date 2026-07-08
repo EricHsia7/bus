@@ -40,7 +40,7 @@ function updateScheduleNotificationField(thisButtonElement: HTMLElement, StopID:
 
     function updateName(thisElement: HTMLElement, thisItem: ScheduleNotificationOption): void {
       const nameElement = elementQuerySelector(thisElement, '.css_schedule_notification_item_name');
-      nameElement.innerText = thisItem.name;
+      nameElement.textContent = thisItem.name;
     }
 
     function updateOnclick(thisElement: HTMLElement, thisItem: ScheduleNotificationOption, thisButtonElement: HTMLElement, StopID: number, RouteID: number, EstimateTime: number): void {

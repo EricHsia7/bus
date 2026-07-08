@@ -114,7 +114,7 @@ function initializeRouteCalendarSliding(): void {
       [timelineElements[0], timelineElements[1], timelineElements[2]] = [timelineElements[2], timelineElements[0], timelineElements[1]];
       [currentTimelineSVGs[0], currentTimelineSVGs[1], currentTimelineSVGs[2]] = [generateRouteCalendarSVG(currentIntegration, yesterday, routeCalendarSliding_fieldWidth), currentTimelineSVGs[0], currentTimelineSVGs[1]];
       timelineElements[0].innerHTML = currentTimelineSVGs[0];
-      dateElement.innerText = dateToString(currentDate, 'YYYY-MM-DD WW');
+      dateElement.textContent = dateToString(currentDate, 'YYYY-MM-DD WW');
     } else if (idx === 2) {
       currentDate = offsetDate(currentDate, 1, 0, 0);
       const tomorrow = offsetDate(currentDate, 1, 0, 0);
@@ -123,7 +123,7 @@ function initializeRouteCalendarSliding(): void {
       [timelineElements[0], timelineElements[1], timelineElements[2]] = [timelineElements[1], timelineElements[2], timelineElements[0]];
       [currentTimelineSVGs[0], currentTimelineSVGs[1], currentTimelineSVGs[2]] = [currentTimelineSVGs[1], currentTimelineSVGs[2], generateRouteCalendarSVG(currentIntegration, tomorrow, routeCalendarSliding_fieldWidth)];
       timelineElements[2].innerHTML = currentTimelineSVGs[2];
-      dateElement.innerText = dateToString(currentDate, 'YYYY-MM-DD WW');
+      dateElement.textContent = dateToString(currentDate, 'YYYY-MM-DD WW');
     }
   });
 
@@ -141,7 +141,7 @@ async function initializeRouteCalendar(PathAttributeId: SimplifiedRouteItem['pid
     currentTimelineSVGs[i] = generateRouteCalendarSVG(integration, date, routeCalendarSliding_fieldWidth);
     timelineElements[i].innerHTML = currentTimelineSVGs[i];
   }
-  dateElement.innerText = dateToString(currentDate, 'YYYY-MM-DD WW');
+  dateElement.textContent = dateToString(currentDate, 'YYYY-MM-DD WW');
   initializeRouteCalendarSliding();
 }
 
