@@ -282,32 +282,32 @@ export async function discardUpdateRateDataGroups() {
   }
 }
 
-export interface getUpdateRateJob {
+export interface UpdateRateWorkerJob {
   resolve: Function;
   reject: Function;
 }
 
-export interface getUpdateRateMessageDone {
+export interface UpdateRateWorkerMessageDone {
   type: 'done';
   id: number;
   result: number;
 }
 
-export interface getUpdateRateMessageError {
+export interface UpdateRateWorkerMessageError {
   type: 'error';
   id: number;
   error: Error['message'];
 }
 
-export type getUpdateRateMessage = getUpdateRateMessageDone | getUpdateRateMessageError;
+export type UpdateRateWorkerMessage = UpdateRateWorkerMessageDone | UpdateRateWorkerMessageError;
 
 const worker = new Worker(new URL('./getUpdateRate-worker.ts', import.meta.url));
 
 let nextId: number = 0;
-const pending = new Map<number, getUpdateRateJob>();
+const pending = new Map<number, UpdateRateWorkerJob>();
 
 worker.onmessage = (event: MessageEvent) => {
-  const message = event.data as getUpdateRateMessage;
+  const message = event.data as UpdateRateWorkerMessage;
   const job = pending.get(message.id);
   if (!job) return;
   switch (message.type) {
