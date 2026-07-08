@@ -99,18 +99,15 @@ export function formatTime(time: number, mode: number): string {
   switch (mode) {
     case 0: {
       return `${roundedTime}秒`;
-      break;
     }
     case 1: {
-      const minutes = String((roundedTime - (roundedTime % 60)) / 60);
-      const seconds = String(roundedTime % 60);
-      return [minutes, seconds].map((u) => u.padStart(2, '0')).join(':');
-      break;
+      const minutes = ((roundedTime - (roundedTime % 60)) / 60).toString().padStart(2, '0');
+      const seconds = (roundedTime % 60).toString().padStart(2, '0');
+      return `${minutes}:${seconds}`;
     }
     case 2: {
       const minutes = (roundedTime / 60) | 0;
       return `${minutes}分`;
-      break;
     }
     case 3: {
       if (roundedTime >= 60 * 60) {
@@ -124,11 +121,9 @@ export function formatTime(time: number, mode: number): string {
       if (roundedTime < 60) {
         return `${roundedTime}秒`;
       }
-      break;
     }
     default: {
       return '--';
-      break;
     }
   }
 }
