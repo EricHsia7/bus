@@ -301,9 +301,9 @@ export async function integrateNotifcationSchedules(progressCallback: ProgressCa
     const thisItemDate = thisItemScheduledTimeDateInstance.getDate();
     const thisItemHours = thisItemScheduledTimeDateInstance.getHours();
     const thisItemMinutes = thisItemScheduledTimeDateInstance.getMinutes();
-    integratedItem.date = String(thisItemDate).padStart(2, '0');
-    integratedItem.hours = String(thisItemHours).padStart(2, '0');
-    integratedItem.minutes = String(thisItemMinutes).padStart(2, '0');
+    integratedItem.date = thisItemDate.toString().padStart(2, '0');
+    integratedItem.hours = thisItemHours.toString().padStart(2, '0');
+    integratedItem.minutes = thisItemMinutes.toString().padStart(2, '0');
 
     integratedItem.route = {};
     const thisRouteName = item.route_name;

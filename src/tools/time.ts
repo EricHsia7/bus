@@ -55,12 +55,12 @@ export function timestampToNumber(string: string, timeZoneOffset: number = 0): n
 
 export function dateToString(date: Date, template: string = 'YYYY-MM-DD hh:mm:ss'): string {
   const result = template
-    .replaceAll(/Y{4,4}/g, date.getFullYear())
-    .replaceAll(/M{2,2}/g, String(date.getMonth() + 1).padStart(2, '0'))
-    .replaceAll(/D{2,2}/g, String(date.getDate()).padStart(2, '0'))
-    .replaceAll(/h{2,2}/g, String(date.getHours()).padStart(2, '0'))
-    .replaceAll(/m{2,2}/g, String(date.getMinutes()).padStart(2, '0'))
-    .replaceAll(/s{2,2}/g, String(date.getSeconds()).padStart(2, '0'))
+    .replaceAll(/Y{4,4}/g, date.getFullYear().toString())
+    .replaceAll(/M{2,2}/g, (date.getMonth() + 1).toString().padStart(2, '0'))
+    .replaceAll(/D{2,2}/g, date.getDate().toString().padStart(2, '0'))
+    .replaceAll(/h{2,2}/g, date.getHours().toString().padStart(2, '0'))
+    .replaceAll(/m{2,2}/g, date.getMinutes().toString().padStart(2, '0'))
+    .replaceAll(/s{2,2}/g, date.getSeconds().toString().padStart(2, '0'))
     .replaceAll(/W{2,2}/g, `週${['日', '一', '二', '三', '四', '五', '六'][date.getDay()]}`);
   return result;
 }
@@ -186,7 +186,7 @@ export function indexToDay(index: WeekDayIndex): WeekDay {
 
 export function dateValueToDayOfWeek(dateValue: string): WeekDay {
   const int = parseInt(dateValue, 10);
-  const index = int - 1;
+  const index = (int - 1) as WeekDayIndex;
   return indexToDay(index);
 }
 
@@ -206,7 +206,8 @@ export interface TimeStampPeriod {
 }
 
 export function timeObjectToString(timeObject: TimeObject): string {
-  return `${String(timeObject.hours).padStart(2, '0')}:${String(timeObject.minutes).padStart(2, '0')}`;
+  // timeObject.hours >= 0 and timeObject.minutes >= 0
+  return `${timeObject.hours < 10 ? '0' : ''}${timeObject.hours.toString()}:${timeObject.minutes < 10 ? '0' : ''}${timeObject.minutes.toString()}`;
 }
 
 export function createDateObjectFromDate(year: number, month: number, date: number): Date {
