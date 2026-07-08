@@ -101,9 +101,9 @@ export function formatTime(time: number, mode: number): string {
       return `${roundedTime}秒`;
     }
     case 1: {
-      const minutes = ((roundedTime - (roundedTime % 60)) / 60).toString().padStart(2, '0');
-      const seconds = (roundedTime % 60).toString().padStart(2, '0');
-      return `${minutes}:${seconds}`;
+      const minutes = (roundedTime - (roundedTime % 60)) / 60;
+      const seconds = roundedTime % 60;
+      return `${minutes < 10 ? '0' : ''}${minutes.toString()}:${seconds < 10 ? '0' : ''}${seconds.toString()}`;
     }
     case 2: {
       const minutes = (roundedTime / 60) | 0;
