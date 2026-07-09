@@ -104,6 +104,7 @@
   transform-origin: top left;
   opacity: 0;
   transition: transform var(--b-cssvar-transition-duration), opacity var(--b-cssvar-transition-duration);
+  transition-delay: var(--b-cssvar-transition-duration);
 }
 
 .css_home_field .css_home_head .css_home_button_right svg#download-svg {
@@ -111,6 +112,7 @@
   transform-origin: top left;
   opacity: 1;
   transition: transform var(--b-cssvar-transition-duration), opacity var(--b-cssvar-transition-duration);
+  transition-delay: var(--b-cssvar-transition-duration);
 }
 
 .css_home_field .css_home_head .css_home_button_right[complete="true"] svg#search-svg {
