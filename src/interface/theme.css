@@ -32,7 +32,7 @@
 
   /* f9f9fb */
   --b-cssvar-f9f9fb-normal: rgb(249, 249, 251);
-  --b-cssvar-f9f9fb-normal-80: rgba(249, 249, 251, 0.8);
+  --b-cssvar-f9f9fb-normal-60: rgba(249, 249, 251, 0.6);
   --b-cssvar-f9f9fb-normal-50-flatten: color-mix(in srgb, rgb(255, 255, 255), rgb(249, 249, 251) 50%);
 
   --b-cssvar-f9f9fb-blocky: rgb(249, 249, 251);
@@ -127,7 +127,7 @@
 
     /* f9f9fb */
     --b-cssvar-f9f9fb-normal: rgb(9, 10, 12);
-    --b-cssvar-f9f9fb-normal-80: rgba(9, 10, 12, 0.8);
+    --b-cssvar-f9f9fb-normal-60: rgba(9, 10, 12, 0.6);
     --b-cssvar-f9f9fb-normal-50-flatten: color-mix(in srgb, rgb(0, 0, 0), rgb(9, 10, 12) 50%);
 
     --b-cssvar-f9f9fb-blocky: rgb(0, 0, 0);
