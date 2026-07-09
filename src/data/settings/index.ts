@@ -541,7 +541,7 @@ let Settings: SettingsObject = {
   last_update_date: {
     key: 'last_update_date',
     name: '更新時間',
-    icon: 'update',
+    icon: 'deployed_code_history',
     status: '',
     type: 'info',
     action: function () {},
