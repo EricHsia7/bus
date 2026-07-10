@@ -110,15 +110,13 @@ export function formatTime(time: number, mode: number): string {
       return `${minutes}分`;
     }
     case 3: {
-      if (roundedTime >= 60 * 60) {
+      if (60 * 60 <= roundedTime) {
         const hours = parseFloat((roundedTime / (60 * 60)).toFixed(1));
         return `${hours}時`;
-      }
-      if (60 <= roundedTime && roundedTime < 60 * 60) {
+      } else if (60 <= roundedTime) {
         const minutes = (roundedTime / 60) | 0;
         return `${minutes}分`;
-      }
-      if (roundedTime < 60) {
+      } else {
         return `${roundedTime}秒`;
       }
     }
@@ -144,7 +142,7 @@ export interface WeekDay {
 export type WeeklyArray<T> = [sun: T, mon: T, tue: T, wed: T, thu: T, fri: T, sat: T];
 
 export function indexToDay(index: WeekDayIndex): WeekDay {
-  const days = [
+  const days: Array<WeekDay> = [
     {
       name: '日',
       day: 0,
