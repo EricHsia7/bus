@@ -1,5 +1,6 @@
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { generateRoundedQRCodeSVG } from '../../tools/qrcode';
+import { rasterizeSVGPath } from '../../tools/rasterize';
 import { shareFile } from '../../tools/share';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 
@@ -7,12 +8,16 @@ const QRCodeField = documentQuerySelector('.css_qrcode_field');
 const headElement = elementQuerySelector(QRCodeField, '.css_qrcode_head');
 const rightButtonElement = elementQuerySelector(headElement, '.css_qrcode_button_right');
 const bodyElement = elementQuerySelector(QRCodeField, '.css_qrcode_body');
+const svgElement = elementQuerySelector(bodyElement, '.css_qrcode_svg');
+const imageElement = elementQuerySelector(bodyElement, '.css_qrcode_image img') as HTMLImageElement;
 
-export function initializeQRCodeField(text: string): void {
+export async function initializeQRCodeField(text: string) {
   const svg = generateRoundedQRCodeSVG(text, 'M', 0.5, 0.3, 0, 10);
-  bodyElement.innerHTML = svg;
+  svgElement.innerHTML = svg[0];
+  const url = await rasterizeSVGPath(svg[1], svg[1], svg[2]);
+  imageElement.src = url;
   rightButtonElement.onclick = function () {
-    shareFile(svg, 'image/svg+xml', 'qrcode.svg');
+    shareFile(svg[0], 'image/svg+xml', 'qrcode.svg');
   };
 }
 

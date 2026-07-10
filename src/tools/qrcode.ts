@@ -29,7 +29,9 @@ export function generateQRCodeMatrix(text: string, errorCorrectionLevel: QRCodeE
   return matrix;
 }
 
-export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRCodeErrorCorrectionLevel = 'L', outerRadius: number = 0.5, innerRadius: number = 0.3, padding: number = 0, scale: number = 4): string {
+export type QRCodeSVG = [svg: string, sideLength: number, path: string];
+
+export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRCodeErrorCorrectionLevel = 'L', outerRadius: number = 0.5, innerRadius: number = 0.3, padding: number = 0, scale: number = 4): QRCodeSVG {
   const filledNeighborhood = [
     [
       [-1, 0],
@@ -240,5 +242,7 @@ export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRC
     }
   }
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${(size + padding * 2) * scale} ${(size + padding * 2) * scale}"><path d="${finalPath.join('')}" fill-rule="nonzero" stroke="none" /></svg>`;
+  const sideLength = (size + padding * 2) * scale;
+  const path = finalPath.join('');
+  return [`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${sideLength} ${sideLength}"><path d="${path}" fill-rule="nonzero" stroke="none" /></svg>`, sideLength, path];
 }
