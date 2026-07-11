@@ -3,7 +3,7 @@ declare const self: DedicatedWorkerGlobalScope;
 // export {}; // make a script a module if no any export or import
 
 import { mergeAddressesIntoOne } from '../../../tools/address';
-import { hasOwnProperty, md5 } from '../../../tools/index';
+import { hasOwnProperty, sha512 } from '../../../tools/index';
 import { MergedLocation, SimplifiedLocation } from './index';
 
 self.onmessage = function (e) {
@@ -13,7 +13,7 @@ self.onmessage = function (e) {
 function processWorkerTask(object: SimplifiedLocation): void {
   const result: MergedLocation = {};
   for (const key in object) {
-    const hash = md5(
+    const hash = sha512(
       String(object[key].n)
         .trim()
         .replaceAll(/[\(\（\）\)\:\：\~\～]*/gim, '')
