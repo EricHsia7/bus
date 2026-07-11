@@ -170,7 +170,7 @@ export async function getLocation(progress: Progress, type: 0 | 1 | 2): Promise<
 
   const cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
   const cacheType = ['simplified', 'merged', 'indexed'][type];
-  const cacheKey = `bus_${cacheType}_location_cache`;
+  const cacheKey = `bus_${cacheType}_location_v2_cache`;
   const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
   if (cacheTimestamp === null) {
     let finalResult;
