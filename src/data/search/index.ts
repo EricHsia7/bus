@@ -9,7 +9,7 @@ import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute
 export async function searchRouteByName(query: string): Promise<Array<SimplifiedRouteItem>> {
   const progress = new Progress(2, function () {});
   const Route = (await getRoute(progress, true)) as SimplifiedRoute;
-  let result: Array<SimplifiedRouteItem> = [];
+  const result: Array<SimplifiedRouteItem> = [];
   for (const key in Route) {
     const thisRoute = Route[key];
     if (String(thisRoute.n).indexOf(query) > -1) {
@@ -36,7 +36,7 @@ export async function searchRouteByRouteID(RouteID: number): Promise<SimplifiedR
 export async function searchRouteByPathAttributeId(PathAttributeId: number): Promise<Array<SimplifiedRouteItem>> {
   const progress = new Progress(2, function () {});
   const Route = (await getRoute(progress, true)) as SimplifiedRoute;
-  let result: Array<SimplifiedRouteItem> = [];
+  const result: Array<SimplifiedRouteItem> = [];
   for (const key in Route) {
     const thisRoute = Route[key];
     if (thisRoute.pid.indexOf(PathAttributeId) > -1) {
@@ -54,10 +54,6 @@ export interface SearchItem {
   des: string;
   n: string;
   hash: string;
-  lo: Array<number>;
-  la: Array<number>;
-  r: Array<Array<number>>;
-  s: Array<Array<number>>;
   type: 0 | 1 | 2; // 0: route, 1: location, 2: car info
 }
 
@@ -81,22 +77,18 @@ export async function prepareForSearch() {
   const [Route, mergedLocation, CarInfo] = (await Promise.all([await getRoute(progress, true), await getLocation(progress, 1), await getCarInfo(progress, true)])) as [SimplifiedRoute, MergedLocation, SimplifiedCarInfo];
   progress.terminate();
 
-  let index: SearchIndex = {};
-  let list: Array<SearchItem> = [];
+  const index: SearchIndex = {};
+  const list: Array<SearchItem> = [];
   let i: number = 0;
   for (const key in Route) {
     const thisRoute = Route[key];
-    const thisItem = {
+    const thisItem: SearchItem = {
       id: thisRoute.id,
       pid: thisRoute.pid,
       dep: thisRoute.dep,
       des: thisRoute.des,
       n: thisRoute.n,
       hash: '',
-      lo: '',
-      la: '',
-      r: '',
-      s: '',
       type: 0
     };
     list.push(thisItem);
@@ -112,13 +104,9 @@ export async function prepareForSearch() {
   }
   for (const key in mergedLocation) {
     const thisLocation = mergedLocation[key];
-    const thisItem = {
+    const thisItem: SearchItem = {
       id: thisLocation.id,
       n: thisLocation.n,
-      lo: thisLocation.lo,
-      la: thisLocation.la,
-      r: thisLocation.r,
-      s: thisLocation.s,
       hash: thisLocation.hash,
       dep: '',
       des: '',
@@ -138,17 +126,13 @@ export async function prepareForSearch() {
   }
   for (const key in CarInfo) {
     const thisCarInfo = CarInfo[key];
-    const thisItem = {
+    const thisItem: SearchItem = {
       id: thisCarInfo.BusId,
       pid: [],
       dep: '',
       des: '',
       n: thisCarInfo.CarNum,
       hash: '',
-      lo: '',
-      la: '',
-      r: '',
-      s: '',
       type: 2
     };
     list.push(thisItem);
