@@ -85,6 +85,9 @@ export function generateRoundedRectPath(x: number, y: number, width: number, hei
   const command = [];
   if (inverted) {
     if (tl !== 0) {
+      // M startX startY Q controlX controlY endX endY
+      // H endX
+      // V endY
       command.push(`M${x} ${y + tl}`, `Q${x} ${y} ${x + tl} ${y}`, `H${x}`, `V${y + tl}`);
     }
     if (tr !== 0) {

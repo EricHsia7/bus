@@ -125,8 +125,8 @@ export function bitmapToSVG(data: Bitmap, outerRadius = 0.5, innerRadius = 0.3, 
 
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
-      const cx = (x + padding) * pixelSize;
-      const cy = (y + padding) * pixelSize;
+      const cx = padding + x * pixelSize;
+      const cy = padding + y * pixelSize;
       const s = pixelSize;
 
       if (cellAt(data, x, y) === 1) {
@@ -209,8 +209,8 @@ export function bitmapToSVG(data: Bitmap, outerRadius = 0.5, innerRadius = 0.3, 
     }
   }
 
-  const width = (cols + padding * 2) * pixelSize;
-  const height = (rows + padding * 2) * pixelSize;
+  const width = padding * 2 + cols * pixelSize;
+  const height = padding * 2 + rows * pixelSize;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}"><path d="${pathCommands.join('')}" fill-rule="nonzero" stroke="none" /></svg>`;
 }
 
