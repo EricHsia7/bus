@@ -9,10 +9,7 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
 const postcssColorMixFunction = require('@csstools/postcss-color-mix-function');
 const { Hasher } = require('./hasher');
-const { ErrorCodePlugin } = require('./plugins/error-code-plugin');
-const { PostCssOptimizationPlugin } = require('./plugins/postcss-optimization-plugin');
-const { BundleStatsMarkdownPlugin } = require('./plugins/bundle-stats-markdown-plugin');
-const { MangleCssNamespacePlugin } = require('./plugins/mangle-css-namespace-plugin');
+const { ErrorCodePlugin, PostCssOptimizationPlugin, BundleStatsMarkdownPlugin, MangleCssNamespacePlugin } = require('@erichsia7/webpack-plugins');
 const splashScreenHTML = require('./dist/splash-screen/html.json');
 const thisVersion = require('./dist/version.json');
 
