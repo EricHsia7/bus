@@ -1,3 +1,5 @@
+import { clamp } from './math';
+
 const { create: QRCode_create } = require('qrcode/lib/core/qrcode');
 
 export type QRCodeErrorCorrectionLevel = 'L' | 'M' | 'Q' | 'H';
@@ -29,215 +31,195 @@ export function generateQRCodeMatrix(text: string, errorCorrectionLevel: QRCodeE
   return matrix;
 }
 
-export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRCodeErrorCorrectionLevel = 'L', outerRadius: number = 0.5, innerRadius: number = 0.3, padding: number = 0, scale: number = 4): string {
-  const filledNeighborhood = [
-    [
-      [-1, 0],
-      [0, -1]
-    ], // top-left
-    [
-      [0, -1],
-      [1, 0]
-    ], // top-right
-    [
-      [1, 0],
-      [0, 1]
-    ], // bottom-right
-    [
-      [0, 1],
-      [-1, 0]
-    ] // bottom-left
-  ];
+type BitCell = 0 | 1;
+type Bitmap = ReadonlyArray<ReadonlyArray<BitCell>>;
+type Offset = readonly [number, number];
 
-  const blankNeighborhood = [
-    [
-      [-1, 0],
-      [-1, -1],
-      [0, -1]
-    ],
-    [
-      [0, -1],
-      [1, -1],
-      [1, 0]
-    ],
-    [
-      [1, 0],
-      [1, 1],
-      [0, 1]
-    ],
-    [
-      [0, 1],
-      [-1, 1],
-      [-1, 0]
-    ]
-  ];
+type PathSegment = { x1: number; y1: number; x2: number; y2: number; command: string };
 
-  const data = generateQRCodeMatrix(text, errorCorrectionLevel);
-  const size = data.length;
+// Corner order used everywhere below.
+const TL = 0,
+  TR = 1,
+  BR = 2,
+  BL = 3;
 
-  // Helper to manage segments
-  // We store directed segments. If we find a reverse segment already exists,
-  // it means we have a shared edge, so we delete both (cancellation).
-  const segments = new Map(); // Key: "x1,y1", Value: { endX, endY, command }
+// FILLED cell: a corner rounds outward only when BOTH its orthogonal
+// neighbors are empty (the cell "touches a gap" on both sides of that corner).
+const FILLED_CORNER_NEIGHBORS: ReadonlyArray<ReadonlyArray<Offset>> = [
+  [
+    [-1, 0],
+    [0, -1]
+  ], // top-left
+  [
+    [0, -1],
+    [1, 0]
+  ], // top-right
+  [
+    [1, 0],
+    [0, 1]
+  ], // bottom-right
+  [
+    [0, 1],
+    [-1, 0]
+  ] // bottom-left
+];
 
-  function addSegment(x1: number, y1: number, x2: number, y2: number, command: string) {
-    const keyForward = `${x1},${y1}:${x2},${y2}`;
-    const keyReverse = `${x2},${y2}:${x1},${y1}`;
+// BLANK cell: gets an inward fillet ("bridge") only when all 3 cells
+// wrapping that corner are filled (an L-shaped notch).
+const BLANK_CORNER_NEIGHBORS: ReadonlyArray<ReadonlyArray<Offset>> = [
+  [
+    [-1, 0],
+    [-1, -1],
+    [0, -1]
+  ], // top-left
+  [
+    [0, -1],
+    [1, -1],
+    [1, 0]
+  ], // top-right
+  [
+    [1, 0],
+    [1, 1],
+    [0, 1]
+  ], // bottom-right
+  [
+    [0, 1],
+    [-1, 1],
+    [-1, 0]
+  ] // bottom-left
+];
 
-    if (segments.has(keyReverse)) {
-      // Found a shared edge (internal). Remove the reverse one and don't add this one.
-      segments.delete(keyReverse);
-    } else {
-      // New edge (external so far). Add it.
-      segments.set(keyForward, { x1, y1, x2, y2, command });
+const cellAt = (data: Bitmap, x: number, y: number): BitCell | undefined => data[y]?.[x];
+
+// Rounds coordinates so mathematically-equal edges from neighboring cells
+// produce bit-identical keys (raw floats can differ by 1 ULP and silently
+// break the cancellation/stitching logic).
+const snap = (n: number): number => Math.round(n * 1e4) / 1e4;
+
+export function bitmapToSVG(data: Bitmap, outerRadius = 0.5, innerRadius = 0.3, padding = 0, pixelSize = 4): string {
+  const rows = data.length;
+  const cols = rows > 0 ? Math.max(...data.map((row) => row.length)) : 0;
+
+  // Clamp: a radius over half a cell would make a corner's own two
+  // fillets overlap/self-intersect.
+
+  const outerR = clamp(outerRadius, 0, 0.5) * pixelSize;
+  const innerR = clamp(innerRadius, 0, 0.5) * pixelSize;
+
+  // Emit every cell's boundary, cancel shared (interior) edges ---
+  const segments = new Map<string, PathSegment>();
+  const addSegment = (x1: number, y1: number, x2: number, y2: number, command: string) => {
+    const [sx1, sy1, sx2, sy2] = [snap(x1), snap(y1), snap(x2), snap(y2)];
+    const forwardKey = `${sx1},${sy1}:${sx2},${sy2}`;
+    const reverseKey = `${sx2},${sy2}:${sx1},${sy1}`;
+    if (segments.has(reverseKey))
+      segments.delete(reverseKey); // shared edge -> cancels
+    else segments.set(forwardKey, { x1: sx1, y1: sy1, x2: sx2, y2: sy2, command });
+  };
+
+  const cornerFlags = new Uint8Array(4); // reused scratch buffer, avoids per-cell allocation
+  const computeCornerFlags = (x: number, y: number, neighborSets: ReadonlyArray<ReadonlyArray<Offset>>, satisfies: (cell: BitCell | undefined) => boolean) => {
+    for (let k = 0; k < 4; k++) {
+      let allSatisfy = 1;
+      for (const [dx, dy] of neighborSets[k]) {
+        if (!satisfies(cellAt(data, x + dx, y + dy))) allSatisfy = 0;
+      }
+      cornerFlags[k] = allSatisfy;
     }
-  }
+  };
 
-  // Iterate grid to generate all potential segments (Clockwise Order)
-  for (let y = 0; y < size; y++) {
-    for (let x = 0; x < size; x++) {
-      const cx = (x + padding) * scale;
-      const cy = (y + padding) * scale;
-      const width = scale;
-      const height = scale;
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      const cx = (x + padding) * pixelSize;
+      const cy = (y + padding) * pixelSize;
+      const s = pixelSize;
 
-      // Calculate Radii Logic (filled)
-      const cornerRadius = new Uint8Array(4);
-      const isFilled = data[y][x] === 1;
+      if (cellAt(data, x, y) === 1) {
+        computeCornerFlags(x, y, FILLED_CORNER_NEIGHBORS, (cell) => cell !== 1);
+        const tl = cornerFlags[TL] * outerR;
+        const tr = cornerFlags[TR] * outerR;
+        const br = cornerFlags[BR] * outerR;
+        const bl = cornerFlags[BL] * outerR;
 
-      if (isFilled) {
-        // FILLED CELL
-        for (let k = 0; k < 4; k++) {
-          const neighbors = filledNeighborhood[k];
-          let displayed = 1;
-          for (const neighbor of neighbors) {
-            if (data[y + neighbor[1]]?.[x + neighbor[0]] === 1) displayed *= 0;
-          }
-          cornerRadius[k] = displayed;
-        }
-
-        const tl = cornerRadius[0] * outerRadius * scale;
-        const tr = cornerRadius[1] * outerRadius * scale;
-        const br = cornerRadius[2] * outerRadius * scale;
-        const bl = cornerRadius[3] * outerRadius * scale;
-
-        // Generate 8 segments for a rounded rect (4 lines, 4 arcs)
-        // Top Edge (Left to Right)
-        if (tl > 0) addSegment(cx, cy + tl, cx + tl, cy, `Q${cx} ${cy} ${cx + tl} ${cy}`); // TL Corner
-        // else addSegment(cx, cy, cx, cy, ''); // sharp corner (0-length, logic handles this by extending lines)
-
-        // Top Line
-        addSegment(cx + tl, cy, cx + width - tr, cy, `L${cx + width - tr} ${cy}`);
-
-        // TR Corner
-        if (tr > 0) addSegment(cx + width - tr, cy, cx + width, cy + tr, `Q${cx + width} ${cy} ${cx + width} ${cy + tr}`);
-
-        // Right Line
-        addSegment(cx + width, cy + tr, cx + width, cy + height - br, `L${cx + width} ${cy + height - br}`);
-
-        // BR Corner
-        if (br > 0) addSegment(cx + width, cy + height - br, cx + width - br, cy + height, `Q${cx + width} ${cy + height} ${cx + width - br} ${cy + height}`);
-
-        // Bottom Line
-        addSegment(cx + width - br, cy + height, cx + bl, cy + height, `L${cx + bl} ${cy + height}`);
-
-        // BL Corner
-        if (bl > 0) addSegment(cx + bl, cy + height, cx, cy + height - bl, `Q${cx} ${cy + height} ${cx} ${cy + height - bl}`);
-
-        // Left Line
-        addSegment(cx, cy + height - bl, cx, cy + tl, `L${cx} ${cy + tl}`);
+        if (tl > 0) addSegment(cx, cy + tl, cx + tl, cy, `Q${cx} ${cy} ${cx + tl} ${cy}`);
+        addSegment(cx + tl, cy, cx + s - tr, cy, `L${cx + s - tr} ${cy}`);
+        if (tr > 0) addSegment(cx + s - tr, cy, cx + s, cy + tr, `Q${cx + s} ${cy} ${cx + s} ${cy + tr}`);
+        addSegment(cx + s, cy + tr, cx + s, cy + s - br, `L${cx + s} ${cy + s - br}`);
+        if (br > 0) addSegment(cx + s, cy + s - br, cx + s - br, cy + s, `Q${cx + s} ${cy + s} ${cx + s - br} ${cy + s}`);
+        addSegment(cx + s - br, cy + s, cx + bl, cy + s, `L${cx + bl} ${cy + s}`);
+        if (bl > 0) addSegment(cx + bl, cy + s, cx, cy + s - bl, `Q${cx} ${cy + s} ${cx} ${cy + s - bl}`);
+        addSegment(cx, cy + s - bl, cx, cy + tl, `L${cx} ${cy + tl}`);
       } else {
-        // BLANK CELL (Liquid connections)
-        // We add "fillets" to the corners. To ensure they cancel with filled cells,
-        // we must draw them Clockwise relative to the "ink".
-        // A fillet in the top-left of an empty cell fills that corner.
+        computeCornerFlags(x, y, BLANK_CORNER_NEIGHBORS, (cell) => cell === 1);
+        const r = innerR;
 
-        for (let k = 0; k < 4; k++) {
-          const neighbors = blankNeighborhood[k];
-          let displayed = 1;
-          for (const neighbor of neighbors) {
-            if (!data[y + neighbor[1]]?.[x + neighbor[0]]) displayed *= 0;
-          }
-          cornerRadius[k] = displayed;
+        if (cornerFlags[TL]) {
+          addSegment(cx, cy + r, cx, cy, `L${cx} ${cy}`);
+          addSegment(cx, cy, cx + r, cy, `L${cx + r} ${cy}`);
+          addSegment(cx + r, cy, cx, cy + r, `Q${cx} ${cy} ${cx} ${cy + r}`);
         }
-
-        // Inverted TL: M(x, y+r) Q(x,y, x+r,y) L(x,y) L(x, y+r) -- (CCW)
-        // We need CW segments: (x, y+r) -> (x,y) -> (x+r, y) -> (x, y+r)
-
-        const r = innerRadius * scale;
-
-        // Top-Left Fillet
-        if (cornerRadius[0]) {
-          // CW: Up, Right, Curve-Back
-          addSegment(cx, cy + r, cx, cy, `L${cx} ${cy}`); // Up
-          addSegment(cx, cy, cx + r, cy, `L${cx + r} ${cy}`); // Right
-          addSegment(cx + r, cy, cx, cy + r, `Q${cx} ${cy} ${cx} ${cy + r}`); // Curve hypotenuse
+        if (cornerFlags[TR]) {
+          addSegment(cx + s - r, cy, cx + s, cy, `L${cx + s} ${cy}`);
+          addSegment(cx + s, cy, cx + s, cy + r, `L${cx + s} ${cy + r}`);
+          addSegment(cx + s, cy + r, cx + s - r, cy, `Q${cx + s} ${cy} ${cx + s - r} ${cy}`);
         }
-
-        // Top-Right Fillet
-        if (cornerRadius[1]) {
-          addSegment(cx + width - r, cy, cx + width, cy, `L${cx + width} ${cy}`); // Right
-          addSegment(cx + width, cy, cx + width, cy + r, `L${cx + width} ${cy + r}`); // Down
-          addSegment(cx + width, cy + r, cx + width - r, cy, `Q${cx + width} ${cy} ${cx + width - r} ${cy}`); // Curve
+        if (cornerFlags[BR]) {
+          addSegment(cx + s, cy + s - r, cx + s, cy + s, `L${cx + s} ${cy + s}`);
+          addSegment(cx + s, cy + s, cx + s - r, cy + s, `L${cx + s - r} ${cy + s}`);
+          addSegment(cx + s - r, cy + s, cx + s, cy + s - r, `Q${cx + s} ${cy + s} ${cx + s} ${cy + s - r}`);
         }
-
-        // Bottom-Right Fillet
-        if (cornerRadius[2]) {
-          addSegment(cx + width, cy + height - r, cx + width, cy + height, `L${cx + width} ${cy + height}`); // Down
-          addSegment(cx + width, cy + height, cx + width - r, cy + height, `L${cx + width - r} ${cy + height}`); // Left
-          addSegment(cx + width - r, cy + height, cx + width, cy + height - r, `Q${cx + width} ${cy + height} ${cx + width} ${cy + height - r}`); // Curve
-        }
-
-        // Bottom-Left Fillet
-        if (cornerRadius[3]) {
-          addSegment(cx + r, cy + height, cx, cy + height, `L${cx} ${cy + height}`); // Left
-          addSegment(cx, cy + height, cx, cy + height - r, `L${cx} ${cy + height - r}`); // Up
-          addSegment(cx, cy + height - r, cx + r, cy + height, `Q${cx} ${cy + height} ${cx + r} ${cy + height}`); // Curve
+        if (cornerFlags[BL]) {
+          addSegment(cx + r, cy + s, cx, cy + s, `L${cx} ${cy + s}`);
+          addSegment(cx, cy + s, cx, cy + s - r, `L${cx} ${cy + s - r}`);
+          addSegment(cx, cy + s - r, cx + r, cy + s, `Q${cx} ${cy + s} ${cx + r} ${cy + s}`);
         }
       }
     }
   }
 
-  // Stitching Logic
-  // Convert map to a more traversable format
-  const adjacency = new Map(); // StartKey -> Segment
-  for (const [key, val] of segments) {
-    // Round coords to avoid floating point mismatch keys
-    const startKey = `${Math.round(val.x1)},${Math.round(val.y1)}`;
-    if (!adjacency.has(startKey)) adjacency.set(startKey, []);
-    adjacency.get(startKey).push(val);
+  // Stitch surviving segments into closed subpaths
+  const adjacency = new Map<string, PathSegment[]>();
+  for (const segment of segments.values()) {
+    const startKey = `${segment.x1},${segment.y1}`;
+    const bucket = adjacency.get(startKey);
+    if (bucket) bucket.push(segment);
+    else adjacency.set(startKey, [segment]);
   }
 
-  const finalPath = [];
+  const pathCommands: string[] = [];
+  const maxSteps = segments.size + 1; // safety valve against malformed/non-manifold input
 
   while (adjacency.size > 0) {
-    // Pick a starting point
-    let startKey = adjacency.keys().next().value;
+    const startKey = adjacency.keys().next().value as string;
     let currentKey = startKey;
 
-    // Start a new sub-path
-    // Find the first segment to determine M command
-    const firstSeg = adjacency.get(startKey)[0]; // naive pick
-    finalPath.push(`M${firstSeg.x1} ${firstSeg.y1}`);
+    const [firstSegment] = adjacency.get(startKey)!;
+    pathCommands.push(`M${firstSegment.x1} ${firstSegment.y1}`);
 
-    // Walk the loop
-    while (true) {
-      const potentialNext = adjacency.get(currentKey);
-      if (!potentialNext || potentialNext.length === 0) break;
+    for (let step = 0; step < maxSteps; step++) {
+      const bucket = adjacency.get(currentKey);
+      if (!bucket || bucket.length === 0) break;
 
-      // Consume one segment
-      const segment = potentialNext.shift();
-      if (potentialNext.length === 0) adjacency.delete(currentKey);
+      const segment = bucket.shift()!;
+      if (bucket.length === 0) adjacency.delete(currentKey);
 
-      finalPath.push(segment.command);
+      pathCommands.push(segment.command);
+      currentKey = `${segment.x2},${segment.y2}`;
 
-      currentKey = `${Math.round(segment.x2)},${Math.round(segment.y2)}`;
-      if (currentKey === startKey && (!adjacency.has(startKey) || adjacency.get(startKey).length === 0)) {
-        finalPath.push('Z');
-        break; // Closed loop
+      const nextBucket = adjacency.get(currentKey);
+      if (currentKey === startKey && (!nextBucket || nextBucket.length === 0)) {
+        pathCommands.push('Z');
+        break;
       }
     }
   }
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${(size + padding * 2) * scale} ${(size + padding * 2) * scale}"><path d="${finalPath.join('')}" fill-rule="nonzero" stroke="none" /></svg>`;
+  const width = (cols + padding * 2) * pixelSize;
+  const height = (rows + padding * 2) * pixelSize;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}"><path d="${pathCommands.join('')}" fill-rule="nonzero" stroke="none" /></svg>`;
+}
+
+export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRCodeErrorCorrectionLevel = 'L', outerRadius: number = 0.5, innerRadius: number = 0.3, padding: number = 0, pixelSize: number = 4): string {
+  const data = generateQRCodeMatrix(text, errorCorrectionLevel);
+  return bitmapToSVG(data, outerRadius, innerRadius, padding, pixelSize);
 }
