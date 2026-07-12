@@ -86,7 +86,7 @@ const BLANK_CORNER_NEIGHBORS: ReadonlyArray<ReadonlyArray<Offset>> = [
   ] // bottom-left
 ];
 
-const cellAt = (data: Bitmap, x: number, y: number): BitCell | undefined => data[y]?.[x];
+const cellAt = (data: Bitmap, x: number, y: number): BitCell | undefined => data[y]?.[x] as BitCell | undefined;
 
 // Rounds coordinates so mathematically-equal edges from neighboring cells
 // produce bit-identical keys (raw floats can differ by 1 ULP and silently
