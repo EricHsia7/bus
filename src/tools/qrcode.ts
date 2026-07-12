@@ -123,9 +123,8 @@ export function generateRoundedQRCodeSVG(text: string, errorCorrectionLevel: QRC
 
         // Generate 8 segments for a rounded rect (4 lines, 4 arcs)
         // Top Edge (Left to Right)
-        if (tl > 0)
-          addSegment(cx, cy + tl, cx + tl, cy, `Q${cx} ${cy} ${cx + tl} ${cy}`); // TL Corner
-        else addSegment(cx, cy, cx, cy, ''); // sharp corner (0-length, logic handles this by extending lines)
+        if (tl > 0) addSegment(cx, cy + tl, cx + tl, cy, `Q${cx} ${cy} ${cx + tl} ${cy}`); // TL Corner
+        // else addSegment(cx, cy, cx, cy, ''); // sharp corner (0-length, logic handles this by extending lines)
 
         // Top Line
         addSegment(cx + tl, cy, cx + width - tr, cy, `L${cx + width - tr} ${cy}`);
