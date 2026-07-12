@@ -11,28 +11,25 @@ export type QRCodeErrorCorrectionLevel = 'L' | 'M' | 'Q' | 'H';
  * @returns 2D array (1 = filled, 0 = blank)
  */
 
-export function generateQRCodeMatrix(text: string, errorCorrectionLevel: QRCodeErrorCorrectionLevel): Array<Array<0 | 1>> {
+export function generateQRCodeMatrix(text: string, errorCorrectionLevel: QRCodeErrorCorrectionLevel): Array<Uint8Array<ArrayBuffer>> {
   const qrData = QRCode_create(text, {
     errorCorrectionLevel: errorCorrectionLevel
   });
 
   const size = qrData.modules.size;
-  const matrix = [];
+  const matrix = new Array(size).fill(null).map((e) => new Uint8Array(size));
 
   for (let y = 0; y < size; y++) {
-    const row = [];
     for (let x = 0; x < size; x++) {
-      const bit = qrData.modules.get(x, y);
-      row.push(bit);
+      matrix[y][x] = qrData.modules.get(x, y);
     }
-    matrix.push(row);
   }
 
   return matrix;
 }
 
 type BitCell = 0 | 1;
-type Bitmap = ReadonlyArray<ReadonlyArray<BitCell>>;
+type Bitmap = Array<Uint8Array<ArrayBuffer>>;
 type Offset = readonly [number, number];
 
 type PathSegment = { x1: number; y1: number; x2: number; y2: number; command: string };
@@ -98,11 +95,9 @@ const snap = (n: number): number => Math.round(n * 1e4) / 1e4;
 
 export function bitmapToSVG(data: Bitmap, outerRadius = 0.5, innerRadius = 0.3, padding = 0, pixelSize = 4): string {
   const rows = data.length;
-  const cols = rows > 0 ? Math.max(...data.map((row) => row.length)) : 0;
+  const cols = rows > 0 ? data[0].length : 0;
 
-  // Clamp: a radius over half a cell would make a corner's own two
-  // fillets overlap/self-intersect.
-
+  // Clamp: a radius over half a cell would make a corner's own two fillets overlap/self-intersect.
   const outerR = clamp(outerRadius, 0, 0.5) * pixelSize;
   const innerR = clamp(innerRadius, 0, 0.5) * pixelSize;
 
