@@ -104,7 +104,7 @@ export type SettingsWithOptionsArray = Array<SettingWithOption>;
 
 const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'display_user_orientation', 'location_labels', 'proxy', 'folder', 'personal_schedule', 'notification', 'playing_animation', 'power_saving', 'data_usage', 'storage', 'persistent_storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
 
-let Settings: SettingsObject = {
+const Settings: SettingsObject = {
   time_formatting_mode: {
     key: 'time_formatting_mode',
     name: '預估時間格式',
@@ -581,7 +581,7 @@ export async function initializeSettings(): Promise<boolean> {
 export async function listSettings(): Promise<SettingsArray> {
   const result: SettingsArray = [];
   for (const key in Settings) {
-    let item = Settings[key];
+    const item = Settings[key];
     switch (item.type) {
       case 'select':
         item.status = item.options[item.option].name;
@@ -623,7 +623,7 @@ export async function listSettings(): Promise<SettingsArray> {
 }
 
 export function listSettingsWithOptions(): SettingsWithOptionsArray {
-  let result: SettingsWithOptionsArray = [];
+  const result: SettingsWithOptionsArray = [];
   for (const key in Settings) {
     if (SettingKeys.indexOf(key) > -1) {
       if (hasOwnProperty(Settings, key)) {
