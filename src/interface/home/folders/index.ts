@@ -131,8 +131,6 @@ function animateUpdateTimer(interval: number): void {
   HomeUpdateTimerElement.classList.add('css_home_update_timer_slide_rtl');
 }
 
-function handleDataReceivingProgressUpdates(message: ProgressMessage): void {}
-
 export function setupFolderFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');

@@ -92,14 +92,11 @@ export function setNotificationSecret(secret: NotificationClient['secret']): voi
 }
 
 export async function initializeNotificationSchedules() {
-  const now = new Date().getTime();
   const keys = await lfListItemKeys(9);
   let index: number = 0;
   for (const key of keys) {
     const thisScheduleJSON = await lfGetItem(9, key);
     const thisSchedule = JSON.parse(thisScheduleJSON) as NotificationSchedule;
-    // const thisScheduledTime = thisSchedule.scheduled_time;
-    // if (thisScheduledTime > now) {
     const thisScheduleID = thisSchedule.schedule_id;
     const thisScheduleStopID = thisSchedule.stop_id;
     const thisScheduleStopKey = `s_${thisScheduleStopID}`;
@@ -110,7 +107,6 @@ export async function initializeNotificationSchedules() {
     }
     NotifcationSchedulesStopIDIndex[thisScheduleStopKey].push(index);
     index += 1;
-    // }
   }
 }
 

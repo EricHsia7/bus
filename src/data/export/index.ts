@@ -40,12 +40,13 @@ export async function exportData(): Promise<string> {
   const settings = listSettingsWithOptions();
   const personalSchedules = listPersonalSchedules();
   const RecentViews = await listRecentViews();
-  let result: ExportedDataVersion4 = {};
-  result.time = new Date().toISOString();
-  result.version = 4;
-  result.folders = foldersWithContent;
-  result.settings = settings;
-  result.personal_schedules = personalSchedules;
-  result.recent_views = RecentViews;
+  const result: ExportedDataVersion4 = {
+    time: new Date().toISOString(),
+    version: 4,
+    folders: foldersWithContent,
+    settings: settings,
+    personal_schedules: personalSchedules,
+    recent_views: RecentViews
+  };
   return JSON.stringify(result);
 }

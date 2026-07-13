@@ -85,7 +85,7 @@ export function searchForMaterialSymbols(query: string, searchFrom: number = 0, 
   }
 
   // Pair words with symbols
-  let indexArrays = [];
+  const indexArrays = [];
   for (let i = queryWordsLength - 1; i >= 0; i--) {
     if (matchedWordIndexes[i] < 0) continue;
     const arr = wordToSymbols[`w${matchedWordIndexes[i]}`] || [];

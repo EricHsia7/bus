@@ -176,7 +176,7 @@ export function searchFor(query: string, type: SearchItem['type'] | -1, limit: n
   const lowerCaseQuery = query.toLowerCase();
   const queryUnicodes = getUnicodes(lowerCaseQuery, true);
   const asIsQueryUnicodes = getUnicodes(lowerCaseQuery, false);
-  let unicodeGroups = [];
+  const unicodeGroups = [];
 
   for (const unicode of queryUnicodes) {
     const key = `u_${unicode}`;
@@ -208,7 +208,7 @@ export function searchFor(query: string, type: SearchItem['type'] | -1, limit: n
     }
   }
 
-  let result: Array<SearchResult> = [];
+  const result: Array<SearchResult> = [];
   let quantity: number = 0;
 
   const exactMatchIds = new Set(); // Track exact matches to avoid duplicates

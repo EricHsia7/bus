@@ -136,7 +136,7 @@ export async function createFolder(name: Folder['name'], icon: Folder['icon']): 
 
   // Generate folder
   const nowTime = new Date().getTime();
-  let newFolder: Folder = {
+  const newFolder: Folder = {
     name: name,
     icon: icon,
     id: folderID,

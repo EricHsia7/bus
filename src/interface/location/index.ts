@@ -53,8 +53,8 @@ const decoder = new TextDecoder();
 
 let currentHashSet_hash: string = '';
 
-let tabPadding: number = 20;
-let subpixelPrecision: number = getSubpixelPrecision();
+const tabPadding: number = 20;
+const subpixelPrecision: number = getSubpixelPrecision();
 
 export function initializeLocationSliding(): void {
   LocationGroupsElement.addEventListener(
@@ -421,7 +421,7 @@ function setupLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): voi
   const FieldHeight = WindowSize.height;
   const defaultItemQuantity: IntegratedLocation['itemQuantity'] = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 };
   const defaultGroupQuantity = 2;
-  let groupedItems: IntegratedLocation['groupedItems'] = {};
+  const groupedItems: IntegratedLocation['groupedItems'] = {};
   for (let i = 0; i < defaultGroupQuantity; i++) {
     const groupKey = `g_${i}`;
     groupedItems[groupKey] = [];

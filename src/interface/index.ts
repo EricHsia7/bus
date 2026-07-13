@@ -32,7 +32,7 @@ const splashScreenTimer_openTime = new Date().getTime();
 
 type Page = 'Home' | 'FolderCreator' | 'FolderEditor' | 'IconSelector' | 'IconSelectorSearch' | 'FolderManager' | 'LocationDetails' | 'Location' | 'RouteDetails' | 'Route' | 'RouteCalendar' | 'SaveToFolder' | 'Search' | 'Settings' | 'SettingsOptions' | 'DataUsage' | 'PersonalScheduleManager' | 'PersonalScheduleCreator' | 'PersonalScheduleEditor' | 'Bus' | 'RegisterNotification' | 'ScheduleNotification' | 'NotificationScheduleManager' | 'QRCode' | 'Storage';
 
-let pageHistory: Array<Page> = ['Home'];
+const pageHistory: Array<Page> = ['Home'];
 
 export function pushPageHistory(page: Page): void {
   const pageHistoryLength = pageHistory.length;

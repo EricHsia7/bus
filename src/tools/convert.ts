@@ -23,8 +23,8 @@ export function convertBytes(contentLength: number): string {
 export function convertNumberToLetters(number: number): string {
   let result = '';
   while (number > 0) {
-    let remainder = (number - 1) % 26; // Adjust for 1-based indexing
-    let letter = String.fromCharCode(remainder + 65); // A=65 in ASCII
+    const remainder = (number - 1) % 26; // Adjust for 1-based indexing
+    const letter = String.fromCharCode(remainder + 65); // A=65 in ASCII
     result = letter + result;
     number = Math.floor((number - 1) / 26); // Update number for next iteration
   }

@@ -1,5 +1,3 @@
-import { TypedArray } from 'fast-equals';
-
 export function calculateStandardDeviation(arr: Array<number>): number {
   // Step 1: Calculate the mean
   const mean = arr.reduce((acc, val) => acc + val, 0) / arr.length;

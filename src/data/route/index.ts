@@ -87,11 +87,11 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
 
-  let result = [];
-  let positions = [];
+  const result = [];
+  const positions = [];
 
   for (const item of EstimateTime) {
-    let integratedStopItem = {} as integratedStopItem;
+    const integratedStopItem = {} as integratedStopItem;
 
     const thisRouteID = item.RouteID;
 
@@ -259,14 +259,14 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
   let isBufferZoneOpened: boolean = false;
   let isBufferZoneClosed: boolean = false;
 
-  let groupedItems: { [key: string]: Array<integratedStopItem> } = {};
+  const groupedItems: { [key: string]: Array<integratedStopItem> } = {};
   let groupQuantity: number = 0;
-  let itemQuantity: { [key: string]: number } = {};
+  const itemQuantity: { [key: string]: number } = {};
 
   const resultLength = result.length;
 
   for (let index = 0; index < resultLength; index++) {
-    let item = result[index];
+    const item = result[index];
     const nextItem = result[index + 1] || item;
     let progress = 0;
 
@@ -313,7 +313,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
     }
     item.nearest = isNearest;
 
-    const groupKey = `g_${item.goBack}` || 'g_0';
+    const groupKey = `g_${item.goBack || '0'}`;
 
     if (!hasOwnProperty(groupedItems, groupKey)) {
       groupedItems[groupKey] = [];

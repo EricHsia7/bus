@@ -29,7 +29,7 @@ export async function saveEditedPersonalSchedule(personalScheduleID: string) {
     .split(':')
     .map((e) => parseInt(e, 10));
 
-  let days: WeekDayIndexArray = [];
+  const days: WeekDayIndexArray = [];
   for (let i = 0; i < 7; i++) {
     const thisDayElement = dayElements[i];
     const highlighted = thisDayElement.getAttribute('highlighted');

@@ -1,6 +1,6 @@
 import localforage from 'localforage';
 
-let storage = {
+const storage = {
   cacheStore: false, // 0
   settingsStore: false, // 1
   dataUsageStatsStore: false, // 2

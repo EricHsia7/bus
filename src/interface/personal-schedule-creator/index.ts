@@ -38,7 +38,7 @@ export async function createFormulatedPersonalSchedule() {
     .split(':')
     .map((e) => parseInt(e, 10));
 
-  let days: WeekDayIndexArray = [];
+  const days: WeekDayIndexArray = [];
   for (let i = 0; i < 7; i++) {
     const thisDayElement = scheduleDayElements[i];
     const highlighted = thisDayElement.getAttribute('highlighted');

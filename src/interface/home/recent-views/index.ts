@@ -196,8 +196,6 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
             }
             break;
           case 'bus':
-            if (previousItem.name !== thisItem.name) {
-            }
             if (previousItem.time !== thisItem.time) {
               updateTime(thisElement, thisItem);
             }

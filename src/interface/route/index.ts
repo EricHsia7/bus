@@ -55,8 +55,8 @@ const decoder = new TextDecoder();
 let currentRouteIDSet_RouteID: number = 0;
 let currentRouteIDSet_PathAttributeId: Array<number> = [];
 
-let tabPadding: number = 20;
-let subpixelPrecision: number = getSubpixelPrecision();
+const tabPadding: number = 20;
+const subpixelPrecision: number = getSubpixelPrecision();
 
 export function initializeRouteSliding(): void {
   RouteGroupsElement.addEventListener(
