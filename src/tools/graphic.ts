@@ -1,14 +1,23 @@
+const supportOffscreenCanvas: boolean = typeof OffscreenCanvas !== 'undefined';
+let canvas: OffscreenCanvas | HTMLCanvasElement;
+let context: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D;
+
+if (supportOffscreenCanvas) {
+  canvas = new OffscreenCanvas(64, 64);
+  context = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
+} else {
+  canvas = document.createElement('canvas');
+  context = canvas.getContext('2d') as CanvasRenderingContext2D;
+}
+
 export function getTextWidth(text: string, weight: number, size: string, fontFamily: string): number {
-  const canvas: HTMLCanvasElement = getTextWidth.canvas || (getTextWidth.canvas = document.createElement('canvas'));
-  const context = canvas.getContext('2d');
   const font: string = `${weight} ${size} ${fontFamily}`;
   context.font = font;
+  context.textBaseline = 'alphabetic';
   return context.measureText(text).width;
 }
 
 export function getTextHeight(text: string, weight: number, size: string, fontFamily: string): number {
-  const canvas: HTMLCanvasElement = getTextHeight.canvas || (getTextHeight.canvas = document.createElement('canvas'));
-  const context = canvas.getContext('2d');
   const font: string = `${weight} ${size} ${fontFamily}`;
   context.font = font;
   context.textBaseline = 'top';
@@ -16,10 +25,9 @@ export function getTextHeight(text: string, weight: number, size: string, fontFa
 }
 
 export function getTextBoundingBox(text: string, weight: number, size: string, fontFamily: string): [topOffset: number, width: number, height: number] {
-  const canvas: HTMLCanvasElement = getTextBoundingBox.canvas || (getTextBoundingBox.canvas = document.createElement('canvas'));
-  const context = canvas.getContext('2d');
   const font: string = `${weight} ${size} ${fontFamily}`;
   context.font = font;
+  context.textBaseline = 'alphabetic';
   const measurement = context.measureText(text);
   const topOffset = Math.max(Math.abs(measurement.emHeightAscent || 0), Math.abs(measurement.hangingBaseline || 0), Math.abs(measurement.fontBoundingBoxAscent || 0), Math.abs(measurement.actualBoundingBoxAscent || 0));
   return [topOffset, measurement.width, measurement.fontBoundingBoxAscent + measurement.fontBoundingBoxDescent];
