@@ -1,4 +1,4 @@
-const localforage = require('localforage');
+import localforage from 'localforage';
 
 let storage = {
   cacheStore: false, // 0

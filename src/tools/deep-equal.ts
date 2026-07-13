@@ -1,1 +1,1 @@
-export const { deepEqual } = require('fast-equals');
+export { deepEqual } from 'fast-equals';
