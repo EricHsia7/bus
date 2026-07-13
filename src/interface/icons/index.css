@@ -18,7 +18,7 @@ span.css_material_symbols_rounded {
   letter-spacing: normal;
   text-transform: none;
   white-space: nowrap;
-  word-wrap: normal;
+  overflow-wrap: normal;
   direction: ltr;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

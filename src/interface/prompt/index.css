@@ -37,9 +37,6 @@
   overflow: clip;
   will-change: transform, opacity;
   visibility: hidden;
-}
-
-.css_prompt {
   animation-name: b-css-show-prompt;
   animation-duration: 2800ms;
   animation-fill-mode: forwards;
