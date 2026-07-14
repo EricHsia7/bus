@@ -3,9 +3,6 @@ import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
-let SemiTimetableAPIVariableCache_available: boolean = false;
-let SemiTimetableAPIVariableCache_data: object = {};
-
 export interface SemiTimetableItem {
   Id: number;
   PathAttributeId: number;
@@ -18,6 +15,13 @@ export interface SemiTimetableItem {
 }
 
 export type SemiTimeTable = Array<SemiTimetableItem>;
+
+let SemiTimetableMemoryCache_available: boolean = false;
+let SemiTimetableMemoryCache_data: SemiTimeTable = [];
+let SemiTimetableMemoryCache_timestamp: number = -1;
+
+const cacheTimeToLive = 60 * 60 * 24 * 14 * 1000;
+const cacheKey = 'bus_semi_timetable_cache';
 
 export async function getSemiTimeTable(progress: Progress): Promise<SemiTimeTable> {
   async function getData() {
@@ -42,33 +46,29 @@ export async function getSemiTimeTable(progress: Progress): Promise<SemiTimeTabl
     return result;
   }
 
-  const cacheTimeToLive = 60 * 60 * 24 * 14 * 1000;
-  const cacheKey = 'bus_semi_timetable_cache';
-  const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
-  if (cacheTimestamp === null) {
-    const result = await getData();
-    await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-    await lfSetItem(0, cacheKey, JSON.stringify(result));
-    if (!SemiTimetableAPIVariableCache_available) {
-      SemiTimetableAPIVariableCache_available = true;
-      SemiTimetableAPIVariableCache_data = result;
-    }
-    return result;
-  } else {
-    if (new Date().getTime() - parseInt(cacheTimestamp, 10) > cacheTimeToLive) {
-      const result = await getData();
-      await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-      await lfSetItem(0, cacheKey, JSON.stringify(result));
-      return result;
-    } else {
-      if (!SemiTimetableAPIVariableCache_available) {
-        const cache = await lfGetItem(0, cacheKey);
-        SemiTimetableAPIVariableCache_available = true;
-        SemiTimetableAPIVariableCache_data = JSON.parse(cache);
-      }
-      progress.update(progress.listen(), 1, 1);
-      progress.update(progress.listen(), 1, 1);
-      return SemiTimetableAPIVariableCache_data;
+  const now = new Date().getTime();
+
+  if (SemiTimetableMemoryCache_timestamp === -1) {
+    const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+    if (cacheTimestamp) SemiTimetableMemoryCache_timestamp = parseInt(cacheTimestamp, 10);
+    const cache = await lfGetItem(0, cacheKey);
+    if (cache) {
+      SemiTimetableMemoryCache_data = JSON.parse(cache);
+      SemiTimetableMemoryCache_available = true;
     }
   }
+
+  if (SemiTimetableMemoryCache_available && now - SemiTimetableMemoryCache_timestamp <= cacheTimeToLive) {
+    progress.update(progress.listen(), 1, 1);
+    progress.update(progress.listen(), 1, 1);
+    return SemiTimetableMemoryCache_data;
+  }
+
+  const result = await getData();
+  SemiTimetableMemoryCache_data = result;
+  SemiTimetableMemoryCache_available = true;
+  SemiTimetableMemoryCache_timestamp = now;
+  await lfSetItem(0, `${cacheKey}_timestamp`, now.toString());
+  await lfSetItem(0, cacheKey, JSON.stringify(result));
+  return result;
 }

@@ -30,8 +30,12 @@ export interface SimplifiedStopItem {
 
 export type SimplifiedStop = { [key: string]: SimplifiedStopItem };
 
-let StopAPIVariableCache_available: boolean = false;
-let StopAPIVariableCache_data: SimplifiedStop = {};
+let StopMemoryCache_available: boolean = false;
+let StopMemoryCache_data: SimplifiedStop = {};
+let StopMemoryCache_timestamp: number = -1;
+
+const cacheTimeToLive = 60 * 60 * 24 * 45 * 1000;
+const cacheKey = 'bus_stop_cache';
 
 async function simplifyStop(array: Stop): Promise<SimplifiedStop> {
   const worker = new Worker(new URL('./simplifyStop-worker.ts', import.meta.url));
@@ -77,35 +81,30 @@ export async function getStop(progress: Progress): Promise<SimplifiedStop> {
     return result;
   }
 
-  const cacheTimeToLive = 60 * 60 * 24 * 45 * 1000;
-  const cacheKey = 'bus_stop_cache';
-  const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
-  if (cacheTimestamp === null) {
-    const result = await getData();
-    const simplified_result = await simplifyStop(result);
-    await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-    await lfSetItem(0, cacheKey, JSON.stringify(simplified_result));
-    if (!StopAPIVariableCache_available) {
-      StopAPIVariableCache_available = true;
-      StopAPIVariableCache_data = simplified_result;
-    }
-    return simplified_result;
-  } else {
-    if (new Date().getTime() - parseInt(cacheTimestamp, 10) > cacheTimeToLive) {
-      const result = await getData();
-      const simplified_result = await simplifyStop(result);
-      await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-      await lfSetItem(0, cacheKey, JSON.stringify(simplified_result));
-      return simplified_result;
-    } else {
-      if (!StopAPIVariableCache_available) {
-        const cache = await lfGetItem(0, cacheKey);
-        StopAPIVariableCache_available = true;
-        StopAPIVariableCache_data = JSON.parse(cache);
-      }
-      progress.update(progress.listen(), 1, 1);
-      progress.update(progress.listen(), 1, 1);
-      return StopAPIVariableCache_data;
+  const now = new Date().getTime();
+
+  if (StopMemoryCache_timestamp === -1) {
+    const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+    if (cacheTimestamp) StopMemoryCache_timestamp = parseInt(cacheTimestamp, 10);
+    const cache = await lfGetItem(0, cacheKey);
+    if (cache) {
+      StopMemoryCache_data = JSON.parse(cache);
+      StopMemoryCache_available = true;
     }
   }
+
+  if (StopMemoryCache_available && now - StopMemoryCache_timestamp <= cacheTimeToLive) {
+    progress.update(progress.listen(), 1, 1);
+    progress.update(progress.listen(), 1, 1);
+    return StopMemoryCache_data;
+  }
+
+  const result = await getData();
+  const simplifiedResult = await simplifyStop(result);
+  StopMemoryCache_data = simplifiedResult;
+  StopMemoryCache_available = true;
+  StopMemoryCache_timestamp = now;
+  await lfSetItem(0, `${cacheKey}_timestamp`, now.toString());
+  await lfSetItem(0, cacheKey, JSON.stringify(simplifiedResult));
+  return simplifiedResult;
 }

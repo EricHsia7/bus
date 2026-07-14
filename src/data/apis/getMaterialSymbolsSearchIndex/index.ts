@@ -13,8 +13,12 @@ export interface UnpackedMaterialSymbolsSearchIndex {
   symbols: { [symbol: string]: Array<number> };
 }
 
-let MaterialSymbolsSearchIndexVariableCache_available: boolean = false;
-let MaterialSymbolsSearchIndexVariableCache_data = {} as UnpackedMaterialSymbolsSearchIndex;
+let MaterialSymbolsSearchIndexMemoryCache_available: boolean = false;
+let MaterialSymbolsSearchIndexMemoryCache_data = {} as UnpackedMaterialSymbolsSearchIndex;
+let MaterialSymbolsSearchIndexMemoryCache_timestamp: number = -1;
+
+const cacheTimeToLive = 60 * 60 * 24 * 7 * 1000;
+const cacheKey = 'bus_material_symbols_search_index_v6_cache';
 
 function unpackMaterialSymbolsSearchIndex(data: MaterialSymbolsSearchIndex): UnpackedMaterialSymbolsSearchIndex {
   const unpackedData: UnpackedMaterialSymbolsSearchIndex = {
@@ -44,38 +48,29 @@ export async function getMaterialSymbolsSearchIndex(progress: Progress): Promise
     return data;
   }
 
-  const cacheTimeToLive = 60 * 60 * 24 * 7 * 1000;
-  const cacheKey = 'bus_material_symbols_search_index_v6_cache';
-  const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
-  if (cacheTimestamp === null) {
-    const result = await getData();
-    const unpacked = unpackMaterialSymbolsSearchIndex(result);
-    await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-    await lfSetItem(0, cacheKey, JSON.stringify(unpacked));
-    if (!MaterialSymbolsSearchIndexVariableCache_available) {
-      MaterialSymbolsSearchIndexVariableCache_available = true;
-      MaterialSymbolsSearchIndexVariableCache_data = unpacked;
-    }
-    return unpacked;
-  } else {
-    if (new Date().getTime() - parseInt(cacheTimestamp, 10) > cacheTimeToLive) {
-      const result = await getData();
-      const unpacked = unpackMaterialSymbolsSearchIndex(result);
-      await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-      await lfSetItem(0, cacheKey, JSON.stringify(unpacked));
-      if (!MaterialSymbolsSearchIndexVariableCache_available) {
-        MaterialSymbolsSearchIndexVariableCache_available = true;
-        MaterialSymbolsSearchIndexVariableCache_data = unpacked;
-      }
-      return unpacked;
-    } else {
-      if (!MaterialSymbolsSearchIndexVariableCache_available) {
-        const cache = await lfGetItem(0, cacheKey);
-        MaterialSymbolsSearchIndexVariableCache_available = true;
-        MaterialSymbolsSearchIndexVariableCache_data = JSON.parse(cache);
-      }
-      progress.update(progress.listen(), 1, 1);
-      return MaterialSymbolsSearchIndexVariableCache_data;
+  const now = new Date().getTime();
+
+  if (MaterialSymbolsSearchIndexMemoryCache_timestamp === -1) {
+    const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+    if (cacheTimestamp) MaterialSymbolsSearchIndexMemoryCache_timestamp = parseInt(cacheTimestamp, 10);
+    const cache = await lfGetItem(0, cacheKey);
+    if (cache) {
+      MaterialSymbolsSearchIndexMemoryCache_data = JSON.parse(cache) as UnpackedMaterialSymbolsSearchIndex;
+      MaterialSymbolsSearchIndexMemoryCache_available = true;
     }
   }
+
+  if (MaterialSymbolsSearchIndexMemoryCache_available && now - MaterialSymbolsSearchIndexMemoryCache_timestamp <= cacheTimeToLive) {
+    progress.update(progress.listen(), 1, 1);
+    return MaterialSymbolsSearchIndexMemoryCache_data;
+  }
+
+  const result = await getData();
+  const unpacked = unpackMaterialSymbolsSearchIndex(result);
+  MaterialSymbolsSearchIndexMemoryCache_data = unpacked;
+  MaterialSymbolsSearchIndexMemoryCache_available = true;
+  MaterialSymbolsSearchIndexMemoryCache_timestamp = now;
+  await lfSetItem(0, `${cacheKey}_timestamp`, now.toString());
+  await lfSetItem(0, cacheKey, JSON.stringify(unpacked));
+  return unpacked;
 }

@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-api-memory-cache-2
 
 jobs:
   build:
