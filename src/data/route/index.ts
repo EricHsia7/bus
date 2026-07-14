@@ -73,8 +73,8 @@ export interface IntegratedRoute {
 
 export async function integrateRoute(RouteID: number, PathAttributeId: Array<number>, chartWidth: number, chartHeight: number, progressCallback: ProgressCallback): Promise<IntegratedRoute> {
   const progress = new Progress(18, progressCallback); // getRoute: 2 + getStop: 2 + getLocation: 2 * 3 + getSegmentBuffers: 2 + getEstimateTime: 2 + getBusEvent: 2 + getBusData: 2
-  const [Route, Stop, SegmentBuffers, SimplifiedLocation] = (await Promise.all([getRoute(progress, true), getStop(progress), getSegmentBuffers(progress), getLocation(progress, 0)])) as [SimplifiedRoute, SimplifiedStop, SimplifiedSegmentBuffer, SimplifiedLocation];
-  const [EstimateTime, MergedLocation, BusEvent] = (await Promise.all([getEstimateTime(progress), getLocation(progress, 1), getBusEvent(progress)])) as [EstimateTime, MergedLocation, BusEvent];
+  const [Route, Stop, EstimateTime, SimplifiedLocation] = (await Promise.all([getRoute(progress, true), getStop(progress), getEstimateTime(progress), getLocation(progress, 0)])) as [SimplifiedRoute, SimplifiedStop, EstimateTime, SimplifiedLocation];
+  const [SegmentBuffers, MergedLocation, BusEvent] = (await Promise.all([getSegmentBuffers(progress), getLocation(progress, 1), getBusEvent(progress)])) as [SimplifiedSegmentBuffer, MergedLocation, BusEvent];
   const [BusData, BusArrivalTimes, IndexedLocation] = (await Promise.all([getBusData(progress), plotBusArrivalTime(chartWidth, chartHeight), getLocation(progress, 2)])) as [BusData, BusArrivalTimes, IndexedLocation];
   const batchFoundBuses = batchFindBusesForRoute(BusEvent, BusData, Route, RouteID, PathAttributeId);
 
