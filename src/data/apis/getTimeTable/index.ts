@@ -43,6 +43,7 @@ export async function getTimeTable(progress: Progress): Promise<Timetable> {
     }
     return result;
   }
+
   const now = new Date().getTime();
 
   if (TimetableMemoryCache_timestamp === -1) {
