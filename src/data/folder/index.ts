@@ -16,7 +16,7 @@ import { EstimateTimeStatus, parseEstimateTime } from '../apis/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../settings/index';
 import { lfGetItem, lfRemoveItem, lfSetItem } from '../storage/index';
 
-interface FolderContentRouteEndPoints {
+export interface FolderContentRouteEndPoints {
   departure: string;
   destination: string;
 }
@@ -446,22 +446,16 @@ export interface integratedFolders {
 
 export async function integrateFolders(progressCallback: ProgressCallback): Promise<integratedFolders> {
   const progress = new Progress(4, progressCallback); // getRoute: 2 + getEstimateTime: 2
-  const [foldersWithContent, Route, EstimateTime] = (await Promise.all([listFoldersWithContent(), getRoute(progress, true), getEstimateTime(progress)])) as [FolderWithContentArray, SimplifiedRoute, EstimateTime];
+  const [Route, EstimateTime] = (await Promise.all([getRoute(progress, true), getEstimateTime(progress)])) as [SimplifiedRoute, EstimateTime];
+  const foldersWithContent = listFoldersWithContent();
+  const StopIDs = (listAllFolderContent(['stop']) as Array<FolderContentStop>).map((stop) => stop.id);
+
   // const Location = (await getLocation(progress, 1)) as MergedLocation;
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
   // const location_labels = getSettingOptionValue('location_labels');
   const power_saving = getSettingOptionValue('power_saving') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
-
-  const StopIDs: Array<FolderContentStop['id']> = [];
-  for (const folderWithContent1 of foldersWithContent) {
-    for (let i = 0, l = folderWithContent1.content.length; i < l; i++) {
-      if (folderWithContent1.content[i].type === 'stop') {
-        StopIDs.push(folderWithContent1.content[i].id as FolderContentStop['id']);
-      }
-    }
-  }
 
   const batchFoundEstimateTime: { [key: string]: EstimateTimeItem } = {};
   for (const EstimateTimeItem of EstimateTime) {
@@ -472,19 +466,18 @@ export async function integrateFolders(progressCallback: ProgressCallback): Prom
   }
 
   const folders: integratedFolders['folders'] = [];
-
-  for (const folderWithContent2 of foldersWithContent) {
+  for (const folderWithContent of foldersWithContent) {
     // Initialize integratedFolder
     const integratedFolder: integratedFolder = {
-      name: folderWithContent2.name,
-      icon: folderWithContent2.icon,
-      id: folderWithContent2.id,
-      timestamp: folderWithContent2.timestamp,
+      name: folderWithContent.name,
+      icon: folderWithContent.icon,
+      id: folderWithContent.id,
+      timestamp: folderWithContent.timestamp,
       content: [],
-      contentLength: folderWithContent2.contentLength
+      contentLength: folderWithContent.contentLength
     };
 
-    for (const item of folderWithContent2.content) {
+    for (const item of folderWithContent.content) {
       const integratedItem = item as integratedFolderContent;
       switch (integratedItem.type) {
         case 'stop': {
