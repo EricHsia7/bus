@@ -68,7 +68,7 @@ export async function lfGetItem(store: number, key: string): Promise<any> {
         name: storeKey
       });
     }
-    const operation = await promiseWithTimeout<any>(storage[storeKey].getItem(key));
+    const operation = await storage[storeKey].getItem(key); // await promiseWithTimeout<any>(storage[storeKey].getItem(key));
     return operation;
   } catch (err) {
     console.log(err);
