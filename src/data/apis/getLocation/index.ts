@@ -60,20 +60,19 @@ export interface IndexedLocationItem {
 
 export type IndexedLocation = { [geohash: string]: Array<IndexedLocationItem> };
 
-const LocationAPIVariableCache = {
-  simplified: {
-    available: false,
-    data: {}
-  },
-  merged: {
-    available: false,
-    data: {}
-  },
-  indexed: {
-    available: false,
-    data: {}
-  }
-};
+let SimplifiedLocationMemoryCache_available: boolean = false;
+let SimplifiedLocationMemoryCache_data: SimplifiedLocation = {};
+let SimplifiedLocationMemoryCache_timestamp: number = -1;
+
+let MergedLocationMemoryCache_available: boolean = false;
+let MergedLocationMemoryCache_data: MergedLocation = {};
+let MergedLocationMemoryCache_timestamp: number = -1;
+
+let IndexdedLocationMemoryCache_available: boolean = false;
+let IndexdedLocationMemoryCache_data: IndexedLocation = {};
+let IndexdedLocationMemoryCache_timestamp: number = -1;
+
+const cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
 
 async function simplifyLocation(Location: Location): Promise<SimplifiedLocation> {
   const worker = new Worker(new URL('./simplifyLocation-worker.ts', import.meta.url));
@@ -146,7 +145,7 @@ async function indexLocationByGeohash(object: MergedLocation): Promise<IndexedLo
  */
 
 export async function getLocation(progress: Progress, type: 0 | 1 | 2): Promise<SimplifiedLocation | MergedLocation | IndexedLocation> {
-  async function getData() {
+  async function getData(): Promise<Location> {
     const apis = [
       [0, 11],
       [1, 11]
@@ -161,91 +160,95 @@ export async function getLocation(progress: Progress, type: 0 | 1 | 2): Promise<
       });
       const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i]);
+        result.push(data.BusInfo[i] as LocationItem);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }
     return result;
   }
 
-  const cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
   const cacheType = ['simplified', 'merged', 'indexed'][type];
   const cacheKey = `bus_${cacheType}_location_v2_cache`;
-  const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
-  if (cacheTimestamp === null) {
-    let finalResult;
-    switch (type) {
-      case 0: {
-        const result = await getData();
-        const simplified_result = await simplifyLocation(result);
-        finalResult = simplified_result;
-        break;
-      }
-      case 1: {
-        const simplified_result = await getLocation(progress, 0);
-        const merged_result = await mergeLocationByName(simplified_result);
-        finalResult = merged_result;
-        break;
-      }
-      case 2: {
-        const merged_result = await getLocation(progress, 1);
-        const indexed_result = await indexLocationByGeohash(merged_result);
-        finalResult = indexed_result;
-        break;
-      }
-      default:
-        break;
-    }
+  const now = new Date().getTime();
 
-    await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-    await lfSetItem(0, cacheKey, JSON.stringify(finalResult));
-    if (!LocationAPIVariableCache[cacheType].available) {
-      LocationAPIVariableCache[cacheType].available = true;
-      LocationAPIVariableCache[cacheType].data = finalResult;
+  if (type === 0 && SimplifiedLocationMemoryCache_timestamp === -1) {
+    const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+    if (cacheTimestamp) SimplifiedLocationMemoryCache_timestamp = parseInt(cacheTimestamp, 10);
+    const cache = await lfGetItem(0, cacheKey);
+    if (cache) {
+      SimplifiedLocationMemoryCache_data = JSON.parse(cache) as SimplifiedLocation;
+      SimplifiedLocationMemoryCache_available = true;
     }
-    return finalResult;
-  } else {
-    if (new Date().getTime() - parseInt(cacheTimestamp, 10) > cacheTimeToLive) {
-      let finalResult;
-      switch (type) {
-        case 0: {
-          const result = await getData();
-          const simplified_result = await simplifyLocation(result);
-          finalResult = simplified_result;
-          break;
-        }
-        case 1: {
-          const simplified_result = await getLocation(progress, 0);
-          const merged_result = await mergeLocationByName(simplified_result);
-          finalResult = merged_result;
-          break;
-        }
-        case 2: {
-          const merged_result = await getLocation(progress, 1);
-          const indexed_result = await indexLocationByGeohash(merged_result);
-          finalResult = indexed_result;
-          break;
-        }
-        default:
-          break;
-      }
+  }
 
-      await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-      await lfSetItem(0, cacheKey, JSON.stringify(finalResult));
-      if (!LocationAPIVariableCache[cacheType].available) {
-        LocationAPIVariableCache[cacheType].available = true;
-        LocationAPIVariableCache[cacheType].data = finalResult;
-      }
-      return finalResult;
-    } else {
-      if (!LocationAPIVariableCache[cacheType].available) {
-        const cache = await lfGetItem(0, cacheKey);
-        LocationAPIVariableCache[cacheType].available = true;
-        LocationAPIVariableCache[cacheType].data = JSON.parse(cache);
-      }
-      progress.update(progress.listen(), 1, 1);
-      progress.update(progress.listen(), 1, 1);
-      return LocationAPIVariableCache[cacheType].data;
+  if (type === 1 && MergedLocationMemoryCache_timestamp === -1) {
+    const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+    if (cacheTimestamp) MergedLocationMemoryCache_timestamp = parseInt(cacheTimestamp, 10);
+    const cache = await lfGetItem(0, cacheKey);
+    if (cache) {
+      MergedLocationMemoryCache_data = JSON.parse(cache) as MergedLocation;
+      MergedLocationMemoryCache_available = true;
+    }
+  }
+
+  if (type === 2 && IndexdedLocationMemoryCache_timestamp === -1) {
+    const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+    if (cacheTimestamp) IndexdedLocationMemoryCache_timestamp = parseInt(cacheTimestamp, 10);
+    const cache = await lfGetItem(0, cacheKey);
+    if (cache) {
+      IndexdedLocationMemoryCache_data = JSON.parse(cache) as IndexedLocation;
+      IndexdedLocationMemoryCache_available = true;
+    }
+  }
+
+  if (type === 0 && SimplifiedLocationMemoryCache_available && now - SimplifiedLocationMemoryCache_timestamp <= cacheTimeToLive) {
+    progress.update(progress.listen(), 1, 1);
+    progress.update(progress.listen(), 1, 1);
+    return SimplifiedLocationMemoryCache_data;
+  }
+
+  if (type === 1 && MergedLocationMemoryCache_available && now - MergedLocationMemoryCache_timestamp <= cacheTimeToLive) {
+    progress.update(progress.listen(), 1, 1);
+    progress.update(progress.listen(), 1, 1);
+    return MergedLocationMemoryCache_data;
+  }
+
+  if (type === 2 && IndexdedLocationMemoryCache_available && now - IndexdedLocationMemoryCache_timestamp <= cacheTimeToLive) {
+    progress.update(progress.listen(), 1, 1);
+    progress.update(progress.listen(), 1, 1);
+    return IndexdedLocationMemoryCache_data;
+  }
+
+  switch (type) {
+    case 0: {
+      const result = await getData();
+      const simplifiedResult = await simplifyLocation(result);
+      SimplifiedLocationMemoryCache_data = simplifiedResult;
+      SimplifiedLocationMemoryCache_available = true;
+      SimplifiedLocationMemoryCache_timestamp = now;
+      await lfSetItem(0, cacheKey, JSON.stringify(simplifiedResult));
+      await lfSetItem(0, `${cacheKey}_timestamp`, now.toString());
+      return simplifiedResult;
+    }
+    case 1: {
+      const simplifiedResult = (await getLocation(progress, 0)) as SimplifiedLocation;
+      const mergedResult = await mergeLocationByName(simplifiedResult);
+      MergedLocationMemoryCache_data = mergedResult;
+      MergedLocationMemoryCache_available = true;
+      MergedLocationMemoryCache_timestamp = now;
+      await lfSetItem(0, cacheKey, JSON.stringify(mergedResult));
+      await lfSetItem(0, `${cacheKey}_timestamp`, now.toString());
+      return mergedResult;
+    }
+    case 2: {
+      const mergedResult = (await getLocation(progress, 1)) as MergedLocation;
+      const indexedResult = await indexLocationByGeohash(mergedResult);
+      IndexdedLocationMemoryCache_data = indexedResult;
+      IndexdedLocationMemoryCache_available = true;
+      IndexdedLocationMemoryCache_timestamp = now;
+      await lfSetItem(0, cacheKey, JSON.stringify(indexedResult));
+      await lfSetItem(0, `${cacheKey}_timestamp`, now.toString());
+      return indexedResult;
     }
   }
 }

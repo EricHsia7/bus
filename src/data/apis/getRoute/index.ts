@@ -60,8 +60,15 @@ export interface SimplifiedRouteItem {
 
 export type SimplifiedRoute = { [r_id: string]: SimplifiedRouteItem };
 
-let RouteAPIVariableCache_available: boolean = false;
-let RouteAPIVariableCache_data: object = {};
+let SimplifiedRouteMemoryCache_available: boolean = false;
+let SimplifiedRouteMemoryCache_data: SimplifiedRoute = {};
+let SimplifiedRouteMemoryCache_timestamp: number = -1;
+
+let RawRouteMemoryCache_available: boolean = false;
+let RawRouteMemoryCache_data: Route = [];
+let RawRouteMemoryCache_timestamp: number = -1;
+
+const cacheTimeToLive = 60 * 60 * 24 * 1 * 1000;
 
 async function simplifyRoute(Route: Route): Promise<SimplifiedRoute> {
   const worker = new Worker(new URL('./simplifyRoute-worker.ts', import.meta.url));
@@ -84,8 +91,8 @@ async function simplifyRoute(Route: Route): Promise<SimplifiedRoute> {
   return result;
 }
 
-export async function getRoute(progress: Progress, simplify: boolean = true): Promise<SimplifiedRoute | Route> {
-  async function getData() {
+export async function getRoute(progress: Progress, simplified: boolean = true): Promise<SimplifiedRoute | Route> {
+  async function getData(): Promise<Route> {
     const apis = [
       [0, 10],
       [1, 10]
@@ -100,48 +107,65 @@ export async function getRoute(progress: Progress, simplify: boolean = true): Pr
       });
       const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i]);
+        result.push(data.BusInfo[i] as RouteItem);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }
     return result;
   }
-  if (simplify === false) {
-    return await getData();
+
+  const cacheType = simplified ? 'simplified' : 'raw';
+  const cacheKey = `bus_${cacheType}_route_cache`;
+  const now = new Date().getTime();
+
+  if (simplified && SimplifiedRouteMemoryCache_timestamp === -1) {
+    const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+    if (cacheTimestamp) SimplifiedRouteMemoryCache_timestamp = parseInt(cacheTimestamp, 10);
+    const cache = await lfGetItem(0, cacheKey);
+    if (cache) {
+      SimplifiedRouteMemoryCache_data = JSON.parse(cache);
+      SimplifiedRouteMemoryCache_available = true;
+    }
   }
-  const cacheTimeToLive = 60 * 60 * 24 * 1 * 1000;
-  const cacheKey = 'bus_route_cache';
-  const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
-  if (cacheTimestamp === null) {
+
+  if (!simplified && RawRouteMemoryCache_timestamp === -1) {
+    const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+    if (cacheTimestamp) RawRouteMemoryCache_timestamp = parseInt(cacheTimestamp, 10);
+    const cache = await lfGetItem(0, cacheKey);
+    if (cache) {
+      RawRouteMemoryCache_data = JSON.parse(cache);
+      RawRouteMemoryCache_available = true;
+    }
+  }
+
+  if (simplified && SimplifiedRouteMemoryCache_available && now - SimplifiedRouteMemoryCache_timestamp <= cacheTimeToLive) {
+    progress.update(progress.listen(), 1, 1);
+    progress.update(progress.listen(), 1, 1);
+    return SimplifiedRouteMemoryCache_data;
+  }
+
+  if (!simplified && RawRouteMemoryCache_available && now - RawRouteMemoryCache_timestamp <= cacheTimeToLive) {
+    progress.update(progress.listen(), 1, 1);
+    progress.update(progress.listen(), 1, 1);
+    return RawRouteMemoryCache_data;
+  }
+
+  if (simplified) {
     const result = await getData();
-    const simplified_result = await simplifyRoute(result);
-    await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-    await lfSetItem(0, cacheKey, JSON.stringify(simplified_result));
-    if (!RouteAPIVariableCache_available) {
-      RouteAPIVariableCache_available = true;
-      RouteAPIVariableCache_data = simplified_result;
-    }
-    return simplified_result;
+    const simplifiedResult = await simplifyRoute(result);
+    SimplifiedRouteMemoryCache_data = simplifiedResult;
+    SimplifiedRouteMemoryCache_available = true;
+    SimplifiedRouteMemoryCache_timestamp = now;
+    await lfSetItem(0, `${cacheKey}_timestamp`, now.toString());
+    await lfSetItem(0, cacheKey, JSON.stringify(simplifiedResult));
+    return simplifiedResult;
   } else {
-    if (new Date().getTime() - parseInt(cacheTimestamp, 10) > cacheTimeToLive) {
-      const result = await getData();
-      const simplified_result = await simplifyRoute(result);
-      await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-      await lfSetItem(0, cacheKey, JSON.stringify(simplified_result));
-      if (!RouteAPIVariableCache_available) {
-        RouteAPIVariableCache_available = true;
-        RouteAPIVariableCache_data = simplified_result;
-      }
-      return simplified_result;
-    } else {
-      if (!RouteAPIVariableCache_available) {
-        const cache = await lfGetItem(0, cacheKey);
-        RouteAPIVariableCache_available = true;
-        RouteAPIVariableCache_data = JSON.parse(cache);
-      }
-      progress.update(progress.listen(), 1, 1);
-      progress.update(progress.listen(), 1, 1);
-      return RouteAPIVariableCache_data;
-    }
+    const result = await getData();
+    RawRouteMemoryCache_data = result;
+    RawRouteMemoryCache_available = true;
+    RawRouteMemoryCache_timestamp = now;
+    await lfSetItem(0, `${cacheKey}_timestamp`, now.toString());
+    await lfSetItem(0, cacheKey, JSON.stringify(result));
+    return result;
   }
 }

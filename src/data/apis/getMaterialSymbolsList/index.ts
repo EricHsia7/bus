@@ -9,8 +9,12 @@ export interface MaterialSymbolsList {
 
 export type UnpackedMaterialSymbolsList = Array<string>;
 
-let MaterialSymbolsListVariableCache_available: boolean = false;
-let MaterialSymbolsListVariableCache_data = [] as UnpackedMaterialSymbolsList;
+let MaterialSymbolsListMemoryCache_available: boolean = false;
+let MaterialSymbolsListMemoryCache_data: UnpackedMaterialSymbolsList = [];
+let MaterialSymbolsListMemoryCache_timestamp: number = -1;
+
+const cacheTimeToLive = 60 * 60 * 24 * 7 * 1000;
+const cacheKey = 'bus_material_symbols_list_v2_cache';
 
 export async function getMaterialSymbolsList(progress: Progress): Promise<UnpackedMaterialSymbolsList> {
   async function getData(): Promise<MaterialSymbolsList> {
@@ -24,38 +28,29 @@ export async function getMaterialSymbolsList(progress: Progress): Promise<Unpack
     return data;
   }
 
-  const cacheTimeToLive = 60 * 60 * 24 * 7 * 1000;
-  const cacheKey = 'bus_material_symbols_list_v2_cache';
-  const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
-  if (cacheTimestamp === null) {
-    const result = await getData();
-    const unpacked = result.list.split(',');
-    await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-    await lfSetItem(0, cacheKey, result.list);
-    if (!MaterialSymbolsListVariableCache_available) {
-      MaterialSymbolsListVariableCache_available = true;
-      MaterialSymbolsListVariableCache_data = unpacked;
-    }
-    return unpacked;
-  } else {
-    if (new Date().getTime() - parseInt(cacheTimestamp, 10) > cacheTimeToLive) {
-      const result = await getData();
-      const unpacked = result.list.split(',');
-      await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-      await lfSetItem(0, cacheKey, result.list);
-      if (!MaterialSymbolsListVariableCache_available) {
-        MaterialSymbolsListVariableCache_available = true;
-        MaterialSymbolsListVariableCache_data = unpacked;
-      }
-      return unpacked;
-    } else {
-      if (!MaterialSymbolsListVariableCache_available) {
-        const cache = await lfGetItem(0, cacheKey);
-        MaterialSymbolsListVariableCache_available = true;
-        MaterialSymbolsListVariableCache_data = cache.split(',');
-      }
-      progress.update(progress.listen(), 1, 1);
-      return MaterialSymbolsListVariableCache_data;
+  const now = new Date().getTime();
+
+  if (MaterialSymbolsListMemoryCache_timestamp === -1) {
+    const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+    if (cacheTimestamp) MaterialSymbolsListMemoryCache_timestamp = parseInt(cacheTimestamp, 10);
+    const cache = await lfGetItem(0, cacheKey);
+    if (cache) {
+      MaterialSymbolsListMemoryCache_data = (cache as string).split(',') as UnpackedMaterialSymbolsList;
+      MaterialSymbolsListMemoryCache_available = true;
     }
   }
+
+  if (MaterialSymbolsListMemoryCache_available && now - MaterialSymbolsListMemoryCache_timestamp <= cacheTimeToLive) {
+    progress.update(progress.listen(), 1, 1);
+    return MaterialSymbolsListMemoryCache_data;
+  }
+
+  const result = await getData();
+  const unpacked = result.list.split(',');
+  MaterialSymbolsListMemoryCache_data = unpacked;
+  MaterialSymbolsListMemoryCache_available = true;
+  MaterialSymbolsListMemoryCache_timestamp = now;
+  await lfSetItem(0, `${cacheKey}_timestamp`, now.toString());
+  await lfSetItem(0, cacheKey, result.list);
+  return unpacked;
 }

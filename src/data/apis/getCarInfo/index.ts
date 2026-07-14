@@ -26,16 +26,15 @@ export interface SimplifiedCarInfoItem {
 
 export type SimplifiedCarInfo = { [key: string]: SimplifiedCarInfoItem };
 
-const CarInfoAPIVariableCache = {
-  raw: {
-    data: [],
-    available: false
-  },
-  simplified: {
-    data: {},
-    available: false
-  }
-};
+let RawCarInfoMemoryCache_available: boolean = false;
+let RawCarInfoMemoryCache_data: CarInfo = [];
+let RawCarInfoMemoryCache_timestamp: number = -1;
+
+let SimplifiedCarInfoMemoryCache_available: boolean = false;
+let SimplifiedCarInfoMemoryCache_data: SimplifiedCarInfo = {};
+let SimplifiedCarInfoMemoryCache_timestamp: number = -1;
+
+const cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
 
 async function simplifyCarInfo(CarInfo: CarInfo): Promise<SimplifiedCarInfo> {
   const worker = new Worker(new URL('./simplifyCarInfo-worker.ts', import.meta.url));
@@ -59,7 +58,7 @@ async function simplifyCarInfo(CarInfo: CarInfo): Promise<SimplifiedCarInfo> {
 }
 
 export async function getCarInfo(progress: Progress, simplified: boolean = false): Promise<CarInfo | SimplifiedCarInfo> {
-  async function getData() {
+  async function getData(): Promise<CarInfo> {
     const apis = [
       [0, 2],
       [1, 2]
@@ -74,7 +73,7 @@ export async function getCarInfo(progress: Progress, simplified: boolean = false
       });
       const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i]);
+        result.push(data.BusInfo[i] as CarInfoItem);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }
@@ -83,44 +82,56 @@ export async function getCarInfo(progress: Progress, simplified: boolean = false
 
   const cacheType = simplified ? 'simplified' : 'raw';
   const cacheKey = `bus_${cacheType}_car_info_cache`;
-  const cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
-  const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
-  if (cacheTimestamp === null) {
+  const now = new Date().getTime();
+
+  if (simplified && SimplifiedCarInfoMemoryCache_timestamp === -1) {
+    const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+    if (cacheTimestamp) SimplifiedCarInfoMemoryCache_timestamp = parseInt(cacheTimestamp, 10);
+    const cache = await lfGetItem(0, cacheKey);
+    if (cache) {
+      SimplifiedCarInfoMemoryCache_data = JSON.parse(cache);
+      SimplifiedCarInfoMemoryCache_available = true;
+    }
+  }
+
+  if (!simplified && RawCarInfoMemoryCache_timestamp === -1) {
+    const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+    if (cacheTimestamp) RawCarInfoMemoryCache_timestamp = parseInt(cacheTimestamp, 10);
+    const cache = await lfGetItem(0, cacheKey);
+    if (cache) {
+      RawCarInfoMemoryCache_data = JSON.parse(cache);
+      RawCarInfoMemoryCache_available = true;
+    }
+  }
+
+  if (simplified && SimplifiedCarInfoMemoryCache_available && now - SimplifiedCarInfoMemoryCache_timestamp <= cacheTimeToLive) {
+    progress.update(progress.listen(), 1, 1);
+    progress.update(progress.listen(), 1, 1);
+    return SimplifiedCarInfoMemoryCache_data;
+  }
+
+  if (!simplified && RawCarInfoMemoryCache_available && now - RawCarInfoMemoryCache_timestamp <= cacheTimeToLive) {
+    progress.update(progress.listen(), 1, 1);
+    progress.update(progress.listen(), 1, 1);
+    return RawCarInfoMemoryCache_data;
+  }
+
+  if (simplified) {
     const result = await getData();
-    let finalResult;
-    if (simplified) {
-      finalResult = await simplifyCarInfo(result);
-    } else {
-      finalResult = result;
-    }
-    await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-    await lfSetItem(0, cacheKey, JSON.stringify(finalResult));
-    if (!CarInfoAPIVariableCache[cacheType].available) {
-      CarInfoAPIVariableCache[cacheType].available = true;
-      CarInfoAPIVariableCache[cacheType].data = finalResult;
-    }
-    return finalResult;
+    const simplifiedResult = await simplifyCarInfo(result);
+    SimplifiedCarInfoMemoryCache_data = simplifiedResult;
+    SimplifiedCarInfoMemoryCache_available = true;
+    SimplifiedCarInfoMemoryCache_timestamp = now;
+    await lfSetItem(0, `${cacheKey}_timestamp`, now.toString());
+    await lfSetItem(0, cacheKey, JSON.stringify(simplifiedResult));
+    return simplifiedResult;
   } else {
-    if (new Date().getTime() - parseInt(cacheTimestamp, 10) > cacheTimeToLive) {
-      const result = await getData();
-      let finalResult;
-      if (simplified) {
-        finalResult = await simplifyCarInfo(result);
-      } else {
-        finalResult = result;
-      }
-      await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-      await lfSetItem(0, cacheKey, JSON.stringify(finalResult));
-      return finalResult;
-    } else {
-      if (!CarInfoAPIVariableCache[cacheType].available) {
-        const cache = await lfGetItem(0, cacheKey);
-        CarInfoAPIVariableCache[cacheType].available = true;
-        CarInfoAPIVariableCache[cacheType].data = JSON.parse(cache);
-      }
-      progress.update(progress.listen(), 1, 1);
-      progress.update(progress.listen(), 1, 1);
-      return CarInfoAPIVariableCache[cacheType].data;
-    }
+    const result = await getData();
+    RawCarInfoMemoryCache_data = result;
+    RawCarInfoMemoryCache_available = true;
+    RawCarInfoMemoryCache_timestamp = now;
+    await lfSetItem(0, `${cacheKey}_timestamp`, now.toString());
+    await lfSetItem(0, cacheKey, JSON.stringify(result));
+    return result;
   }
 }

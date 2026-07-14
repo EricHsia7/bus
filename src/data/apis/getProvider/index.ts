@@ -17,16 +17,20 @@ export interface ProviderItem {
 
 export type Provider = Array<ProviderItem>;
 
-let ProviderAPIVariableCache_available: boolean = false;
-let ProviderAPIVariableCache_data: object = {};
+let ProviderMemoryCache_available: boolean = false;
+let ProviderMemoryCache_data: Provider = [];
+let ProviderMemoryCache_timestamp: number = -1;
+
+const cacheTimeToLive = 60 * 60 * 24 * 60 * 1000;
+const cacheKey = 'bus_provider_cache';
 
 export async function getProvider(progress: Progress): Promise<Provider> {
-  async function getData() {
+  async function getData(): Promise<Provider> {
     const apis = [
       [0, 9],
       [1, 9]
     ];
-    const result = [];
+    const result: Provider = [];
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
@@ -36,40 +40,35 @@ export async function getProvider(progress: Progress): Promise<Provider> {
       });
       const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i]);
+        result.push(data.BusInfo[i] as ProviderItem);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }
     return result;
   }
 
-  const cacheTimeToLive = 60 * 60 * 24 * 60 * 1000;
-  const cacheKey = 'bus_provider_cache';
-  const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
-  if (cacheTimestamp === null) {
-    const result = await getData();
-    await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-    await lfSetItem(0, cacheKey, JSON.stringify(result));
-    if (!ProviderAPIVariableCache_available) {
-      ProviderAPIVariableCache_available = true;
-      ProviderAPIVariableCache_data = result;
-    }
-    return result;
-  } else {
-    if (new Date().getTime() - parseInt(cacheTimestamp, 10) > cacheTimeToLive) {
-      const result = await getData();
-      await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-      await lfSetItem(0, cacheKey, JSON.stringify(result));
-      return result;
-    } else {
-      if (!ProviderAPIVariableCache_available) {
-        const cache = await lfGetItem(0, cacheKey);
-        ProviderAPIVariableCache_available = true;
-        ProviderAPIVariableCache_data = JSON.parse(cache);
-      }
-      progress.update(progress.listen(), 1, 1);
-      progress.update(progress.listen(), 1, 1);
-      return ProviderAPIVariableCache_data;
+  const now = new Date().getTime();
+
+  if (ProviderMemoryCache_timestamp === -1) {
+    const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+    if (cacheTimestamp) ProviderMemoryCache_timestamp = parseInt(cacheTimestamp, 10);
+    const cache = await lfGetItem(0, cacheKey);
+    if (cache) {
+      ProviderMemoryCache_data = JSON.parse(cache) as Provider;
+      ProviderMemoryCache_available = true;
     }
   }
+
+  if (ProviderMemoryCache_available && now - ProviderMemoryCache_timestamp <= cacheTimeToLive) {
+    progress.update(progress.listen(), 1, 1);
+    return ProviderMemoryCache_data;
+  }
+
+  const result = await getData();
+  ProviderMemoryCache_data = result;
+  ProviderMemoryCache_available = true;
+  ProviderMemoryCache_timestamp = now;
+  await lfSetItem(0, `${cacheKey}_timestamp`, now.toString());
+  await lfSetItem(0, cacheKey, JSON.stringify(result));
+  return result;
 }

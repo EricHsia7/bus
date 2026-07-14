@@ -41,8 +41,12 @@ export interface UnpackedMaterialSymbolsSimilarity {
   similarity: UnpackedMaterialSymbolsSimilaritySimilarity;
 }
 
-let MaterialSymbolsSimilarityVariableCache_available: boolean = false;
-let MaterialSymbolsSimilarityVariableCache_data = {} as UnpackedMaterialSymbolsSimilarity;
+let MaterialSymbolsSimilarityMemoryCache_available: boolean = false;
+let MaterialSymbolsSimilarityMemoryCache_data = {} as UnpackedMaterialSymbolsSimilarity;
+let MaterialSymbolsSimilarityMemoryCache_timestamp: number = -1;
+
+const cacheTimeToLive = 60 * 60 * 24 * 7 * 1000;
+const cacheKey = 'bus_material_symbols_similarity_cache';
 
 function unpackMaterialSymbolsSimilarity(data: MaterialSymbolsSimilarity): UnpackedMaterialSymbolsSimilarity {
   const unpackedData: UnpackedMaterialSymbolsSimilarity = {
@@ -75,38 +79,29 @@ export async function getMaterialSymbolsSimilarity(progress: Progress): Promise<
     return data;
   }
 
-  const cacheTimeToLive = 60 * 60 * 24 * 7 * 1000;
-  const cacheKey = 'bus_material_symbols_similarity_cache';
-  const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
-  if (cacheTimestamp === null) {
-    const result = await getData();
-    const unpacked = unpackMaterialSymbolsSimilarity(result);
-    await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-    await lfSetItem(0, cacheKey, JSON.stringify(unpacked));
-    if (!MaterialSymbolsSimilarityVariableCache_available) {
-      MaterialSymbolsSimilarityVariableCache_available = true;
-      MaterialSymbolsSimilarityVariableCache_data = unpacked;
-    }
-    return unpacked;
-  } else {
-    if (new Date().getTime() - parseInt(cacheTimestamp, 10) > cacheTimeToLive) {
-      const result = await getData();
-      const unpacked = unpackMaterialSymbolsSimilarity(result);
-      await lfSetItem(0, `${cacheKey}_timestamp`, new Date().getTime());
-      await lfSetItem(0, cacheKey, JSON.stringify(unpacked));
-      if (!MaterialSymbolsSimilarityVariableCache_available) {
-        MaterialSymbolsSimilarityVariableCache_available = true;
-        MaterialSymbolsSimilarityVariableCache_data = unpacked;
-      }
-      return unpacked;
-    } else {
-      if (!MaterialSymbolsSimilarityVariableCache_available) {
-        const cache = await lfGetItem(0, cacheKey);
-        MaterialSymbolsSimilarityVariableCache_available = true;
-        MaterialSymbolsSimilarityVariableCache_data = JSON.parse(cache);
-      }
-      progress.update(progress.listen(), 1, 1);
-      return MaterialSymbolsSimilarityVariableCache_data;
+  const now = new Date().getTime();
+
+  if (MaterialSymbolsSimilarityMemoryCache_timestamp === -1) {
+    const cacheTimestamp = await lfGetItem(0, `${cacheKey}_timestamp`);
+    if (cacheTimestamp) MaterialSymbolsSimilarityMemoryCache_timestamp = parseInt(cacheTimestamp, 10);
+    const cache = await lfGetItem(0, cacheKey);
+    if (cache) {
+      MaterialSymbolsSimilarityMemoryCache_data = JSON.parse(cache) as UnpackedMaterialSymbolsSimilarity;
+      MaterialSymbolsSimilarityMemoryCache_available = true;
     }
   }
+
+  if (MaterialSymbolsSimilarityMemoryCache_available && now - MaterialSymbolsSimilarityMemoryCache_timestamp <= cacheTimeToLive) {
+    progress.update(progress.listen(), 1, 1);
+    return MaterialSymbolsSimilarityMemoryCache_data;
+  }
+
+  const result = await getData();
+  const unpacked = unpackMaterialSymbolsSimilarity(result);
+  MaterialSymbolsSimilarityMemoryCache_data = unpacked;
+  MaterialSymbolsSimilarityMemoryCache_available = true;
+  MaterialSymbolsSimilarityMemoryCache_timestamp = now;
+  await lfSetItem(0, `${cacheKey}_timestamp`, now.toString());
+  await lfSetItem(0, cacheKey, JSON.stringify(unpacked));
+  return unpacked;
 }
