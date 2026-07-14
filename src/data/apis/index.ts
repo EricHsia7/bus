@@ -5,7 +5,7 @@ import { BusEvent, BusEventItem } from './getBusEvent/index';
 import { SimplifiedRoute, SimplifiedRouteItem } from './getRoute/index';
 
 export interface EstimateTimeStatus {
-  code: 0 | 0.5 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8; // 8: loading
+  code: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8; // 8: loading
   text: string;
   time: number;
 }
@@ -28,11 +28,8 @@ export function parseEstimateTime(EstimateTime: string, mode: number): EstimateT
     if (0 <= time && time <= 10) {
       return { code: 2, text: '進站中', time };
     }
-    if (10 < time && time <= 180) {
+    if (10 < time && time <= 250) {
       return { code: 1, text: formatTime(time, mode), time };
-    }
-    if (180 < time && time <= 250) {
-      return { code: 0.5, text: formatTime(time, mode), time };
     }
     if (250 < time) {
       return { code: 0, text: formatTime(time, mode), time };
