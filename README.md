@@ -7,9 +7,9 @@
 - [23.6 KB] **css-mangle-manifest.json**
 </details>
 <details>
-<summary>[32.59 KB] <b>*.html</b></summary>
+<summary>[32.57 KB] <b>*.html</b></summary>
 
-- [32.59 KB] **index.html**
+- [32.57 KB] **index.html**
 </details>
 <details>
 <summary>[330.29 KB] <b>*.js</b></summary>
@@ -120,7 +120,7 @@
 - [79.23 KB] **cd26594cbe44acf5f850.css.map**
 - [78.47 KB] **5bda716de8b6535be75f.js.map**
 - [67.63 KB] **bc75c240e0dfaf7043ff.css.map**
-- [64.66 KB] **52c4059cfabc71c60c63.js.map**
+- [64.67 KB] **52c4059cfabc71c60c63.js.map**
 - [63.99 KB] **5a28c1b7e168ad1ecb67.js.map**
 - [62.21 KB] **7cd9fb74fc3c8d6e411b.js.map**
 - [62.19 KB] **b07548936b3c3d1ca388.css.map**
