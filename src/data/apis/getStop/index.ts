@@ -70,7 +70,7 @@ export async function getStop(progress: Progress): Promise<SimplifiedStop> {
       });
       const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i += 64) {
-        Array.prototype.push.apply(result, data.BusInfo.slice(i, i + 64));
+        result.push(data.BusInfo[i]);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }

@@ -160,8 +160,8 @@ export async function getLocation(progress: Progress, type: 0 | 1 | 2): Promise<
         progress.update(sourceId, message.loaded, message.total);
       });
       const data = JSON.parse(decoder.decode(inflatedData));
-      for (let i = 0, l = data.BusInfo.length; i < l; i += 64) {
-        Array.prototype.push.apply(result, data.BusInfo.slice(i, i + 64));
+      for (let i = 0, l = data.BusInfo.length; i < l; i++) {
+        result.push(data.BusInfo[i]);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }
