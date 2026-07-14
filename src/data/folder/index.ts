@@ -14,7 +14,7 @@ import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute
 import { getStop, SimplifiedStop } from '../apis/getStop/index';
 import { EstimateTimeStatus, parseEstimateTime } from '../apis/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../settings/index';
-import { lfGetItem, lfRemoveItem, lfSetItem } from '../storage/index';
+import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 
 export interface FolderContentRouteEndPoints {
   departure: string;
@@ -100,6 +100,7 @@ export async function initializeFolders() {
   } else {
     await lfSetItem(10, 'folderIndex', JSON.stringify(folderIndexArray));
   }
+
   for (const folderKey of folderIndexArray) {
     const thisFolderJSON = await lfGetItem(11, folderKey);
     if (!thisFolderJSON) continue;
@@ -114,13 +115,15 @@ export async function initializeFolders() {
       thisFolderContentIndexArray = JSON.parse(thisFolderContentIndexJSON) as Array<string>;
     }
     FolderContentIndices.set(folderKey, thisFolderContentIndexArray);
-    for (const contentKey of thisFolderContentIndexArray) {
-      if (FolderContents.has(contentKey)) continue;
-      const thisFolderContentJSON = await lfGetItem(13, contentKey);
-      if (!thisFolderContentJSON) continue;
-      const thisFolderContentObject = JSON.parse(thisFolderContentJSON) as FolderContent;
-      FolderContents.set(contentKey, thisFolderContentObject);
-    }
+  }
+
+  const folderContentKeys = await lfListItemKeys(13);
+  for (const contentKey of folderContentKeys) {
+    if (FolderContents.has(contentKey)) continue;
+    const thisFolderContentJSON = await lfGetItem(13, contentKey);
+    if (!thisFolderContentJSON) continue;
+    const thisFolderContentObject = JSON.parse(thisFolderContentJSON) as FolderContent;
+    FolderContents.set(contentKey, thisFolderContentObject);
   }
 }
 
