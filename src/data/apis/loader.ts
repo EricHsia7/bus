@@ -56,7 +56,7 @@ worker.onmessage = (event: MessageEvent) => {
       break;
     case 'done':
       pending.delete(message.id);
-      // recordDataUsage(message.loaded, new Date());
+      recordDataUsage(message.loaded, new Date());
       job.resolve(concatChunks(job.chunks));
       break;
     case 'error':
