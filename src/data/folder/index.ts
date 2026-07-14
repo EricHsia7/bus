@@ -589,7 +589,10 @@ export async function saveToFolder(folderID: Folder['id'], content: FolderConten
     thisFolderContentIndexArray.push(contentKey);
     FolderContentIndices.set(folderKey, thisFolderContentIndexArray);
     await lfSetItem(12, folderKey, JSON.stringify(thisFolderContentIndexArray));
-    await lfSetItem(13, contentKey, JSON.stringify(content));
+    if (!FolderContents.has(contentKey)) {
+      FolderContents.set(contentKey, content);
+      await lfSetItem(13, contentKey, JSON.stringify(content));
+    }
     return true;
   } else {
     return false;
