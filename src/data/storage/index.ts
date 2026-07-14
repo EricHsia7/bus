@@ -51,7 +51,7 @@ export async function lfSetItem(store: number, key: string, value: any): Promise
         name: storeKey
       });
     }
-    const operation = await promiseWithTimeout<any>(storage[storeKey].setItem(key, value));
+    const operation = await storage[storeKey].setItem(key, value); // await promiseWithTimeout<any>(storage[storeKey].setItem(key, value));
     return operation;
   } catch (err) {
     console.log(err);
@@ -85,7 +85,7 @@ export async function lfRemoveItem(store: number, key: string): Promise<any> {
         name: storeKey
       });
     }
-    const operation = await promiseWithTimeout<any>(storage[storeKey].removeItem(key));
+    const operation = await storage[storeKey].removeItem(key); // promiseWithTimeout<any>(storage[storeKey].removeItem(key));
     return operation;
   } catch (err) {
     console.log(err);
@@ -102,7 +102,7 @@ export async function lfListItemKeys(store: number): Promise<Array<string>> {
         name: storeKey
       });
     }
-    const keys = await promiseWithTimeout<Array<string>>(storage[storeKey].keys());
+    const keys = await storage[storeKey].keys(); // await promiseWithTimeout<Array<string>>(storage[storeKey].keys());
     return keys;
   } catch (err) {
     console.log(err);
