@@ -223,7 +223,7 @@
 
 /* skeleton screen: true */
 .css_route_field .css_route_head .css_route_group_tab_line_track[skeleton-screen="true"] .css_route_group_tab_line {
-  display: none;
+  visibility: hidden;
 }
 
 .css_route_field .css_route_head .css_route_group_tab_line_track .css_route_group_tab_line::before {

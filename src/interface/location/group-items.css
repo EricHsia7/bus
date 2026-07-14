@@ -282,7 +282,7 @@
 
 /* skeleton screen: true */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_capsule_separator {
-  display: none;
+  visibility: hidden;
 }
 
 /* items > item > head > capsule > stretch */
@@ -299,7 +299,7 @@
 
 /* skeleton screen: true */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_stretch {
-  display: none;
+  visibility: hidden;
 }
 
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_stretch span.css_material_symbols_rounded {
