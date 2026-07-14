@@ -1,6 +1,6 @@
 # Bundle Statistics
 
-[2.91 MB] **\*.\***
+[2.9 MB] **\*.\***
 <details>
 <summary>[23.6 KB] <b>*.json</b></summary>
 
@@ -108,14 +108,14 @@
 - [163 Bytes] **0d9b1b0540ae7f2b87b7.js.LICENSE.txt**
 </details>
 <details>
-<summary>[2.36 MB] <b>*.map</b></summary>
+<summary>[2.35 MB] <b>*.map</b></summary>
 
 - [154.64 KB] **workbox-e08edf49.js.map**
 - [141.54 KB] **0d9b1b0540ae7f2b87b7.js.map**
 - [106.46 KB] **3bef1b67475aa9a780a0.js.map**
 - [105.78 KB] **2332cf49a9f4a3f52f83.js.map**
 - [100.27 KB] **8e49e00fc9f7bbaf1ffa.js.map**
-- [93.26 KB] **1ea40abf094f70ff778a.js.map**
+- [91.44 KB] **1ea40abf094f70ff778a.js.map**
 - [81.36 KB] **7350f55a0281baa72e5a.css.map**
 - [79.23 KB] **cd26594cbe44acf5f850.css.map**
 - [78.47 KB] **5bda716de8b6535be75f.js.map**
