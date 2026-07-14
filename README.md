@@ -1,6 +1,6 @@
 # Bundle Statistics
 
-[2.9 MB] **\*.\***
+[2.91 MB] **\*.\***
 <details>
 <summary>[23.6 KB] <b>*.json</b></summary>
 
@@ -12,17 +12,17 @@
 - [32.57 KB] **index.html**
 </details>
 <details>
-<summary>[330.53 KB] <b>*.js</b></summary>
+<summary>[331.05 KB] <b>*.js</b></summary>
 
 - [28.19 KB] **dc1dd7d3d20c97a43aca.js**
 - [20.79 KB] **e03d0ae86e45a35f79c0.js**
 - [19.91 KB] **d5d0d4d28d89c17e9134.js**
 - [17.8 KB] **7cd9fb74fc3c8d6e411b.js**
-- [16.28 KB] **47f4f9f2cb6edd535c49.js**
+- [16.32 KB] **cb0bf8d01d0ff7e7b9b3.js**
 - [15.45 KB] **workbox-e08edf49.js**
 - [14.51 KB] **05a1352dc0abb1b6d8d0.js**
+- [13.62 KB] **e84cd8e72bd575176013.js**
 - [13.21 KB] **dac0335f5b7960f7b7af.js**
-- [13.14 KB] **6e4406f7e8475d22297c.js**
 - [12.7 KB] **cc69cacbda18efcc9bb9.js**
 - [11.3 KB] **5a28c1b7e168ad1ecb67.js**
 - [10.98 KB] **9dcace3f167acabcdc46.js**
@@ -81,9 +81,9 @@
 - [1.19 KB] **952c042bed7593306096.js.erm**
 - [1.16 KB] **5a28c1b7e168ad1ecb67.js.erm**
 - [1.16 KB] **f3b3320e2ee56d44b77e.js.erm**
-- [1.08 KB] **6e4406f7e8475d22297c.js.erm**
+- [1.08 KB] **e84cd8e72bd575176013.js.erm**
 - [1.08 KB] **07361c8e5cbba90db973.js.erm**
-- [1.08 KB] **47f4f9f2cb6edd535c49.js.erm**
+- [1.08 KB] **cb0bf8d01d0ff7e7b9b3.js.erm**
 - [1.06 KB] **2332cf49a9f4a3f52f83.js.erm**
 - [1.02 KB] **9dcace3f167acabcdc46.js.erm**
 - [207 Bytes] **7cd9fb74fc3c8d6e411b.js.erm**
@@ -115,11 +115,11 @@
 - [106.53 KB] **e03d0ae86e45a35f79c0.js.map**
 - [105.78 KB] **2332cf49a9f4a3f52f83.js.map**
 - [100.51 KB] **d5d0d4d28d89c17e9134.js.map**
-- [93.67 KB] **47f4f9f2cb6edd535c49.js.map**
+- [93.78 KB] **cb0bf8d01d0ff7e7b9b3.js.map**
 - [81.43 KB] **3f7e85b2fbafdebd2a47.css.map**
 - [79.23 KB] **cd26594cbe44acf5f850.css.map**
 - [78.49 KB] **05a1352dc0abb1b6d8d0.js.map**
-- [71.89 KB] **6e4406f7e8475d22297c.js.map**
+- [72.74 KB] **e84cd8e72bd575176013.js.map**
 - [67.63 KB] **bc75c240e0dfaf7043ff.css.map**
 - [63.99 KB] **5a28c1b7e168ad1ecb67.js.map**
 - [62.21 KB] **7cd9fb74fc3c8d6e411b.js.map**
