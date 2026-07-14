@@ -79,13 +79,13 @@ function generateElementOfItem(): HTMLElement {
   return itemElement;
 }
 
-async function initializeFolderManagerField() {
+function initializeFolderManagerField() {
   rightButtonElement.onclick = function () {
     openFolderCreator(function () {
       initializeFolderManagerField();
     });
   };
-  const foldersWithContentLength = await listFoldersWithContentLength();
+  const foldersWithContentLength = listFoldersWithContentLength();
   updateFolderManagerField(foldersWithContentLength);
 }
 

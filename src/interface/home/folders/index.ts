@@ -594,7 +594,7 @@ async function refreshFolders(): Promise<number> {
   }
 }
 
-export function initializeFolders(): void {
+export function initializeFoldersField(): void {
   // setupFolderFieldSkeletonScreen();
   if (foldersTick.isPaused) {
     foldersTick.resume(true);

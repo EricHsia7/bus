@@ -765,9 +765,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
           thisSaveToFolderButtonElement.onclick = function () {
             openSaveToFolder('route', [thisOverlappingRouteID], thisSaveToFolderButtonElement); // TODO: update buttons of other stop items
           };
-          isFolderContentSaved('route', thisOverlappingRouteID).then(function (e) {
-            thisSaveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
-          });
+          thisSaveToFolderButtonElement.setAttribute('highlighted', booleanToString(isFolderContentSaved('route', thisOverlappingRouteID)));
         })(saveToFolderButtonElement, overlappingRouteItem.RouteID);
       }
 
@@ -854,9 +852,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
           thisSaveToFolderButtonElement.onclick = function () {
             openSaveToFolder('location', [thisNearbyLocationHash], thisSaveToFolderButtonElement); // TODO: update buttons of other stop items
           };
-          isFolderContentSaved('location', thisNearbyLocationHash).then(function (e) {
-            thisSaveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
-          });
+          thisSaveToFolderButtonElement.setAttribute('highlighted', booleanToString(isFolderContentSaved('location', thisNearbyLocationHash)));
         })(saveToFolderButtonElement, nearbyLocationItem.hash);
       }
 
@@ -922,9 +918,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       saveToFolderButtonElement.onclick = function () {
         openSaveToFolder('stop', [thisItem.id, integration.RouteID], saveToFolderButtonElement);
       };
-      isFolderContentSaved('stop', thisItem.id).then((e) => {
-        saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
-      });
+      saveToFolderButtonElement.setAttribute('highlighted', booleanToString(isFolderContentSaved('stop', thisItem.id)));
     }
 
     function updateScheduleNotificationButton(thisItemElement: HTMLElement, thisItem: integratedStopItem): void {
