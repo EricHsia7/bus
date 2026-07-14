@@ -2,8 +2,8 @@
 .css_home_field .css_home_body .css_home_recent_views {
   position: relative;
   width: 100%;
-  height: auto;
-  display: inline-block;
+  height: calc(25px + 70px);
+  display: block;
   margin-top: calc(var(--b-cssvar-safe-area-top) + 55px + 10px);
 }
 
