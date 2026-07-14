@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - dev-folder-memory-cache
 
 jobs:
   build:
