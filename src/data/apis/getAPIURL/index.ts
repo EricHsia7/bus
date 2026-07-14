@@ -9,7 +9,6 @@ import { getSettingOptionValue } from '../../settings/index';
  * @param interval - The interval for no cache parameter
  * @returns The direct link to a gzip file.
  */
-
 export function getAPIURL(city: number, api: number, alternative: boolean = false, interval: number = 10000): string {
   const cities = ['blobbus', 'ntpcbus'];
   // blobbus → Taipei City
@@ -33,7 +32,6 @@ export function getAPIURL(city: number, api: number, alternative: boolean = fals
  * @param interval The interval for no cache parameter
  * @returns
  */
-
 export function getMaterialSymbolsAPIURL(api: number, interval: number = 10000): string {
   const buckets = ['search-index', 'description', 'similarity', 'index'];
   return `https://erichsia7.github.io/material-symbols-list/${buckets[api]}.gz?_=${getNoCacheParameter(interval)}`;

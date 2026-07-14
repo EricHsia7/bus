@@ -60,10 +60,7 @@ export async function lfSetItem(store: number, key: string, value: any): Promise
   }
 }
 
-let count = 0;
-
 export async function lfGetItem(store: number, key: string): Promise<any> {
-  console.log(count++, performance.now(), store, key);
   try {
     const storeKey = stores[store];
     if (storage[storeKey] === false) {
