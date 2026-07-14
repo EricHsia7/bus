@@ -1,10 +1,6 @@
 import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
-// import { generateLabelFromAddresses } from '../../tools/address';
-// import { CardinalDirection, getCardinalDirectionFromVector } from '../../tools/cardinal-direction';
 import { generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { Progress, ProgressCallback } from '../../tools/progress';
-// import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
-// import { normalizeVector } from '../../tools/math';
 import { collectBusArrivalTimeData } from '../analytics/bus-arrival-time/index';
 import { collectUpdateRateData } from '../analytics/update-rate/index';
 import { EstimateTime, EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
@@ -504,44 +500,8 @@ export async function integrateFolders(progressCallback: ProgressCallback): Prom
           integratedItem.pathAttributeId = thisRoute.pid;
           break;
         }
-        case 'location': {
-          /*
-          const thisLocationKey = `ml_${integratedItem.id}`;
-          const thisLocation = Location[thisLocationKey] as MergedLocationItem;
-          let labels: Array<string> = [];
-          switch (location_labels) {
-            case 'address':
-              labels = generateLabelFromAddresses(thisLocation.a);
-              break;
-            case 'letters':
-              const stopLocationIds = thisLocation.id;
-              const stopLocationQuantity = stopLocationIds.length;
-              labels = generateLetterLabels(stopLocationQuantity);
-              break;
-            case 'directions':
-              const setsOfVectors = thisLocation.v;
-              const cardinalDirections: Array<CardinalDirection> = [];
-              for (const vectorSet of setsOfVectors) {
-                let x: number = 0;
-                let y: number = 0;
-                for (const vector of vectorSet) {
-                  x += vector[0];
-                  y += vector[1];
-                }
-                const meanVector = normalizeVector([x, y]) as [number, number];
-                const cardinalDirection = getCardinalDirectionFromVector(meanVector);
-                cardinalDirections.push(cardinalDirection);
-              }
-
-              labels = generateDirectionLabels(cardinalDirections);
-              break;
-            default:
-              break;
-          }
-          integratedItem.labels = labels.join(' - ');
-          */
+        case 'location':
           break;
-        }
         case 'bus':
           break;
         case 'empty':
