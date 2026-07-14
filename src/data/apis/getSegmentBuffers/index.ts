@@ -72,7 +72,7 @@ async function simplifySegmentBuffers(array: SegmentBuffers): Promise<Simplified
 }
 
 export async function getSegmentBuffers(progress: Progress): Promise<SimplifiedSegmentBuffer> {
-  async function getData() {
+  async function getData(): Promise<string> {
     const apis = [
       [0, 15],
       [1, 15]

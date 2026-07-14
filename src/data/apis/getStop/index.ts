@@ -59,7 +59,7 @@ async function simplifyStop(array: Stop): Promise<SimplifiedStop> {
 }
 
 export async function getStop(progress: Progress): Promise<SimplifiedStop> {
-  async function getData() {
+  async function getData(): Promise<Stop> {
     const apis = [
       [0, 11],
       [1, 11]
@@ -74,7 +74,7 @@ export async function getStop(progress: Progress): Promise<SimplifiedStop> {
       });
       const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i]);
+        result.push(data.BusInfo[i] as StopItem);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }

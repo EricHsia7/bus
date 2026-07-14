@@ -26,7 +26,7 @@ export async function getEstimateTime(progress: Progress): Promise<EstimateTime>
     });
     const data = JSON.parse(decoder.decode(inflatedData));
     for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-      result.push(data.BusInfo[i]);
+      result.push(data.BusInfo[i] as EstimateTimeItem);
     }
     progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
   }

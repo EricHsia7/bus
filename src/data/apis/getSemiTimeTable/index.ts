@@ -29,7 +29,7 @@ export async function getSemiTimeTable(progress: Progress): Promise<SemiTimeTabl
       [0, 12],
       [1, 12]
     ];
-    const result = [];
+    const result: SemiTimeTable = [];
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
@@ -39,7 +39,7 @@ export async function getSemiTimeTable(progress: Progress): Promise<SemiTimeTabl
       });
       const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i]);
+        result.push(data.BusInfo[i] as SemiTimetableItem);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }

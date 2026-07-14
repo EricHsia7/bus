@@ -58,7 +58,7 @@ async function simplifyCarInfo(CarInfo: CarInfo): Promise<SimplifiedCarInfo> {
 }
 
 export async function getCarInfo(progress: Progress, simplified: boolean = false): Promise<CarInfo | SimplifiedCarInfo> {
-  async function getData() {
+  async function getData(): Promise<CarInfo> {
     const apis = [
       [0, 2],
       [1, 2]
@@ -73,7 +73,7 @@ export async function getCarInfo(progress: Progress, simplified: boolean = false
       });
       const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i]);
+        result.push(data.BusInfo[i] as CarInfoItem);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }

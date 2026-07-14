@@ -92,7 +92,7 @@ async function simplifyRoute(Route: Route): Promise<SimplifiedRoute> {
 }
 
 export async function getRoute(progress: Progress, simplified: boolean = true): Promise<SimplifiedRoute | Route> {
-  async function getData() {
+  async function getData(): Promise<Route> {
     const apis = [
       [0, 10],
       [1, 10]
@@ -107,7 +107,7 @@ export async function getRoute(progress: Progress, simplified: boolean = true): 
       });
       const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i]);
+        result.push(data.BusInfo[i] as RouteItem);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }

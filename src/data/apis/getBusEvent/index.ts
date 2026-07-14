@@ -34,7 +34,7 @@ export async function getBusEvent(progress: Progress): Promise<BusEvent> {
     });
     const data = JSON.parse(decoder.decode(inflatedData));
     for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-      result.push(data.BusInfo[i]);
+      result.push(data.BusInfo[i] as BusEventItem);
     }
     progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
   }

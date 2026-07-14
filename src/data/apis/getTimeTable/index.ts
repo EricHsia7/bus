@@ -22,7 +22,7 @@ const cacheTimeToLive = 60 * 60 * 24 * 14 * 1000;
 const cacheKey = 'bus_timetable_cache';
 
 export async function getTimeTable(progress: Progress): Promise<Timetable> {
-  async function getData() {
+  async function getData(): Promise<Timetable> {
     const apis = [
       [0, 14],
       [1, 14]
@@ -37,7 +37,7 @@ export async function getTimeTable(progress: Progress): Promise<Timetable> {
       });
       const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i]);
+        result.push(data.BusInfo[i] as TimetableItem);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }

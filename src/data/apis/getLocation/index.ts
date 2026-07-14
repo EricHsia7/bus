@@ -145,7 +145,7 @@ async function indexLocationByGeohash(object: MergedLocation): Promise<IndexedLo
  */
 
 export async function getLocation(progress: Progress, type: 0 | 1 | 2): Promise<SimplifiedLocation | MergedLocation | IndexedLocation> {
-  async function getData() {
+  async function getData(): Promise<Location> {
     const apis = [
       [0, 11],
       [1, 11]
@@ -160,7 +160,7 @@ export async function getLocation(progress: Progress, type: 0 | 1 | 2): Promise<
       });
       const data = JSON.parse(decoder.decode(inflatedData));
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i]);
+        result.push(data.BusInfo[i] as LocationItem);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }
