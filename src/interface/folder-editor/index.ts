@@ -283,11 +283,11 @@ function setupFolderEditorFieldSkeletonScreen(): void {
   updateFolderEditorField(folder, content, function () {}, true, playing_animation);
 }
 
-async function initializeFolderEditorField(folderID: string, callback: Function) {
+function initializeFolderEditorField(folderID: string, callback: Function) {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   setupFolderEditorFieldSkeletonScreen();
   const folder = getFolder(folderID);
-  const content = await listFolderContent(folderID);
+  const content = listFolderContent(folderID);
   if (typeof folder === 'boolean') return;
   updateFolderEditorField(folder, content, callback, false, playing_animation);
 }

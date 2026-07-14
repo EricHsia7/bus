@@ -681,9 +681,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       saveToFolderButtonElement.onclick = function () {
         openSaveToFolder('stop', [thisItem.stopId, thisItem.routeId], saveToFolderButtonElement);
       };
-      isFolderContentSaved('stop', thisItem.stopId).then((e) => {
-        saveToFolderButtonElement.setAttribute('highlighted', booleanToString(e));
-      });
+      saveToFolderButtonElement.setAttribute('highlighted', booleanToString(isFolderContentSaved('stop', thisItem.stopId)));
     }
 
     function updateScheduleNotificationButton(thisItemElement: HTMLElement, thisItem: IntegratedLocationItem): void {

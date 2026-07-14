@@ -190,7 +190,7 @@ export async function initializeBusArrivalTime(): Promise<boolean> {
   const now = new Date();
   const currentTime = Math.floor(now.getTime() / 1000);
   const schedules = listPersonalSchedules();
-  const stops = (await listAllFolderContent(['stop'])) as Array<FolderContentStop>;
+  const stops = listAllFolderContent(['stop']) as Array<FolderContentStop>;
   const tracking = stops.map((e) => e.id);
   const existing = await listBusArrivalTimeStatsGroups();
   const transfer: Array<ArrayBuffer> = [];

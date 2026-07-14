@@ -1,7 +1,7 @@
 import { initializeBusArrivalTime } from './data/analytics/bus-arrival-time';
 import { discardExpiredDataUsageStats } from './data/analytics/data-usage/index';
 import { discardUpdateRateDataGroups, initializeUpdateRateDataGroups, recoverUpdateRateDataFromWriteAheadLog } from './data/analytics/update-rate/index';
-import { initializeFolderList } from './data/folder/index';
+import { initializeFolders } from './data/folder/index';
 import { discardExpiredNotificationSchedules, initializeNotificationSchedules, loadNotificationClient } from './data/notification/index';
 import { initializePersonalSchedules, initializePersonalSchedulesTimeline } from './data/personal-schedule';
 import { discardExpiredRecentViews } from './data/recent-views/index';
@@ -12,7 +12,7 @@ import { closeBus } from './interface/bus/index';
 import { closeDataUsage } from './interface/data-usage/index';
 import { closeFolderCreator } from './interface/folder-creator/index';
 import { closeFolderManager } from './interface/folder-manager/index';
-import { initializeFolders, setupFolderFieldSkeletonScreen } from './interface/home/folders/index';
+import { initializeFoldersField, setupFolderFieldSkeletonScreen } from './interface/home/folders/index';
 import { downloadData } from './interface/home/index';
 import { initializeRecentViews, setupRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 import { closeIconSelector } from './interface/icon-selector/index';
@@ -241,7 +241,7 @@ interface BusWindow extends Window {
     await initializeSettings();
 
     // initalize folder list
-    await initializeFolderList();
+    await initializeFolders();
 
     // initialize personal schedules
     await initializePersonalSchedules();
@@ -261,7 +261,7 @@ interface BusWindow extends Window {
     initializeRecentViews();
 
     // initialize folders
-    initializeFolders();
+    initializeFoldersField();
 
     // initialize sliding
     initializeRouteSliding();

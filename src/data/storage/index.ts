@@ -122,7 +122,7 @@ export function getStoresLength(): number {
 export async function isStoragePersistent(): Promise<boolean> {
   // Check if site's storage has been marked as persistent
   if (navigator.storage) {
-    if (navigator.storage.persist) {
+    if (navigator.storage.persisted) {
       const isPersisted = await navigator.storage.persisted();
       return isPersisted;
     }
