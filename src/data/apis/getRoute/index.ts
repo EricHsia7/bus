@@ -151,7 +151,7 @@ export async function getRoute(progress: Progress, simplified: boolean = true): 
   }
 
   if (simplified) {
-    const result = await getData();
+    const result = (await getRoute(progress, false)) as Route;
     const simplifiedResult = await simplifyRoute(result);
     SimplifiedRouteMemoryCache_data = simplifiedResult;
     SimplifiedRouteMemoryCache_available = true;
