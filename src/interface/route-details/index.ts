@@ -156,10 +156,10 @@ function setupRouteDetailsFieldSkeletonScreen(): void {
   );
 }
 
-async function initializeRouteDetailsField(RouteID: SimplifiedRouteItem['id'], PathAttributeId: SimplifiedRouteItem['pid']) {
+async function initializeRouteDetailsField(RouteID: SimplifiedRouteItem['id']) {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   setupRouteDetailsFieldSkeletonScreen();
-  const integration = await integrateRouteDetails(RouteID, PathAttributeId, function () {});
+  const integration = await integrateRouteDetails(RouteID, function () {});
   updateRouteDetailsField(integration, false, playing_animation);
 }
 
@@ -171,10 +171,10 @@ export function hideRouteDetails(): void {
   RouteDetailsField.setAttribute('displayed', 'false');
 }
 
-export function openRouteDetails(RouteID: SimplifiedRouteItem['id'], PathAttributeId: SimplifiedRouteItem['pid']): void {
+export function openRouteDetails(RouteID: SimplifiedRouteItem['id']): void {
   pushPageHistory('RouteDetails');
   showRouteDetails();
-  initializeRouteDetailsField(RouteID, PathAttributeId);
+  initializeRouteDetailsField(RouteID);
   hidePreviousPage();
 }
 

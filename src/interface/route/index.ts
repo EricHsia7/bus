@@ -1039,7 +1039,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
   if (previousIntegration?.RouteID !== integration.RouteID) {
     RouteButtonRightElement.onclick = function () {
-      openRouteDetails(integration.RouteID, integration.PathAttributeId);
+      openRouteDetails(integration.RouteID);
     };
   }
 

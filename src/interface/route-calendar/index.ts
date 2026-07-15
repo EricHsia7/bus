@@ -130,11 +130,11 @@ function initializeRouteCalendarSliding(): void {
   timelinesElement.scrollTo({ left: routeCalendarSliding_fieldWidth });
 }
 
-async function initializeRouteCalendar(PathAttributeId: SimplifiedRouteItem['pid']) {
+async function initializeRouteCalendar(RouteID: SimplifiedRouteItem['id']) {
   const FieldSize = querySize('window');
   routeCalendarSliding_fieldWidth = FieldSize.width;
   currentDate = new Date();
-  const integration = await integrateRouteCalendar(PathAttributeId, function () {});
+  const integration = await integrateRouteCalendar(RouteID, function () {});
   currentIntegration = integration;
   for (let i = 0; i < 3; i++) {
     const date = offsetDate(currentDate, i - 1, 0, 0);
@@ -153,10 +153,10 @@ export function hideRouteCalendar(): void {
   routeCalendarField.setAttribute('displayed', 'false');
 }
 
-export function openRouteCalendar(PathAttributeId: SimplifiedRouteItem['pid']): void {
+export function openRouteCalendar(RouteID: SimplifiedRouteItem['id']): void {
   pushPageHistory('RouteCalendar');
   showRouteCalendar();
-  initializeRouteCalendar(PathAttributeId);
+  initializeRouteCalendar(RouteID);
   hidePreviousPage();
 }
 

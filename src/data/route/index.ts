@@ -70,7 +70,7 @@ export interface IntegratedRoute {
   PathAttributeId: Array<number>;
 }
 
-export async function integrateRoute(RouteID: number, chartWidth: number, chartHeight: number, progressCallback: ProgressCallback): Promise<IntegratedRoute> {
+export async function integrateRoute(RouteID: SimplifiedRouteItem['id'], chartWidth: number, chartHeight: number, progressCallback: ProgressCallback): Promise<IntegratedRoute> {
   const progress = new Progress(18, progressCallback); // getRoute: 2 + getStop: 2 + getLocation: 2 * 3 + getSegmentBuffers: 2 + getEstimateTime: 2 + getBusEvent: 2 + getBusData: 2
   const [Route, Stop, EstimateTime, SimplifiedLocation] = (await Promise.all([getRoute(progress, true), getStop(progress), getEstimateTime(progress), getLocation(progress, 0)])) as [SimplifiedRoute, SimplifiedStop, EstimateTime, SimplifiedLocation];
   const [SegmentBuffers, MergedLocation, BusEvent] = (await Promise.all([getSegmentBuffers(progress), getLocation(progress, 1), getBusEvent(progress)])) as [SimplifiedSegmentBuffer, MergedLocation, BusEvent];
