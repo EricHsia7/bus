@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-route-path-attribute-id
 
 jobs:
   build:
