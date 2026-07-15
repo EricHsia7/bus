@@ -49,7 +49,6 @@ export async function searchRouteByPathAttributeId(PathAttributeId: number): Pro
 
 export interface SearchItem {
   id: string | number | Array<number>;
-  pid: Array<number>;
   dep: string;
   des: string;
   n: string;
@@ -84,7 +83,6 @@ export async function prepareForSearch() {
     const thisRoute = Route[key];
     const thisItem: SearchItem = {
       id: thisRoute.id,
-      pid: thisRoute.pid,
       dep: thisRoute.dep,
       des: thisRoute.des,
       n: thisRoute.n,
@@ -110,7 +108,6 @@ export async function prepareForSearch() {
       hash: thisLocation.hash,
       dep: '',
       des: '',
-      pid: [],
       type: 1
     };
     list.push(thisItem);
@@ -128,7 +125,6 @@ export async function prepareForSearch() {
     const thisCarInfo = CarInfo[key];
     const thisItem: SearchItem = {
       id: thisCarInfo.BusId,
-      pid: [],
       dep: '',
       des: '',
       n: thisCarInfo.CarNum,

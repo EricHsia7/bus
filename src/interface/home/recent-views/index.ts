@@ -190,7 +190,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
             if (previousItem.time !== thisItem.time) {
               updateTime(thisElement, thisItem);
             }
-            if (previousItem.id !== thisItem.id || !deepEqual(previousItem.pid, thisItem.pid)) {
+            if (previousItem.id !== thisItem.id) {
               updateName(thisElement, thisItem);
               updateOnclick(thisElement, thisItem, skeletonScreen);
             }

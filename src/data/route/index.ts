@@ -7,7 +7,7 @@ import { BusData, getBusData } from '../apis/getBusData/index';
 import { BusEvent, getBusEvent } from '../apis/getBusEvent/index';
 import { EstimateTime, getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation, IndexedLocation, IndexedLocationItem, MergedLocation, SimplifiedLocation, SimplifiedLocationItem } from '../apis/getLocation/index';
-import { getRoute, RouteItem, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
+import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { BufferZones, getSegmentBuffers, SimplifiedSegmentBuffer, SimplifiedSegmentBufferItem } from '../apis/getSegmentBuffers/index';
 import { getStop, SimplifiedStop, SimplifiedStopItem } from '../apis/getStop/index';
 import { batchFindBusesForRoute, EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime } from '../apis/index';
@@ -23,7 +23,6 @@ interface formattedOverlappingRoute {
     html: string;
   };
   RouteID: number;
-  PathAttributeId: Array<number>;
 }
 
 export interface integratedStopItemPosition {
@@ -147,8 +146,7 @@ export async function integrateRoute(RouteID: number, chartWidth: number, chartH
               text: `${overlappingRoute.dep} \u2194 ${overlappingRoute.des}`, // u2194 -> '↔'
               html: `<span>${overlappingRoute.dep}</span><span>\u2194</span><span>${overlappingRoute.des}</span>`
             },
-            RouteID: overlappingRoute.id,
-            PathAttributeId: overlappingRoute.pid
+            RouteID: overlappingRoute.id
           };
           integratedStopItem.overlappingRoutes.push(formattedOverlappingRoute);
         }

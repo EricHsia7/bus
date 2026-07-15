@@ -159,7 +159,6 @@ export interface integratedRecentViewRoute {
   time: integratedRecentViewTime;
   name: string;
   id: number;
-  pid: Array<number>;
 }
 
 export interface integratedRecentViewLocation {
@@ -194,7 +193,6 @@ export interface integratedRecentViews {
 export async function integrateRecentViews(progressCallback: ProgressCallback): Promise<integratedRecentViews> {
   const recentViewList = await listRecentViews();
   const progress = new Progress(2, progressCallback);
-  const Route = (await getRoute(progress, true)) as SimplifiedRoute;
   const items: Array<integratedRecentView> = [];
   let itemQuantity: number = 0;
   for (const recentView of recentViewList) {
@@ -205,7 +203,6 @@ export async function integrateRecentViews(progressCallback: ProgressCallback): 
         items.push({
           type: 'route',
           id: recentView.id,
-          pid: Route[`r_${recentView.id}`].pid,
           name: recentView.name,
           time: {
             absolute: recentViewTime.getTime(),

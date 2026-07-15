@@ -410,22 +410,13 @@ export function listAllFolderContent(types: Array<FolderContent['type']>): Array
   return result;
 }
 
-export interface integratedFolderContentStopRoute extends FolderContentStopRoute {
-  pathAttributeId: Array<number>;
-}
-
 export interface integratedFolderContentStop extends FolderContentStop {
   status: EstimateTimeStatus;
-  route: integratedFolderContentStopRoute;
 }
 
-export interface integratedFolderContentRoute extends FolderContentRoute {
-  pathAttributeId: Array<number>;
-}
+export interface integratedFolderContentRoute extends FolderContentRoute {}
 
-export interface integratedFolderContentLocation extends FolderContentLocation {
-  // labels: string;
-}
+export interface integratedFolderContentLocation extends FolderContentLocation {}
 
 export interface integratedFolderContentBus extends FolderContentBus {}
 
@@ -483,10 +474,6 @@ export async function integrateFolders(progressCallback: ProgressCallback): Prom
           if (!hasOwnProperty(batchFoundEstimateTime, thisStopKey)) continue;
           const thisEstimateTime = batchFoundEstimateTime[thisStopKey] as EstimateTimeItem;
 
-          const thisRouteKey = `r_${item.route.id}`;
-          if (!hasOwnProperty(Route, thisRouteKey)) continue;
-          const thisRoute = Route[thisRouteKey] as SimplifiedRouteItem;
-
           integratedFolder.content.push({
             type: 'stop',
             id: item.id,
@@ -496,7 +483,6 @@ export async function integrateFolders(progressCallback: ProgressCallback): Prom
             status: parseEstimateTime(thisEstimateTime.EstimateTime, time_formatting_mode),
             route: {
               id: item.route.id,
-              pathAttributeId: thisRoute.pid,
               name: item.route.name,
               endPoints: {
                 departure: item.route.endPoints.departure,
@@ -507,10 +493,6 @@ export async function integrateFolders(progressCallback: ProgressCallback): Prom
           break;
         }
         case 'route': {
-          const thisRouteKey = `r_${item.id}`;
-          if (!hasOwnProperty(Route, thisRouteKey)) continue;
-          const thisRoute = Route[thisRouteKey] as SimplifiedRouteItem;
-
           integratedFolder.content.push({
             type: 'route',
             id: item.id,
@@ -519,8 +501,7 @@ export async function integrateFolders(progressCallback: ProgressCallback): Prom
             endPoints: {
               departure: item.endPoints.departure,
               destination: item.endPoints.destination
-            },
-            pathAttributeId: thisRoute.pid
+            }
           } as integratedFolderContentRoute);
           break;
         }

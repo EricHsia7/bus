@@ -254,7 +254,6 @@ export interface IntegratedNotificationScheduleItem {
     name: NotificationSchedule['route_name'];
     direction: NotificationSchedule['direction'];
     id: NotificationSchedule['route_id'];
-    pathAttributeId: SimplifiedRouteItem['pid'];
   };
   date: string;
   hours: string;
@@ -269,7 +268,6 @@ export interface IntegratedNotificationSchedules {
 
 export async function integrateNotifcationSchedules(progressCallback: ProgressCallback): Promise<IntegratedNotificationSchedules> {
   const progress = new Progress(2, progressCallback);
-  const Route = (await getRoute(progress, true)) as SimplifiedRoute;
 
   const notificationSchedules = listNotifcationSchedules();
   const now = new Date().getTime();
@@ -301,27 +299,11 @@ export async function integrateNotifcationSchedules(progressCallback: ProgressCa
     integratedItem.hours = thisItemHours.toString().padStart(2, '0');
     integratedItem.minutes = thisItemMinutes.toString().padStart(2, '0');
 
-    integratedItem.route = {};
-    const thisRouteName = item.route_name;
-    integratedItem.route.name = thisRouteName;
-
-    const thisRouteID = item.route_id;
-    integratedItem.route.id = thisRouteID;
-
-    const thisRouteDirection = item.direction;
-    integratedItem.route.direction = thisRouteDirection;
-
-    // Collect data from Route
-    const thisNotificationScheduleRouteID = item.route_id;
-    const thisNotificationScheduleRouteKey = `r_${thisNotificationScheduleRouteID}`;
-    let thisNotificationScheduleRoute = {} as SimplifiedRouteItem;
-    if (hasOwnProperty(Route, thisNotificationScheduleRouteKey)) {
-      thisNotificationScheduleRoute = Route[thisNotificationScheduleRouteKey];
-    } else {
-      continue;
-    }
-    const thisNotificationScheduleRoutePathAttributeId = thisNotificationScheduleRoute.pid;
-    integratedItem.route.pathAttributeId = thisNotificationScheduleRoutePathAttributeId;
+    integratedItem.route = {
+      name: item.route_name,
+      id: item.route_id,
+      direction: item.direction
+    };
 
     items.push(integratedItem);
   }

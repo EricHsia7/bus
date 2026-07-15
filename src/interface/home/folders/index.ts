@@ -168,8 +168,7 @@ export function setupFolderFieldSkeletonScreen(): void {
             departure: '',
             destination: ''
           },
-          id: 0,
-          pathAttributeId: []
+          id: 0
         }
       };
       folder.content.push(folderContent);
