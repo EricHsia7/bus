@@ -495,7 +495,7 @@ export async function integrateFolders(progressCallback: ProgressCallback): Prom
             direction: item.direction,
             status: parseEstimateTime(thisEstimateTime.EstimateTime, time_formatting_mode),
             route: {
-              id: item.id,
+              id: item.route.id,
               pathAttributeId: thisRoute.pid,
               name: item.route.name,
               endPoints: {
