@@ -345,7 +345,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
       thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
 
-    if (previousItem === null || previousItem === undefined) {
+    if (previousItem === null) {
       updateType(thisElement, thisItem);
       updateIcon(thisElement, thisItem);
       updateStatus(thisElement, thisItem, animation);

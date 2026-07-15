@@ -477,27 +477,50 @@ export async function integrateFolders(progressCallback: ProgressCallback): Prom
     };
 
     for (const item of folderWithContent.content) {
-      const integratedItem = item as integratedFolderContent;
-      switch (integratedItem.type) {
+      switch (item.type) {
         case 'stop': {
-          const thisStopKey = `s_${integratedItem.id}`;
-          let thisEstimateTime = {} as EstimateTimeItem;
-          if (hasOwnProperty(batchFoundEstimateTime, thisStopKey)) {
-            thisEstimateTime = batchFoundEstimateTime[thisStopKey];
-          } else {
-            continue;
-            // break;
-          }
-          integratedItem.status = parseEstimateTime(thisEstimateTime.EstimateTime, time_formatting_mode);
-          const thisRouteKey = `r_${integratedItem.route.id}`;
+          const thisStopKey = `s_${item.id}`;
+          if (!hasOwnProperty(batchFoundEstimateTime, thisStopKey)) continue;
+          const thisEstimateTime = batchFoundEstimateTime[thisStopKey] as EstimateTimeItem;
+
+          const thisRouteKey = `r_${item.route.id}`;
+          if (!hasOwnProperty(Route, thisRouteKey)) continue;
           const thisRoute = Route[thisRouteKey] as SimplifiedRouteItem;
-          integratedItem.route.pathAttributeId = thisRoute.pid;
+
+          integratedFolder.content.push({
+            type: 'stop',
+            id: item.id,
+            timestamp: item.timestamp,
+            name: item.name,
+            direction: item.direction,
+            status: parseEstimateTime(thisEstimateTime.EstimateTime, time_formatting_mode),
+            route: {
+              pathAttributeId: thisRoute.pid,
+              name: item.route.name,
+              endPoints: {
+                departure: item.route.endPoints.departure,
+                destination: item.route.endPoints.destination
+              }
+            }
+          } as integratedFolderContentStop);
           break;
         }
         case 'route': {
-          const thisRouteKey = `r_${integratedItem.id}`;
+          const thisRouteKey = `r_${item.id}`;
+          if (!hasOwnProperty(Route, thisRouteKey)) continue;
           const thisRoute = Route[thisRouteKey] as SimplifiedRouteItem;
-          integratedItem.pathAttributeId = thisRoute.pid;
+
+          integratedFolder.content.push({
+            type: 'route',
+            id: item.id,
+            timestamp: item.timestamp,
+            name: item.name,
+            endPoints: {
+              departure: item.endPoints.departure,
+              destination: item.endPoints.destination
+            },
+            pathAttributeId: thisRoute.pid
+          } as integratedFolderContentRoute);
           break;
         }
         case 'location':
@@ -509,7 +532,6 @@ export async function integrateFolders(progressCallback: ProgressCallback): Prom
         default:
           break;
       }
-      integratedFolder.content.push(integratedItem);
     }
     folders.push(integratedFolder);
   }
