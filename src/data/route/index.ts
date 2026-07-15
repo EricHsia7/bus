@@ -280,7 +280,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
           // ensure that (x, y) is between (x1, y1) and (x2, y2)
           const distance1 = Math.hypot(x - x1, y - y1);
           const distance2 = Math.hypot(x - x2, y - y2);
-          progress = clamp(distance1 / (distance1 + distance2), 0, 1);
+          progress = clamp(Math.round((distance1 / (distance1 + distance2)) * 1e3) / 1e3, 0, 1);
         }
       }
     }
