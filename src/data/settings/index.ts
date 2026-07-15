@@ -680,19 +680,14 @@ export function getSettingOptionValue(key: string): SettingSelectOptionStringVal
       switch (thisSettingValue.type) {
         case 0:
           return thisSettingValue.string as string;
-          break;
         case 1:
           return thisSettingValue.number as number;
-          break;
         case 2:
           return thisSettingValue.boolean as boolean;
-          break;
         case 3:
           return thisSettingValue as SettingSelectOptionRefreshIntervalValue;
-          break;
         default:
           return '' as string;
-          break;
       }
     }
   }
