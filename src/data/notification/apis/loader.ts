@@ -1,4 +1,4 @@
-type NotificationResponseCode = 200 | 400 | 401 | 404 | 500;
+type NotificationResponseCode = 200 | 400 | 401 | 403 | 404 | 500;
 
 interface NotificationResponseCancel {
   result: string;
