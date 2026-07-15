@@ -523,12 +523,31 @@ export async function integrateFolders(progressCallback: ProgressCallback): Prom
           } as integratedFolderContentRoute);
           break;
         }
-        case 'location':
+        case 'location': {
+          integratedFolder.content.push({
+            type: 'location',
+            id: item.id,
+            timestamp: item.timestamp,
+            name: item.name
+          } as integratedFolderContentLocation);
           break;
-        case 'bus':
+        }
+        case 'bus': {
+          integratedFolder.content.push({
+            type: 'bus',
+            id: item.id,
+            timestamp: item.timestamp,
+            busID: item.busID
+          } as integratedFolderContentBus);
           break;
-        case 'empty':
+        }
+        case 'empty': {
+          integratedFolder.content.push({
+            type: 'empty',
+            id: item.id
+          } as integratedFolderContentEmpty);
           break;
+        }
         default:
           break;
       }
