@@ -5,13 +5,12 @@ export function generateIdentifier(): string {
   // 0-9: 48 - 57
   // A-Z: 65 - 90
   // a-z: 97 - 122
-  let randomNumber1 = Math.floor(new Date().getTime() * Math.random() + performance.now());
+  const buffer = new Uint8Array(17);
+  crypto.getRandomValues(buffer);
   const result = new Uint8Array(17);
   result[0] = 95;
   for (let i = 16; i > 0; i--) {
-    const n = randomNumber1 % 62;
-    result[i] = chars[n];
-    randomNumber1 >>>= 1;
+    result[i] = chars[Math.floor((buffer[i] / 255) * 62)];
   }
   return String.fromCharCode.apply(null, result);
 }
