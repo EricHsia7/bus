@@ -128,7 +128,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
         switch (thisItem.type) {
           case 'route':
             thisElement.onclick = function () {
-              openRoute(thisItem.id, thisItem.pid);
+              openRoute(thisItem.id);
             };
             break;
           case 'location':

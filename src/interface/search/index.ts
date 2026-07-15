@@ -243,7 +243,7 @@ export function updateSearchResult(): void {
       switch (thisItem.item.type) {
         case 0:
           thisElement.onclick = function () {
-            openRoute(thisItem.item.id as number, thisItem.item.pid);
+            openRoute(thisItem.item.id as number);
           };
           break;
         case 1:

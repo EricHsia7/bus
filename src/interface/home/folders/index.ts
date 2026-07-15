@@ -313,12 +313,12 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
         switch (thisItem.type) {
           case 'stop':
             buttonElement.onclick = function () {
-              openRoute(thisItem.route.id, thisItem.route.pathAttributeId);
+              openRoute(thisItem.route.id);
             };
             break;
           case 'route':
             buttonElement.onclick = function () {
-              openRoute(thisItem.id, thisItem.pathAttributeId);
+              openRoute(thisItem.id);
             };
             break;
           case 'location':
