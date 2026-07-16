@@ -163,7 +163,7 @@ export function initializeSearchInput(): void {
 }
 
 function getSearchTypeFilterValue(): SearchItem['type'] | -1 {
-  return parseInt(searchTypeFilterButtonElement.getAttribute('type'));
+  return parseInt(searchTypeFilterButtonElement.getAttribute('type') || '-1') as SearchItem['type'] | -1;
 }
 
 function updateSearchInput(): void {
