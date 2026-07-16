@@ -134,7 +134,7 @@ async function scheduleNotificationForStopItem(thisButtonElement: HTMLElement, S
       promptMessage('error', '驗證失敗');
       break;
     case 6:
-      promptMessage('warning', '只能設定至少一分鐘後的到站通知');
+      promptMessage('warning', '只能設定最早一分鐘後的到站通知');
       break;
     default:
       promptMessage('error', '發生未知錯誤');
