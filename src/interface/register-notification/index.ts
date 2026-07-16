@@ -13,11 +13,11 @@ const groupsElement = elementQuerySelector(bodyElement, '.css_register_notificat
 
 const providerGroupElement = elementQuerySelector(groupsElement, '.css_register_notification_group[group="provider"]');
 const providerGroupBodyElement = elementQuerySelector(providerGroupElement, '.css_register_notification_group_body');
-const providerInputElement = elementQuerySelector(providerGroupBodyElement, 'input');
+const providerInputElement = elementQuerySelector(providerGroupBodyElement, 'input') as HTMLInputElement;
 
 const rgistrationKeyGroupElement = elementQuerySelector(groupsElement, '.css_register_notification_group[group="registration-key"]');
 const rgistrationKeyGroupBodyElement = elementQuerySelector(rgistrationKeyGroupElement, '.css_register_notification_group_body');
-const rgistrationKeyInputElement = elementQuerySelector(rgistrationKeyGroupBodyElement, 'input');
+const rgistrationKeyInputElement = elementQuerySelector(rgistrationKeyGroupBodyElement, 'input') as HTMLInputElement;
 
 const headElement = elementQuerySelector(RegisterNotificationField, '.css_register_notification_head');
 const leftButtonElement = elementQuerySelector(headElement, '.css_register_notification_button_left');
@@ -70,11 +70,9 @@ export async function saveFormulatedRegisterNotification() {
   // register
   setNotificationProvider(provider);
   const registering = await registerNotificationClient(registrationKey);
-  if (registering) {
+  if (registering === 0) {
     promptMessage('check_circle', '註冊成功');
-    return;
   } else {
     promptMessage('error', '註冊失敗');
-    return;
   }
 }
