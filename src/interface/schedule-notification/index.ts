@@ -3,6 +3,7 @@ import { documentCreateDivElement, documentQuerySelector, elementQuerySelector }
 import { getBlankIconElement, setIcon } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
+import { openRegisterNotification } from '../register-notification';
 
 const ScheduleNotificationField = documentQuerySelector('.css_schedule_notification_field');
 const ScheduleNotificationBodyElement = elementQuerySelector(ScheduleNotificationField, '.css_schedule_notification_body');
@@ -118,7 +119,10 @@ async function scheduleNotificationForStopItem(thisButtonElement: HTMLElement, S
       promptMessage('error', '網路錯誤，請稍後再試');
       break;
     case -1:
-      promptMessage('warning', '在設定中註冊後才可設定到站通知');
+      promptMessage('warning', '註冊後才可設定到站通知', {
+        text: '註冊',
+        action: openRegisterNotification
+      });
       break;
     case 0:
       promptMessage('check_circle', '設定成功');
