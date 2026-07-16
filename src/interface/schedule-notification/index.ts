@@ -114,17 +114,30 @@ async function scheduleNotificationForStopItem(thisButtonElement: HTMLElement, S
   closeScheduleNotification();
   const result = await scheduleNotificationForStop(StopID, RouteID, EstimateTime, index);
   switch (result) {
-    case 0:
-      promptMessage('error', '設定失敗');
+    case false:
+      promptMessage('error', '網路錯誤，請稍後再試');
       break;
-    case 1:
+    case -1:
+      promptMessage('warning', '在設定中註冊後才可設定到站通知');
+      break;
+    case 0:
       promptMessage('check_circle', '設定成功');
       thisButtonElement.setAttribute('highlighted', 'true');
       break;
-    case 2:
-      promptMessage('warning', '在設定中註冊後才可設定到站通知');
+    case 1:
+      promptMessage('error', '無效使用者');
+      break;
+    case 3:
+      promptMessage('error', '未知使用者');
+      break;
+    case 5:
+      promptMessage('error', '驗證失敗');
+      break;
+    case 6:
+      promptMessage('warning', '只能設定至少一分鐘後的排程通知');
       break;
     default:
+      promptMessage('error', '發生未知錯誤');
       break;
   }
   thisButtonElement.setAttribute('processing', 'false');

@@ -274,13 +274,37 @@ export function closeNotificationScheduleManager(): void {
 export async function cancelNotificationOnNotificationScheduleManager(thisItemElement: HTMLElement, schedule_id: NotificationSchedule['schedule_id']) {
   promptMessage('manufacturing', '處理中');
   const cancellation = await cancelNotification(schedule_id);
-  if (cancellation) {
-    thisItemElement.remove();
-    const index = itemElements.indexOf(thisItemElement);
-    itemElements.splice(index, 1);
-    promptMessage('check_circle', '已取消通知');
-    // TODO: refresh
-  } else {
-    promptMessage('error', '取消失敗');
+  switch (cancellation) {
+    case false:
+      promptMessage('error', '網路錯誤，請稍後再試');
+      break;
+    case 0:
+      thisItemElement.remove();
+      const index = itemElements.indexOf(thisItemElement);
+      itemElements.splice(index, 1);
+      promptMessage('check_circle', '已取消排程通知');
+      // TODO: refresh
+      break;
+    case 1:
+      promptMessage('error', '無效使用者');
+      break;
+    case 2:
+      promptMessage('error', '無效排程通知');
+      break;
+    case 3:
+      promptMessage('error', '未知使用者');
+      break;
+    case 4:
+      promptMessage('error', '未知排程通知');
+      break;
+    case 5:
+      promptMessage('error', '驗證錯誤');
+      break;
+    case 6:
+      promptMessage('error', '無法取消已過期的排程通知');
+      break;
+    default:
+      promptMessage('error', '未知錯誤');
+      break;
   }
 }

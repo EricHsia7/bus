@@ -1,4 +1,5 @@
-import { NotificationProvider, NotificationResponse } from '../../index';
+import { NotificationProvider } from '../../index';
+import { NotificationResponse } from '../loader';
 
 export function getNotificationAPIURL(method: NotificationResponse['method']): string | false {
   if (NotificationProvider === '') {

@@ -7,15 +7,15 @@
  * 5: authentication failure;
  * 6: schedule time error
  */
-type NotificationResponseCode = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+export type NotificationResponseCode = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
-interface NotificationResponseCancel {
+export interface NotificationResponseCancel {
   result: string;
   code: NotificationResponseCode;
   method: 'cancel';
 }
 
-interface NotificationResponseRegister {
+export interface NotificationResponseRegister {
   result: string;
   code: NotificationResponseCode;
   method: 'register';
@@ -23,21 +23,21 @@ interface NotificationResponseRegister {
   secret: string | 'null';
 }
 
-interface NotificationResponseSchedule {
+export interface NotificationResponseSchedule {
   result: string;
   code: NotificationResponseCode;
   method: 'schedule';
   schedule_id: string | 'null';
 }
 
-interface NotificationResponseRotate {
+export interface NotificationResponseRotate {
   result: string;
   code: NotificationResponseCode;
   method: 'rotate';
   secret: string | 'null';
 }
 
-interface NotificationResponseReschedule {
+export interface NotificationResponseReschedule {
   result: string;
   code: NotificationResponseCode;
   method: 'reschedule';
