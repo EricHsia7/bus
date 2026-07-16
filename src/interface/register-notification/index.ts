@@ -69,8 +69,8 @@ export async function saveFormulatedRegisterNotification() {
   }
   // register
   setNotificationProvider(provider);
-  const registering = await registerNotificationClient(registrationKey);
-  if (registering === 0) {
+  const result = await registerNotificationClient(registrationKey);
+  if (result === 0) {
     promptMessage('check_circle', '註冊成功');
   } else {
     promptMessage('error', '註冊失敗');

@@ -1,6 +1,7 @@
 import { sha512 } from '../../../../tools/index';
-import { NotificationClientID, NotificationResponse, NotificationSecret } from '../../index';
+import { NotificationClientID, NotificationSecret } from '../../index';
 import { getNotificationToken } from '../getNotificationToken/index';
+import { NotificationResponse } from '../loader';
 
 export function getNotificationRequestBody(method: NotificationResponse['method'], parameters: Array<any>): object | false {
   switch (method) {

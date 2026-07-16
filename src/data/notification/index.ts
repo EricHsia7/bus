@@ -425,7 +425,7 @@ export async function scheduleNotificationForStop(StopID: number, RouteID: numbe
   const now = new Date().getTime();
   const scheduled_time = now + EstimateTime * 1000 + timeOffset * 60 * 1000;
 
-  const scheduling = await scheduleNotification(StopID, thisLocationName, RouteID, thisRouteName, thisRouteDirection, EstimateTime, time_formatting_mode, timeOffset, scheduled_time);
-  if (typeof scheduling === 'string') return 0;
-  return scheduling;
+  const result = await scheduleNotification(StopID, thisLocationName, RouteID, thisRouteName, thisRouteDirection, EstimateTime, time_formatting_mode, timeOffset, scheduled_time);
+  if (typeof result === 'string') return 0;
+  return result;
 }
