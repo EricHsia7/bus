@@ -2,7 +2,7 @@ import { SimplifiedRouteItem } from '../../data/apis/getRoute/index';
 import { integratedRouteCalendar, integrateRouteCalendar } from '../../data/route/calendar';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { generateRoundedRectPath } from '../../tools/graphic';
-import { dateToString, offsetDate } from '../../tools/time';
+import { dateToString, offsetDate, WeekDayIndex } from '../../tools/time';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 const routeCalendarField = documentQuerySelector('.css_route_calendar_field');
@@ -65,7 +65,7 @@ function generateRouteCalendarSVG(integration: integratedRouteCalendar, date: Da
         interval: scheduledEvents[i].interval,
         count: scheduledEvents[i].count,
         track: 0,
-        day: day
+        day: day as WeekDayIndex
       });
     }
   }

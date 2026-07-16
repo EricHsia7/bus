@@ -1,7 +1,6 @@
 import { integratedBus, integratedBusProperty, integratedBusPropertyArray } from '../../data/bus/index';
 import { getSettingOptionValue } from '../../data/settings/index';
 import { booleanToString } from '../../tools';
-import { deepEqual } from '../../tools/deep-equal';
 import { documentCreateDivElement, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { getBlankIconElement, setIcon } from '../icons/index';
 import { BusPropertiesGroupBodyElement } from './index';
@@ -60,22 +59,22 @@ export function updateBusPropertiesField(properties: integratedBus['properties']
       thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
 
-    if (previousProperty === null || previousProperty === undefined) {
+    if (previousProperty === null) {
       updateIcon(thisElement, thisProperty);
       updateValue(thisElement, thisProperty);
       updateSkeletonScreen(thisElement, skeletonScreen);
       updateAnimation(thisElement, animation);
     } else {
-      if (!deepEqual(previousProperty, thisProperty)) {
+      if (previousProperty.icon !== thisProperty.icon) {
         updateIcon(thisElement, thisProperty);
       }
-      if (!deepEqual(previousProperty, thisProperty)) {
+      if (previousProperty.value !== thisProperty.value) {
         updateValue(thisElement, thisProperty);
       }
-      if (skeletonScreen !== previousSkeletonScreen) {
+      if (previousSkeletonScreen !== skeletonScreen) {
         updateSkeletonScreen(thisElement, skeletonScreen);
       }
-      if (animation !== previousAnimation) {
+      if (previousAnimation !== animation) {
         updateAnimation(thisElement, animation);
       }
     }

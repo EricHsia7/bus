@@ -12,7 +12,7 @@ export async function searchRouteByName(query: string): Promise<Array<Simplified
   const result: Array<SimplifiedRouteItem> = [];
   for (const key in Route) {
     const thisRoute = Route[key];
-    if (String(thisRoute.n).indexOf(query) > -1) {
+    if (thisRoute.n.indexOf(query) > -1) {
       result.push(thisRoute);
     }
   }

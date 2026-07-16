@@ -695,7 +695,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       scheduleNotificationButtonElement.setAttribute('highlighted', booleanToString(havingNotifcationSchedules));
     }
 
-    if (previousItem === null || previousItem === undefined) {
+    if (previousItem === null) {
       updateStatus(thisElement, thisItem, skeletonScreen, animation);
       updateRank(thisElement, thisItem, skeletonScreen, animation);
       updateRouteDirection(thisElement, thisItem);
@@ -712,17 +712,21 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         updateStatus(thisElement, thisItem, skeletonScreen, animation);
         updateScheduleNotificationButton(thisElement, thisItem);
       }
+
       if (previousItem.ranking.number !== thisItem.ranking.number || previousItem.ranking.code !== thisItem.ranking.code) {
         updateRank(thisElement, thisItem, skeletonScreen, animation);
       }
+
       if (previousItem.stopId !== thisItem.stopId) {
         updateRouteDirection(thisElement, thisItem);
         updateRouteName(thisElement, thisItem);
         updateSaveToFolderButton(thisElement, thisItem);
       }
+
       if (!deepEqual(previousItem.buses, thisItem.buses)) {
         updateBuses(thisElement, thisItem);
       }
+
       if (
         !deepEqual(
           previousItem.busArrivalTimes.map((e) => e.state),
@@ -731,9 +735,11 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       ) {
         updateBusArrivalTimes(thisElement, thisItem);
       }
+
       if (animation !== previousAnimation) {
         updateAnimation(thisElement, animation);
       }
+
       if (skeletonScreen !== previousSkeletonScreen) {
         updateStretch(thisElement, skeletonScreen);
         updateSkeletonScreen(thisElement, skeletonScreen);
@@ -759,7 +765,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
     }
 
-    if (previousProperty === null || previousProperty === undefined) {
+    if (previousProperty === null) {
       updateIcon(thisElement, thisProperty);
       updateValue(thisElement, thisProperty);
       updateAnimation(thisElement, animation);
@@ -768,13 +774,16 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       if (previousProperty.icon !== thisProperty.icon) {
         updateIcon(thisElement, thisProperty);
       }
+
       if (previousProperty.value !== thisProperty.value) {
         updateValue(thisElement, thisProperty);
       }
-      if (animation !== previousAnimation) {
+
+      if (previousAnimation !== animation) {
         updateAnimation(thisElement, animation);
       }
-      if (skeletonScreen !== previousSkeletonScreen) {
+
+      if (previousSkeletonScreen !== skeletonScreen) {
         updateSkeletonScreen(thisElement, skeletonScreen);
       }
     }

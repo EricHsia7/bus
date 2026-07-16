@@ -4,7 +4,6 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { deepEqual } from '../../../tools/deep-equal';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../../tools/elements';
 import { booleanToString, hasOwnProperty } from '../../../tools/index';
-import { ProgressMessage } from '../../../tools/progress';
 import { Tick } from '../../../tools/tick';
 import { VisibilityMonitor } from '../../../tools/visibility-monitor';
 import { getBlankIconElement, getIconElement, setIcon } from '../../icons/index';
@@ -395,11 +394,6 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
             if (previousItem.name !== thisItem.name) {
               updateMain(thisElement, thisItem);
             }
-            /*
-            if (!deepEqual(previousItem.labels, thisItem.labels)) {
-              updateContext(thisElement, thisItem);
-            }
-            */
             break;
           case 'bus':
             /*

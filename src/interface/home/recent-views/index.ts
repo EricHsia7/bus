@@ -1,6 +1,5 @@
 import { integratedRecentView, integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
 import { getSettingOptionValue } from '../../../data/settings/index';
-import { deepEqual } from '../../../tools/deep-equal';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../../tools/elements';
 import { booleanToString, hasOwnProperty } from '../../../tools/index';
 import { Tick } from '../../../tools/tick';
