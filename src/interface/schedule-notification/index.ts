@@ -125,19 +125,19 @@ async function scheduleNotificationForStopItem(thisButtonElement: HTMLElement, S
       thisButtonElement.setAttribute('highlighted', 'true');
       break;
     case 1:
-      promptMessage('error', '無效的使用者');
+      promptMessage('error', '無效使用者');
       break;
     case 3:
-      promptMessage('error', '找不到使用者');
+      promptMessage('error', '未知使用者');
       break;
     case 5:
-      promptMessage('error', '驗證錯誤');
+      promptMessage('error', '驗證失敗');
       break;
     case 6:
-      promptMessage('error', '只能設定至少一分鐘後的排程通知');
+      promptMessage('warning', '只能設定至少一分鐘後的排程通知');
       break;
     default:
-      promptMessage('error', '未知錯誤');
+      promptMessage('error', '發生未知錯誤');
       break;
   }
   thisButtonElement.setAttribute('processing', 'false');

@@ -286,16 +286,16 @@ export async function cancelNotificationOnNotificationScheduleManager(thisItemEl
       // TODO: refresh
       break;
     case 1:
-      promptMessage('error', '無效的使用者');
+      promptMessage('error', '無效使用者');
       break;
     case 2:
-      promptMessage('error', '無效的排程通知');
+      promptMessage('error', '無效排程通知');
       break;
     case 3:
-      promptMessage('error', '找不到使用者');
+      promptMessage('error', '未知使用者');
       break;
     case 4:
-      promptMessage('error', '找不到排程通知');
+      promptMessage('error', '未知排程通知');
       break;
     case 5:
       promptMessage('error', '驗證錯誤');
