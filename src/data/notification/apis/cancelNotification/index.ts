@@ -7,7 +7,7 @@ export async function cancelNotification(schedule_id: NotificationSchedule['sche
   if (NotificationClientID === '' || NotificationSecret === '' || schedule_id === undefined) {
     return false;
   }
-  const url = getNotificationAPIURL('cancel', [schedule_id]);
+  const url = getNotificationAPIURL('cancel');
   const requestBody = getNotificationRequestBody('cancel', [schedule_id]);
   const response = await makeNotificationRequest('cancel', url, requestBody);
   if (response === false) {

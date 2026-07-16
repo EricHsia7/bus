@@ -36,7 +36,15 @@ interface NotificationResponseReschedule {
 
 export type NotificationResponse = NotificationResponseCancel | NotificationResponseRegister | NotificationResponseSchedule | NotificationResponseRotate | NotificationResponseReschedule;
 
-export async function makeNotificationRequest(method: NotificationResponse['method'], url: string | false, body: object | false): Promise<NotificationResponse | false> {
+export interface NotificationResponseMap {
+  cancel: NotificationResponseCancel;
+  register: NotificationResponseRegister;
+  schedule: NotificationResponseSchedule;
+  rotate: NotificationResponseRotate;
+  reschedule: NotificationResponseReschedule;
+}
+
+export async function makeNotificationRequest<M extends keyof NotificationResponseMap>(method: M, url: string | false, body: object | false): Promise<NotificationResponseMap[M] | false> {
   try {
     if (url === false || body === false) {
       return false;
@@ -68,23 +76,13 @@ export async function makeNotificationRequest(method: NotificationResponse['meth
     // Attempt to parse the JSON response
     try {
       const text = await response.text();
-      const json = JSON.parse(text);
-      switch (method) {
-        case 'cancel':
-          return json as NotificationResponseCancel;
-        case 'register':
-          return json as NotificationResponseRegister;
-        case 'schedule':
-          return json as NotificationResponseSchedule;
-        case 'rotate':
-          return json as NotificationResponseRotate;
-        case 'reschedule':
-          return json as NotificationResponseReschedule;
-        default:
-          return false;
+      const json = JSON.parse(text) as NotificationResponseMap[M];
+      if (method === json.method) {
+        return json;
+      } else {
+        return false;
       }
     } catch (jsonError) {
-      console.error('Failed to parse JSON response', jsonError);
       throw new Error('Invalid JSON response from server');
     }
   } catch (error) {
