@@ -4,11 +4,11 @@ import { Progress, ProgressCallback } from '../../tools/progress';
 import { collectBusArrivalTimeData } from '../analytics/bus-arrival-time/index';
 import { collectUpdateRateData } from '../analytics/update-rate/index';
 import { EstimateTime, EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
-import { getLocation, MergedLocation, MergedLocationItem, SimplifiedLocation } from '../apis/getLocation/index';
+import { getLocation, MergedLocation, SimplifiedLocation } from '../apis/getLocation/index';
 import { getMaterialSymbolsList } from '../apis/getMaterialSymbolsList';
-import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
+import { getRoute, SimplifiedRoute } from '../apis/getRoute/index';
 import { getStop, SimplifiedStop } from '../apis/getStop/index';
-import { EstimateTimeStatus, parseEstimateTime } from '../apis/index';
+import { batchFindEstimateTime, EstimateTimeStatus, parseEstimateTime } from '../apis/index';
 import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../settings/index';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 
@@ -435,25 +435,16 @@ export interface integratedFolders {
 }
 
 export async function integrateFolders(progressCallback: ProgressCallback): Promise<integratedFolders> {
-  const progress = new Progress(4, progressCallback); // getRoute: 2 + getEstimateTime: 2
-  const [Route, EstimateTime] = (await Promise.all([getRoute(progress, true), getEstimateTime(progress)])) as [SimplifiedRoute, EstimateTime];
+  const progress = new Progress(2, progressCallback); // getEstimateTime: 2
+  const EstimateTime = await getEstimateTime(progress);
   const foldersWithContent = listFoldersWithContent();
   const StopIDs = (listAllFolderContent(['stop']) as Array<FolderContentStop>).map((stop) => stop.id);
 
-  // const Location = (await getLocation(progress, 1)) as MergedLocation;
-
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
-  // const location_labels = getSettingOptionValue('location_labels');
   const power_saving = getSettingOptionValue('power_saving') as boolean;
   const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
 
-  const batchFoundEstimateTime: { [key: string]: EstimateTimeItem } = {};
-  for (const EstimateTimeItem of EstimateTime) {
-    if (StopIDs.indexOf(EstimateTimeItem.StopID) > -1) {
-      const thisStopKey: string = `s_${EstimateTimeItem.StopID}`;
-      batchFoundEstimateTime[thisStopKey] = EstimateTimeItem;
-    }
-  }
+  const batchFoundEstimateTime = batchFindEstimateTime(EstimateTime, StopIDs);
 
   const folders: integratedFolders['folders'] = [];
   for (const folderWithContent of foldersWithContent) {
@@ -653,12 +644,10 @@ export async function saveRoute(folderID: Folder['id'], RouteID: FolderContentRo
   const Route = (await getRoute(progress, true)) as SimplifiedRoute;
   progress.terminate();
   const thisRouteKey = `r_${RouteID}`;
-  let thisRoute = {} as SimplifiedRouteItem;
-  if (hasOwnProperty(Route, thisRouteKey)) {
-    thisRoute = Route[thisRouteKey];
-  } else {
+  if (!hasOwnProperty(Route, thisRouteKey)) {
     return false;
   }
+  const thisRoute = Route[thisRouteKey];
 
   const newContent: FolderContentRoute = {
     type: 'route',
@@ -679,12 +668,10 @@ export async function saveLocation(folderID: Folder['id'], hash: FolderContentLo
   const Location = (await getLocation(progress, 1)) as MergedLocation;
   progress.terminate();
   const thisLocationKey = `ml_${hash}`;
-  let thisLocation = {} as MergedLocationItem;
-  if (hasOwnProperty(Location, thisLocationKey)) {
-    thisLocation = Location[thisLocationKey];
-  } else {
+  if (!hasOwnProperty(Location, thisLocationKey)) {
     return false;
   }
+  const thisLocation = Location[thisLocationKey];
 
   const newContent: FolderContentLocation = {
     type: 'location',

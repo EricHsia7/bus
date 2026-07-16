@@ -8,33 +8,16 @@ import { Progress, ProgressCallback } from '../../tools/progress';
 import { BusArrivalTime, plotBusArrivalTime } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
-import { EstimateTime, EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
+import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation, MergedLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getStop, SimplifiedStop, SimplifiedStopItem } from '../apis/getStop/index';
-import { batchFindBusesForLocation, EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime } from '../apis/index';
+import { batchFindBusesForLocation, batchFindEstimateTime, BatchFoundEstimateTime, EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime } from '../apis/index';
 import { getSettingOptionValue } from '../settings/index';
 import { getUserOrientation } from '../user-orientation/index';
 
-interface BatchFoundEstimateTimeItem extends EstimateTimeItem {}
-
-type BatchFoundEstimateTime = {
-  [key: string]: BatchFoundEstimateTimeItem;
-};
-
-function batchFindEstimateTime(EstimateTime: EstimateTime, StopIDList: Array<number>): BatchFoundEstimateTime {
-  const result: BatchFoundEstimateTime = {};
-  for (const item of EstimateTime) {
-    if (StopIDList.indexOf(item.StopID) > -1) {
-      const thisStopKey: string = `s_${item.StopID}`;
-      result[thisStopKey] = item;
-    }
-  }
-  return result;
-}
-
 type BatchFoundEstimateTimeRanking = {
-  [key: string]: IntegratedLocationItemRanking;
+  [s_id: string]: IntegratedLocationItemRanking;
 };
 
 function rankBatchFoundEstimateTime(batchFoundEstimateTime: BatchFoundEstimateTime, StopIDList: Array<number>): BatchFoundEstimateTimeRanking {

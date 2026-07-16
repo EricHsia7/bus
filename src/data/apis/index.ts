@@ -2,6 +2,7 @@ import { hasOwnProperty } from '../../tools/index';
 import { formatTime } from '../../tools/time';
 import { BusData, BusDataItem } from './getBusData/index';
 import { BusEvent, BusEventItem } from './getBusEvent/index';
+import { EstimateTime, EstimateTimeItem } from './getEstimateTime';
 import { SimplifiedRoute, SimplifiedRouteItem } from './getRoute/index';
 
 export interface EstimateTimeStatus {
@@ -95,6 +96,21 @@ export function parseTimeCode(code: string, mode: 0 | 1): TimeMoment | TimeRange
       max: max
     };
   }
+}
+
+export type BatchFoundEstimateTime = {
+  [s_id: string]: EstimateTimeItem;
+};
+
+export function batchFindEstimateTime(EstimateTime: EstimateTime, StopIDList: Array<number>): BatchFoundEstimateTime {
+  const result: BatchFoundEstimateTime = {};
+  for (const item of EstimateTime) {
+    if (StopIDList.indexOf(item.StopID) > -1) {
+      const thisStopKey: string = `s_${item.StopID}`;
+      result[thisStopKey] = item;
+    }
+  }
+  return result;
 }
 
 export interface BatchFoundBusPosition {
@@ -254,17 +270,6 @@ export function batchFindBusesForLocation(BusEvent: BusEvent, BusData: BusData, 
   return result;
 }
 
-interface FormattedBusStatus {
-  onStop: string;
-  situation: string;
-  text: string;
-}
-
-interface FormattedBusPosition {
-  longitude: number;
-  latitude: number;
-}
-
 export function parseCarType(CarType: '0' | '1' | '2' | '3'): '一般' | '低底盤' | '大復康巴士' | '狗狗友善專車' | '未知類型' {
   switch (CarType) {
     case '0':
@@ -310,6 +315,17 @@ export function parseBusStatus(BusStatus: '0' | '1' | '2' | '3' | '4' | '5' | '9
     default:
       return '未知狀態'; // Handle unexpected values if necessary
   }
+}
+
+interface FormattedBusStatus {
+  onStop: string;
+  situation: string;
+  text: string;
+}
+
+interface FormattedBusPosition {
+  longitude: number;
+  latitude: number;
 }
 
 export interface FormattedBus {
