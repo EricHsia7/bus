@@ -1,4 +1,13 @@
-type NotificationResponseCode = 200 | 400 | 401 | 403 | 404 | 500;
+/**
+ * 0: success;
+ * 1: invalid client id;
+ * 2: invalid schedule id;
+ * 3: client not found;
+ * 4: schedule not found;
+ * 5: authentication failure;
+ * 6: schedule time error
+ */
+type NotificationResponseCode = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 interface NotificationResponseCancel {
   result: string;

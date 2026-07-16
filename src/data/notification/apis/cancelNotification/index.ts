@@ -13,7 +13,7 @@ export async function cancelNotification(schedule_id: NotificationSchedule['sche
   if (response === false) {
     return false;
   } else {
-    if (response.code === 200 && response.method === 'cancel') {
+    if (response.code === 0 && response.method === 'cancel') {
       await removeNotificationSchedule(schedule_id);
       return true;
     } else {

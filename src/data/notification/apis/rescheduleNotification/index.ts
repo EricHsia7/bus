@@ -29,7 +29,7 @@ export async function rescheduleNotification(schedule_id: NotificationSchedule['
   if (response === false) {
     return false;
   } else {
-    if (response.code === 200 && response.method === 'reschedule') {
+    if (response.code === 0 && response.method === 'reschedule') {
       await updateNotificationSchedule(schedule_id, estimate_time, processed_schedule_time.getTime());
       return true;
     } else {

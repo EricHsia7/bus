@@ -30,7 +30,7 @@ export async function scheduleNotification(stop_id: NotificationSchedule['stop_i
   if (response === false) {
     return false;
   } else {
-    if (response.code === 200 && response.method === 'schedule') {
+    if (response.code === 0 && response.method === 'schedule') {
       if (Math.random() > 0.8) {
         await rotateNotificationSecret();
       }

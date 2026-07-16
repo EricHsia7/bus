@@ -13,7 +13,7 @@ export async function rotateNotificationSecret(): Promise<boolean> {
   if (response === false) {
     return false;
   } else {
-    if (response.code === 200 && response.method === 'rotate') {
+    if (response.code === 0 && response.method === 'rotate') {
       setNotificationSecret(response.secret);
       await saveNotificationClient();
       return true;

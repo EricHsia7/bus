@@ -13,7 +13,7 @@ export async function registerNotificationClient(registrationKey: string): Promi
   if (response === false) {
     return false;
   } else {
-    if (response.code === 200 && response.method === 'register') {
+    if (response.code === 0 && response.method === 'register') {
       setNotificationClientID(response.client_id)
       setNotificationSecret(response.secret)
       await saveNotificationClient();
