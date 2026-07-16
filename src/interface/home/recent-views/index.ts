@@ -271,7 +271,6 @@ export function setupRecentViewsFieldSkeletonScreen(): void {
     items.push({
       type: 'route',
       id: 0,
-      pid: [],
       time: {
         absolute: 0,
         relative: ''
