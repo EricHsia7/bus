@@ -44,6 +44,7 @@
   /* ededf2 */
   --b-cssvar-ededf2: rgb(237, 237, 242);
   --b-cssvar-ededf2-50-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(237, 237, 242) 50%);
+  --b-cssvar-ededf2-65: rgba(237, 237, 242, 0.65);
 
   --b-cssvar-ededf2-inflected-to-segment-buffer: color-mix(in srgb, rgb(237, 237, 242), rgb(89, 145, 187) 8.5%);
   --b-cssvar-ededf2-inflected-to-segment-buffer-50-flattened: color-mix(in srgb, rgb(255, 255, 255), color-mix(in srgb, rgb(237, 237, 242), rgb(89, 145, 187) 8.5%) 50%);
@@ -139,6 +140,7 @@
     /* ededf2 */
     --b-cssvar-ededf2: rgb(19, 20, 23);
     --b-cssvar-ededf2-50-flattened: color-mix(in srgb, rgb(9, 10, 12), rgb(19, 20, 23) 50%);
+    --b-cssvar-ededf2-65: rgba(19, 20, 23, 0.65);
 
     --b-cssvar-ededf2-inflected-to-segment-buffer: color-mix(in srgb, rgb(19, 20, 23), rgb(89, 145, 187) 13%);
     --b-cssvar-ededf2-inflected-to-segment-buffer-50-flattened: color-mix(in srgb, color-mix(in srgb, rgb(9, 10, 12), rgb(89, 145, 187) 6%), color-mix(in srgb, rgb(19, 20, 23), rgb(89, 145, 187) 13%) 50%);
