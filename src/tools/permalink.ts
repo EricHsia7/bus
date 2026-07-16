@@ -15,11 +15,11 @@ export function openPermalink(): void {
         case 0:
           searchRouteByRouteID(parseInt(values[1], 16)).then((result) => {
             if (result !== false) {
-              openRoute(result.id, result.pid);
+              openRoute(result.id);
             } else {
               searchRouteByName(values[2]).then((result2) => {
                 if (result2.length > 0) {
-                  openRoute(result2[0].id, result2[0].pid);
+                  openRoute(result2[0].id);
                 }
               });
             }

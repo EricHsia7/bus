@@ -2,7 +2,7 @@ import { SimplifiedRouteItem } from '../../data/apis/getRoute/index';
 import { integratedRouteCalendar, integrateRouteCalendar } from '../../data/route/calendar';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { generateRoundedRectPath } from '../../tools/graphic';
-import { dateToString, offsetDate } from '../../tools/time';
+import { dateToString, offsetDate, WeekDayIndex } from '../../tools/time';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 const routeCalendarField = documentQuerySelector('.css_route_calendar_field');
@@ -65,7 +65,7 @@ function generateRouteCalendarSVG(integration: integratedRouteCalendar, date: Da
         interval: scheduledEvents[i].interval,
         count: scheduledEvents[i].count,
         track: 0,
-        day: day
+        day: day as WeekDayIndex
       });
     }
   }
@@ -130,11 +130,11 @@ function initializeRouteCalendarSliding(): void {
   timelinesElement.scrollTo({ left: routeCalendarSliding_fieldWidth });
 }
 
-async function initializeRouteCalendar(PathAttributeId: SimplifiedRouteItem['pid']) {
+async function initializeRouteCalendar(RouteID: SimplifiedRouteItem['id']) {
   const FieldSize = querySize('window');
   routeCalendarSliding_fieldWidth = FieldSize.width;
   currentDate = new Date();
-  const integration = await integrateRouteCalendar(PathAttributeId, function () {});
+  const integration = await integrateRouteCalendar(RouteID, function () {});
   currentIntegration = integration;
   for (let i = 0; i < 3; i++) {
     const date = offsetDate(currentDate, i - 1, 0, 0);
@@ -153,10 +153,10 @@ export function hideRouteCalendar(): void {
   routeCalendarField.setAttribute('displayed', 'false');
 }
 
-export function openRouteCalendar(PathAttributeId: SimplifiedRouteItem['pid']): void {
+export function openRouteCalendar(RouteID: SimplifiedRouteItem['id']): void {
   pushPageHistory('RouteCalendar');
   showRouteCalendar();
-  initializeRouteCalendar(PathAttributeId);
+  initializeRouteCalendar(RouteID);
   hidePreviousPage();
 }
 

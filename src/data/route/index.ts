@@ -23,7 +23,6 @@ interface formattedOverlappingRoute {
     html: string;
   };
   RouteID: number;
-  PathAttributeId: Array<number>;
 }
 
 export interface integratedStopItemPosition {
@@ -71,11 +70,18 @@ export interface IntegratedRoute {
   PathAttributeId: Array<number>;
 }
 
-export async function integrateRoute(RouteID: number, PathAttributeId: Array<number>, chartWidth: number, chartHeight: number, progressCallback: ProgressCallback): Promise<IntegratedRoute> {
+export async function integrateRoute(RouteID: SimplifiedRouteItem['id'], chartWidth: number, chartHeight: number, progressCallback: ProgressCallback): Promise<IntegratedRoute> {
   const progress = new Progress(18, progressCallback); // getRoute: 2 + getStop: 2 + getLocation: 2 * 3 + getSegmentBuffers: 2 + getEstimateTime: 2 + getBusEvent: 2 + getBusData: 2
   const [Route, Stop, EstimateTime, SimplifiedLocation] = (await Promise.all([getRoute(progress, true), getStop(progress), getEstimateTime(progress), getLocation(progress, 0)])) as [SimplifiedRoute, SimplifiedStop, EstimateTime, SimplifiedLocation];
   const [SegmentBuffers, MergedLocation, BusEvent] = (await Promise.all([getSegmentBuffers(progress), getLocation(progress, 1), getBusEvent(progress)])) as [SimplifiedSegmentBuffer, MergedLocation, BusEvent];
   const [BusData, BusArrivalTimes, IndexedLocation] = (await Promise.all([getBusData(progress), plotBusArrivalTime(chartWidth, chartHeight), getLocation(progress, 2)])) as [BusData, BusArrivalTimes, IndexedLocation];
+
+  const RouteKey = `r_${RouteID}`;
+  let PathAttributeId: SimplifiedRouteItem['pid'] = [];
+  if (hasOwnProperty(Route, RouteKey)) {
+    PathAttributeId = Route[RouteKey].pid;
+  }
+
   const batchFoundBuses = batchFindBusesForRoute(BusEvent, BusData, Route, RouteID, PathAttributeId);
 
   let hasSegmentBuffers: boolean = false;
@@ -140,8 +146,7 @@ export async function integrateRoute(RouteID: number, PathAttributeId: Array<num
               text: `${overlappingRoute.dep} \u2194 ${overlappingRoute.des}`, // u2194 -> '↔'
               html: `<span>${overlappingRoute.dep}</span><span>\u2194</span><span>${overlappingRoute.des}</span>`
             },
-            RouteID: overlappingRoute.id,
-            PathAttributeId: overlappingRoute.pid
+            RouteID: overlappingRoute.id
           };
           integratedStopItem.overlappingRoutes.push(formattedOverlappingRoute);
         }

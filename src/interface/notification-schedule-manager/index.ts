@@ -193,10 +193,8 @@ function setupNotificationScheduleManagerFieldSkeletonScreen(): void {
       route: {
         name: '',
         direction: '',
-        id: 0,
-        pathAttributeId: []
+        id: 0
       },
-      is_first: true,
       date: '',
       hours: '',
       minutes: ''

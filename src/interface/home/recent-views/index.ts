@@ -1,6 +1,5 @@
 import { integratedRecentView, integratedRecentViews, integrateRecentViews } from '../../../data/recent-views/index';
 import { getSettingOptionValue } from '../../../data/settings/index';
-import { deepEqual } from '../../../tools/deep-equal';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../../tools/elements';
 import { booleanToString, hasOwnProperty } from '../../../tools/index';
 import { Tick } from '../../../tools/tick';
@@ -128,7 +127,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
         switch (thisItem.type) {
           case 'route':
             thisElement.onclick = function () {
-              openRoute(thisItem.id, thisItem.pid);
+              openRoute(thisItem.id);
             };
             break;
           case 'location':
@@ -190,7 +189,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
             if (previousItem.time !== thisItem.time) {
               updateTime(thisElement, thisItem);
             }
-            if (previousItem.id !== thisItem.id || !deepEqual(previousItem.pid, thisItem.pid)) {
+            if (previousItem.id !== thisItem.id) {
               updateName(thisElement, thisItem);
               updateOnclick(thisElement, thisItem, skeletonScreen);
             }
@@ -272,7 +271,6 @@ export function setupRecentViewsFieldSkeletonScreen(): void {
     items.push({
       type: 'route',
       id: 0,
-      pid: [],
       time: {
         absolute: 0,
         relative: ''

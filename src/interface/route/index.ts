@@ -52,8 +52,7 @@ const routeTick = new Tick(refreshRoute, 15 * 1000);
 const routeVisibilityMonitor = new VisibilityMonitor({ root: RouteGroupsElement, threshold: 0.5 });
 const decoder = new TextDecoder();
 
-let currentRouteIDSet_RouteID: number = 0;
-let currentRouteIDSet_PathAttributeId: Array<number> = [];
+let currentRouteID: number = 0;
 
 const tabPadding: number = 20;
 const subpixelPrecision: number = getSubpixelPrecision();
@@ -560,7 +559,7 @@ function generateElementOfNearbyLocation(): HTMLElement {
   return nearbyLocationElement;
 }
 
-function setupRouteFieldSkeletonScreen(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
+function setupRouteFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation') as boolean;
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
@@ -611,8 +610,8 @@ function setupRouteFieldSkeletonScreen(RouteID: IntegratedRoute['RouteID'], Path
       },
       RouteName: '載入中',
       RouteEndPoints: ['載入中', '載入中'],
-      RouteID: RouteID,
-      PathAttributeId: PathAttributeId,
+      RouteID: -1,
+      PathAttributeId: [],
       dataUpdateTime: 0
     },
     true,
@@ -755,11 +754,11 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         routeNameElement.textContent = overlappingRouteItem.name;
         routeEndPoindsElement.textContent = overlappingRouteItem.RouteEndPoints.text;
 
-        (function (thisViewRouteButtonElement, thisOverlappingRouteID, thisOverlappingRoutePathAttributeID) {
+        (function (thisViewRouteButtonElement, thisOverlappingRouteID) {
           thisViewRouteButtonElement.onclick = function () {
-            switchRoute(thisOverlappingRouteID, thisOverlappingRoutePathAttributeID);
+            switchRoute(thisOverlappingRouteID);
           };
-        })(viewRouteButtonElement, overlappingRouteItem.RouteID, overlappingRouteItem.PathAttributeId);
+        })(viewRouteButtonElement, overlappingRouteItem.RouteID);
 
         (function (thisSaveToFolderButtonElement, thisOverlappingRouteID) {
           thisSaveToFolderButtonElement.onclick = function () {
@@ -1040,7 +1039,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
   if (previousIntegration?.RouteID !== integration.RouteID) {
     RouteButtonRightElement.onclick = function () {
-      openRouteDetails(integration.RouteID, integration.PathAttributeId);
+      openRouteDetails(integration.RouteID);
     };
   }
 
@@ -1160,7 +1159,7 @@ async function refreshRoute(): Promise<number> {
     const busArrivalTimeChartSize = querySize('route-bus-arrival-time-chart');
     RouteUpdateTimerElement.setAttribute('refreshing', 'true');
     RouteUpdateTimerElement.classList.remove('css_route_update_timer_scale_down');
-    const integration = await integrateRoute(currentRouteIDSet_RouteID, currentRouteIDSet_PathAttributeId, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, function (message) {
+    const integration = await integrateRoute(currentRouteID, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, function (message) {
       RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-scale-x', message.percent.toString());
     });
     updateRouteField(integration, false, playing_animation);
@@ -1187,17 +1186,16 @@ async function refreshRoute(): Promise<number> {
   }
 }
 
-function initializeRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
-  currentRouteIDSet_RouteID = RouteID;
+function initializeRoute(RouteID: IntegratedRoute['RouteID']): void {
+  currentRouteID = RouteID;
 
-  currentRouteIDSet_PathAttributeId = PathAttributeId;
   routeSliding_initialIndex = 0;
   routeSliding_groupStyles = {};
 
   RouteGroupsElement.scrollLeft = 0;
   RouteGroupsElement.focus();
 
-  setupRouteFieldSkeletonScreen(RouteID, PathAttributeId);
+  setupRouteFieldSkeletonScreen();
 
   if (routeTick.isPaused) {
     routeTick.resume(true);
@@ -1214,11 +1212,11 @@ export function hideRoute(): void {
   RouteField.setAttribute('displayed', 'false');
 }
 
-export function openRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
+export function openRoute(RouteID: IntegratedRoute['RouteID']): void {
   pushPageHistory('Route');
   logRecentView('route', RouteID);
   showRoute();
-  initializeRoute(RouteID, PathAttributeId);
+  initializeRoute(RouteID);
   hidePreviousPage();
 }
 
@@ -1229,9 +1227,9 @@ export function closeRoute(): void {
   revokePageHistory('Route');
 }
 
-export function switchRoute(RouteID: IntegratedRoute['RouteID'], PathAttributeId: IntegratedRoute['PathAttributeId']): void {
+export function switchRoute(RouteID: IntegratedRoute['RouteID']): void {
   routeTick.pause();
-  openRoute(RouteID, PathAttributeId);
+  openRoute(RouteID);
 }
 
 export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTMLElement): void {

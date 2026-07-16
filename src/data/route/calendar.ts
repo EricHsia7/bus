@@ -1,8 +1,9 @@
+import { hasOwnProperty } from '../../tools';
 import { Progress, ProgressCallback } from '../../tools/progress';
-import { WeeklyArray } from '../../tools/time';
-import { SimplifiedRouteItem } from '../apis/getRoute/index';
-import { getSemiTimeTable } from '../apis/getSemiTimeTable/index';
-import { getTimeTable } from '../apis/getTimeTable/index';
+import { WeekDayIndex, WeeklyArray } from '../../tools/time';
+import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
+import { getSemiTimeTable, SemiTimeTable } from '../apis/getSemiTimeTable/index';
+import { getTimeTable, Timetable } from '../apis/getTimeTable/index';
 import { parseTimeCode, TimeMoment } from '../apis/index';
 
 export type integratedRouteCalendarEventTime = [start: number, end: number]; // hours * 60 + minutes
@@ -36,9 +37,15 @@ export interface integratedRouteCalendar {
   timeZoneOffset: -480;
 }
 
-export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteItem['pid'], progressCallback: ProgressCallback): Promise<integratedRouteCalendar> {
-  const progress = new Progress(4, progressCallback);
-  const [SemiTimeTable, TimeTable] = await Promise.all([getSemiTimeTable(progress), getTimeTable(progress)]);
+export async function integrateRouteCalendar(RouteID: SimplifiedRouteItem['id'], progressCallback: ProgressCallback): Promise<integratedRouteCalendar> {
+  const progress = new Progress(6, progressCallback); // getRoute: 2 + getSemiTimeTable: 2 + getTimeTable: 2
+  const [Route, SemiTimeTable, TimeTable] = (await Promise.all([getRoute(progress, true), getSemiTimeTable(progress), getTimeTable(progress)])) as [SimplifiedRoute, SemiTimeTable, Timetable];
+
+  const RouteKey = `r_${RouteID}`;
+  let PathAttributeId: SimplifiedRouteItem['pid'] = [];
+  if (hasOwnProperty(Route, RouteKey)) {
+    PathAttributeId = Route[RouteKey].pid;
+  }
 
   const result: integratedRouteCalendar = {
     repeated: [[], [], [], [], [], [], []],
@@ -77,7 +84,7 @@ export async function integrateRouteCalendar(PathAttributeId: SimplifiedRouteIte
         interval: [longHeadway, lowHeadway],
         count: [Math.ceil((end - start) / lowHeadway), Math.floor((end - start) / longHeadway)],
         track: 0,
-        day: day
+        day: day as WeekDayIndex
       };
       result.repeated[day].push(repeatedEvent);
     } else if (item.DateType === '1') {

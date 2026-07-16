@@ -49,7 +49,7 @@ export interface IntegratedRouteDetails {
   RouteID: SimplifiedRouteItem['id'];
 }
 
-export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], PathAttributeId: SimplifiedRouteItem['pid'], progressCallback: ProgressCallback): Promise<IntegratedRouteDetails> {
+export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], progressCallback: ProgressCallback): Promise<IntegratedRouteDetails> {
   const progress = new Progress(2, progressCallback);
   const Route = (await getRoute(progress, true)) as SimplifiedRoute;
   progress.terminate();
@@ -76,7 +76,7 @@ export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], 
       name: '時刻表',
       key: 'calendar',
       action: function () {
-        openRouteCalendar(PathAttributeId);
+        openRouteCalendar(RouteID);
       }
     },
     {
@@ -96,6 +96,7 @@ export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], 
       }
     }
   ];
+
   const result: IntegratedRouteDetails = {
     actions: actions,
     actionsQuantity: actions.length,

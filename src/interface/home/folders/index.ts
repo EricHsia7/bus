@@ -4,7 +4,6 @@ import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '
 import { deepEqual } from '../../../tools/deep-equal';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../../tools/elements';
 import { booleanToString, hasOwnProperty } from '../../../tools/index';
-import { ProgressMessage } from '../../../tools/progress';
 import { Tick } from '../../../tools/tick';
 import { VisibilityMonitor } from '../../../tools/visibility-monitor';
 import { getBlankIconElement, getIconElement, setIcon } from '../../icons/index';
@@ -168,8 +167,7 @@ export function setupFolderFieldSkeletonScreen(): void {
             departure: '',
             destination: ''
           },
-          id: 0,
-          pathAttributeId: []
+          id: 0
         }
       };
       folder.content.push(folderContent);
@@ -313,12 +311,12 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
         switch (thisItem.type) {
           case 'stop':
             buttonElement.onclick = function () {
-              openRoute(thisItem.route.id, thisItem.route.pathAttributeId);
+              openRoute(thisItem.route.id);
             };
             break;
           case 'route':
             buttonElement.onclick = function () {
-              openRoute(thisItem.id, thisItem.pathAttributeId);
+              openRoute(thisItem.id);
             };
             break;
           case 'location':
@@ -396,11 +394,6 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
             if (previousItem.name !== thisItem.name) {
               updateMain(thisElement, thisItem);
             }
-            /*
-            if (!deepEqual(previousItem.labels, thisItem.labels)) {
-              updateContext(thisElement, thisItem);
-            }
-            */
             break;
           case 'bus':
             /*
