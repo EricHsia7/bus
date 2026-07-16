@@ -14,7 +14,6 @@ export function getNotificationRequestBody(method: NotificationResponse['method'
           schedule_id: parameters[0]
         };
       }
-      break;
     case 'register':
       if (parameters.length !== 1) {
         return false;
@@ -26,7 +25,6 @@ export function getNotificationRequestBody(method: NotificationResponse['method'
           hash: sha512(`${sha512(parameters[0])}${currentDate.getTime()}`)
         };
       }
-      break;
     case 'schedule':
       if (NotificationClientID === '' || NotificationSecret === '' || parameters.length !== 9) {
         return false;
@@ -45,7 +43,6 @@ export function getNotificationRequestBody(method: NotificationResponse['method'
           scheduled_time: parameters[8]
         };
       }
-      break;
     case 'rotate':
       if (NotificationClientID === '' || NotificationSecret === '' || parameters.length !== 0) {
         return false;
@@ -55,7 +52,6 @@ export function getNotificationRequestBody(method: NotificationResponse['method'
           token: getNotificationToken(NotificationClientID, NotificationSecret, {})
         };
       }
-      break;
     case 'reschedule':
       if (NotificationClientID === '' || NotificationSecret === '' || parameters.length !== 3) {
         return false;
@@ -68,9 +64,7 @@ export function getNotificationRequestBody(method: NotificationResponse['method'
           scheduled_time: parameters[2]
         };
       }
-      break;
     default:
       return false;
-      break;
   }
 }
