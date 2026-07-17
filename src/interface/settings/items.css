@@ -149,7 +149,7 @@
 .css_settings_options_field .css_settings_options_body .css_settings_options .css_option .css_option_checkbox svg path {
   fill: none;
   stroke: var(--b-cssvar-main-color);
-  stroke-width: 2;
+  stroke-width: 2.1;
   stroke-dasharray: 30px;
   stroke-dashoffset: var(--b-checkbox-path-stroke-dashoffset);
   stroke-linecap: round;
