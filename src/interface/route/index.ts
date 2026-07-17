@@ -59,7 +59,7 @@ const subpixelPrecision: number = getSubpixelPrecision();
 
 export function initializeRouteSliding(): void {
   RouteGroupsElement.addEventListener(
-    'touchstart',
+    'pointerdown',
     function () {
       routeSliding_initialIndex = Math.round(RouteGroupsElement.scrollLeft / routeSliding_fieldWidth);
     },

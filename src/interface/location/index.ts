@@ -58,7 +58,7 @@ const subpixelPrecision: number = getSubpixelPrecision();
 
 export function initializeLocationSliding(): void {
   LocationGroupsElement.addEventListener(
-    'touchstart',
+    'pointerdown',
     function () {
       locationSliding_initialIndex = Math.round(LocationGroupsElement.scrollLeft / locationSliding_fieldWidth);
     },

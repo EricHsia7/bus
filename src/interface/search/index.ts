@@ -91,24 +91,23 @@ function initializeKeyboard(): void {
       for (const item of row) {
         const newButtonElement = document.createElement('button');
         newButtonElement.classList.add('css_search_keyboard_key');
-        const eventName = supportTouch() ? 'touchstart' : 'mousedown';
         switch (item) {
           case '刪除':
-            newButtonElement.addEventListener(eventName, deleteCharFromInput);
+            newButtonElement.addEventListener('pointerdown', deleteCharFromInput);
             newButtonElement.appendChild(getIconElement('backspace'));
             break;
           case '清空':
-            newButtonElement.addEventListener(eventName, emptyInput);
+            newButtonElement.addEventListener('pointerdown', emptyInput);
             newButtonElement.textContent = item;
             break;
           case '鍵盤':
-            newButtonElement.addEventListener(eventName, openSystemKeyboard);
+            newButtonElement.addEventListener('pointerdown', openSystemKeyboard);
             newButtonElement.appendChild(getIconElement('keyboard'));
             break;
           default:
             // Use an IIFE (Immediately Invoked Function Expression) to create a new scope for each item value. This ensures that the item variable is captured by value rather than by reference.
             newButtonElement.addEventListener(
-              eventName,
+              'pointerdown',
               (function (currentItem) {
                 return function () {
                   typeTextIntoInput(currentItem);
