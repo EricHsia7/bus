@@ -14,7 +14,9 @@ const LeftButtonElement = elementQuerySelector(HeadElement, '.css_settings_optio
 const optionElements: Array<HTMLElement> = [];
 
 function generateElementOfItem(): HTMLElement {
-  const optionElement = documentCreateDivElement();
+  const svgNamespace = 'http://www.w3.org/2000/svg';
+
+  const optionElement = document.createElement('label');
   optionElement.classList.add('css_option');
 
   const nameElement = documentCreateDivElement();
@@ -25,8 +27,16 @@ function generateElementOfItem(): HTMLElement {
 
   const checkboxElement = document.createElement('input');
   checkboxElement.type = 'checkbox';
-
   checkboxContainerElement.appendChild(checkboxElement);
+
+  const svg = document.createElementNS(svgNamespace, 'svg');
+  svg.setAttribute('viewBox', '0 0 55 55');
+
+  const path = document.createElementNS(svgNamespace, 'path');
+  path.setAttribute('d', 'M16.893398282201787,27.500000000000000 L23.964466094067262,34.571067811865476 L38.106601717798213,20.428932188134524');
+  svg.appendChild(path);
+  checkboxContainerElement.appendChild(svg);
+
   optionElement.appendChild(nameElement);
   optionElement.appendChild(checkboxContainerElement);
 
