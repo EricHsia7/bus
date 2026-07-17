@@ -339,27 +339,19 @@ export interface FormattedBus {
 }
 
 export function formatBus(batchFoundBus: BatchFoundBus): FormattedBus {
-  const result = {} as FormattedBus;
-
-  const CarType = batchFoundBus.CarType;
-  const type = parseCarType(CarType);
-  result.type = type;
-
-  const CarOnStop = batchFoundBus.CarOnStop;
-  const onStop = parseCarOnStop(CarOnStop);
-
-  const BusStatus = batchFoundBus.BusStatus;
-  const situation = parseBusStatus(BusStatus);
-
-  result.carNumber = batchFoundBus.BusID;
-  result.status = {
-    onStop: onStop,
-    situation: situation,
-    text: `${onStop} | ${situation}`
+  const onStop = parseCarOnStop(batchFoundBus.CarOnStop);
+  const situation = parseBusStatus(batchFoundBus.BusStatus);
+  return {
+    type: parseCarType(batchFoundBus.CarType),
+    carNumber: batchFoundBus.BusID,
+    status: {
+      onStop: parseCarOnStop(batchFoundBus.CarOnStop),
+      situation: situation,
+      text: `${onStop} | ${situation}`
+    },
+    RouteName: batchFoundBus.RouteName,
+    onThisRoute: batchFoundBus.onThisRoute,
+    index: batchFoundBus.index,
+    position: batchFoundBus.position
   };
-  result.RouteName = batchFoundBus.RouteName;
-  result.onThisRoute = batchFoundBus.onThisRoute;
-  result.index = batchFoundBus.index;
-  result.position = batchFoundBus.position;
-  return result;
 }
