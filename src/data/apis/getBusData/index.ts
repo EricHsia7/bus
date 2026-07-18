@@ -3,20 +3,62 @@ import { getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface BusDataItem {
+  /**
+   * @ProviderID
+   */
   ProviderID: number;
+  /**
+   * @StationID
+   */
   StationID: number;
-  BusID: string; // vehicle registration number
-  CarType: '0' | '1' | '2' | '3'; // 0: normal bus (一般), 1: low-floor bus (低底盤), 2: disability-friendly bus (大復康巴士), 3: dog-friendly bus (狗狗友善專車)
+  /**
+   * @BusID vehicle registration number
+   */
+  BusID: string;
+  /**
+   * @CarType 0: normal bus (一般) | 1: low-floor bus (低底盤) | 2: disability-friendly bus (大復康巴士) | 3: dog-friendly bus (狗狗友善專車)
+   */
+  CarType: '0' | '1' | '2' | '3';
+  /**
+   * @CarID
+   */
   CarID: number;
-  DutyStatus: '0' | '1' | '2'; // 0: normal, 1: start, 2: end
-  BusStatus: '0' | '1' | '2' | '3' | '4' | '5' | '99'; // 0: 正常, 1: 車禍, 2: 故障, 3: 塞車, 4: 緊急求援, 5: 加油, 99: 非營運狀態
-  RouteID: string; // number in string
-  GoBack: '0' | '1' | '2'; // 0: go, 1: back, 2: unknown
-  Longitude: string; // number in string
-  Latitude: string; // number in string
-  Speed: string; // number in string
-  Azimuth: string; // number in string
-  DataTime: string; // timestamp
+  /**
+   * @DutyStatus 0: normal | 1: start | 2: end
+   */
+  DutyStatus: '0' | '1' | '2';
+  /**
+   * @BusStatus 0: 正常 | 1: 車禍 | 2: 故障 | 3: 塞車 | 4: 緊急求援 | 5: 加油 | 99: 非營運狀態
+   */
+  BusStatus: '0' | '1' | '2' | '3' | '4' | '5' | '99';
+  /**
+   * @RouteID number in string
+   */
+  RouteID: string;
+  /**
+   * @GoBack 0: go | 1: back | 2: unknown
+   */
+  GoBack: '0' | '1' | '2';
+  /**
+   * @Longitude number in string
+   */
+  Longitude: string;
+  /**
+   * @Latitude number in string
+   */
+  Latitude: string;
+  /**
+   * @Speed number in string
+   */
+  Speed: string;
+  /**
+   * @Azimuth number in string
+   */
+  Azimuth: string;
+  /**
+   * @DataTime timestamp
+   */
+  DataTime: string;
 }
 
 export type BusData = Array<BusDataItem>;
