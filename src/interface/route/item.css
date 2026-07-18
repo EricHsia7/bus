@@ -218,6 +218,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: manipulation;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_stretch {
@@ -502,6 +503,7 @@
   overflow: clip;
   vertical-align: top;
   contain: layout;
+  touch-action: manipulation;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_buttons .css_route_group_item_button:last-child {
@@ -954,6 +956,7 @@
   column-gap: 5px;
 }
 
+/* body > overlapping routes, nearby locations > overlapping route, nearby location > actions > action button */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_overlapping_routes .css_route_group_item_overlapping_route .css_route_group_item_overlapping_route_actions .css_route_group_item_overlapping_route_action_button,
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_body .css_route_group_item_nearby_locations .css_route_group_item_nearby_location .css_route_group_item_nearby_location_actions .css_route_group_item_nearby_location_action_button {
   display: flex;
@@ -962,6 +965,7 @@
   background: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-large);
   color: var(--b-cssvar-333333);
+  touch-action: manipulation;
 }
 
 /* animation: true && stretched: true && skeleton-screen: false && displayed: true */

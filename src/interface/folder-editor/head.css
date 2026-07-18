@@ -20,6 +20,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  touch-action: manipulation;
 }
 
 .css_folder_editor_field .css_folder_editor_head .css_folder_editor_button_left span.css_material_symbols_rounded {

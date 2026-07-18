@@ -20,6 +20,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  touch-action: manipulation;
 }
 
 .css_folder_manager_field .css_folder_manager_head .css_folder_manager_button_left {

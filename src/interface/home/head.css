@@ -57,6 +57,7 @@
   top: var(--b-cssvar-safe-area-top);
   width: 55px;
   height: 55px;
+  touch-action: manipulation;
 }
 
 .css_home_field .css_home_head .css_home_button_left {

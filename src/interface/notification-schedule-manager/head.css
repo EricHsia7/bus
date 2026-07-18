@@ -31,6 +31,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  touch-action: manipulation;
 }
 
 .css_notification_schedule_manager_field .css_notification_schedule_manager_head .css_notification_schedule_manager_button_left {

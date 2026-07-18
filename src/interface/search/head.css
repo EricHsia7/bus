@@ -90,6 +90,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  touch-action: manipulation;
 }
 
 .css_search_field .css_search_head .css_search_button_left {

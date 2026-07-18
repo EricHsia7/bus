@@ -20,6 +20,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  touch-action: manipulation;
 }
 
 .css_personal_schedule_editor_field .css_personal_schedule_editor_head .css_personal_schedule_editor_button_left {

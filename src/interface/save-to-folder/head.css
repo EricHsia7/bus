@@ -20,6 +20,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  touch-action: manipulation;
 }
 
 .css_save_to_folder_field .css_save_to_folder_head .css_save_to_folder_button_left {
