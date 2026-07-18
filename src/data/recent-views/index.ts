@@ -55,7 +55,7 @@ export async function listRecentViews(): Promise<RecentViewArray> {
       type: 'empty',
       time: new Date().toISOString(),
       name: '沒有內容',
-      id: 0
+      id: -1
     });
   }
   return result;
