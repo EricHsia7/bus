@@ -196,7 +196,8 @@ export async function integrateRoute(RouteID: SimplifiedRouteItem['id'], chartWi
         }
       }
       integratedStopItem.buses.sort(function (a, b) {
-        return a.index - b.index;
+        if (a.onThisRoute !== b.onThisRoute) return a.onThisRoute ? -1 : 1;
+        return a.carNumber.localeCompare(b.carNumber);
       });
 
       // Collect data from 'BusArrivalTimes'

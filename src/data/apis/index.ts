@@ -127,7 +127,6 @@ export interface BatchFoundBus {
   position: BatchFoundBusPosition;
   RouteName: string;
   RouteID: number;
-  index: number;
 }
 
 export type BatchFoundBuses = { [key: string]: Array<BatchFoundBus> };
@@ -154,17 +153,7 @@ export function batchFindBusesForRoute(BusEvent: BusEvent, BusData: BusData, Rou
     // check whether this bus is on the route
     const thisRouteID = parseInt(BusEventItem.RouteID, 10);
     const thisBusID = BusEventItem.BusID;
-    let isOnThisRoute: boolean = false;
-    let index: number = 0;
-    if (thisRouteID === RouteID || PathAttributeId.indexOf(thisRouteID) > -1 || thisRouteID === RouteID * 10) {
-      isOnThisRoute = true;
-      index = thisBusID.charCodeAt(0) * Math.pow(10, -5);
-    } else {
-      isOnThisRoute = false;
-      index = thisBusID.charCodeAt(0);
-    }
-    processedItem.onThisRoute = isOnThisRoute;
-    processedItem.index = index;
+    processedItem.onThisRoute = thisRouteID === RouteID || PathAttributeId.indexOf(thisRouteID) > -1 || thisRouteID === RouteID * 10;
 
     // collect data from 'BusData'
     let thisBusData = {} as BusDataItem;
@@ -225,7 +214,6 @@ export function batchFindBusesForLocation(BusEvent: BusEvent, BusData: BusData, 
       continue;
     }
 
-    processedItem.index = thisBusID.charCodeAt(0);
     processedItem.onThisRoute = true; // Every entry in Location is stop-route pair
 
     // Collect data from 'BusEvent'
