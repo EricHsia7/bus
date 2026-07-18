@@ -119,8 +119,8 @@
 @property --b-checkbox-path-stroke-dashoffset {
   syntax: '<length>';
   inherits: false;
-  initial-value: 30px;
-  /* 10px + 20px */
+  initial-value: 22px;
+  /* 5*sqrt(2) + 10*sqrt(2) ≈ 21.2132*/
 }
 
 .css_settings_options_field .css_settings_options_body .css_settings_options .css_option .css_option_checkbox input[type="checkbox"] {
@@ -150,13 +150,13 @@
   fill: none;
   stroke: var(--b-cssvar-main-color);
   stroke-width: 2.1;
-  stroke-dasharray: 30px;
+  stroke-dasharray: 22px;
   stroke-dashoffset: var(--b-checkbox-path-stroke-dashoffset);
   stroke-linecap: round;
   stroke-linejoin: round;
-  --b-checkbox-path-stroke-dashoffset: 30px;
+  --b-checkbox-path-stroke-dashoffset: 22px;
   transition: --b-checkbox-path-stroke-dashoffset var(--b-cssvar-transition-duration) ease;
-  /* 30px -> 0px */
+  /* 22px -> 0px */
 }
 
 /* :checked */

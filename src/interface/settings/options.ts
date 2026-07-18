@@ -33,7 +33,7 @@ function generateElementOfItem(): HTMLElement {
   svg.setAttribute('viewBox', '0 0 55 55');
 
   const path = document.createElementNS(svgNamespace, 'path');
-  path.setAttribute('d', 'M16.893398282201787,27.500000000000000 L23.964466094067262,34.571067811865476 L38.106601717798213,20.428932188134524');
+  path.setAttribute('d', 'M20,27.5 L25,32.5 L35,22.5');
   svg.appendChild(path);
   checkboxContainerElement.appendChild(svg);
 
