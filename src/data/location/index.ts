@@ -70,8 +70,8 @@ export interface IntegratedLocationItemRanking {
 }
 
 export interface IntegratedLocationItem {
-  route_name: string;
-  route_direction: string;
+  routeName: string;
+  routeDirection: string;
   routeId: number;
   stopId: number;
   status: EstimateTimeStatus;
@@ -214,8 +214,8 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       } else {
         continue;
       }
-      integratedItem.route_name = thisRoute.n;
-      integratedItem.route_direction = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack, 10)]}`;
+      integratedItem.routeName = thisRoute.n;
+      integratedItem.routeDirection = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack, 10)]}`;
       integratedItem.routeId = thisRouteID;
 
       // Collect data from 'batchFoundEstimateTime'
@@ -255,8 +255,8 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       .map((item: IntegratedLocationItem) => {
         // accessing ranking[key] inside map callback will cause constant violations any way
         return {
-          route_name: item.route_name,
-          route_direction: item.route_direction,
+          routeName: item.routeName,
+          routeDirection: item.routeDirection,
           routeId: item.routeId,
           stopId: item.stopId,
           status: item.status,

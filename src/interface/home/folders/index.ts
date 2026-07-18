@@ -146,7 +146,7 @@ export function setupFolderFieldSkeletonScreen(): void {
     timestamp: 0,
     content: new Array(contentLength).fill({
       type: 'stop',
-      id: 0,
+      id: -1,
       timestamp: 0,
       name: '',
       status: {
@@ -161,7 +161,7 @@ export function setupFolderFieldSkeletonScreen(): void {
           departure: '',
           destination: ''
         },
-        id: 0
+        id: -1
       }
     }),
     contentLength: contentLength

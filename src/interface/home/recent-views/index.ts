@@ -268,7 +268,7 @@ export function setupRecentViewsFieldSkeletonScreen(): void {
   const defaultItemQuantity = Math.floor(WindowSize.height / 70 / 3) + 2;
   const items: Array<integratedRecentView> = new Array(defaultItemQuantity).fill({
     type: 'route',
-    id: 0,
+    id: -1,
     time: {
       absolute: 0,
       relative: ''

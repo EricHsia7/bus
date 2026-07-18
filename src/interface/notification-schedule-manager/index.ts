@@ -185,14 +185,14 @@ function setupNotificationScheduleManagerFieldSkeletonScreen(): void {
   const quantity: IntegratedNotificationSchedules['itemQuantity'] = Math.floor(FieldHeight / 50) + 5;
   let items: IntegratedNotificationSchedules['items'] = new Array(quantity).fill({
     name: '',
-    stop_id: 0,
+    stop_id: -1,
     estimate_time: 0,
     schedule_id: 'null',
     scheduled_time: 0,
     route: {
       name: '',
       direction: '',
-      id: 0
+      id: -1
     },
     date: '',
     hours: '',

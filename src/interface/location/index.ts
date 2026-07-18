@@ -422,11 +422,11 @@ function setupLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): voi
   const FieldHeight = WindowSize.height;
 
   const itemQuantity = Math.floor(FieldHeight / 50) + 5;
-  const groupedItems = new Array(itemQuantity).fill({
-    route_name: '',
-    route_direction: '',
-    routeId: 0,
-    stopId: 0,
+  const items: Array<IntegratedLocationItem> = new Array(itemQuantity).fill({
+    routeName: '',
+    routeDirection: '',
+    routeId: -1,
+    stopId: -1,
     status: {
       code: 8,
       text: '',
@@ -445,7 +445,7 @@ function setupLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): voi
 
   updateLocationField(
     {
-      groupedItems: { g_0: groupedItems, g_1: groupedItems },
+      groupedItems: { g_0: items, g_1: items },
       groupQuantity: 2,
       groups: {
         g_0: { name: '載入中', properties: properties },
@@ -532,13 +532,13 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     function updateRouteDirection(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       const thisHeadElement = elementQuerySelector(thisElement, '.css_location_group_item_head');
       const thisRouteDirectionElement = elementQuerySelector(thisHeadElement, '.css_location_group_item_route_direction');
-      thisRouteDirectionElement.textContent = thisItem.route_direction;
+      thisRouteDirectionElement.textContent = thisItem.routeDirection;
     }
 
     function updateRouteName(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       const thisHeadElement = elementQuerySelector(thisElement, '.css_location_group_item_head');
       const thisRouteNameElement = elementQuerySelector(thisHeadElement, '.css_location_group_item_route_name');
-      thisRouteNameElement.textContent = thisItem.route_name;
+      thisRouteNameElement.textContent = thisItem.routeName;
     }
 
     function updateBuses(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {

@@ -145,7 +145,7 @@ function setupRouteDetailsFieldSkeletonScreen(): void {
     {
       actions: actions,
       actionsQuantity: quantity,
-      RouteID: 0
+      RouteID: -1
     },
     true,
     playing_animation
