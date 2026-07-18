@@ -23,6 +23,7 @@ let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
 const notifcationScheduleManagerTick = new Tick(refreshNotificationScheduleManager, 15 * 1000);
+const notificationTickRetryInterval = 10 * 1000;
 
 function animateUpdateTimer(interval: number): void {
   NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-notification-schedule-manager-update-timer-interval', `${interval}ms`);
@@ -237,10 +238,9 @@ async function refreshNotificationScheduleManager(): Promise<number> {
     animateUpdateTimer(interval);
     return interval;
   } catch (err) {
-    const interval = 10 * 1000;
-    promptMessage('error', `通知發生錯誤，將在${interval / 1000}秒後重試。`);
-    animateUpdateTimer(interval);
-    return interval;
+    promptMessage('error', `通知發生錯誤，將在${notificationTickRetryInterval / 1000}秒後重試。`);
+    animateUpdateTimer(notificationTickRetryInterval);
+    return notificationTickRetryInterval;
   }
 }
 

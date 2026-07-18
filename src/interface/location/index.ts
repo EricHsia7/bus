@@ -48,6 +48,7 @@ let locationSliding_fieldHeight: number = 0;
 let locationSliding_sliding: boolean = false;
 
 const locationTick = new Tick(refreshLocation, 15 * 1000);
+const locationTickRetryInterval = 10 * 1000;
 const locationVisibilityMonitor = new VisibilityMonitor({ root: LocationGroupsElement, threshold: 0.5 });
 const decoder = new TextDecoder();
 
@@ -1016,10 +1017,9 @@ async function refreshLocation(): Promise<number> {
     animateUpdateTimer(interval);
     return interval;
   } catch (err) {
-    const interval = 10 * 1000;
-    promptMessage('error', `地點發生錯誤，將在${interval / 1000}秒後重試。`);
-    animateUpdateTimer(interval);
-    return interval;
+    promptMessage('error', `地點發生錯誤，將在${locationTickRetryInterval / 1000}秒後重試。`);
+    animateUpdateTimer(locationTickRetryInterval);
+    return locationTickRetryInterval;
   }
 }
 

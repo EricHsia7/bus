@@ -27,6 +27,7 @@ let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
 const foldersTick = new Tick(refreshFolders, 15 * 1000);
+const foldersTickRetryInterval = 10 * 1000;
 const foldersVisibilityMonitor = new VisibilityMonitor({ root: HomeBodyElement, threshold: 1 });
 
 function generateElementOfItem(): HTMLElement {
@@ -580,10 +581,9 @@ async function refreshFolders(): Promise<number> {
     animateUpdateTimer(interval);
     return interval;
   } catch (err) {
-    const interval = 10 * 1000;
-    promptMessage('error', `資料夾發生錯誤，將在${interval / 1000}秒後重試。`);
-    animateUpdateTimer(interval);
-    return interval;
+    promptMessage('error', `資料夾發生錯誤，將在${foldersTickRetryInterval / 1000}秒後重試。`);
+    animateUpdateTimer(foldersTickRetryInterval);
+    return foldersTickRetryInterval;
   }
 }
 

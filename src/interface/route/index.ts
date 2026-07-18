@@ -49,6 +49,7 @@ let routeSliding_fieldHeight: number = 0;
 let routeSliding_sliding: boolean = false;
 
 const routeTick = new Tick(refreshRoute, 15 * 1000);
+const routeTickRetryInterval = 10 * 1000;
 const routeVisibilityMonitor = new VisibilityMonitor({ root: RouteGroupsElement, threshold: 0.5 });
 const decoder = new TextDecoder();
 
@@ -1179,10 +1180,9 @@ async function refreshRoute(): Promise<number> {
     animateUpdateTimer(interval);
     return interval;
   } catch (err) {
-    const interval = 10 * 1000;
-    promptMessage('error', `路線發生錯誤，將在${interval / 1000}秒後重試。`);
-    animateUpdateTimer(interval);
-    return interval;
+    promptMessage('error', `路線發生錯誤，將在${routeTickRetryInterval / 1000}秒後重試。`);
+    animateUpdateTimer(routeTickRetryInterval);
+    return routeTickRetryInterval;
   }
 }
 
