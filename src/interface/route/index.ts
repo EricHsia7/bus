@@ -1262,11 +1262,9 @@ export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTM
 
     // Separate the elements from the document flow while keeping its position
     threadBoxElement.setAttribute('stretching', 'true');
-    // threadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-box-x', `${threadBoxElementX}px`);
     threadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-box-y', `${threadBoxElementY}px`);
 
     itemElement.setAttribute('stretching', 'true');
-    // itemElement.style.setProperty('--b-cssvar-css-route-group-item-x', `${itemElementX}px`);
     itemElement.style.setProperty('--b-cssvar-css-route-group-item-y', `${itemElementY}px`);
 
     // Set push direction and push state

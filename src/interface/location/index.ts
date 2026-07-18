@@ -1086,7 +1086,6 @@ export function stretchLocationItem(thisItemElement: HTMLElement): void {
 
     // Separate the elements from the document flow while keeping its position
     thisItemElement.setAttribute('stretching', 'true');
-    // itemElement.style.setProperty('--b-cssvar-css-location-group-item-x', `${itemElementX}px`);
     thisItemElement.style.setProperty('--b-cssvar-css-location-group-item-y', `${itemElementY}px`);
 
     // Set push direction and push state

@@ -1,11 +1,3 @@
-/*
-@property --b-cssvar-css-location-group-item-x {
-  syntax: '<length>';
-  inherits: false;
-  initial-value: 0px;
-}
-*/
-
 @property --b-cssvar-css-location-group-item-y {
   syntax: '<length>';
   inherits: false;
@@ -41,7 +33,6 @@
 /* stretching: true */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[stretching="true"] {
   position: absolute;
-  /* left: var(--b-cssvar-css-location-group-item-x); */
   left: 0px;
   top: var(--b-cssvar-css-location-group-item-y);
 }
