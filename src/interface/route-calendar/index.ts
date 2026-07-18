@@ -2,7 +2,7 @@ import { SimplifiedRouteItem } from '../../data/apis/getRoute/index';
 import { integratedRouteCalendar, integrateRouteCalendar } from '../../data/route/calendar';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { generateRoundedRectPath } from '../../tools/graphic';
-import { dateToString, offsetDate, WeekDayIndex } from '../../tools/time';
+import { dateToString, offsetDate } from '../../tools/time';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 const routeCalendarField = documentQuerySelector('.css_route_calendar_field');
@@ -53,44 +53,58 @@ function generateRouteCalendarSVG(integration: integratedRouteCalendar, date: Da
   const gridLine = `<path d="${gridLinePathCommands.join(' ')}" fill="none" stroke-width="0.45" component="gridline"/>`;
   const height = gridHeight * 24 + verticalPadding * 2;
 
-  const events = integration.repeated[day];
+  const eventBoxPathCommands: Array<string> = [];
+  const eventBoxDecorationPathCommands: Array<string> = [];
+  const eventBoxTexts = [];
+  const minutesPerDay = 24 * 60;
+
   const scheduledEvents = integration.scheduled;
   const date2 = offsetDate(date, 0, 0, integration.timeZoneOffset - date.getTimezoneOffset());
   const eventDate = [date2.getFullYear(), date2.getMonth() + 1, date2.getDate()];
   for (let i = scheduledEvents.length - 1; i >= 0; i--) {
     if (eventDate[0] === scheduledEvents[i].date[0] && eventDate[1] === scheduledEvents[i].date[1] && eventDate[2] === scheduledEvents[i].date[2]) {
-      events.push({
-        type: 'repeated',
-        time: scheduledEvents[i].time,
-        interval: scheduledEvents[i].interval,
-        count: scheduledEvents[i].count,
-        track: 0,
-        day: day as WeekDayIndex
-      });
+      const x = gridLabelWidth + (eventBoxWidth + eventBoxVerticalGap) * scheduledEvents[i].track;
+      const y = (scheduledEvents[i].time[0] / minutesPerDay) * height + eventBoxHorizontalGap / 2;
+      const eventBoxHeight = (10 / minutesPerDay) * height - eventBoxHorizontalGap / 2;
+      const startMinutes = scheduledEvents[i].time[0] % 60;
+      const startHours = (scheduledEvents[i].time[0] - startMinutes) / 60;
+      const title = `${startHours.toString().padStart(2, '0')}:${startMinutes.toString().padStart(2, '0')}`;
+      // const titleWidth = 30;
+      const titleHeight = 17;
+      Array.prototype.push.apply(eventBoxPathCommands, generateRoundedRectPath(x, y, eventBoxWidth, eventBoxHeight, borderRadius, false));
+      eventBoxDecorationPathCommands.push(`M${x + eventBoxPadding} ${y + eventBoxPadding}`, `v${eventBoxHeight - eventBoxPadding * 2}`);
+      eventBoxTexts.push(`<text x="${x + eventBoxPadding + decorationWidth + eventBoxPadding}" y="${y + eventBoxPadding + titleHeight}" font-weight="${eventBoxFontWeight}" font-size="${eventBoxFontSize}" font-family="${fontFamily}" component="event-title">${title}</text>`);
     }
   }
 
-  const eventBoxPathCommands: Array<string> = [];
-  const eventBoxDecorationPathCommands: Array<string> = [];
-  const eventBoxTexts = [];
-  const minutesPerDay = 24 * 60;
-  for (let i = events.length - 1; i >= 0; i--) {
-    const x = gridLabelWidth + (eventBoxWidth + eventBoxVerticalGap) * events[i].track;
-    const y = (events[i].time[0] / minutesPerDay) * height + eventBoxHorizontalGap / 2;
-    const eventBoxHeight = ((events[i].time[1] - events[i].time[0]) / minutesPerDay) * height - eventBoxHorizontalGap / 2;
-    const startMinutes = events[i].time[0] % 60;
-    const startHours = (events[i].time[0] - startMinutes) / 60;
-    const endMinutes = events[i].time[1] % 60;
-    const endHours = (events[i].time[1] - endMinutes) / 60;
-    const title = `${startHours.toString().padStart(2, '0')}:${startMinutes.toString().padStart(2, '0')}-${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
-    // const titleWidth = 30;
-    const titleHeight = 17;
-    const description = `${events[i].interval[0] === events[i].interval[1] ? events[i].interval[0] : events[i].interval.join('-')}分鐘一班|${events[i].count[0] === events[i].count[1] ? events[i].count[0] : events[i].count.join('-')}班`;
-    // const descriptionWidth = 30;
-    const descriptionHeight = 17;
+  const repeatedEvents = integration.repeated[day];
+  for (let i = repeatedEvents.length - 1; i >= 0; i--) {
+    const x = gridLabelWidth + (eventBoxWidth + eventBoxVerticalGap) * repeatedEvents[i].track;
+    const y = (repeatedEvents[i].time[0] / minutesPerDay) * height + eventBoxHorizontalGap / 2;
+    const eventBoxHeight = ((repeatedEvents[i].time[1] - repeatedEvents[i].time[0]) / minutesPerDay) * height - eventBoxHorizontalGap / 2;
+
+    const startMinutes = repeatedEvents[i].time[0] % 60;
+    const startHours = (repeatedEvents[i].time[0] - startMinutes) / 60;
+
+    if (repeatedEvents[i].count[0] === 1 && repeatedEvents[i].count[1] === 1) {
+      const title = `${startHours.toString().padStart(2, '0')}:${startMinutes.toString().padStart(2, '0')}`;
+      // const titleWidth = 30;
+      const titleHeight = 17;
+      eventBoxTexts.push(`<text x="${x + eventBoxPadding + decorationWidth + eventBoxPadding}" y="${y + eventBoxPadding + titleHeight}" font-weight="${eventBoxFontWeight}" font-size="${eventBoxFontSize}" font-family="${fontFamily}" component="event-title">${title}</text>`);
+    } else {
+      const endMinutes = repeatedEvents[i].time[1] % 60;
+      const endHours = (repeatedEvents[i].time[1] - endMinutes) / 60;
+      const title = `${startHours.toString().padStart(2, '0')}:${startMinutes.toString().padStart(2, '0')}-${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+      // const titleWidth = 30;
+      const titleHeight = 17;
+      const description = `${repeatedEvents[i].interval[0] === repeatedEvents[i].interval[1] ? repeatedEvents[i].interval[0] : repeatedEvents[i].interval.join('-')}分鐘一班|${repeatedEvents[i].count[0] === repeatedEvents[i].count[1] ? repeatedEvents[i].count[0] : repeatedEvents[i].count.join('-')}班`;
+      // const descriptionWidth = 30;
+      const descriptionHeight = 17;
+      eventBoxTexts.push(`<text x="${x + eventBoxPadding + decorationWidth + eventBoxPadding}" y="${y + eventBoxPadding + titleHeight}" font-weight="${eventBoxFontWeight}" font-size="${eventBoxFontSize}" font-family="${fontFamily}" component="event-title">${title}</text>`, `<text x="${x + eventBoxPadding + decorationWidth + eventBoxPadding}" y="${y + eventBoxPadding + titleHeight + descriptionHeight}" font-weight="${eventBoxFontWeight}" font-size="${eventBoxFontSize}" font-family="${fontFamily}" component="event-description">${description}</text>`);
+    }
+
     Array.prototype.push.apply(eventBoxPathCommands, generateRoundedRectPath(x, y, eventBoxWidth, eventBoxHeight, borderRadius, false));
     eventBoxDecorationPathCommands.push(`M${x + eventBoxPadding} ${y + eventBoxPadding}`, `v${eventBoxHeight - eventBoxPadding * 2}`);
-    eventBoxTexts.push(`<text x="${x + eventBoxPadding + decorationWidth + eventBoxPadding}" y="${y + eventBoxPadding + titleHeight}" font-weight="${eventBoxFontWeight}" font-size="${eventBoxFontSize}" font-family="${fontFamily}" component="event-title">${title}</text>`, `<text x="${x + eventBoxPadding + decorationWidth + eventBoxPadding}" y="${y + eventBoxPadding + titleHeight + descriptionHeight}" font-weight="${eventBoxFontWeight}" font-size="${eventBoxFontSize}" font-family="${fontFamily}" component="event-description">${description}</text>`);
   }
 
   const eventBoxes = `<path d="${eventBoxPathCommands.join(' ')}" stroke="none" component="event-box"/>`;

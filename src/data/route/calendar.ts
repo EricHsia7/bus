@@ -105,7 +105,7 @@ export async function integrateRouteCalendar(RouteID: SimplifiedRouteItem['id'],
     if (PathAttributeId.indexOf(item.PathAttributeId) < 0) {
       continue;
     }
-    const assumedDuration = 30;
+    const assumedDuration = 20;
     const departureTime = parseTimeCode(item.DepartureTime, 0) as TimeMoment;
     const start = departureTime.hours * 60 + departureTime.minutes;
     const end = start + assumedDuration;
@@ -117,7 +117,7 @@ export async function integrateRouteCalendar(RouteID: SimplifiedRouteItem['id'],
         interval: [assumedDuration, assumedDuration],
         count: [1, 1],
         track: 0,
-        day: day
+        day: day as WeekDayIndex
       };
       result.repeated[day].push(repeatedEvent);
     } else if (item.DateType === '1') {
