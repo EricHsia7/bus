@@ -19,6 +19,7 @@
   width: 100%;
   height: 55px;
   display: block;
+  touch-action: manipulation;
 }
 
 .css_settings_field .css_settings_body .css_settings .css_setting .css_setting_icon {

@@ -122,6 +122,7 @@
   line-height: 45px;
   overflow: clip;
   visibility: hidden;
+  touch-action: manipulation;
 }
 
 .css_prompt[displayed="true"][button="true"] .css_prompt_button {

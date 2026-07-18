@@ -24,6 +24,7 @@
   height: 50px;
   box-sizing: border-box;
   position: relative;
+  touch-action: manipulation;
 }
 
 .css_icon_selector_search_field .css_icon_selector_search_body .css_icon_selector_search_results .css_icon_selector_search_result:first-child {
