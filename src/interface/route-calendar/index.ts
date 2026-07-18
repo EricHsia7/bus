@@ -65,7 +65,7 @@ function generateRouteCalendarSVG(integration: integratedRouteCalendar, date: Da
     if (eventDate[0] === scheduledEvents[i].date[0] && eventDate[1] === scheduledEvents[i].date[1] && eventDate[2] === scheduledEvents[i].date[2]) {
       const x = gridLabelWidth + (eventBoxWidth + eventBoxVerticalGap) * scheduledEvents[i].track;
       const y = (scheduledEvents[i].time[0] / minutesPerDay) * height + eventBoxHorizontalGap / 2;
-      const eventBoxHeight = (10 / minutesPerDay) * height - eventBoxHorizontalGap / 2;
+      const eventBoxHeight = ((scheduledEvents[i].time[1] - scheduledEvents[i].time[0]) / minutesPerDay) * height - eventBoxHorizontalGap / 2;
       const startMinutes = scheduledEvents[i].time[0] % 60;
       const startHours = (scheduledEvents[i].time[0] - startMinutes) / 60;
       const title = `${startHours.toString().padStart(2, '0')}:${startMinutes.toString().padStart(2, '0')}`;
