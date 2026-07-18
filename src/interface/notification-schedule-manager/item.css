@@ -124,6 +124,7 @@
   align-items: center;
   background: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-normal);
+  touch-action: manipulation;
 }
 
 .css_notification_schedule_manager_field .css_notification_schedule_manager_body .css_notification_schedule_manager_notification_schedule_list .css_notification_schedule_manager_item .css_notification_schedule_manager_item_drawer .css_notification_schedule_manager_item_drawer_button span.css_material_symbols_rounded {

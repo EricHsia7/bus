@@ -67,6 +67,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  touch-action: manipulation;
 }
 
 .css_location_field .css_location_head .css_location_button_left {

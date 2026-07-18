@@ -219,6 +219,7 @@
   align-items: center;
   overflow: clip;
   contain: layout;
+  touch-action: manipulation;
 }
 
 /* skeleton-screen: true */
@@ -236,6 +237,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: manipulation;
 }
 
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_head .css_icon_selector_item_capsule .css_icon_selector_item_capsule_stretch span.css_material_symbols_rounded {
@@ -349,6 +351,7 @@
   overflow: clip;
   vertical-align: top;
   contain: layout;
+  touch-action: manipulation;
 }
 
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item .css_icon_selector_item_body .css_icon_selector_item_buttons .css_icon_selector_item_button:last-child {
@@ -589,4 +592,5 @@
   background: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-large);
   color: var(--b-cssvar-333333);
+  touch-action: manipulation;
 }

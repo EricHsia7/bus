@@ -16,6 +16,7 @@
   align-items: center;
   padding-left: 5px;
   box-sizing: border-box;
+  touch-action: manipulation;
 }
 
 .css_personal_schedule_creator_field .css_personal_schedule_creator_body .css_personal_schedule_creator_groups .css_personal_schedule_creator_group[group="schedule-days"] .css_personal_schedule_creator_group_body .css_personal_schedule_creator_day:last-child {

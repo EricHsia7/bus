@@ -20,6 +20,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  touch-action: manipulation;
 }
 
 .css_location_details_field .css_location_details_head .css_location_details_button_left {

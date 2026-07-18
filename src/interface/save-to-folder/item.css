@@ -1,9 +1,12 @@
+/* item */
 .css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item {
   position: relative;
   width: 100%;
   height: 55px;
+  touch-action: manipulation;
 }
 
+/* item > icon */
 .css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item .css_save_to_folder_item_icon {
   position: absolute;
   top: 0px;
@@ -19,6 +22,7 @@
   color: var(--b-cssvar-333333);
 }
 
+/* item > name */
 .css_save_to_folder_field .css_save_to_folder_body .css_save_to_folder_list .css_save_to_folder_list_item .css_save_to_folder_item_name {
   position: absolute;
   top: 0px;

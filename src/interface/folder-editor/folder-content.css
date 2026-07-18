@@ -24,6 +24,7 @@
   width: 100%;
   height: 50px;
   scroll-snap-align: end;
+  touch-action: manipulation;
 }
 
 /* item > head > icon */
@@ -123,6 +124,7 @@
   justify-content: center;
   background: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-large);
+  touch-action: manipulation;
 }
 
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item .css_folder_editor_folder_item_drawer .css_folder_editor_folder_item_drawer_button span.css_material_symbols_rounded {

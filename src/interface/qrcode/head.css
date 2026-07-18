@@ -20,6 +20,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  touch-action: manipulation;
 }
 
 .css_qrcode_field .css_qrcode_head .css_qrcode_button_left {

@@ -24,6 +24,7 @@
   height: 50px;
   box-sizing: border-box;
   position: relative;
+  touch-action: manipulation;
 }
 
 .css_search_field .css_search_body .css_search_results .css_search_search_result:first-child {

@@ -20,6 +20,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  touch-action: manipulation;
 }
 
 .css_route_calendar_field .css_route_calendar_head .css_route_calendar_button_left {

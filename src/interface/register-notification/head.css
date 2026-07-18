@@ -20,6 +20,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  touch-action: manipulation;
 }
 
 .css_register_notification_field .css_register_notification_head .css_register_notification_button_left {

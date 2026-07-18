@@ -101,6 +101,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  touch-action: manipulation;
 }
 
 .css_route_field .css_route_head .css_route_button_left {
