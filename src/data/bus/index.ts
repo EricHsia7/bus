@@ -11,7 +11,6 @@ import { parseBusStatus, parseCarOnStop, parseCarType } from '../apis/index';
 import { searchRouteByPathAttributeId } from '../search/index';
 
 export interface integratedBusProperty {
-  key: string;
   icon: MaterialSymbol;
   value: string;
 }
@@ -40,17 +39,17 @@ export async function integrateBus(id: CarInfoItem['BusId'], progressCallback: P
     return result;
   }
 
+  // car number
   const thisCarNumber = thisCar.CarNum;
   result.properties.push({
-    key: 'car_number',
     icon: 'tag',
     value: thisCarNumber
   });
 
+  // car type
   const thisCarType = thisCar.CarType;
   const type = parseCarType(thisCarType);
   result.properties.push({
-    key: 'car_type',
     icon: 'directions_bus',
     value: type
   });
@@ -80,16 +79,16 @@ export async function integrateBus(id: CarInfoItem['BusId'], progressCallback: P
     }
   }
 
+  // status
   const thisBusEventItemCarOnStop = thisBusEventItem.CarOnStop;
   const onStop = parseCarOnStop(thisBusEventItemCarOnStop);
   result.properties.push({
-    key: 'status',
     icon: 'vital_signs',
     value: `${onStop} | ${situation}`
   });
   const thisBusEventItemStopID = thisBusEventItem.StopID;
 
-  // Search routes
+  // route
   const searchedRoutes = await searchRouteByPathAttributeId(thisBusDataItemPathAttributeId);
   let searchedRoute = {} as SimplifiedRouteItem;
   if (searchedRoutes.length > 0) {
@@ -104,7 +103,6 @@ export async function integrateBus(id: CarInfoItem['BusId'], progressCallback: P
   const thisRouteDestination = searchedRoute.des;
   const thisRouteDirection = [thisRouteDestination, thisRouteDeparture, ''][thisBusDataItemGoBack ? thisBusDataItemGoBack : 0];
   result.properties.push({
-    key: 'route',
     icon: 'route',
     value: `${thisRouteName} - 往${thisRouteDirection}`
   });
@@ -122,12 +120,11 @@ export async function integrateBus(id: CarInfoItem['BusId'], progressCallback: P
   }
   const thisStopItemStopLocationId = thisStopItem.stopLocationId;
 
-  // Collect data drom Location
+  // Collect data from Location
   const LocationKey = `l_${thisStopItemStopLocationId}`;
   const thisLocationItem = Location[LocationKey];
   const thisLocationItemName = thisLocationItem.n;
   result.properties.push({
-    key: 'location_name',
     icon: 'location_on',
     value: thisLocationItemName
   });

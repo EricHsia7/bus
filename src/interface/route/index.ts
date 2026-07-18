@@ -565,50 +565,42 @@ function setupRouteFieldSkeletonScreen(): void {
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
   const FieldHeight = WindowSize.height;
-  const defaultItemQuantity: number = Math.floor(FieldHeight / 50) + 5;
-  const defaultGroupQuantity = 2;
-  let groupedItems: IntegratedRoute['groupedItems'] = {};
-  for (let i = 0; i < defaultGroupQuantity; i++) {
-    const groupKey: string = `g_${i}`;
-    groupedItems[groupKey] = [];
-    for (let j = 0; j < defaultItemQuantity; j++) {
-      groupedItems[groupKey].push({
-        name: '',
-        goBack: '0',
-        status: {
-          code: 8,
-          text: '',
-          time: -6
-        },
-        buses: [],
-        overlappingRoutes: [],
-        busArrivalTimes: [],
-        nearbyLocations: [],
-        sequence: j,
-        position: {
-          longitude: 0,
-          latitude: 0
-        },
-        nearest: false,
-        progress: 0,
-        segmentBuffer: {
-          isSegmentBuffer: false,
-          isStartingPoint: false,
-          isEndingPoint: false
-        },
-        id: 0
-      });
-    }
-  }
+  const itemQuantity = Math.floor(FieldHeight / 50) + 5;
+  const groupQuantity = 2;
+  const items: Array<integratedStopItem> = new Array(itemQuantity).fill({
+    name: '',
+    goBack: '0',
+    status: {
+      code: 8,
+      text: '',
+      time: -6
+    },
+    buses: [],
+    overlappingRoutes: [],
+    busArrivalTimes: [],
+    nearbyLocations: [],
+    sequence: 0,
+    position: {
+      longitude: 0,
+      latitude: 0
+    },
+    nearest: false,
+    progress: 0,
+    segmentBuffer: {
+      isSegmentBuffer: false,
+      isStartingPoint: false,
+      isEndingPoint: false
+    },
+    id: -1
+  });
+  // reuse the object (assume readonly)
+
   updateRouteField(
     {
       groupNames: { g_0: '往載入中', g_1: '往載入中' },
-      groupedItems: groupedItems,
-      groupQuantity: defaultGroupQuantity,
-      itemQuantity: {
-        g_0: defaultItemQuantity,
-        g_1: defaultItemQuantity
-      },
+      groupedItems: { g_0: items, g_1: items },
+      groupQuantity: groupQuantity,
+      itemQuantity: { g_0: itemQuantity, g_1: itemQuantity },
       RouteName: '載入中',
       RouteEndPoints: ['載入中', '載入中'],
       RouteID: -1,

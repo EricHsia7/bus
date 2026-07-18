@@ -182,29 +182,28 @@ function setupNotificationScheduleManagerFieldSkeletonScreen(): void {
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
   const FieldHeight = WindowSize.height;
-  const defaultItemQuantity: IntegratedNotificationSchedules['itemQuantity'] = Math.floor(FieldHeight / 50) + 5;
-  let items: IntegratedNotificationSchedules['items'] = [];
-  for (let i = 0; i < defaultItemQuantity; i++) {
-    items.push({
+  const quantity: IntegratedNotificationSchedules['itemQuantity'] = Math.floor(FieldHeight / 50) + 5;
+  let items: IntegratedNotificationSchedules['items'] = new Array(quantity).fill({
+    name: '',
+    stop_id: -1,
+    estimate_time: 0,
+    schedule_id: 'null',
+    scheduled_time: 0,
+    route: {
       name: '',
-      stop_id: 0,
-      estimate_time: 0,
-      schedule_id: 'null',
-      scheduled_time: 0,
-      route: {
-        name: '',
-        direction: '',
-        id: 0
-      },
-      date: '',
-      hours: '',
-      minutes: ''
-    });
-  }
+      direction: '',
+      id: -1
+    },
+    date: '',
+    hours: '',
+    minutes: ''
+  });
+  // reuse the object (assume readonly)
+
   updateNotificationScheduleManagerField(
     {
       items: items,
-      itemQuantity: defaultItemQuantity,
+      itemQuantity: quantity,
       dataUpdateTime: 0
     },
     true,

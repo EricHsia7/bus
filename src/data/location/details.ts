@@ -8,7 +8,6 @@ import { getLocation, MergedLocation } from '../apis/getLocation/index';
 export interface IntegratedLocationDetailsAction {
   icon: MaterialSymbol;
   action: Function;
-  key: string;
   name: string;
 }
 
@@ -32,26 +31,26 @@ export async function integrateLocationDetails(hash: string, progressCallback: P
     };
   }
   const actions: IntegratedLocationDetailsActionArray = [
+    // save to folder
     {
       icon: 'folder',
       name: '儲存',
-      key: 'save-to-folder',
       action: function () {
         openSaveToFolder('location', [hash], null);
       }
     },
+    // share
     {
       icon: 'ios_share',
       name: '分享',
-      key: 'permalink',
       action: function () {
         shareLocationPermalink(hash);
       }
     },
+    // qrcode
     {
       icon: 'qr_code_2',
       name: '二維條碼',
-      key: 'permalink-qr-code',
       action: function () {
         showLocationPermalinkQRCode(hash);
       }

@@ -139,42 +139,33 @@ export function setupFolderFieldSkeletonScreen(): void {
   const contentLength = Math.floor(FieldHeight / 50 / 3) + 2;
   const folderQuantity = 3;
 
-  const folders: integratedFolders['folders'] = [];
-  for (let i = 0; i < folderQuantity; i++) {
-    const folder: integratedFolder = {
-      name: '',
-      icon: '',
-      id: '',
+  const folders: integratedFolders['folders'] = new Array(folderQuantity).fill({
+    name: '',
+    icon: '',
+    id: '',
+    timestamp: 0,
+    content: new Array(contentLength).fill({
+      type: 'stop',
+      id: -1,
       timestamp: 0,
-      content: [],
-      contentLength: contentLength
-    };
-
-    for (let j = 0; j < contentLength; j++) {
-      const folderContent: integratedFolderContent = {
-        type: 'stop',
-        id: 0,
-        timestamp: 0,
+      name: '',
+      status: {
+        code: 8,
+        text: '',
+        time: -6
+      },
+      direction: 0,
+      route: {
         name: '',
-        status: {
-          code: 8,
-          text: '',
-          time: -6
+        endPoints: {
+          departure: '',
+          destination: ''
         },
-        direction: 0,
-        route: {
-          name: '',
-          endPoints: {
-            departure: '',
-            destination: ''
-          },
-          id: 0
-        }
-      };
-      folder.content.push(folderContent);
-    }
-    folders.push(folder);
-  }
+        id: -1
+      }
+    }),
+    contentLength: contentLength
+  }); // reuse the objects (assume readonly)
 
   updateFoldersElement(
     {

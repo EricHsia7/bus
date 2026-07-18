@@ -29,14 +29,10 @@ function generateElementOfBusProperty(): HTMLElement {
 export function setupBusPropertiesFieldSkeletonScreen() {
   const playing_animation = getSettingOptionValue('playing_animation');
   const defaultPropertyQuantity = 5;
-  const properties: integratedBusPropertyArray = [];
-  for (let i = 0; i < defaultPropertyQuantity; i++) {
-    properties.push({
-      key: i.toString(),
-      icon: '',
-      value: ''
-    });
-  }
+  const properties: integratedBusPropertyArray = new Array(defaultPropertyQuantity).fill({
+    icon: '',
+    value: ''
+  }); // reuse the object (assume readonly)
   updateBusPropertiesField(properties, true, playing_animation);
 }
 

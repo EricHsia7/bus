@@ -279,7 +279,7 @@ function setupFolderEditorFieldSkeletonScreen(): void {
       },
       id: -1
     }
-  });
+  }); // reuse the object (assume readonly)
   updateFolderEditorField(folder, content, function () {}, true, playing_animation);
 }
 

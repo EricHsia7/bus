@@ -69,10 +69,14 @@ function updateRouteDetailsField(integration: IntegratedRouteDetails, skeletonSc
       updateAnimation(thisElement, animation);
       updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
-      if (previousItem.key !== thisItem.key) {
+      updateOnclick(thisElement, thisItem);
+
+      if (previousItem.icon !== thisItem.icon) {
         updateIcon(thisElement, thisItem);
+      }
+
+      if (previousItem.name !== thisItem.name) {
         updateName(thisElement, thisItem);
-        updateOnclick(thisElement, thisItem);
       }
 
       if (animation !== previousAnimation) {
@@ -129,27 +133,19 @@ function updateRouteDetailsField(integration: IntegratedRouteDetails, skeletonSc
 
 function setupRouteDetailsFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation');
-  const actions: IntegratedRouteDetailsAction[] = [];
-  /*
-  const WindowSize = querySize('window');
-  const FieldWidth = WindowSize.width;
-  const FieldHeight = WindowSize.height;
-  */
-  const defaultActionsQuantity = 4;
-  for (let i = 0; i < defaultActionsQuantity; i++) {
-    actions.push({
-      name: '',
-      icon: '',
-      key: `action-${i}`,
-      action: function () {}
-    });
-  }
+  const quantity = 4;
+  const actions: Array<IntegratedRouteDetailsAction> = new Array(quantity).fill({
+    name: '',
+    icon: '',
+    action: function () {}
+  });
+  // reuse the object (assume readonly)
 
   updateRouteDetailsField(
     {
       actions: actions,
-      actionsQuantity: defaultActionsQuantity,
-      RouteID: 0
+      actionsQuantity: quantity,
+      RouteID: -1
     },
     true,
     playing_animation

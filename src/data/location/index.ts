@@ -54,7 +54,6 @@ function rankBatchFoundEstimateTime(batchFoundEstimateTime: BatchFoundEstimateTi
 }
 
 export interface LocationGroupProperty {
-  key: string;
   icon: MaterialSymbol;
   value: string;
 }
@@ -71,8 +70,8 @@ export interface IntegratedLocationItemRanking {
 }
 
 export interface IntegratedLocationItem {
-  route_name: string;
-  route_direction: string;
+  routeName: string;
+  routeDirection: string;
   routeId: number;
   stopId: number;
   status: EstimateTimeStatus;
@@ -168,19 +167,16 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       name: labels[i],
       properties: [
         {
-          key: 'address',
           icon: 'personal_places',
-          value: addressToString(thisLocation.a[i])
+          value: addressToString(thisLocation.a[i]) // address
         },
         {
-          key: 'exact_position',
           icon: 'location_on',
-          value: `${thisLocation.la[i].toFixed(5)}, ${thisLocation.lo[i].toFixed(5)}`
+          value: `${thisLocation.la[i].toFixed(5)}, ${thisLocation.lo[i].toFixed(5)}` // coordinate
         },
         {
-          key: 'cardinal_direction',
           icon: cardinalDirections[i].icon,
-          value: `${cardinalDirections[i].name}${display_user_orientation && userOrientation.cardinalDirection.id !== -1 && userOrientation.cardinalDirection.id === cardinalDirections[i].id ? '（目前指向）' : ''}`
+          value: `${cardinalDirections[i].name}${display_user_orientation && userOrientation.cardinalDirection.id !== -1 && userOrientation.cardinalDirection.id === cardinalDirections[i].id ? '（目前指向）' : ''}` // orientation
         }
       ]
     };
@@ -218,8 +214,8 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       } else {
         continue;
       }
-      integratedItem.route_name = thisRoute.n;
-      integratedItem.route_direction = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack, 10)]}`;
+      integratedItem.routeName = thisRoute.n;
+      integratedItem.routeDirection = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack, 10)]}`;
       integratedItem.routeId = thisRouteID;
 
       // Collect data from 'batchFoundEstimateTime'
@@ -259,8 +255,8 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       .map((item: IntegratedLocationItem) => {
         // accessing ranking[key] inside map callback will cause constant violations any way
         return {
-          route_name: item.route_name,
-          route_direction: item.route_direction,
+          routeName: item.routeName,
+          routeDirection: item.routeDirection,
           routeId: item.routeId,
           stopId: item.stopId,
           status: item.status,

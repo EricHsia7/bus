@@ -420,80 +420,38 @@ function setupLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): voi
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
   const FieldHeight = WindowSize.height;
-  const defaultItemQuantity: IntegratedLocation['itemQuantity'] = { g_0: Math.floor(FieldHeight / 50) + 5, g_1: Math.floor(FieldHeight / 50) + 5 };
-  const defaultGroupQuantity = 2;
-  const groupedItems: IntegratedLocation['groupedItems'] = {};
-  for (let i = 0; i < defaultGroupQuantity; i++) {
-    const groupKey = `g_${i}`;
-    groupedItems[groupKey] = [];
-    for (let j = 0; j < defaultItemQuantity[groupKey]; j++) {
-      groupedItems[groupKey].push({
-        route_name: '',
-        route_direction: '',
-        routeId: 0,
-        stopId: 0,
-        status: {
-          code: 8,
-          text: '',
-          time: -6
-        },
-        ranking: {
-          number: 0,
-          text: '--',
-          code: -1
-        },
-        buses: [],
-        busArrivalTimes: []
-      });
-    }
-  }
+
+  const itemQuantity = Math.floor(FieldHeight / 50) + 5;
+  const items: Array<IntegratedLocationItem> = new Array(itemQuantity).fill({
+    routeName: '',
+    routeDirection: '',
+    routeId: -1,
+    stopId: -1,
+    status: {
+      code: 8,
+      text: '',
+      time: -6
+    },
+    ranking: {
+      number: 0,
+      text: '--',
+      code: -1
+    },
+    buses: [],
+    busArrivalTimes: []
+  });
+  const properties = new Array(3).fill({ icon: '', value: '' });
+  // reuse the objects (assume readonly)
+
   updateLocationField(
     {
-      groupedItems: groupedItems,
-      groupQuantity: defaultGroupQuantity,
+      groupedItems: { g_0: items, g_1: items },
+      groupQuantity: 2,
       groups: {
-        g_0: {
-          name: '載入中',
-          properties: [
-            {
-              key: '0',
-              icon: '',
-              value: ''
-            },
-            {
-              key: '1',
-              icon: '',
-              value: ''
-            },
-            {
-              key: '2',
-              icon: '',
-              value: ''
-            }
-          ]
-        },
-        g_1: {
-          name: '載入中',
-          properties: [
-            {
-              key: '0',
-              icon: '',
-              value: ''
-            },
-            {
-              key: '1',
-              icon: '',
-              value: ''
-            },
-            {
-              key: '2',
-              icon: '',
-              value: ''
-            }
-          ]
-        }
+        g_0: { name: '載入中', properties: properties },
+        g_1: { name: '載入中', properties: properties }
       },
-      itemQuantity: defaultItemQuantity,
+      itemQuantity: { g_0: itemQuantity, g_1: itemQuantity },
       LocationName: '載入中',
       hash: hash,
       dataUpdateTime: 0
@@ -574,13 +532,13 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     function updateRouteDirection(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       const thisHeadElement = elementQuerySelector(thisElement, '.css_location_group_item_head');
       const thisRouteDirectionElement = elementQuerySelector(thisHeadElement, '.css_location_group_item_route_direction');
-      thisRouteDirectionElement.textContent = thisItem.route_direction;
+      thisRouteDirectionElement.textContent = thisItem.routeDirection;
     }
 
     function updateRouteName(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       const thisHeadElement = elementQuerySelector(thisElement, '.css_location_group_item_head');
       const thisRouteNameElement = elementQuerySelector(thisHeadElement, '.css_location_group_item_route_name');
-      thisRouteNameElement.textContent = thisItem.route_name;
+      thisRouteNameElement.textContent = thisItem.routeName;
     }
 
     function updateBuses(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {

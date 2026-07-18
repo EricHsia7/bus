@@ -333,7 +333,7 @@ export function listFolderContent(folderID: Folder['id']): Array<FolderContent> 
   if (thisFolderContentIndexArray.length === 0) {
     const emptyItem: FolderContentEmpty = {
       type: 'empty',
-      id: 0
+      id: -1
     };
     result.push(emptyItem);
     return result;

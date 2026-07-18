@@ -266,18 +266,15 @@ export function setupRecentViewsFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation');
   const WindowSize = querySize('window');
   const defaultItemQuantity = Math.floor(WindowSize.height / 70 / 3) + 2;
-  const items: Array<integratedRecentView> = [];
-  for (let i = 0; i < defaultItemQuantity; i++) {
-    items.push({
-      type: 'route',
-      id: 0,
-      time: {
-        absolute: 0,
-        relative: ''
-      },
-      name: ''
-    });
-  }
+  const items: Array<integratedRecentView> = new Array(defaultItemQuantity).fill({
+    type: 'route',
+    id: -1,
+    time: {
+      absolute: 0,
+      relative: ''
+    },
+    name: ''
+  }); // reuse the object (assume readonly)
   updateRecentViewsField(
     {
       items: items,
