@@ -495,15 +495,13 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
 
 function setupIconSelectorFieldSkeleton(inputElement: HTMLInputElement): void {
   const playing_animation = getSettingOptionValue('playing_animation');
-  const items: IntegratedMaterialSymbols = [];
-  for (let i = 0; i < visibleElementsQuantity; i++) {
-    items.push({
-      name: '',
-      description: '',
-      related: [],
-      keywords: []
-    });
-  }
+  const items: IntegratedMaterialSymbols = new Array(visibleElementsQuantity).fill({
+    name: '',
+    description: '',
+    related: [],
+    keywords: []
+  });
+  // reuse the object (assume readonly)
   updateIconSelectorField(items, inputElement, 0, true, playing_animation);
 }
 

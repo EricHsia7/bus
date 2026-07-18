@@ -37,7 +37,6 @@ function findProvider(Provider: Provider, providerId: number): ProviderItem {
 export interface IntegratedRouteDetailsAction {
   icon: MaterialSymbol;
   action: Function;
-  key: string;
   name: string;
 }
 
@@ -63,34 +62,34 @@ export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], 
   }
 
   const actions: IntegratedRouteDetailsActionArray = [
+    // save to folder
     {
       icon: 'folder',
       name: '儲存',
-      key: 'save-to-folder',
       action: function () {
         openSaveToFolder('route', [RouteID], null);
       }
     },
+    // calendar
     {
       icon: 'calendar_today',
       name: '時刻表',
-      key: 'calendar',
       action: function () {
         openRouteCalendar(RouteID);
       }
     },
+    // share
     {
       icon: 'ios_share',
       name: '分享',
-      key: 'permalink',
       action: function () {
         shareRoutePermalink(RouteID);
       }
     },
+    // qrcode
     {
       icon: 'qr_code_2',
       name: '二維條碼',
-      key: 'permalink-qr-code',
       action: function () {
         showRoutePermalinkQRCode(RouteID);
       }

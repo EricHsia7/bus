@@ -69,10 +69,14 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
       updateAnimation(thisElement, animation);
       updateSkeletonScreen(thisElement, skeletonScreen);
     } else {
-      if (previousItem.key !== thisItem.key) {
+      updateOnclick(thisElement, thisItem);
+
+      if (previousItem.icon !== thisItem.icon) {
         updateIcon(thisElement, thisItem);
+      }
+
+      if (previousItem.name !== thisItem.name) {
         updateName(thisElement, thisItem);
-        updateOnclick(thisElement, thisItem);
       }
 
       if (animation !== previousAnimation) {
@@ -129,21 +133,18 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
 
 function setupLocationDetailsFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation');
-  const actions: Array<IntegratedLocationDetailsAction> = [];
-  const defaultActionsQuantity = 3;
-  for (let i = 0; i < defaultActionsQuantity; i++) {
-    actions.push({
-      name: '',
-      icon: '',
-      key: `action-${i}`,
-      action: function () {}
-    });
-  }
+  const quantity = 3;
+  const actions: Array<IntegratedLocationDetailsAction> = new Array(quantity).fill({
+    name: '',
+    icon: '',
+    action: function () {}
+  });
+  // reuse the object (assume readonly)
 
   updateLocationDetailsField(
     {
       actions: actions,
-      actionsQuantity: defaultActionsQuantity,
+      actionsQuantity: quantity,
       hash: ''
     },
     true,

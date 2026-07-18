@@ -54,7 +54,6 @@ function rankBatchFoundEstimateTime(batchFoundEstimateTime: BatchFoundEstimateTi
 }
 
 export interface LocationGroupProperty {
-  key: string;
   icon: MaterialSymbol;
   value: string;
 }
@@ -168,19 +167,16 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       name: labels[i],
       properties: [
         {
-          key: 'address',
           icon: 'personal_places',
-          value: addressToString(thisLocation.a[i])
+          value: addressToString(thisLocation.a[i]) // address
         },
         {
-          key: 'exact_position',
           icon: 'location_on',
-          value: `${thisLocation.la[i].toFixed(5)}, ${thisLocation.lo[i].toFixed(5)}`
+          value: `${thisLocation.la[i].toFixed(5)}, ${thisLocation.lo[i].toFixed(5)}` // coordinate
         },
         {
-          key: 'cardinal_direction',
           icon: cardinalDirections[i].icon,
-          value: `${cardinalDirections[i].name}${display_user_orientation && userOrientation.cardinalDirection.id !== -1 && userOrientation.cardinalDirection.id === cardinalDirections[i].id ? '（目前指向）' : ''}`
+          value: `${cardinalDirections[i].name}${display_user_orientation && userOrientation.cardinalDirection.id !== -1 && userOrientation.cardinalDirection.id === cardinalDirections[i].id ? '（目前指向）' : ''}` // orientation
         }
       ]
     };
