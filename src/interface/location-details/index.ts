@@ -128,7 +128,7 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
 }
 
 function setupLocationDetailsFieldSkeletonScreen(): void {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const playing_animation = getSettingOptionValue('playing_animation');
   const actions: Array<IntegratedLocationDetailsAction> = [];
   const defaultActionsQuantity = 3;
   for (let i = 0; i < defaultActionsQuantity; i++) {
@@ -152,7 +152,7 @@ function setupLocationDetailsFieldSkeletonScreen(): void {
 }
 
 async function initializeLocationDetailsField(hash: string) {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const playing_animation = getSettingOptionValue('playing_animation');
   setupLocationDetailsFieldSkeletonScreen();
   const integration = await integrateLocationDetails(hash, function () {});
   updateLocationDetailsField(integration, false, playing_animation);

@@ -27,7 +27,7 @@ function generateElementOfBusProperty(): HTMLElement {
 }
 
 export function setupBusPropertiesFieldSkeletonScreen() {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const playing_animation = getSettingOptionValue('playing_animation');
   const defaultPropertyQuantity = 5;
   const properties: integratedBusPropertyArray = [];
   for (let i = 0; i < defaultPropertyQuantity; i++) {

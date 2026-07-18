@@ -560,7 +560,7 @@ function generateElementOfNearbyLocation(): HTMLElement {
 }
 
 function setupRouteFieldSkeletonScreen(): void {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const playing_animation = getSettingOptionValue('playing_animation');
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
   const FieldHeight = WindowSize.height;
@@ -1154,8 +1154,8 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
 async function refreshRoute(): Promise<number> {
   try {
-    const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-    const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
+    const playing_animation = getSettingOptionValue('playing_animation');
+    const refresh_interval_setting = getSettingOptionValue('refresh_interval');
     const busArrivalTimeChartSize = querySize('route-bus-arrival-time-chart');
     RouteUpdateTimerElement.setAttribute('refreshing', 'true');
     RouteUpdateTimerElement.classList.remove('css_route_update_timer_scale_down');

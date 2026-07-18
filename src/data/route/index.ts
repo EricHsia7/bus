@@ -91,7 +91,7 @@ export async function integrateRoute(RouteID: SimplifiedRouteItem['id'], chartWi
     thisSegmentBuffers = SegmentBuffers[`r_${RouteID}`];
   }
 
-  const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
+  const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
 
   const result = [];
   const positions = [];

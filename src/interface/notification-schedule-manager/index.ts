@@ -177,7 +177,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
 }
 
 function setupNotificationScheduleManagerFieldSkeletonScreen(): void {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const playing_animation = getSettingOptionValue('playing_animation');
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
   const FieldHeight = WindowSize.height;
@@ -213,8 +213,8 @@ function setupNotificationScheduleManagerFieldSkeletonScreen(): void {
 
 async function refreshNotificationScheduleManager(): Promise<number> {
   try {
-    const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-    const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
+    const playing_animation = getSettingOptionValue('playing_animation');
+    const refresh_interval_setting = getSettingOptionValue('refresh_interval');
     NotificationScheduleManagerUpdateTimerElement.setAttribute('refreshing', 'true');
     NotificationScheduleManagerUpdateTimerElement.classList.remove('css_notification_schedule_manager_update_timer_scale_down');
     const integration = await integrateNotifcationSchedules(function (message) {

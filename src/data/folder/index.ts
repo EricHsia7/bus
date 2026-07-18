@@ -440,9 +440,9 @@ export async function integrateFolders(progressCallback: ProgressCallback): Prom
   const foldersWithContent = listFoldersWithContent();
   const StopIDs = (listAllFolderContent(['stop']) as Array<FolderContentStop>).map((stop) => stop.id);
 
-  const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
-  const power_saving = getSettingOptionValue('power_saving') as boolean;
-  const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
+  const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
+  const power_saving = getSettingOptionValue('power_saving');
+  const refresh_interval_setting = getSettingOptionValue('refresh_interval');
 
   const batchFoundEstimateTime = batchFindEstimateTime(EstimateTime, StopIDs);
 

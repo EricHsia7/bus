@@ -263,7 +263,7 @@ function updateRecentViewsField(integration: integratedRecentViews, skeletonScre
 }
 
 export function setupRecentViewsFieldSkeletonScreen(): void {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const playing_animation = getSettingOptionValue('playing_animation');
   const WindowSize = querySize('window');
   const defaultItemQuantity = Math.floor(WindowSize.height / 70 / 3) + 2;
   const items: Array<integratedRecentView> = [];
@@ -291,7 +291,7 @@ export function setupRecentViewsFieldSkeletonScreen(): void {
 
 async function refreshRecentViews(): Promise<number> {
   try {
-    const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+    const playing_animation = getSettingOptionValue('playing_animation');
     const integration = await integrateRecentViews(function () {});
     updateRecentViewsField(integration, false, playing_animation);
     return 15 * 1000;

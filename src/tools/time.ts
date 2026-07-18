@@ -111,7 +111,7 @@ export function formatTime(time: number, mode: number): string {
     }
     case 3: {
       if (60 * 60 <= roundedTime) {
-        const hours = parseFloat((roundedTime / (60 * 60)).toFixed(1));
+        const hours = (((roundedTime / (60 * 60)) * 10) | 0) / 10;
         return `${hours}時`;
       } else if (60 <= roundedTime) {
         const minutes = (roundedTime / 60) | 0;

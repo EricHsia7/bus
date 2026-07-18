@@ -12,8 +12,6 @@ import { getNotificationClientStatus } from '../notification/index';
 import { isStoragePersistent, lfGetItem, lfListItemKeys, lfSetItem } from '../storage/index';
 import { getHTMLVersionBranchName, getHTMLVersionHash, getHTMLVersionTimeStamp } from './version';
 
-type SettingType = 'select' | 'page' | 'info' | 'action';
-
 export interface SettingSelectOptionStringValue {
   type: 0;
   string: string;
@@ -35,18 +33,24 @@ export interface SettingSelectOptionRefreshIntervalValue {
   dynamic: boolean;
 }
 
+/**
+ * 0: string;
+ * 1: number;
+ * 2: boolean;
+ * 3: refresh interval
+ */
 export type SettingSelectOptionValue = SettingSelectOptionStringValue | SettingSelectOptionNumberValue | SettingSelectOptionBooleanValue | SettingSelectOptionRefreshIntervalValue;
 
-export interface SettingSelectOption {
+export interface SettingSelectOption<T> {
   name: string;
-  value: SettingSelectOptionValue;
+  value: T;
   resourceIntensive: boolean;
   powerSavingAlternative: -1 | number; // index of the option to redirect to when power saving mode is enabled
 }
 
-export type SettingSelectOptions = Array<SettingSelectOption>;
+export type SettingSelectOptions<T> = Array<SettingSelectOption<T>>;
 
-export interface SettingSelect {
+export interface SettingSelect<T> {
   key: string;
   name: string;
   icon: MaterialSymbol;
@@ -55,7 +59,7 @@ export interface SettingSelect {
   type: 'select';
   default_option: number;
   option: number;
-  options: SettingSelectOptions;
+  options: SettingSelectOptions<T>;
   description: string;
 }
 
@@ -89,7 +93,9 @@ export interface SettingAction {
   description: string;
 }
 
-export type Setting = SettingSelect | SettingPage | SettingInfo | SettingAction;
+export type Setting = SettingSelect<SettingSelectOptionValue> | SettingPage | SettingInfo | SettingAction;
+
+export type SettingType = Setting['type'];
 
 export type SettingsObject = { [key: string]: Setting };
 
@@ -101,6 +107,28 @@ export interface SettingWithOption {
 }
 
 export type SettingsWithOptionsArray = Array<SettingWithOption>;
+
+export interface SettingSelectValueMap {
+  time_formatting_mode: SettingSelectOptionNumberValue;
+  refresh_interval: SettingSelectOptionRefreshIntervalValue;
+  display_user_location: SettingSelectOptionBooleanValue;
+  display_user_orientation: SettingSelectOptionBooleanValue;
+  location_labels: SettingSelectOptionStringValue;
+  proxy: SettingSelectOptionBooleanValue;
+  playing_animation: SettingSelectOptionBooleanValue;
+  power_saving: SettingSelectOptionBooleanValue;
+}
+
+export interface SettingSelectUnpackedValueMap {
+  time_formatting_mode: SettingSelectOptionNumberValue['number'];
+  refresh_interval: SettingSelectOptionRefreshIntervalValue;
+  display_user_location: SettingSelectOptionBooleanValue['boolean'];
+  display_user_orientation: SettingSelectOptionBooleanValue['boolean'];
+  location_labels: SettingSelectOptionStringValue['string'];
+  proxy: SettingSelectOptionBooleanValue['boolean'];
+  playing_animation: SettingSelectOptionBooleanValue['boolean'];
+  power_saving: SettingSelectOptionBooleanValue['boolean'];
+}
 
 const SettingKeys: Array<string> = ['time_formatting_mode', 'refresh_interval', 'display_user_location', 'display_user_orientation', 'location_labels', 'proxy', 'folder', 'personal_schedule', 'notification', 'playing_animation', 'power_saving', 'data_usage', 'storage', 'persistent_storage', 'export', 'import', 'version', 'branch', 'last_update_date', 'github'];
 
@@ -663,13 +691,13 @@ export function getSetting(key: string): Setting | undefined {
   }
 }
 
-export function getSettingOptionValue(key: string): SettingSelectOptionStringValue['string'] | SettingSelectOptionNumberValue['number'] | SettingSelectOptionBooleanValue['boolean'] | SettingSelectOptionRefreshIntervalValue {
+export function getSettingOptionValue<K extends keyof SettingSelectValueMap>(key: K): SettingSelectUnpackedValueMap[K] {
   if (SettingKeys.indexOf(key) > -1) {
     if (hasOwnProperty(Settings, key)) {
-      const powerSavingSetting = Settings['power_saving'] as SettingSelect;
+      const powerSavingSetting = Settings['power_saving'] as SettingSelect<SettingSelectOptionBooleanValue>;
       const powerSavingSettingValue = powerSavingSetting.options[powerSavingSetting.option].value as SettingSelectOptionBooleanValue;
       const powerSavingSettingValueBoolean = powerSavingSettingValue.boolean;
-      const thisSetting = Settings[key] as SettingSelect;
+      const thisSetting = Settings[key] as SettingSelect<SettingSelectValueMap[K]>;
       let thisSettingOption = thisSetting.options[thisSetting.option];
       if (powerSavingSettingValueBoolean) {
         if (thisSettingOption.resourceIntensive) {
@@ -679,17 +707,17 @@ export function getSettingOptionValue(key: string): SettingSelectOptionStringVal
       const thisSettingValue = thisSettingOption.value;
       switch (thisSettingValue.type) {
         case 0:
-          return thisSettingValue.string as string;
+          return thisSettingValue.string as SettingSelectUnpackedValueMap[K];
         case 1:
-          return thisSettingValue.number as number;
+          return thisSettingValue.number as SettingSelectUnpackedValueMap[K];
         case 2:
-          return thisSettingValue.boolean as boolean;
+          return thisSettingValue.boolean as SettingSelectUnpackedValueMap[K];
         case 3:
-          return thisSettingValue as SettingSelectOptionRefreshIntervalValue;
+          return thisSettingValue as any as SettingSelectUnpackedValueMap[K];
         default:
-          return '' as string;
+          return '' as SettingSelectUnpackedValueMap[K];
       }
     }
   }
-  return '';
+  return '' as SettingSelectUnpackedValueMap[K];
 }

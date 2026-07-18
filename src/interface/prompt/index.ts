@@ -15,7 +15,7 @@ export interface PromptButton {
 }
 
 export function promptMessage(icon: MaterialSymbol, message: string, button?: PromptButton | null): void {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const playing_animation = getSettingOptionValue('playing_animation');
 
   const promptElementAnimations = promptElement.getAnimations();
   const promptIconSpanElementAnimations = promptIconSpanElement.getAnimations();

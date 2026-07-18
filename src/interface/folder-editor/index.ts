@@ -256,7 +256,7 @@ function updateFolderEditorField(folder: Folder, content: Array<FolderContent>, 
 }
 
 function setupFolderEditorFieldSkeletonScreen(): void {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const playing_animation = getSettingOptionValue('playing_animation');
   const folder: Folder = {
     name: '',
     icon: '',
@@ -284,7 +284,7 @@ function setupFolderEditorFieldSkeletonScreen(): void {
 }
 
 function initializeFolderEditorField(folderID: string, callback: Function) {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const playing_animation = getSettingOptionValue('playing_animation');
   setupFolderEditorFieldSkeletonScreen();
   const folder = getFolder(folderID);
   const content = listFolderContent(folderID);

@@ -128,7 +128,7 @@ function updateRouteDetailsField(integration: IntegratedRouteDetails, skeletonSc
 }
 
 function setupRouteDetailsFieldSkeletonScreen(): void {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const playing_animation = getSettingOptionValue('playing_animation');
   const actions: IntegratedRouteDetailsAction[] = [];
   /*
   const WindowSize = querySize('window');
@@ -157,7 +157,7 @@ function setupRouteDetailsFieldSkeletonScreen(): void {
 }
 
 async function initializeRouteDetailsField(RouteID: SimplifiedRouteItem['id']) {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const playing_animation = getSettingOptionValue('playing_animation');
   setupRouteDetailsFieldSkeletonScreen();
   const integration = await integrateRouteDetails(RouteID, function () {});
   updateRouteDetailsField(integration, false, playing_animation);

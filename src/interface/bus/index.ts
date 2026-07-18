@@ -37,7 +37,7 @@ export function closeBus(): void {
 
 async function initializeBusPage(id: number) {
   setupBusPropertiesFieldSkeletonScreen();
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const playing_animation = getSettingOptionValue('playing_animation');
   const integration = await integrateBus(id, function () {});
   updateBusPropertiesField(integration.properties, false, playing_animation);
 }

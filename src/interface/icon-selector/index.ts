@@ -21,7 +21,7 @@ let currentIntegration: IntegratedMaterialSymbols = [];
 let currentItemsLength: number = 0;
 let previousAnimation: boolean = false;
 let previosuSkeletonScreen: boolean = false;
-let previousInputElement;
+let previousInputElement: HTMLInputElement;
 
 const buffer = 16;
 const itemHeight = 50;
@@ -494,7 +494,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
 }
 
 function setupIconSelectorFieldSkeleton(inputElement: HTMLInputElement): void {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const playing_animation = getSettingOptionValue('playing_animation');
   const items: IntegratedMaterialSymbols = [];
   for (let i = 0; i < visibleElementsQuantity; i++) {
     items.push({
@@ -508,7 +508,7 @@ function setupIconSelectorFieldSkeleton(inputElement: HTMLInputElement): void {
 }
 
 async function initializeIconSelectorField(inputElement: HTMLInputElement) {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const playing_animation = getSettingOptionValue('playing_animation');
 
   initializeIconSelectorVirtualScroll();
 

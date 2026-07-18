@@ -102,9 +102,9 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
   const [Route, Stop, Location] = (await Promise.all([await getRoute(progress, true), await getStop(progress), await getLocation(progress, 1)])) as [SimplifiedRoute, SimplifiedStop, MergedLocation];
   const [EstimateTime, BusEvent, BusData, BusArrivalTimes] = await Promise.all([getEstimateTime(progress), getBusEvent(progress), getBusData(progress), plotBusArrivalTime(chartWidth, chartHeight)]);
 
-  const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
-  const location_labels = getSettingOptionValue('location_labels') as string;
-  const display_user_orientation = getSettingOptionValue('display_user_orientation') as boolean;
+  const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
+  const location_labels = getSettingOptionValue('location_labels');
+  const display_user_orientation = getSettingOptionValue('display_user_orientation');
 
   const groupedItems = {} as IntegratedLocation['groupedItems'];
   const itemQuantity = {} as IntegratedLocation['itemQuantity'];

@@ -226,7 +226,7 @@ export function searchFor(query: string, type: SearchItem['type'] | -1, limit: n
 
   if (quantity < limit) {
     for (const j of intersection) {
-      let thisItem = searchList[j];
+      const thisItem = searchList[j];
 
       // Check if the item is of the type
       if (type !== -1 && type !== thisItem.type) {

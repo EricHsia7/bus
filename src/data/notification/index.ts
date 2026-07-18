@@ -377,7 +377,7 @@ export async function scheduleNotificationForStop(StopID: number, RouteID: numbe
     return -1; // no registration
   }
 
-  const time_formatting_mode = getSettingOptionValue('time_formatting_mode') as number;
+  const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
   const progress = new Progress(6, function () {});
   const Stop = (await getStop(progress)) as SimplifiedStop;
   const Location = (await getLocation(progress, 0)) as SimplifiedLocation;

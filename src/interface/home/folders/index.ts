@@ -131,7 +131,7 @@ function animateUpdateTimer(interval: number): void {
 }
 
 export function setupFolderFieldSkeletonScreen(): void {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const playing_animation = getSettingOptionValue('playing_animation');
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
   const FieldHeight = WindowSize.height;
@@ -556,8 +556,8 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
 
 async function refreshFolders(): Promise<number> {
   try {
-    const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-    const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
+    const playing_animation = getSettingOptionValue('playing_animation');
+    const refresh_interval_setting = getSettingOptionValue('refresh_interval');
     HomeUpdateTimerElement.setAttribute('refreshing', 'true');
     HomeUpdateTimerElement.classList.remove('css_home_update_timer_slide_rtl');
     const integration = await integrateFolders(function (message) {

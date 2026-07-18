@@ -415,7 +415,7 @@ function generateElementOfBusArrivalTime(): HTMLElement {
 }
 
 function setupLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): void {
-  const playing_animation = getSettingOptionValue('playing_animation') as boolean;
+  const playing_animation = getSettingOptionValue('playing_animation');
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
   const FieldHeight = WindowSize.height;
@@ -991,8 +991,8 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 
 async function refreshLocation(): Promise<number> {
   try {
-    const playing_animation = getSettingOptionValue('playing_animation') as boolean;
-    const refresh_interval_setting = getSettingOptionValue('refresh_interval') as SettingSelectOptionRefreshIntervalValue;
+    const playing_animation = getSettingOptionValue('playing_animation');
+    const refresh_interval_setting = getSettingOptionValue('refresh_interval');
     const busArrivalTimeChartSize = querySize('location-bus-arrival-time-chart');
     LocationUpdateTimerElement.setAttribute('refreshing', 'true');
     LocationUpdateTimerElement.classList.remove('css_location_update_timer_slide_rtl');
