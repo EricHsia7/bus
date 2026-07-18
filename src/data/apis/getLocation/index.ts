@@ -5,56 +5,158 @@ import { getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface LocationItem {
-  Id: number; // StopID
-  routeId: number; // RouteID
-  nameZh: string; // name in Chinese
-  nameEn: string; // name in English
-  seqNo: number; // sequence on the route
-  pgp: string; // pgp (-1: get off, 0: get on and off, 1: get on)
-  goBack: '0' | '1' | '2'; // GoBack (0: go, 1: back, 2: unknown)
-  longitude: string; // number in string
-  latitude: string; // number in string
+  /**
+   * @Id StopID
+   */
+  Id: number;
+  /**
+   * @routeId RouteID
+   */
+  routeId: number;
+  /**
+   * @nameZh name in Chinese
+   */
+  nameZh: string;
+  /**
+   * @nameEn name in English
+   */
+  nameEn: string;
+  /**
+   * @seqNo sequence on the route
+   */
+  seqNo: number;
+  /**
+   * @pgp -1: get off | 0: get on and off | 1: get on
+   */
+  pgp: string;
+  /**
+   * @goBack GoBack (0: go | 1: back | 2: unknown)
+   */
+  goBack: '0' | '1' | '2';
+  /**
+   * @longitude number in string
+   */
+  longitude: string;
+  /**
+   * @latitude number in string
+   */
+  latitude: string;
   address: string;
-  stopLocationId: number; // LocationID
-  showLon: string; // number in string
-  showLat: string; // number in string
+  /**
+   * @stopLocationId LocationID
+   */
+  stopLocationId: number;
+  /**
+   * @showLon number in string
+   */
+  showLon: string;
+  /**
+   * @showLat number in string
+   */
+  showLat: string;
   vector: string;
 }
 
 export type Location = Array<LocationItem>;
 
 export interface SimplifiedLocationItem {
-  n: string; // name
-  lo: number; // longitude
-  la: number; // latitude
-  g: string; // geohash
-  r: Array<number>; // RouteIDs
-  s: Array<number>; // StopIDs
-  v: Array<[number, number]>; // a set of vectors
-  a: Array<string>; // addresses
-  id: number; // stopLocationId
+  /**
+   * @n name
+   */
+  n: string;
+  /**
+   * @lo longitude
+   */
+  lo: number;
+  /**
+   * @la latitude
+   */
+  la: number;
+  /**
+   * @g geohash
+   */
+  g: string;
+  /**
+   * @r an array of RouteIDs
+   */
+  r: Array<number>;
+  /**
+   * @s an array of StopIDs
+   */
+  s: Array<number>;
+  /**
+   * @v an array of vectors
+   */
+  v: Array<[number, number]>;
+  /**
+   * @a an array of addresses
+   */
+  a: Array<string>;
+  /**
+   * @id stopLocationId
+   */
+  id: number;
 }
 
 export type SimplifiedLocation = { [l_id: string]: SimplifiedLocationItem };
 
 export interface MergedLocationItem {
-  n: string; // name
-  lo: Array<number>; // longitude
-  la: Array<number>; // latitude
-  g: Array<string>; // geohash
-  r: Array<Array<number>>; // RouteIDs
-  s: Array<Array<number>>; // StopIDs
-  v: Array<Array<[number, number]>>; // sets of vectors
-  a: Array<ParsedAddress>; // addresses
-  id: Array<number>; // stopLocationIds
+  /**
+   * @n name
+   */
+  n: string;
+  /**
+   * @lo longitude
+   */
+  lo: Array<number>;
+  /**
+   * @la latitude
+   */
+  la: Array<number>;
+  /**
+   * @g geohash
+   */
+  g: Array<string>;
+  /**
+   * @r a 2D array of RouteIDs
+   */
+  r: Array<Array<number>>;
+  /**
+   * @s a 2D array of StopIDs
+   */
+  s: Array<Array<number>>;
+  /**
+   * @v a 2D array of vectors
+   */
+  v: Array<Array<[number, number]>>;
+  /**
+   * @a an array of addresses
+   */
+  a: Array<ParsedAddress>;
+  /**
+   * @id an array of stopLocationIds
+   */
+  id: Array<number>;
+  /**
+   * @hash the hash of the deduplicated name
+   */
   hash: string;
 }
 
 export type MergedLocation = { [ml_hash: string]: MergedLocationItem };
 
 export interface IndexedLocationItem {
-  lo: number; // longitude
-  la: number; // latitude
+  /**
+   * @lo longitude
+   */
+  lo: number;
+  /**
+   * @la latitude
+   */
+  la: number;
+  /**
+   * @hash the hash of the deduplicated name
+   */
   hash: string;
 }
 

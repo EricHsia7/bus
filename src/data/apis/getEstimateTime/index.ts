@@ -6,7 +6,7 @@ export interface EstimateTimeItem {
   RouteID: number;
   StopID: number;
   /**
-   * @EstimateTime 
+   * @EstimateTime
    * x >= 0: remaining time to wait measured in seconds
    *
    * x = -1: no departed bus
@@ -16,6 +16,8 @@ export interface EstimateTimeItem {
    * x = -3: the next bus will not come until tomorrow
    *
    * x = -4: not in operation
+   * 
+   * EstimateTime should be parsed as an integer and x = parseInt(EstimateTime, 10).
    */
   EstimateTime: string | '-1' | '-2' | '-3' | '-4';
   /**
