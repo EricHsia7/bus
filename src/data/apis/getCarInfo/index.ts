@@ -4,10 +4,19 @@ import { getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface CarInfoItem {
-  BusId: number; // BusId ≠ BusID
+  /**
+   * @BusId numeric identifier of the object (BusId ≠ BusID)
+   */
+  BusId: number;
   BusNId: string;
-  CarNum: string; // CarNumber = BusID = vehicle registration number
-  CarType: '0' | '1' | '2' | '3'; // 0: normal bus (一般), 1: low-floor bus (低底盤), 2: disability-friendly bus (大復康巴士), 3: dog-friendly bus (狗狗友善專車)
+  /**
+   * @CarNum CarNumber = BusID = vehicle registration number
+   */
+  CarNum: string;
+  /**
+   * @CarType 0: normal bus (一般) | 1: low-floor bus (低底盤) | 2: disability-friendly bus (大復康巴士) | 3: dog-friendly bus (狗狗友善專車)
+   */
+  CarType: '0' | '1' | '2' | '3';
   IboxId: number;
   StationId: number;
   PathAttributeId: number;
