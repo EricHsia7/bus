@@ -32,18 +32,16 @@ export function truncateText(text: string, weight: number, size: string, fontFam
     const averageCharacterWidth = fullTextWidth / fullTextLength;
     const truncatedLength = Math.floor(maxWidth / averageCharacterWidth) - 2;
     let lengthAdjustment = 0;
-    let lastLength = 0;
     for (let i = 0; i < 5; i++) {
       const adjustedText = text.substring(0, truncatedLength + lengthAdjustment);
       const adjustedTextWidth = getTextWidth(adjustedText, weight, size, fontFamily) + ellipsisWidth;
       if (adjustedTextWidth <= maxWidth) {
-        lastLength = truncatedLength + lengthAdjustment;
-        lengthAdjustment += 1;
+        lengthAdjustment++;
       } else {
         break;
       }
     }
-    return `${text.substring(0, lastLength)}${ellipsis}`;
+    return `${text.substring(0, truncatedLength + lengthAdjustment)}${ellipsis}`;
   }
 }
 
