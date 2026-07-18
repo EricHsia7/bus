@@ -2,6 +2,7 @@ import { SimplifiedRouteItem } from '../../data/apis/getRoute/index';
 import { integratedRouteCalendar, integrateRouteCalendar } from '../../data/route/calendar';
 import { documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { generateRoundedRectPath } from '../../tools/graphic';
+import { truncateText } from '../../tools/text';
 import { dateToString, offsetDate } from '../../tools/time';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
@@ -37,14 +38,14 @@ function generateRouteCalendarSVG(integration: integratedRouteCalendar, date: Da
   const eventBoxHorizontalGap = 2;
   const eventBoxVerticalGap = 3;
   const eventBoxWidth = (width - gridLabelWidth - (integration.trackQuantity[day] - 1) * eventBoxVerticalGap) / integration.trackQuantity[day];
+  const eventBoxTextMaxWidth = eventBoxWidth - 2 * eventBoxPadding - decorationWidth;
 
   const gridLinePathCommands = [];
   const gridLineLabels = [];
   for (let i = 0; i < 24; i++) {
     const text = `${i.toString().padStart(2, '0')}:00`;
     const textWidth = 30;
-    const textHeight = 12;
-    // TODO: measure text width and height
+    // const textHeight = 12;
     const y = i * gridHeight + verticalPadding;
     gridLinePathCommands.push(`M${gridLabelWidth} ${y}`, `h${width - gridLabelWidth}`);
     gridLineLabels.push(`<text x="${gridLabelWidth - textWidth}" y="${y + 3}" font-weight="${gridLineLabelFontWeight}" font-size="${gridLineLabelFontSize}" font-family="${fontFamily}" component="gridline-label">${text}</text>`);
@@ -68,7 +69,7 @@ function generateRouteCalendarSVG(integration: integratedRouteCalendar, date: Da
       const eventBoxHeight = ((scheduledEvents[i].time[1] - scheduledEvents[i].time[0]) / minutesPerDay) * height - eventBoxHorizontalGap / 2;
       const startMinutes = scheduledEvents[i].time[0] % 60;
       const startHours = (scheduledEvents[i].time[0] - startMinutes) / 60;
-      const title = `${startHours.toString().padStart(2, '0')}:${startMinutes.toString().padStart(2, '0')}`;
+      const title = truncateText(`${startHours.toString().padStart(2, '0')}:${startMinutes.toString().padStart(2, '0')}`, eventBoxFontWeight, `${eventBoxFontSize}px`, fontFamily, eventBoxTextMaxWidth);
       // const titleWidth = 30;
       const titleHeight = 17;
       Array.prototype.push.apply(eventBoxPathCommands, generateRoundedRectPath(x, y, eventBoxWidth, eventBoxHeight, borderRadius, false));
@@ -87,17 +88,17 @@ function generateRouteCalendarSVG(integration: integratedRouteCalendar, date: Da
     const startHours = (repeatedEvents[i].time[0] - startMinutes) / 60;
 
     if (repeatedEvents[i].count[0] === 1 && repeatedEvents[i].count[1] === 1) {
-      const title = `${startHours.toString().padStart(2, '0')}:${startMinutes.toString().padStart(2, '0')}`;
+      const title = truncateText(`${startHours.toString().padStart(2, '0')}:${startMinutes.toString().padStart(2, '0')}`, eventBoxFontWeight, `${eventBoxFontSize}px`, fontFamily, eventBoxTextMaxWidth);
       // const titleWidth = 30;
       const titleHeight = 17;
       eventBoxTexts.push(`<text x="${x + eventBoxPadding + decorationWidth + eventBoxPadding}" y="${y + eventBoxPadding + titleHeight}" font-weight="${eventBoxFontWeight}" font-size="${eventBoxFontSize}" font-family="${fontFamily}" component="event-title">${title}</text>`);
     } else {
       const endMinutes = repeatedEvents[i].time[1] % 60;
       const endHours = (repeatedEvents[i].time[1] - endMinutes) / 60;
-      const title = `${startHours.toString().padStart(2, '0')}:${startMinutes.toString().padStart(2, '0')}-${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+      const title = truncateText(`${startHours.toString().padStart(2, '0')}:${startMinutes.toString().padStart(2, '0')}-${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`, eventBoxFontWeight, `${eventBoxFontSize}px`, fontFamily, eventBoxTextMaxWidth);
       // const titleWidth = 30;
       const titleHeight = 17;
-      const description = `${repeatedEvents[i].interval[0] === repeatedEvents[i].interval[1] ? repeatedEvents[i].interval[0] : repeatedEvents[i].interval.join('-')}分鐘一班|${repeatedEvents[i].count[0] === repeatedEvents[i].count[1] ? repeatedEvents[i].count[0] : repeatedEvents[i].count.join('-')}班`;
+      const description = truncateText(`${repeatedEvents[i].interval[0] === repeatedEvents[i].interval[1] ? repeatedEvents[i].interval[0] : repeatedEvents[i].interval.join('-')}分鐘一班|${repeatedEvents[i].count[0] === repeatedEvents[i].count[1] ? repeatedEvents[i].count[0] : repeatedEvents[i].count.join('-')}班`, eventBoxFontWeight, `${eventBoxFontSize}px`, fontFamily, eventBoxTextMaxWidth);
       // const descriptionWidth = 30;
       const descriptionHeight = 17;
       eventBoxTexts.push(`<text x="${x + eventBoxPadding + decorationWidth + eventBoxPadding}" y="${y + eventBoxPadding + titleHeight}" font-weight="${eventBoxFontWeight}" font-size="${eventBoxFontSize}" font-family="${fontFamily}" component="event-title">${title}</text>`, `<text x="${x + eventBoxPadding + decorationWidth + eventBoxPadding}" y="${y + eventBoxPadding + titleHeight + descriptionHeight}" font-weight="${eventBoxFontWeight}" font-size="${eventBoxFontSize}" font-family="${fontFamily}" component="event-description">${description}</text>`);
