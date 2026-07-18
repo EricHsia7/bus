@@ -567,7 +567,7 @@ function setupRouteFieldSkeletonScreen(): void {
   const FieldHeight = WindowSize.height;
   const itemQuantity = Math.floor(FieldHeight / 50) + 5;
   const groupQuantity = 2;
-  const items: Array<integratedStopItem> = new Array(groupQuantity).fill({
+  const items: Array<integratedStopItem> = new Array(itemQuantity).fill({
     name: '',
     goBack: '0',
     status: {
@@ -579,7 +579,7 @@ function setupRouteFieldSkeletonScreen(): void {
     overlappingRoutes: [],
     busArrivalTimes: [],
     nearbyLocations: [],
-    sequence: j,
+    sequence: 0,
     position: {
       longitude: 0,
       latitude: 0

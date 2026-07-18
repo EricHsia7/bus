@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-skeleton-screen-reuse-objects
 
 jobs:
   build:
