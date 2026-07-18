@@ -1,6 +1,6 @@
 # Bundle Statistics
 
-[2.9 MB] **\*.\***
+[2.91 MB] **\*.\***
 <details>
 <summary>[23.56 KB] <b>*.json</b></summary>
 
@@ -12,7 +12,7 @@
 - [32.58 KB] **index.html**
 </details>
 <details>
-<summary>[331.01 KB] <b>*.js</b></summary>
+<summary>[331.58 KB] <b>*.js</b></summary>
 
 - [28.19 KB] **dc1dd7d3d20c97a43aca.js**
 - [20.78 KB] **b7512b7f63c066a1c24b.js**
@@ -29,9 +29,9 @@
 - [10.92 KB] **09e1429307f41e81431c.js**
 - [10.86 KB] **3f5b1d6f74ea81963387.js**
 - [10.79 KB] **d6b030744af64bbacf74.js**
+- [10.18 KB] **bf8057ab2919e0b598d9.js**
 - [10.14 KB] **36b47bbf310d095e63e9.js**
-- [9.76 KB] **a45f4976d60e952dd594.js**
-- [9.61 KB] **0b76d998eedcbba7f09f.js**
+- [9.76 KB] **c20ede201a57e6dc8f49.js**
 - [8.81 KB] **9e96892e2c953d7c3d90.js**
 - [8.21 KB] **6aabd55779c7119fae7c.js**
 - [8.08 KB] **21c10aea0d7256de3960.js**
@@ -80,9 +80,9 @@
 - [1.19 KB] **d6b030744af64bbacf74.js.erm**
 - [1.19 KB] **21c10aea0d7256de3960.js.erm**
 - [1.16 KB] **e1b405c23813db30fc19.js.erm**
-- [1.16 KB] **a45f4976d60e952dd594.js.erm**
+- [1.16 KB] **c20ede201a57e6dc8f49.js.erm**
 - [1.08 KB] **367a79c028a8eace4832.js.erm**
-- [1.08 KB] **0b76d998eedcbba7f09f.js.erm**
+- [1.08 KB] **bf8057ab2919e0b598d9.js.erm**
 - [1.08 KB] **775f0311c1bb26d96bf6.js.erm**
 - [1.06 KB] **2332cf49a9f4a3f52f83.js.erm**
 - [1.02 KB] **9dcace3f167acabcdc46.js.erm**
@@ -127,13 +127,13 @@
 - [60.31 KB] **9dcace3f167acabcdc46.js.map**
 - [59.15 KB] **b05a6b6134a40b7f0cd1.js.map**
 - [56.63 KB] **09e1429307f41e81431c.js.map**
-- [55.64 KB] **a45f4976d60e952dd594.js.map**
+- [55.65 KB] **c20ede201a57e6dc8f49.js.map**
 - [55.34 KB] **36b47bbf310d095e63e9.js.map**
 - [55.23 KB] **3f5b1d6f74ea81963387.js.map**
 - [53.12 KB] **be39b0cf3b70232d5403.css.map**
 - [53 KB] **d6b030744af64bbacf74.js.map**
 - [52.17 KB] **21c10aea0d7256de3960.js.map**
-- [49.48 KB] **0b76d998eedcbba7f09f.js.map**
+- [51.87 KB] **bf8057ab2919e0b598d9.js.map**
 - [49.2 KB] **9e96892e2c953d7c3d90.js.map**
 - [48.51 KB] **5018d86746179ed8639b.js.map**
 - [46.7 KB] **5a2eb6647ac0fa45d08f.css.map**
