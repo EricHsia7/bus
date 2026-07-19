@@ -5,14 +5,16 @@ declare const self: DedicatedWorkerGlobalScope;
 import { geohashEncode } from '../../../tools/geohash';
 import { hasOwnProperty } from '../../../tools/index';
 import { normalizeVector } from '../../../tools/math';
-import { Location, SimplifiedLocation, SimplifiedLocationItem } from './index';
+import { Location, SimplifiedLocation } from './index';
 
 self.onmessage = function (e) {
   processWorkerTask(e.data);
 };
 
 function processWorkerTask(Location: Location): void {
-  const locationsByRoute = {};
+  const locationsByRoute: {
+    [r_id: string]: Location;
+  } = {};
   for (const item of Location) {
     const thisRouteID = item.routeId;
     const thisRouteKey = `r_${thisRouteID}`;
@@ -33,7 +35,7 @@ function processWorkerTask(Location: Location): void {
     const thisItemLongitude = parseFloat(item.longitude);
     const thisItemLatitude = parseFloat(item.latitude);
 
-    let vector = [0, 0];
+    let vector;
     const locationsOnThisRoute = locationsByRoute[thisRouteKey];
     const locationsOnThisRouteLength = locationsOnThisRoute.length;
     let nextLocation = null;
@@ -54,27 +56,28 @@ function processWorkerTask(Location: Location): void {
 
     const key = `l_${item.stopLocationId}`;
     if (!hasOwnProperty(result, key)) {
-      const simplifiedItem = {} as SimplifiedLocationItem;
-      simplifiedItem.n = item.nameZh;
-      simplifiedItem.lo = thisItemLongitude;
-      simplifiedItem.la = thisItemLatitude;
-      simplifiedItem.g = geohashEncode(thisItemLatitude, thisItemLongitude, 6);
-      simplifiedItem.r = [item.routeId];
-      simplifiedItem.s = [item.Id];
-      simplifiedItem.v = [vector];
-      simplifiedItem.a = [item.address];
-      simplifiedItem.id = item.stopLocationId;
-      result[key] = simplifiedItem;
-    } else {
-      if (result[key].r.indexOf(item.routeId) < 0) {
-        result[key].r.push(item.routeId);
-      }
-      if (result[key].s.indexOf(item.Id) < 0) {
-        result[key].s.push(item.Id);
-        result[key].v.push(vector);
-      }
-      result[key].a.push(item.address);
+      result[key] = {
+        n: item.nameZh,
+        lo: thisItemLongitude,
+        la: thisItemLatitude,
+        g: geohashEncode(thisItemLatitude, thisItemLongitude, 6),
+        r: [],
+        s: [],
+        v: [],
+        a: [],
+        id: item.stopLocationId
+      };
     }
+
+    if (result[key].r.indexOf(item.routeId) < 0) {
+      result[key].r.push(item.routeId);
+    }
+    if (result[key].s.indexOf(item.Id) < 0) {
+      result[key].s.push(item.Id);
+      if (vector) result[key].v.push(Array.from(vector) as [number, number]);
+    }
+    result[key].a.push(item.address);
   }
+
   self.postMessage(result); // Send the result back to the main thread
 }

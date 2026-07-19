@@ -3,7 +3,7 @@ declare const self: DedicatedWorkerGlobalScope;
 // export {}; // make a script a module if no any export or import
 
 import { hasOwnProperty } from '../../../tools/index';
-import { IndexedLocation, IndexedLocationItem, MergedLocation } from './index';
+import { IndexedLocation, MergedLocation } from './index';
 
 self.onmessage = function (e) {
   processWorkerTask(e.data);
@@ -12,29 +12,30 @@ self.onmessage = function (e) {
 function processWorkerTask(object: MergedLocation): void {
   const result: IndexedLocation = {};
   for (const key in object) {
-    const indexedLocationItem = {} as IndexedLocationItem;
     const thisItem = object[key];
-    const hash = thisItem.hash;
-    const longitudes = thisItem.lo;
-    const latitudes = thisItem.la;
     const groupQuantity = thisItem.s.length;
     let longitude: number = 0;
     let latitude: number = 0;
     for (let i = 0; i < groupQuantity; i++) {
-      longitude += longitudes[i];
-      latitude += latitudes[i];
+      longitude += object[key].lo[i];
+      latitude += object[key].la[i];
     }
     longitude /= groupQuantity;
     latitude /= groupQuantity;
-    indexedLocationItem.lo = longitude;
-    indexedLocationItem.la = latitude;
-    indexedLocationItem.hash = hash;
-    for (const geohash of thisItem.g) {
+
+    const geohashLength = object[key].g.length;
+    for (let i = 0; i < geohashLength; i++) {
+      const geohash = object[key].g[i];
       if (!hasOwnProperty(result, geohash)) {
         result[geohash] = [];
       }
-      result[geohash].push(indexedLocationItem);
+      result[geohash].push({
+        hash: thisItem.hash,
+        lo: longitude,
+        la: latitude
+      });
     }
   }
+
   self.postMessage(result); // Send the result back to the main thread
 }

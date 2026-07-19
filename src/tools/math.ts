@@ -1,3 +1,5 @@
+export type GenericNumberArray = Array<number> | Float32Array | Float64Array | Int8Array | Int16Array | Int32Array | Uint16Array | Uint32Array | Uint8Array;
+
 export function calculateStandardDeviation(arr: Array<number>): number {
   // Step 1: Calculate the mean
   const mean = arr.reduce((acc, val) => acc + val, 0) / arr.length;
@@ -82,19 +84,20 @@ export function mergePearsonCorrelation(targetXAverage: number, targetYAverage: 
  * @returns [b1, b2, b3, ...]
  */
 
-export function normalizeVector(vector: Array<number>): Array<number> {
-  const length = Math.hypot(vector);
+export function normalizeVector(vector: GenericNumberArray): Float32Array {
   const componentQuantity = vector.length;
+  let squaredSum = 0;
+  for (let i = vector.length - 1; i >= 0; i--) {
+    squaredSum += vector[i] * vector[i];
+  }
+  const length = Math.sqrt(squaredSum);
   const newVector = new Float32Array(componentQuantity);
   if (length > 0) {
-    const scale = 1 / length;
-    for (let i = componentQuantity; i > 0; i--) {
-      newVector[i] = vector[i] * scale;
+    for (let i = componentQuantity - 1; i >= 0; i--) {
+      newVector[i] = vector[i] / length;
     }
-    return Array.from(newVector);
-  } else {
-    return vector;
   }
+  return newVector;
 }
 
 export function smoothArray(array: Array<number>): Array<number> {
@@ -163,7 +166,7 @@ export function calculateAverage(array: Array<number>): number {
   }
 }
 
-export function findGlobalExtrema(array: Array<number> | Float32Array | Float64Array | Int8Array | Int16Array | Int32Array | Uint16Array | Uint32Array | Uint8Array): [minimum: number, maximum: number] {
+export function findGlobalExtrema(array: GenericNumberArray): [minimum: number, maximum: number] {
   const arrayLength = array.length;
   if (arrayLength === 0) {
     return [0, 0];

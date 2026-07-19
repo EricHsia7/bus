@@ -34,7 +34,7 @@ function processWorkerTask(xml: string): void {
         // To prevent the second concatenated dataset erasing the first one, ignore RouteFares
         /*
         case 'RouteFares':
-          result = []; // [NOTE] L15: const
+          result = []; // [NOTE] L19: const
           resultLastIndex = -1;
           break;
         */

@@ -2,7 +2,7 @@
 declare const self: DedicatedWorkerGlobalScope;
 // export {}; // make a script a module if no any export or import
 
-import { mergeAddressesIntoOne } from '../../../tools/address';
+import { mergeAddressesIntoOne, ParsedAddress } from '../../../tools/address';
 import { hasOwnProperty, sha512 } from '../../../tools/index';
 import { MergedLocation, SimplifiedLocation } from './index';
 
@@ -22,28 +22,29 @@ function processWorkerTask(object: SimplifiedLocation): void {
     if (!hasOwnProperty(result, nameKey)) {
       result[nameKey] = {
         n: object[key].n,
-        lo: [object[key].lo],
-        la: [object[key].la],
-        g: [object[key].g],
-        r: [object[key].r],
-        s: [object[key].s],
-        v: [object[key].v],
-        a: [mergeAddressesIntoOne(object[key].a)],
-        id: [object[key].id],
+        lo: [],
+        la: [],
+        g: [],
+        r: [],
+        s: [],
+        v: [],
+        a: [],
+        id: [],
         hash: hash
       };
-    } else {
-      result[nameKey].lo.push(object[key].lo);
-      result[nameKey].la.push(object[key].la);
-      if (result[nameKey].g.indexOf(object[key].g) < 0) {
-        result[nameKey].g.push(object[key].g);
-      }
-      result[nameKey].r.push(object[key].r);
-      result[nameKey].s.push(object[key].s);
-      result[nameKey].v.push(object[key].v);
-      result[nameKey].a.push(mergeAddressesIntoOne(object[key].a));
-      result[nameKey].id.push(object[key].id);
     }
+
+    result[nameKey].lo.push(object[key].lo);
+    result[nameKey].la.push(object[key].la);
+    if (result[nameKey].g.indexOf(object[key].g) < 0) {
+      result[nameKey].g.push(object[key].g);
+    }
+    result[nameKey].r.push(object[key].r);
+    result[nameKey].s.push(object[key].s);
+    result[nameKey].v.push(object[key].v);
+    result[nameKey].a.push(mergeAddressesIntoOne(object[key].a) as ParsedAddress);
+    result[nameKey].id.push(object[key].id);
   }
+
   self.postMessage(result); // Send the result back to the main thread
 }
