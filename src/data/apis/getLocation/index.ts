@@ -1,7 +1,7 @@
 import { ParsedAddress } from '../../../tools/address';
 import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
-import { getAPIURL } from '../getAPIURL/index';
+import { APIData, getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface LocationItem {
@@ -288,7 +288,7 @@ export async function getLocation(progress: Progress, type: 0 | 1 | 2): Promise<
       [0, 11],
       [1, 11]
     ];
-    const result = [];
+    const result: Location = [];
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
@@ -296,7 +296,7 @@ export async function getLocation(progress: Progress, type: 0 | 1 | 2): Promise<
       const inflatedData = await fetchInflate(url, function (message) {
         progress.update(sourceId, message.loaded, message.total);
       });
-      const data = JSON.parse(decoder.decode(inflatedData));
+      const data = JSON.parse(decoder.decode(inflatedData)) as APIData<Location>;
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
         result.push(data.BusInfo[i] as LocationItem);
       }

@@ -1,6 +1,6 @@
 import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
-import { getAPIURL } from '../getAPIURL/index';
+import { APIData, getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface CarInfoItem {
@@ -98,7 +98,7 @@ export async function getCarInfo(progress: Progress, simplified: boolean = false
       [0, 2],
       [1, 2]
     ];
-    const result = [];
+    const result: CarInfo = [];
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
@@ -106,9 +106,9 @@ export async function getCarInfo(progress: Progress, simplified: boolean = false
       const inflatedData = await fetchInflate(url, function (message) {
         progress.update(sourceId, message.loaded, message.total);
       });
-      const data = JSON.parse(decoder.decode(inflatedData));
+      const data = JSON.parse(decoder.decode(inflatedData)) as APIData<CarInfo>;
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i] as CarInfoItem);
+        result.push(data.BusInfo[i]);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }

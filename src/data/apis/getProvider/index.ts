@@ -1,6 +1,6 @@
 import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
-import { getAPIURL } from '../getAPIURL/index';
+import { APIData, getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface ProviderItem {
@@ -63,9 +63,9 @@ export async function getProvider(progress: Progress): Promise<Provider> {
       const inflatedData = await fetchInflate(url, function (message) {
         progress.update(sourceId, message.loaded, message.total);
       });
-      const data = JSON.parse(decoder.decode(inflatedData));
+      const data = JSON.parse(decoder.decode(inflatedData)) as APIData<Provider>;
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i] as ProviderItem);
+        result.push(data.BusInfo[i]);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }

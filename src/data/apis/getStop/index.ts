@@ -1,6 +1,6 @@
 import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
-import { getAPIURL } from '../getAPIURL/index';
+import { APIData, getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface StopItem {
@@ -131,7 +131,7 @@ export async function getStop(progress: Progress): Promise<SimplifiedStop> {
       [0, 11],
       [1, 11]
     ];
-    const result = [];
+    const result: Stop = [];
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
@@ -139,9 +139,9 @@ export async function getStop(progress: Progress): Promise<SimplifiedStop> {
       const inflatedData = await fetchInflate(url, function (message) {
         progress.update(sourceId, message.loaded, message.total);
       });
-      const data = JSON.parse(decoder.decode(inflatedData));
+      const data = JSON.parse(decoder.decode(inflatedData)) as APIData<Stop>;
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i] as StopItem);
+        result.push(data.BusInfo[i]);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }

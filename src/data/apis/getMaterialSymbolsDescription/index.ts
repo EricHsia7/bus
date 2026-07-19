@@ -15,7 +15,8 @@ export type MaterialSymbolsDescriptionSymbols = Record<MaterialSymbolsDescriptio
 
 export interface MaterialSymbolsDescription {
   /**
-   * a stringified array of words (word_1,word_2,word_3,...)
+   * a stringified array of words
+   * @example "word_1,word_2,word_3,..."
    */
   dictionary: string;
 

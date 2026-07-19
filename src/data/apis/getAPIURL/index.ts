@@ -36,3 +36,18 @@ export function getMaterialSymbolsAPIURL(api: number, interval: number = 10000):
   const buckets = ['search-index', 'description', 'similarity', 'index'];
   return `https://erichsia7.github.io/material-symbols-list/${buckets[api]}.gz?_=${getNoCacheParameter(interval)}`;
 }
+
+export interface APIData<T> {
+  BusInfo: T;
+  EssentialInfo: {
+    Location: {
+      name: string;
+      CenterName: string;
+    };
+    /**
+     * timestamp (YYYY/MM/DD hh:mm:ss)
+     */
+    UpdateTime: string;
+    CoordinateSystem: string;
+  };
+}

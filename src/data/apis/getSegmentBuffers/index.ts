@@ -91,7 +91,7 @@ export async function getSegmentBuffers(progress: Progress): Promise<SimplifiedS
       const inflatedData = await fetchInflate(url, function (message) {
         progress.update(sourceId, message.loaded, message.total);
       });
-      const data = decoder.decode(inflatedData); // xml
+      const data = decoder.decode(inflatedData) as string; // xml
       result += data;
       // progress.timestamp(-1, -480); // UTC+8
     }

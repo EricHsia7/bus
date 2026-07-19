@@ -1,6 +1,6 @@
 import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
-import { getAPIURL } from '../getAPIURL/index';
+import { APIData, getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface RouteItem {
@@ -217,7 +217,7 @@ export async function getRoute(progress: Progress, simplified: boolean = true): 
       [0, 10],
       [1, 10]
     ];
-    const result = [];
+    const result: Route = [];
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
@@ -225,9 +225,9 @@ export async function getRoute(progress: Progress, simplified: boolean = true): 
       const inflatedData = await fetchInflate(url, function (message) {
         progress.update(sourceId, message.loaded, message.total);
       });
-      const data = JSON.parse(decoder.decode(inflatedData));
+      const data = JSON.parse(decoder.decode(inflatedData)) as APIData<Route>;
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i] as RouteItem);
+        result.push(data.BusInfo[i]);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }
