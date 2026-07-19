@@ -2,38 +2,95 @@ import { recordDataUsage } from '../analytics/data-usage/index';
 
 export interface LoaderMessageProgress {
   type: 'progress';
+
+  /**
+   * job id
+   */
   id: number;
+
+  /**
+   * received byte length
+   */
   loaded: number;
+
+  /**
+   * total byte length
+   */
   total: number;
+
+  /**
+   * a fraction representing the progress
+   */
   percent: number;
 }
 
 export interface LoaderMessageData {
   type: 'data';
+
+  /**
+   * job id
+   */
   id: number;
+
+  /**
+   * an inflated chunk
+   */
   chunk: Uint8Array;
+
   final: boolean;
 }
 
 export interface LoaderMessageDone {
   type: 'done';
+
+  /**
+   * job id
+   */
   id: number;
+
+  /**
+   * received byte length
+   */
   loaded: number;
+
+  /**
+   * total byte length
+   */
   total: number;
 }
 
 export interface LoaderMessageError {
   type: 'error';
+
+  /**
+   * job id
+   */
   id: number;
+
   error: Error['message'];
 }
 
 export type LoaderMessage = LoaderMessageProgress | LoaderMessageData | LoaderMessageDone | LoaderMessageError;
 
 export interface LoaderJob {
+  /**
+   * function to resolve the promise
+   */
   resolve: Function;
+
+  /**
+   * function to reject the promise
+   */
   reject: Function;
+
+  /**
+   * function called on progress
+   */
   onProgress: Function;
+
+  /**
+   * an array of inflated chunks
+   */
   chunks: Array<Uint8Array>;
 }
 
@@ -52,7 +109,7 @@ worker.onmessage = (event: MessageEvent) => {
       job.onProgress?.(message);
       break;
     case 'data':
-      job.chunks.push(message.chunk); // inflated Uint8Array
+      job.chunks.push(message.chunk);
       break;
     case 'done':
       pending.delete(message.id);

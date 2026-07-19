@@ -27,7 +27,7 @@ export function offsetDate(origin: Date, date: number, hours: number, minutes: n
 }
 
 /**
- *
+ * parse the timestamp of a specific dataset as JavaScript-native timestamp
  * @param x a timestamp with years, months, date, hours, minutes and seconds placed in order
  * @param timeZoneOffset offset = UTC - time (measured in minutes); UTC±T -> offset = ∓60 * T
  * @returns the value of Date.getTime()
