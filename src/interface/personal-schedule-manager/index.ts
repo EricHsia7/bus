@@ -9,7 +9,10 @@ const Field = documentQuerySelector('.css_personal_schedule_manager_field');
 const BodyElement = elementQuerySelector(Field, '.css_personal_schedule_manager_body');
 const ListElement = elementQuerySelector(BodyElement, '.css_personal_schedule_manager_list');
 
-const itemElements: Array<HTMLElement> = []; // div.css_personal_schedule_manager_item in div.css_personal_schedule_manager_list
+/**
+ * div.css_personal_schedule_manager_item(n) in div.css_personal_schedule_manager_list(1)
+ */
+const itemElements: Array<HTMLElement> = [];
 
 let previousPersonalSchedules: PersonalScheduleArray = [];
 

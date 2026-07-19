@@ -30,10 +30,25 @@ const LocationGroupTabLineTrackElement = elementQuerySelector(LocationHeadElemen
 const LocationGroupTabLineElement = elementQuerySelector(LocationGroupTabLineTrackElement, '.css_location_group_tab_line');
 const LocationUpdateTimerElement = elementQuerySelector(LocationHeadElement, '.css_location_update_timer_box .css_location_update_timer');
 
-const groupElements: Array<HTMLElement> = []; // div.css_location_group(n) in div.css_location_groups(1)
-const tabElements: Array<HTMLElement> = []; // div.css_location_group_tab(n) in div.css_location_group_tabs_tray(1)
-const propertyElements: Array<Array<HTMLElement>> = []; // div.css_location_group_details_property(m) in div.css_location_group_details_body(1) in div.css_location_group_details(1) in div.css_location_group(n)
-const itemElements: Array<Array<HTMLElement>> = []; // div.css_location_group_item(m) in div.css_location_group_items(1) in div.div.css_location_group(n)
+/**
+ * div.css_location_group(n) in div.css_location_groups(1)
+ */
+const groupElements: Array<HTMLElement> = [];
+
+/**
+ * div.css_location_group_tab(n) in div.css_location_group_tabs_tray(1)
+ */
+const tabElements: Array<HTMLElement> = [];
+
+/**
+ * div.css_location_group_details_property(m) in div.css_location_group_details_body(1) in div.css_location_group_details(1) in div.css_location_group(n)
+ */
+const propertyElements: Array<Array<HTMLElement>> = [];
+
+/**
+ * div.css_location_group_item(m) in div.css_location_group_items(1) in div.div.css_location_group(n)
+ */
+const itemElements: Array<Array<HTMLElement>> = [];
 
 let previousIntegration = {} as IntegratedLocation;
 let previousAnimation: boolean = false;
