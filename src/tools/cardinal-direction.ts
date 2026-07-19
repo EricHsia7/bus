@@ -13,7 +13,7 @@ export interface CardinalDirection {
 
 export const UnknownCardinalDirection: CardinalDirection = {
   vector: [0, 0],
-  id: -1,
+  id: 0,
   name: '未知',
   symbol: '?',
   icon: 'explore'
@@ -22,7 +22,7 @@ export const UnknownCardinalDirection: CardinalDirection = {
 // cardinal directions
 export const NorthCardinalDirection: CardinalDirection = {
   vector: [0, 1], // 90 degress
-  id: 0,
+  id: 1,
   name: '北',
   symbol: '↑',
   icon: 'north'
@@ -30,7 +30,7 @@ export const NorthCardinalDirection: CardinalDirection = {
 
 export const WestCardinalDirection: CardinalDirection = {
   vector: [1, 0], // 0 degres
-  id: 1,
+  id: 2,
   name: '東',
   symbol: '→',
   icon: 'east'
@@ -38,7 +38,7 @@ export const WestCardinalDirection: CardinalDirection = {
 
 export const SouthCardinalDirection: CardinalDirection = {
   vector: [0, -1], // 270 degress
-  id: 2,
+  id: 3,
   name: '南',
   symbol: '↓',
   icon: 'south'
@@ -46,24 +46,24 @@ export const SouthCardinalDirection: CardinalDirection = {
 
 export const EastCardinalDirection: CardinalDirection = {
   vector: [-1, 0], // 180 degress
-  id: 3,
+  id: 4,
   name: '西',
   symbol: '←',
   icon: 'west'
 };
 
 // intercardinal directions
-const NorthEastCardinalDirection: CardinalDirection = {
+export const NorthEastCardinalDirection: CardinalDirection = {
   vector: [Math.SQRT1_2, Math.SQRT1_2], // 45 degrees
-  id: 4,
+  id: 5,
   name: '東北',
   symbol: '↗',
   icon: 'north_east'
 };
 
-const SouthEastCardinalDirection: CardinalDirection = {
+export const SouthEastCardinalDirection: CardinalDirection = {
   vector: [Math.SQRT1_2, -Math.SQRT1_2], // 135 degrees
-  id: 5,
+  id: 6,
   name: '東南',
   symbol: '↘',
   icon: 'south_east'
@@ -71,7 +71,7 @@ const SouthEastCardinalDirection: CardinalDirection = {
 
 export const SouthWestCardinalDirection: CardinalDirection = {
   vector: [-Math.SQRT1_2, -Math.SQRT1_2], // 225 degrees
-  id: 6,
+  id: 7,
   name: '西南',
   symbol: '↙',
   icon: 'south_west'
@@ -79,27 +79,28 @@ export const SouthWestCardinalDirection: CardinalDirection = {
 
 export const NorthWestCardinalDirection: CardinalDirection = {
   vector: [-Math.SQRT1_2, Math.SQRT1_2], // 315 degrees
-  id: 7,
+  id: 8,
   name: '西北',
   symbol: '↖',
   icon: 'north_west'
 };
+
+const directions: Array<CardinalDirection> = [UnknownCardinalDirection, NorthCardinalDirection, WestCardinalDirection, SouthCardinalDirection, EastCardinalDirection, NorthEastCardinalDirection, SouthEastCardinalDirection, SouthWestCardinalDirection, NorthWestCardinalDirection];
 
 /**
  * @param vector [x, y]
  * @returns CardinalDirection
  */
 export function getCardinalDirectionFromVector(vector: GenericNumberArray): CardinalDirection {
-  const directions: Array<CardinalDirection> = [UnknownCardinalDirection, NorthCardinalDirection, EastCardinalDirection, SouthCardinalDirection, WestCardinalDirection, NorthEastCardinalDirection, SouthEastCardinalDirection, SouthWestCardinalDirection, NorthWestCardinalDirection];
   const unitVector = normalizeVector(vector);
-  let maxDotProduct = -Infinity;
-  let bestMatch: CardinalDirection = directions[0];
-  for (const direction of directions) {
-    const dotProduct = direction.vector[0] * unitVector[0] + direction.vector[1] * unitVector[1];
+  let maxDotProduct = 0;
+  let bestMatchIndex = 0;
+  for (let i = 0; i < 9; i++) {
+    const dotProduct = directions[i].vector[0] * unitVector[0] + directions[i].vector[1] * unitVector[1];
     if (dotProduct > maxDotProduct) {
       maxDotProduct = dotProduct;
-      bestMatch = direction;
+      bestMatchIndex = i;
     }
   }
-  return bestMatch;
+  return directions[bestMatchIndex];
 }
