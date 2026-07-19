@@ -136,10 +136,13 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
   for (const vectorSet of setsOfVectors) {
     let x: number = 0;
     let y: number = 0;
+    const quantity = vectorSet.length;
     for (const vector of vectorSet) {
       x += vector[0];
       y += vector[1];
     }
+    x /= quantity;
+    y /= quantity;
     averageCardinalDirections.push(getCardinalDirectionFromVector(normalizeVector([x, y])));
     cardinalDirections.push(vectorSet.map((v) => getCardinalDirectionFromVector(v)));
   }
