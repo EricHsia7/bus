@@ -31,10 +31,25 @@ const RouteGroupTabLineTrackElement = elementQuerySelector(RouteHeadElement, '.c
 const RouteGroupTabLineElement = elementQuerySelector(RouteGroupTabLineTrackElement, '.css_route_group_tab_line');
 const RouteGroupsElement = elementQuerySelector(RouteField, '.css_route_groups');
 
-const groupElements: Array<HTMLElement> = []; // div.css_route_group(n) in div.css_route_groups(1)
-const tabElements: Array<HTMLElement> = []; // div.css_route_group_tab(n) in div.css_route_group_tabs_tray(1)
-const itemElements: Array<Array<HTMLElement>> = []; // div.css_route_group_item(m) in div.css_route_group_items_track(1) in div.css_route_group(n)
-const threadBoxElements: Array<Array<HTMLElement>> = []; // div.css_route_group_thread_box(m) in div.css_route_group_threads_track(1) in div.css_route_group(n)
+/**
+ * div.css_route_group(n) in div.css_route_groups(1)
+ */
+const groupElements: Array<HTMLElement> = [];
+
+/**
+ * div.css_route_group_tab(n) in div.css_route_group_tabs_tray(1)
+ */
+const tabElements: Array<HTMLElement> = [];
+
+/**
+ * div.css_route_group_item(m) in div.css_route_group_items_track(1) in div.css_route_group(n)
+ */
+const itemElements: Array<Array<HTMLElement>> = [];
+
+/**
+ * div.css_route_group_thread_box(m) in div.css_route_group_threads_track(1) in div.css_route_group(n)
+ */
+const threadBoxElements: Array<Array<HTMLElement>> = [];
 
 let previousIntegration = {} as IntegratedRoute;
 let previousAnimation: boolean = false;

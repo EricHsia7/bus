@@ -18,6 +18,9 @@ const LocationDetailsField = documentQuerySelector('.css_location_details_field'
 const LocationDetailsBodyElement = elementQuerySelector(LocationDetailsField, '.css_location_details_body');
 const LocationDetailsActionsElement = elementQuerySelector(LocationDetailsBodyElement, '.css_location_details_actions');
 
+/**
+ * div.css_location_details_action(n) in div.css_location_details_actions(1)
+ */
 const actionElements: Array<HTMLElement> = [];
 
 function generateElementOfItem(): HTMLElement {

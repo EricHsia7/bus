@@ -17,6 +17,9 @@ const IconInputElement = elementQuerySelector(FolderEditorGroupsElement, '.css_f
 const OpenIconSelectorElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_icon_selector');
 const FolderContentElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body');
 
+/**
+ * div.css_folder_editor_folder_item(n) in div.css_folder_editor_group_body(1)
+ */
 const itemElements: Array<HTMLElement> = [];
 
 let previousContent: Array<FolderContent> = [];

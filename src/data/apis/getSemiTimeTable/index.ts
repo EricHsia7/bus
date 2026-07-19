@@ -1,17 +1,58 @@
 import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
-import { getAPIURL } from '../getAPIURL/index';
+import { APIData, getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface SemiTimetableItem {
   Id: number;
+
   PathAttributeId: number;
-  StartTime: string; // hhmm
-  EndTime: string; // hhmm
-  LongHeadway: string; // minutes
-  LowHeadway: string; // minutes
+
+  /**
+   * hhmm
+   */
+  StartTime: string;
+
+  /**
+   * hhmm
+   */
+  EndTime: string;
+
+  /**
+   * - shorter duration in minutes
+   * - it's actually the low headway in general
+   * - "long" must be interpreted as "high frequency" in this case or the name is confused
+   */
+  LongHeadway: string;
+
+  /**
+   * - longer duration in minutes
+   * - it's actually the long headway in general
+   * - "low" must be interpreted as "low frequency" in this case or the name is confused
+   */
+  LowHeadway: string;
+
+  /**
+   * the type of DateValue
+   * - 0: weekday index
+   * - 1: specific date
+   */
   DateType: '0' | '1';
-  DateValue: string; // DateType: 0 -> [1: Sun, 2: Mon, 3: Tue, 4: Wed, 5: Thu, 6: Fri, 7: Sat]; DateType: 1 -> yyyymmdd (UTC+8)
+
+  /**
+   * DateType == 0
+   * - 1: Sun
+   * - 2: Mon
+   * - 3: Tue
+   * - 4: Wed
+   * - 5: Thu
+   * - 6: Fri
+   * - 7: Sat
+   *
+   * DateType == 1
+   * - yyyymmdd (UTC+8)
+   */
+  DateValue: string;
 }
 
 export type SemiTimeTable = Array<SemiTimetableItem>;
@@ -37,9 +78,9 @@ export async function getSemiTimeTable(progress: Progress): Promise<SemiTimeTabl
       const inflatedData = await fetchInflate(url, function (message) {
         progress.update(sourceId, message.loaded, message.total);
       });
-      const data = JSON.parse(decoder.decode(inflatedData));
+      const data = JSON.parse(decoder.decode(inflatedData)) as APIData<SemiTimeTable>;
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i] as SemiTimetableItem);
+        result.push(data.BusInfo[i]);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }

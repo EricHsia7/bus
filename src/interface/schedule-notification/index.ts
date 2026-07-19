@@ -9,7 +9,10 @@ const ScheduleNotificationField = documentQuerySelector('.css_schedule_notificat
 const ScheduleNotificationBodyElement = elementQuerySelector(ScheduleNotificationField, '.css_schedule_notification_body');
 const ScheduleNotificationListElement = elementQuerySelector(ScheduleNotificationBodyElement, '.css_schedule_notification_list');
 
-const itemElements: Array<HTMLElement> = []; // div.css_schedule_notification_list_item in div.css_schedule_notification_list
+/**
+ * div.css_schedule_notification_list_item(n) in div.css_schedule_notification_list(1)
+ */
+const itemElements: Array<HTMLElement> = [];
 
 let initialized: boolean = false;
 

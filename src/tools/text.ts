@@ -18,6 +18,15 @@ export function containPhoneticSymbols(string: string): boolean {
   return /[\u3100-\u312F\ˇ\ˋ\ˊ\˙]/gm.test(string);
 }
 
+/**
+ * Truncate overflowed text and add an ellipsis
+ * @param text text to truncate
+ * @param weight font weight
+ * @param size font size with unit notation
+ * @param fontFamily font family
+ * @param maxWidth maximum width measured in pixels
+ * @returns truncated text
+ */
 export function truncateText(text: string, weight: number, size: string, fontFamily: string, maxWidth: number): string {
   const ellipsis = '...';
   const ellipsisWidth = getTextWidth(ellipsis, weight, size, fontFamily);

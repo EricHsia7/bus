@@ -1,26 +1,61 @@
 import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
-import { getAPIURL } from '../getAPIURL/index';
+import { APIData, getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface CarInfoItem {
-  BusId: number; // BusId ≠ BusID
+  /**
+   * numeric identifier of the object (BusId ≠ BusID)
+   */
+  BusId: number;
+
   BusNId: string;
-  CarNum: string; // CarNumber = BusID = vehicle registration number
-  CarType: '0' | '1' | '2' | '3'; // 0: normal bus (一般), 1: low-floor bus (低底盤), 2: disability-friendly bus (大復康巴士), 3: dog-friendly bus (狗狗友善專車)
+
+  /**
+   * CarNumber = BusID = vehicle registration number
+   */
+  CarNum: string;
+
+  /**
+   * - 0: normal bus (一般)
+   * - 1: low-floor bus (低底盤)
+   * - 2: disability-friendly bus (大復康巴士)
+   * - 3: dog-friendly bus (狗狗友善專車)
+   */
+  CarType: '0' | '1' | '2' | '3';
+
   IboxId: number;
+
   StationId: number;
+
   PathAttributeId: number;
+
   BuildPeriod: string;
+
   Ctime: string;
 }
 
 export type CarInfo = Array<CarInfoItem>;
 
 export interface SimplifiedCarInfoItem {
+  /**
+   * numeric identifier of the object (BusId ≠ BusID)
+   */
   BusId: CarInfoItem['BusId'];
+
+  /**
+   * CarNumber = BusID = vehicle registration number
+   */
   CarNum: CarInfoItem['CarNum'];
+
+  /**
+   * - 0: normal bus (一般)
+   * - 1: low-floor bus (低底盤)
+   * - 2: disability-friendly bus (大復康巴士)
+   * - 3: dog-friendly bus (狗狗友善專車)
+   */
   CarType: CarInfoItem['CarType'];
+
   PathAttributeId: CarInfoItem['PathAttributeId'];
 }
 
@@ -63,7 +98,7 @@ export async function getCarInfo(progress: Progress, simplified: boolean = false
       [0, 2],
       [1, 2]
     ];
-    const result = [];
+    const result: CarInfo = [];
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
@@ -71,9 +106,9 @@ export async function getCarInfo(progress: Progress, simplified: boolean = false
       const inflatedData = await fetchInflate(url, function (message) {
         progress.update(sourceId, message.loaded, message.total);
       });
-      const data = JSON.parse(decoder.decode(inflatedData));
+      const data = JSON.parse(decoder.decode(inflatedData)) as APIData<CarInfo>;
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i] as CarInfoItem);
+        result.push(data.BusInfo[i]);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }

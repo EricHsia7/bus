@@ -26,9 +26,15 @@ export function offsetDate(origin: Date, date: number, hours: number, minutes: n
   return duplicatedOrigin;
 }
 
-export function timestampToNumber(string: string, timeZoneOffset: number = 0): number {
+/**
+ * parse the timestamp of a specific dataset as JavaScript-native timestamp
+ * @param x a timestamp with years, months, date, hours, minutes and seconds placed in order
+ * @param timeZoneOffset offset = UTC - time (measured in minutes); UTC±T -> offset = ∓60 * T
+ * @returns the value of Date.getTime()
+ */
+export function timestampToNumber(x: string, timeZoneOffset: number = 0): number {
   const regex = /[0-9\.]*/gm;
-  const match = string.match(regex);
+  const match = x.match(regex);
   if (match) {
     const localTimeZoneOffset = new Date().getTimezoneOffset();
     const year = parseInt(match[0], 10);
@@ -126,8 +132,16 @@ export function formatTime(time: number, mode: number): string {
   }
 }
 
+/**
+ * - 0: Sunday
+ * - 1: Monday
+ * - 2: Tuesday
+ * - 3: Wednesday
+ * - 4: Thursday
+ * - 5: Friday
+ * - 6: Saturday
+ */
 export type WeekDayIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
-// 0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday
 
 export type WeekDayIndexArray = Array<WeekDayIndex>;
 

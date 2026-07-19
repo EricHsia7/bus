@@ -13,7 +13,10 @@ const StorageField = documentQuerySelector('.css_storage_field');
 const StorageBodyElement = elementQuerySelector(StorageField, '.css_storage_body');
 const StatisticsElement = elementQuerySelector(StorageBodyElement, '.css_storage_statistics');
 
-const itemElements: Array<HTMLElement> = []; // div.css_storage_statistics_item in div.css_storage_statistics
+/**
+ * div.css_storage_statistics_item(n) in div.css_storage_statistics(1)
+ */
+const itemElements: Array<HTMLElement> = [];
 
 function generateElementOfItem(): HTMLElement {
   // Create root element

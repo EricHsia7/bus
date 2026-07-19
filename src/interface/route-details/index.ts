@@ -18,7 +18,10 @@ const RouteDetailsField = documentQuerySelector('.css_route_details_field');
 const RouteDetailsBodyElement = elementQuerySelector(RouteDetailsField, '.css_route_details_body');
 const RouteDetailsActionsElement = elementQuerySelector(RouteDetailsBodyElement, '.css_route_details_actions');
 
-const actionElements: Array<HTMLElement> = []; // div.css_route_details_action in div.css_route_details_actions
+/**
+ * div.css_route_details_action(n) in div.css_route_details_actions(1)
+ */
+const actionElements: Array<HTMLElement> = [];
 
 function generateElementOfItem(): HTMLElement {
   const element = documentCreateDivElement();

@@ -9,7 +9,7 @@ import { MaterialSymbol } from '../icons/material-symbols-type';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 
 let previousSearchResults: MaterialSymbolsSearchResults = [];
-let previousInputElement;
+let previousInputElement: HTMLInputElement;
 let previousQuery: string = '';
 let initialized: boolean = false;
 
@@ -19,6 +19,9 @@ const searchInputElement = elementQuerySelector(headElement, '.css_icon_selector
 const bodyElement = elementQuerySelector(iconSelectorSearchField, '.css_icon_selector_search_body');
 const resultsElement = elementQuerySelector(bodyElement, '.css_icon_selector_search_results');
 
+/**
+ * div.css_icon_selector_search_result(n) in div.css_icon_selector_search_results(1)
+ */
 const resultElements: Array<HTMLElement> = [];
 
 function generateElementOfResultItem(): HTMLElement {

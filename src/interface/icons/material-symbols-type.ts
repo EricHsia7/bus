@@ -1,1 +1,3 @@
-export type MaterialSymbol = string;
+import type { MaterialSymbol as _MaterialSymbol } from '@erichsia7/material-symbols-list';
+
+export type MaterialSymbol = _MaterialSymbol | '';

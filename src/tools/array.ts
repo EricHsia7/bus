@@ -3,8 +3,8 @@
 /**
  * Splits data into groups based on delta between consecutive elements.
  *
- * @param {Array<[number, number]>} data - Array of tuples where each tuple contains two numbers.
- * @returns {Array<Array<[number, number]>>} - Array of groups, each containing arrays of tuples.
+ * @param {Array<[number, number]>} data an array of tuples where each tuple contains two numbers.
+ * @returns {Array<Array<[number, number]>>} an array of groups, each containing arrays of tuples.
  */
 
 export function splitDataByDelta(data: Array<[number, number]>): Array<Array<[number, number]>> {
@@ -29,7 +29,7 @@ export function splitDataByDelta(data: Array<[number, number]>): Array<Array<[nu
   return result;
 }
 
-export function areItemsDifferent(arr: Array): boolean {
+export function areItemsDifferent<T>(arr: Array<T>): boolean {
   for (let i = 0; i < arr.length; i++) {
     for (let j = i + 1; j < arr.length; j++) {
       if (arr[i] === arr[j]) {

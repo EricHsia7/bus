@@ -14,7 +14,10 @@ const Field = documentQuerySelector('.css_settings_field');
 const BodyElement = elementQuerySelector(Field, '.css_settings_body');
 const SettingsElement = elementQuerySelector(BodyElement, '.css_settings');
 
-const settingElements: Array<HTMLElement> = []; // div.css_setting in div.css_settings
+/**
+ * div.css_setting(n) in div.css_settings(1)
+ */
+const settingElements: Array<HTMLElement> = [];
 
 let initialized: boolean = false;
 

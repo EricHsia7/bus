@@ -1,18 +1,43 @@
 import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
-import { getAPIURL } from '../getAPIURL/index';
+import { APIData, getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface ProviderItem {
+  /**
+   * a numeric identifier associated with the company
+   */
   id: number;
-  nameZn: string; // name in Chinese (Zhōngwén)
-  nameEn: string; // name in English
+
+  /**
+   * name in Chinese (Zhōngwén)
+   */
+  nameZn: string;
+
+  /**
+   * name in English
+   */
+  nameEn: string;
+
   email: string;
+
   phoneInfo: string;
+
   stationId: string;
+
   stationNameZn: string;
+
   stationNameEn: string;
-  type: '0' | '1' | '2' | '3' | '4' | '5'; // 0: city bus station, 1: coach bus station, 2: MRT station, 3: train station, 4: airport, 5: port
+
+  /**
+   * - 0: city bus station
+   * - 1: coach bus station
+   * - 2: MRT station
+   * - 3: train station
+   * - 4: airport
+   * - 5: port
+   */
+  type: '0' | '1' | '2' | '3' | '4' | '5';
 }
 
 export type Provider = Array<ProviderItem>;
@@ -38,9 +63,9 @@ export async function getProvider(progress: Progress): Promise<Provider> {
       const inflatedData = await fetchInflate(url, function (message) {
         progress.update(sourceId, message.loaded, message.total);
       });
-      const data = JSON.parse(decoder.decode(inflatedData));
+      const data = JSON.parse(decoder.decode(inflatedData)) as APIData<Provider>;
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i] as ProviderItem);
+        result.push(data.BusInfo[i]);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }

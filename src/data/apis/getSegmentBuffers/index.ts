@@ -4,7 +4,13 @@ import { getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface BufferZoneItem {
-  Direction: 0 | 1 | 2; // (goBack/GoBack)
+  /**
+   * same as goBack/GoBack
+   * - 0: go
+   * - 1: back
+   * - 2: unknown
+   */
+  Direction: 0 | 1 | 2;
   OriginStopID: number;
   DestinationStopID: number;
 }
@@ -85,7 +91,7 @@ export async function getSegmentBuffers(progress: Progress): Promise<SimplifiedS
       const inflatedData = await fetchInflate(url, function (message) {
         progress.update(sourceId, message.loaded, message.total);
       });
-      const data = decoder.decode(inflatedData); // xml
+      const data = decoder.decode(inflatedData) as string; // xml
       result += data;
       // progress.timestamp(-1, -480); // UTC+8
     }

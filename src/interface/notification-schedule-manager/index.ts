@@ -16,6 +16,9 @@ const NotificationScheduleManagerUpdateTimerElement = elementQuerySelector(Notif
 const NotificationScheduleManagerBody = elementQuerySelector(NotificationScheduleManagerField, '.css_notification_schedule_manager_body');
 const NotificationScheduleList = elementQuerySelector(NotificationScheduleManagerBody, '.css_notification_schedule_manager_notification_schedule_list');
 
+/**
+ * div.css_notification_schedule_manager_item(n) in div.css_notification_schedule_manager_notification_schedule_list(1)
+ */
 const itemElements: Array<HTMLElement> = [];
 
 let previousIntegration = {} as IntegratedNotificationSchedules;

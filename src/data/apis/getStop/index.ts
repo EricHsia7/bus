@@ -1,30 +1,97 @@
 import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
-import { getAPIURL } from '../getAPIURL/index';
+import { APIData, getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface StopItem {
-  Id: number; // StopID
-  routeId: number; // RouteID
-  nameZh: string; // name in Chinese
-  nameEn: string; // name in English
-  seqNo: number; // sequence on the route
-  pgp: string; // pgp (-1: get off, 0: get on and off, 1: get on)
-  goBack: '0' | '1' | '2'; // GoBack (0: go, 1: back, 2: unknown)
-  longitude: string; // number in string
-  latitude: string; // number in string
+  /**
+   * StopID
+   */
+  Id: number;
+
+  /**
+   * RouteID
+   */
+  routeId: number;
+
+  /**
+   * name in Chinese
+   */
+  nameZh: string;
+
+  /**
+   * name in English
+   */
+  nameEn: string;
+
+  /**
+   * sequence on the route
+   */
+  seqNo: number;
+
+  /**
+   * - -1: get off
+   * - 0: get on and off
+   * - 1: get on
+   */
+  pgp: string;
+
+  /**
+   * same as GoBack
+   * - 0: go
+   * - 1: back
+   * - 2: unknown
+   */
+  goBack: '0' | '1' | '2';
+
+  /**
+   * number in string
+   */
+  longitude: string;
+
+  /**
+   * number in string
+   */
+  latitude: string;
+
   address: string;
-  stopLocationId: number; // LocationID
-  showLon: string; // number in string
-  showLat: string; // number in string
+
+  /**
+   * LocationID
+   */
+  stopLocationId: number;
+
+  /**
+   * number in string
+   */
+  showLon: string;
+
+  /**
+   * number in string
+   */
+  showLat: string;
   vector: string;
 }
 
 export type Stop = Array<StopItem>;
 
 export interface SimplifiedStopItem {
+  /**
+   * sequence on the route
+   */
   seqNo: number;
-  goBack: '0' | '1' | '2'; // GoBack (0: go, 1: back, 2: unknown)
+
+  /**
+   * same as GoBack
+   * - 0: go
+   * - 1: back
+   * - 2: unknown
+   */
+  goBack: '0' | '1' | '2';
+
+  /**
+   * LocationID
+   */
   stopLocationId: number;
 }
 
@@ -64,7 +131,7 @@ export async function getStop(progress: Progress): Promise<SimplifiedStop> {
       [0, 11],
       [1, 11]
     ];
-    const result = [];
+    const result: Stop = [];
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
@@ -72,9 +139,9 @@ export async function getStop(progress: Progress): Promise<SimplifiedStop> {
       const inflatedData = await fetchInflate(url, function (message) {
         progress.update(sourceId, message.loaded, message.total);
       });
-      const data = JSON.parse(decoder.decode(inflatedData));
+      const data = JSON.parse(decoder.decode(inflatedData)) as APIData<Stop>;
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i] as StopItem);
+        result.push(data.BusInfo[i]);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }

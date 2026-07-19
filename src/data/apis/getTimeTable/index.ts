@@ -1,15 +1,45 @@
 import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
-import { getAPIURL } from '../getAPIURL/index';
+import { APIData, getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface TimetableItem {
   Id: number;
+
   PathAttributeId: number;
+
+  /**
+   * the type of DateValue
+   * - 0: weekday index
+   * - 1: specific date
+   */
   DateType: '0' | '1';
-  DateValue: string; // DateType: 0 -> [1: Sun, 2: Mon, 3: Tue, 4: Wed, 5: Thu, 6: Fri, 7: Sat]; DateType: 1 -> yyyymmdd (UTC+8)
-  DepartureTime: string; // hhmm
-  IsLastBus: string; // 0: false, 1: true
+
+  /**
+   * DateType == 0
+   * - 1: Sun
+   * - 2: Mon
+   * - 3: Tue
+   * - 4: Wed
+   * - 5: Thu
+   * - 6: Fri
+   * - 7: Sat
+   *
+   * DateType == 1
+   * - yyyymmdd (UTC+8)
+   */
+  DateValue: string;
+
+  /**
+   * hhmm
+   */
+  DepartureTime: string;
+
+  /**
+   * - 0: false
+   * - 1: true
+   */
+  IsLastBus: string;
 }
 
 export type Timetable = Array<TimetableItem>;
@@ -27,7 +57,7 @@ export async function getTimeTable(progress: Progress): Promise<Timetable> {
       [0, 14],
       [1, 14]
     ];
-    const result = [];
+    const result: Timetable = [];
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
@@ -35,9 +65,9 @@ export async function getTimeTable(progress: Progress): Promise<Timetable> {
       const inflatedData = await fetchInflate(url, function (message) {
         progress.update(sourceId, message.loaded, message.total);
       });
-      const data = JSON.parse(decoder.decode(inflatedData));
+      const data = JSON.parse(decoder.decode(inflatedData)) as APIData<Timetable>;
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i] as TimetableItem);
+        result.push(data.BusInfo[i]);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }

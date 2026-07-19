@@ -4,22 +4,26 @@ import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getMaterialSymbolsAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
-/**
- * a stringified array of words (word_1,word_2,word_3,...)
- */
-export type MaterialSymbolsDescriptionDictionary = string;
-
-export type MaterialSymbolsDescriptionDelimiters = Array<string>;
-
 export type MaterialSymbolsDescriptionSymbolKey = string;
 
 export type MaterialSymbolsDescriptionSymbolDescription = string;
 
+/**
+ * Encoded descriptions
+ */
 export type MaterialSymbolsDescriptionSymbols = Record<MaterialSymbolsDescriptionSymbolKey, MaterialSymbolsDescriptionSymbolDescription>;
 
 export interface MaterialSymbolsDescription {
-  dictionary: MaterialSymbolsDescriptionDictionary;
-  delimiters: MaterialSymbolsDescriptionDelimiters;
+  /**
+   * a stringified array of words
+   * @example "word_1,word_2,word_3,..."
+   */
+  dictionary: string;
+
+  /**
+   * an array of delimiters
+   */
+  delimiters: Array<string>;
   descriptions: MaterialSymbolsDescriptionSymbols;
 }
 

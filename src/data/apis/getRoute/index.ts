@@ -1,60 +1,180 @@
 import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
-import { getAPIURL } from '../getAPIURL/index';
+import { APIData, getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface RouteItem {
+  /**
+   * a numeric identifier associated with the company
+   */
   providerId: number;
+
+  /**
+   * the name of the company
+   */
   providerName: string;
-  nameZh: string; // name in Chinese
-  nameEn: string; // name in English
-  aliasName: string; // another name in Chinese
+
+  /**
+   * the name of the route in Chinese
+   */
+  nameZh: string;
+
+  /**
+   * the name of the route in English
+   */
+  nameEn: string;
+
+  /**
+   * one of the alternative names of the route in Chinese
+   */
+  aliasName: string;
+
+  /**
+   * a numeric identifier assigned to a bus on this route
+   */
   pathAttributeId: number;
+
   pathAttributeNId: string;
-  pathAttributeName: string; // another name in Chinese
-  pathAttributeEname: string; // another name in English
+
+  /**
+   * one of the alternative names of the route in Chinese
+   */
+  pathAttributeName: string;
+
+  /**
+   * one of the alternative names in English
+   */
+  pathAttributeEname: string;
+
   buildPeriod: '1' | '2' | '3' | '9' | '10';
-  departureZh: string; // departure stop name in Chinese
-  destinationZh: string; // destination stop name in Chinese
-  departureEn: string; // departure stop name in English
-  destinationEn: string; // destination stop name in English
-  goFirstBusTime: string; // time code (hhmm)
+
+  /**
+   * departure stop name in Chinese
+   */
+  departureZh: string;
+
+  /**
+   * destination stop name in Chinese
+   */
+  destinationZh: string;
+
+  /**
+   * departure stop name in English
+   */
+  departureEn: string;
+
+  /**
+   * destination stop name in English
+   */
+  destinationEn: string;
+
+  /**
+   * time code (hhmm)
+   */
+  goFirstBusTime: string;
+
+  /**
+   * time code (hhmm)
+   */
   goLastBusTime: string;
+
+  /**
+   * time code (hhmm)
+   */
   backFirstBusTime: string;
+
+  /**
+   * time code (hhmm)
+   */
   backLastBusTime: string;
-  offPeakHeadway: string; // time code (hhmm or mm)
+
+  /**
+   * time code (hhmm or mm)
+   */
+  offPeakHeadway: string;
+
   busTimeDesc: string;
+
   roadMapUrl: string;
+
   headwayDesc: string;
+
   holidayGoFirstBusTime: string;
+
   holidayBackFirstBusTime: string;
+
   holidayBackLastBusTime: string;
+
   holidayGoLastBusTime: string;
+
   holidayBusTimeDesc: string;
-  realSequence: string; // number in string
+
+  /**
+   * number in string
+   */
+  realSequence: string;
+
   holidayHeadwayDesc: string;
+
   holidayOffPeakHeadway: string;
+
   holidayPeakHeadway: string;
+
   segmentBufferEn: string;
+
   ticketPriceDescriptionZh: string;
+
   ticketPriceDescriptionEn: string;
+
   peakHeadway: string;
+
   ttiaPathId: string;
+
   segmentBufferZh: string;
+
   distance: string;
+
   NId: string;
-  Id: number; // RouteID
+
+  /**
+   * RouteID
+   */
+  Id: number;
+
   routeType: string;
 }
 
 export type Route = Array<RouteItem>;
 
 export interface SimplifiedRouteItem {
+  /**
+   * providerId (a numeric identifier associated with the company)
+   */
   pd: number;
+
+  /**
+   * nameZh (the name of the route in Chinese)
+   */
   n: string;
+
+  /**
+   * - an array of pathAttributeIds (a list of numeric identifiers assigned to buses on this route)
+   */
   pid: Array<number>;
+
+  /**
+   * departureZh (departure stop name in Chinese)
+   */
   dep: string;
+
+  /**
+   * destinationZh (destination stop name in Chinese)
+   */
   des: string;
+
+  /**
+   * RouteID
+   */
   id: number;
 }
 
@@ -97,7 +217,7 @@ export async function getRoute(progress: Progress, simplified: boolean = true): 
       [0, 10],
       [1, 10]
     ];
-    const result = [];
+    const result: Route = [];
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
@@ -105,9 +225,9 @@ export async function getRoute(progress: Progress, simplified: boolean = true): 
       const inflatedData = await fetchInflate(url, function (message) {
         progress.update(sourceId, message.loaded, message.total);
       });
-      const data = JSON.parse(decoder.decode(inflatedData));
+      const data = JSON.parse(decoder.decode(inflatedData)) as APIData<Route>;
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
-        result.push(data.BusInfo[i] as RouteItem);
+        result.push(data.BusInfo[i]);
       }
       progress.timestamp(data.EssentialInfo.UpdateTime, -480); // UTC+8
     }

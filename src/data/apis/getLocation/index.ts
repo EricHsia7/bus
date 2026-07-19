@@ -1,60 +1,198 @@
 import { ParsedAddress } from '../../../tools/address';
 import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
-import { getAPIURL } from '../getAPIURL/index';
+import { APIData, getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface LocationItem {
-  Id: number; // StopID
-  routeId: number; // RouteID
-  nameZh: string; // name in Chinese
-  nameEn: string; // name in English
-  seqNo: number; // sequence on the route
-  pgp: string; // pgp (-1: get off, 0: get on and off, 1: get on)
-  goBack: '0' | '1' | '2'; // GoBack (0: go, 1: back, 2: unknown)
-  longitude: string; // number in string
-  latitude: string; // number in string
+  /**
+   * StopID
+   */
+  Id: number;
+
+  /**
+   * RouteID
+   */
+  routeId: number;
+
+  /**
+   * name in Chinese
+   */
+  nameZh: string;
+
+  /**
+   * name in English
+   */
+  nameEn: string;
+
+  /**
+   * sequence on the route
+   */
+  seqNo: number;
+
+  /**
+   * - -1: get off
+   * - 0: get on and off
+   * - 1: get on
+   */
+  pgp: '-1' | '0' | '1';
+
+  /**
+   * GoBack
+   * - 0: go
+   * - 1: back
+   * - 2: unknown
+   */
+  goBack: '0' | '1' | '2';
+
+  /**
+   * number in string
+   */
+  longitude: string;
+
+  /**
+   * number in string
+   */
+  latitude: string;
+
   address: string;
-  stopLocationId: number; // LocationID
-  showLon: string; // number in string
-  showLat: string; // number in string
+
+  /**
+   * LocationID
+   */
+  stopLocationId: number;
+
+  /**
+   * number in string
+   */
+  showLon: string;
+
+  /**
+   * number in string
+   */
+  showLat: string;
   vector: string;
 }
 
 export type Location = Array<LocationItem>;
 
 export interface SimplifiedLocationItem {
-  n: string; // name
-  lo: number; // longitude
-  la: number; // latitude
-  g: string; // geohash
-  r: Array<number>; // RouteIDs
-  s: Array<number>; // StopIDs
-  v: Array<[number, number]>; // a set of vectors
-  a: Array<string>; // addresses
-  id: number; // stopLocationId
+  /**
+   * name
+   */
+  n: string;
+
+  /**
+   * longitude
+   */
+  lo: number;
+
+  /**
+   * latitude
+   */
+  la: number;
+
+  /**
+   * geohash
+   */
+  g: string;
+
+  /**
+   * an array of RouteIDs
+   */
+  r: Array<number>;
+
+  /**
+   * an array of StopIDs
+   */
+  s: Array<number>;
+
+  /**
+   * an array of vectors
+   */
+  v: Array<[number, number]>;
+
+  /**
+   * an array of addresses
+   */
+  a: Array<string>;
+
+  /**
+   * stopLocationId
+   */
+  id: number;
 }
 
 export type SimplifiedLocation = { [l_id: string]: SimplifiedLocationItem };
 
 export interface MergedLocationItem {
-  n: string; // name
-  lo: Array<number>; // longitude
-  la: Array<number>; // latitude
-  g: Array<string>; // geohash
-  r: Array<Array<number>>; // RouteIDs
-  s: Array<Array<number>>; // StopIDs
-  v: Array<Array<[number, number]>>; // sets of vectors
-  a: Array<ParsedAddress>; // addresses
-  id: Array<number>; // stopLocationIds
+  /**
+   * name
+   */
+  n: string;
+
+  /**
+   * longitude
+   */
+  lo: Array<number>;
+
+  /**
+   * latitude
+   */
+  la: Array<number>;
+
+  /**
+   * geohash
+   */
+  g: Array<string>;
+
+  /**
+   * a 2D array of RouteIDs
+   */
+  r: Array<Array<number>>;
+
+  /**
+   * a 2D array of StopIDs
+   */
+  s: Array<Array<number>>;
+
+  /**
+   * a 2D array of vectors
+   */
+  v: Array<Array<[number, number]>>;
+
+  /**
+   * an array of addresses
+   */
+  a: Array<ParsedAddress>;
+
+  /**
+   * an array of stopLocationIds
+   */
+  id: Array<number>;
+
+  /**
+   * the hash of the deduplicated name
+   */
   hash: string;
 }
 
 export type MergedLocation = { [ml_hash: string]: MergedLocationItem };
 
 export interface IndexedLocationItem {
-  lo: number; // longitude
-  la: number; // latitude
+  /**
+   * longitude
+   */
+  lo: number;
+
+  /**
+   * latitude
+   */
+  la: number;
+
+  /**
+   * the hash of the deduplicated name
+   */
   hash: string;
 }
 
@@ -150,7 +288,7 @@ export async function getLocation(progress: Progress, type: 0 | 1 | 2): Promise<
       [0, 11],
       [1, 11]
     ];
-    const result = [];
+    const result: Location = [];
     const decoder = new TextDecoder();
     for (const api of apis) {
       const url = getAPIURL(api[0], api[1]);
@@ -158,7 +296,7 @@ export async function getLocation(progress: Progress, type: 0 | 1 | 2): Promise<
       const inflatedData = await fetchInflate(url, function (message) {
         progress.update(sourceId, message.loaded, message.total);
       });
-      const data = JSON.parse(decoder.decode(inflatedData));
+      const data = JSON.parse(decoder.decode(inflatedData)) as APIData<Location>;
       for (let i = 0, l = data.BusInfo.length; i < l; i++) {
         result.push(data.BusInfo[i] as LocationItem);
       }

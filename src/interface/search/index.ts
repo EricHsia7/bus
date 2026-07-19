@@ -28,7 +28,10 @@ const searchTypeFilterButtonElement = elementQuerySelector(searchHeadElement, '.
 const searchResultsElement = elementQuerySelector(searchBodyElement, '.css_search_results');
 const searchKeyboardElement = elementQuerySelector(searchBodyElement, '.css_search_keyboard');
 
-const searchResultElements: Array<HTMLElement> = []; // div.css_search_search_result in div.css_search_results
+/**
+ * div.css_search_search_result(n) in div.css_search_results(1)
+ */
+const searchResultElements: Array<HTMLElement> = [];
 
 const fontWeight = 400;
 const fontSize = '20px';

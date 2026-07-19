@@ -1,6 +1,6 @@
 import { getUpdateRate } from '../../../data/analytics/update-rate/index';
-import { Folder, integratedFolder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
-import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../../data/settings/index';
+import { Folder, integratedFolderContent, integratedFolders, integrateFolders } from '../../../data/folder/index';
+import { getSettingOptionValue } from '../../../data/settings/index';
 import { deepEqual } from '../../../tools/deep-equal';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../../tools/elements';
 import { booleanToString, hasOwnProperty } from '../../../tools/index';
@@ -19,8 +19,15 @@ const HomeBodyElement = elementQuerySelector(HomeField, '.css_home_body');
 const HomeFoldersElement = elementQuerySelector(HomeBodyElement, '.css_home_folders');
 const HomeUpdateTimerElement = elementQuerySelector(HomeHeadElement, '.css_home_update_timer_box .css_home_update_timer');
 
-const folderElements: Array<HTMLElement> = []; // div.css_home_folder in div.css_home_folders
-const folderContentItemElements: Array<Array<HTMLElement>> = []; // div.css_home_folder_item in div.css_home_folder
+/**
+ * div.css_home_folder(n) in div.css_home_folders(1)
+ */
+const folderElements: Array<HTMLElement> = [];
+
+/**
+ * div.css_home_folder_item(m) in div.css_home_folder(n)
+ */
+const folderContentItemElements: Array<Array<HTMLElement>> = [];
 
 let previousIntegration = {} as integratedFolders;
 let previousAnimation: boolean = false;
