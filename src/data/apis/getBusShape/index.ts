@@ -1,3 +1,4 @@
+import { GenericNumberArray } from '../../../tools/math';
 import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getAPIURL } from '../getAPIURL/index';
@@ -38,14 +39,54 @@ export interface BusShapeItem {
 
 export type BusShape = Array<BusShapeItem>;
 
+export interface SimplifiedBusShapeItem {
+  /**
+   * RouteID
+   */
+  id: BusShapeItem['RouteID'];
+
+  /**
+   * coordinates
+   */
+  coordinates: {
+    longtitudes: GenericNumberArray;
+    latitudes: GenericNumberArray;
+  };
+}
+
+export type SimplifiedBusShape = {
+  [r_id: string]: [go: Array<SimplifiedBusShapeItem>, back: Array<SimplifiedBusShapeItem>];
+};
+
 let BusShapeMemoryCache_available: boolean = false;
-let BusShapeMemoryCache_data: BusShape = [];
+let BusShapeMemoryCache_data: SimplifiedBusShape = {};
 let BusShapeMemoryCache_timestamp: number = -1;
 
 const cacheTimeToLive = 60 * 60 * 24 * 14 * 1000;
 const cacheKey = 'bus_bus_shape_cache';
 
-export async function getBusShape(progress: Progress): Promise<BusShape> {
+async function simplifyBusShape(BusShape: BusShape): Promise<SimplifiedBusShape> {
+  const worker = new Worker(new URL('./simplifyBusShape-worker.ts', import.meta.url));
+
+  // Wrap worker communication in a promise
+  const result = (await new Promise((resolve, reject) => {
+    worker.onmessage = function (e) {
+      resolve(e.data); // Resolve the promise with the worker's result
+      worker.terminate(); // Terminate the worker when done
+    };
+
+    worker.onerror = function (e) {
+      reject(e.message); // Reject the promise on error
+      worker.terminate(); // Terminate the worker if an error occurs
+    };
+
+    worker.postMessage(BusShape); // Send data to the worker
+  })) as SimplifiedBusShape;
+
+  return result;
+}
+
+export async function getBusShape(progress: Progress): Promise<SimplifiedBusShape> {
   async function getData() {
     const apis = [
       [0, 16],
@@ -86,10 +127,20 @@ export async function getBusShape(progress: Progress): Promise<BusShape> {
   }
 
   const result = await getData();
-  BusShapeMemoryCache_data = result;
+  const simplified = await simplifyBusShape(result);
+  for (const key in simplified) {
+    for (let i = 0; i < 2; i++) {
+      for (let j = simplified[key][i].length - 1; j >= 0; j--) {
+        simplified[key][i][j].coordinates.longtitudes = Array.from(simplified[key][i][j].coordinates.longtitudes);
+        simplified[key][i][j].coordinates.latitudes = Array.from(simplified[key][i][j].coordinates.latitudes);
+      }
+    }
+  }
+
+  BusShapeMemoryCache_data = simplified;
   BusShapeMemoryCache_available = true;
   BusShapeMemoryCache_timestamp = now;
   await lfSetItem(0, `${cacheKey}_timestamp`, now.toString());
-  await lfSetItem(0, cacheKey, JSON.stringify(result));
-  return result;
+  await lfSetItem(0, cacheKey, JSON.stringify(simplified));
+  return simplified;
 }
