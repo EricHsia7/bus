@@ -156,7 +156,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       labels = generateLetterLabels(stopLocationQuantity);
       break;
     case 'directions':
-      labels = generateDirectionLabels(cardinalDirections);
+      labels = generateDirectionLabels(averageCardinalDirections);
       break;
     default:
       break;
@@ -218,7 +218,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
         continue;
       }
       integratedItem.routeName = thisRoute.n;
-      integratedItem.routeDirection = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack, 10)]} - ${cardinalDirections[i][o].name}${cardinalDirections[i][o].symbol}`;
+      integratedItem.routeDirection = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack, 10)]} | ${cardinalDirections[i][o].name}${cardinalDirections[i][o].symbol}`;
       integratedItem.routeId = thisRouteID;
 
       // Collect data from 'batchFoundEstimateTime'
