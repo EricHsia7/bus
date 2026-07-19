@@ -7,12 +7,12 @@ export interface BusShapeItem {
   UniRouteId: string;
 
   /**
-   * PathAttributeId
+   * RouteID
    */
   RouteID: number;
 
   /**
-   * -1: no sub-route
+   * PathAttributeId
    */
   SubRouteID: -1 | number;
 
