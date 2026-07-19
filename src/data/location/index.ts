@@ -131,7 +131,8 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
   const batchFoundEstimateTime = batchFindEstimateTime(EstimateTime, StopIDs);
   const batchFoundBuses = batchFindBusesForLocation(BusEvent, BusData, Route, StopIDs);
 
-  const cardinalDirections: Array<CardinalDirection> = [];
+  const cardinalDirections: Array<Array<CardinalDirection>> = [];
+  const averageCardinalDirections: Array<CardinalDirection> = [];
   for (const vectorSet of setsOfVectors) {
     let x: number = 0;
     let y: number = 0;
@@ -139,9 +140,8 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       x += vector[0];
       y += vector[1];
     }
-    const meanVector = normalizeVector([x, y]);
-    const cardinalDirection = getCardinalDirectionFromVector(meanVector);
-    cardinalDirections.push(cardinalDirection);
+    averageCardinalDirections.push(getCardinalDirectionFromVector(normalizeVector([x, y])));
+    cardinalDirections.push(vectorSet.map((v) => getCardinalDirectionFromVector(v)));
   }
 
   let labels: Array<string> = [];
@@ -175,8 +175,8 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
           value: `${thisLocation.la[i].toFixed(5)}, ${thisLocation.lo[i].toFixed(5)}` // coordinate
         },
         {
-          icon: cardinalDirections[i].icon,
-          value: `${cardinalDirections[i].name}${display_user_orientation && userOrientation.cardinalDirection.id !== -1 && userOrientation.cardinalDirection.id === cardinalDirections[i].id ? '（目前指向）' : ''}` // orientation
+          icon: averageCardinalDirections[i].icon,
+          value: `${averageCardinalDirections[i].name}${display_user_orientation && userOrientation.cardinalDirection.id !== -1 && userOrientation.cardinalDirection.id === averageCardinalDirections[i].id ? '（目前指向）' : ''}` // orientation
         }
       ]
     };
@@ -215,7 +215,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
         continue;
       }
       integratedItem.routeName = thisRoute.n;
-      integratedItem.routeDirection = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack, 10)]}`;
+      integratedItem.routeDirection = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack, 10)]} - ${cardinalDirections[i][o].name}${cardinalDirections[i][o].symbol}`;
       integratedItem.routeId = thisRouteID;
 
       // Collect data from 'batchFoundEstimateTime'
