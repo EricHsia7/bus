@@ -5,7 +5,7 @@ import { fetchInflate } from '../loader';
 
 export interface BufferZoneItem {
   /**
-   * same as goBack GoBack
+   * same as goBack/GoBack
    * - 0: go
    * - 1: back
    * - 2: unknown
