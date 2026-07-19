@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - dev-jsdoc
+      - dev-cardinal-direction-2
 
 jobs:
   build:
