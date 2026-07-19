@@ -85,21 +85,22 @@ export const NorthWestCardinalDirection: CardinalDirection = {
   icon: 'north_west'
 };
 
+const directions: Array<CardinalDirection> = [UnknownCardinalDirection, NorthCardinalDirection, WestCardinalDirection, SouthCardinalDirection, EastCardinalDirection, NorthEastCardinalDirection, SouthEastCardinalDirection, SouthWestCardinalDirection, NorthWestCardinalDirection];
+
 /**
  * @param vector [x, y]
  * @returns CardinalDirection
  */
 export function getCardinalDirectionFromVector(vector: GenericNumberArray): CardinalDirection {
-  const directions: Array<CardinalDirection> = [UnknownCardinalDirection, NorthCardinalDirection, WestCardinalDirection, SouthCardinalDirection, EastCardinalDirection, NorthEastCardinalDirection, SouthEastCardinalDirection, SouthWestCardinalDirection, NorthWestCardinalDirection];
   const unitVector = normalizeVector(vector);
-  let maxDotProduct = -Infinity;
-  let bestMatch: CardinalDirection = directions[0];
-  for (const direction of directions) {
-    const dotProduct = direction.vector[0] * unitVector[0] + direction.vector[1] * unitVector[1];
+  let maxDotProduct = 0;
+  let bestMatchIndex = 0;
+  for (let i = 0; i < 9; i++) {
+    const dotProduct = directions[i].vector[0] * unitVector[0] + directions[i].vector[1] * unitVector[1];
     if (dotProduct > maxDotProduct) {
       maxDotProduct = dotProduct;
-      bestMatch = direction;
+      bestMatchIndex = i;
     }
   }
-  return bestMatch;
+  return directions[bestMatchIndex];
 }

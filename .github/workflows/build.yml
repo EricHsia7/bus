@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - dev-cardinal-direction-2
 
 jobs:
   build:
