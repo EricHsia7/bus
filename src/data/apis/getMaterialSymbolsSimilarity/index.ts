@@ -4,11 +4,6 @@ import { getMaterialSymbolsAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 /**
- * a stringified array of symbol names
- */
-export type MaterialSymbolsSimilaritySymbols = string;
-
-/**
  * a base-36 index that represents the location of the symbol name in symbols
  */
 export type MaterialSymbolsSimilaritySimilarityKey = string;
@@ -21,7 +16,11 @@ export type MaterialSymbolsSimilaritySimilaritySymbols = string;
 export type MaterialSymbolsSimilaritySimilarity = Record<MaterialSymbolsSimilaritySimilarityKey, MaterialSymbolsSimilaritySimilaritySymbols>;
 
 export interface MaterialSymbolsSimilarity {
-  symbols: MaterialSymbolsSimilaritySymbols;
+  /**
+   * a stringified array of symbol names
+   */
+  symbols: string;
+
   similarity: MaterialSymbolsSimilaritySimilarity;
 }
 

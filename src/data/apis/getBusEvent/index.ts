@@ -4,42 +4,67 @@ import { fetchInflate } from '../loader';
 
 export interface BusEventItem {
   StationID: number;
+
   /**
-   * @CarType 0: normal bus (一般) | 1: low-floor bus (低底盤) | 2: disability-friendly bus (大復康巴士) | 3: dog-friendly bus (狗狗友善專車)
+   * - 0: normal bus (一般)
+   * - 1: low-floor bus (低底盤)
+   * - 2: disability-friendly bus (大復康巴士)
+   * - 3: dog-friendly bus (狗狗友善專車)
    */
   CarType: '0' | '1' | '2' | '3';
+
   /**
-   * @BusID vehicle registration number
+   * vehicle registration number
    */
   BusID: string;
+
   ProviderID: number;
+
   CarID: number;
+
   /**
-   * @DutyStatus 0: normal | 1: start | 2: end
+   * - 0: normal
+   * - 1: start
+   * - 2: end
    */
   DutyStatus: '0' | '1' | '2';
+
   /**
-   * @BusStatus 0: 正常 | 1: 車禍 | 2: 故障 | 3: 塞車 | 4: 緊急求援 | 5: 加油 | 99: 非營運狀態
+   * - 0: 正常
+   * - 1: 車禍
+   * - 2: 故障
+   * - 3: 塞車
+   * - 4: 緊急求援
+   * - 5: 加油
+   * - 99: 非營運狀態
    */
   BusStatus: '0' | '1' | '2' | '3' | '4' | '5' | '99';
+
   /**
-   * @RouteID PathAttributeId (number in string)
+   * PathAttributeId (number in string)
    */
   RouteID: string;
+
   /**
-   * @GoBack 0: go | 1: back | 2: unknown
+   * - 0: go
+   * - 1: back
+   * - 2: unknown
    */
   GoBack: '0' | '1' | '2';
+
   /**
-   * @StopID number in string
+   * number in string
    */
   StopID: string;
+
   /**
-   * @CarOnStop 0: leaving/left | 1: coming/came
+   * - 0: leaving/left
+   * - 1: coming/came
    */
   CarOnStop: '0' | '1';
+
   /**
-   * @DataTime timestamp
+   * timestamp
    */
   DataTime: string;
 }

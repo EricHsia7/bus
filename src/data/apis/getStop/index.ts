@@ -4,27 +4,94 @@ import { getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface StopItem {
-  Id: number; // StopID
-  routeId: number; // RouteID
-  nameZh: string; // name in Chinese
-  nameEn: string; // name in English
-  seqNo: number; // sequence on the route
-  pgp: string; // pgp (-1: get off, 0: get on and off, 1: get on)
-  goBack: '0' | '1' | '2'; // GoBack (0: go, 1: back, 2: unknown)
-  longitude: string; // number in string
-  latitude: string; // number in string
+  /**
+   * StopID
+   */
+  Id: number;
+
+  /**
+   * RouteID
+   */
+  routeId: number;
+
+  /**
+   * name in Chinese
+   */
+  nameZh: string;
+
+  /**
+   * name in English
+   */
+  nameEn: string;
+
+  /**
+   * sequence on the route
+   */
+  seqNo: number;
+
+  /**
+   * - -1: get off
+   * - 0: get on and off
+   * - 1: get on
+   */
+  pgp: string;
+
+  /**
+   * same as GoBack
+   * - 0: go
+   * - 1: back
+   * - 2: unknown
+   */
+  goBack: '0' | '1' | '2';
+
+  /**
+   * number in string
+   */
+  longitude: string;
+
+  /**
+   * number in string
+   */
+  latitude: string;
+
   address: string;
-  stopLocationId: number; // LocationID
-  showLon: string; // number in string
-  showLat: string; // number in string
+
+  /**
+   * LocationID
+   */
+  stopLocationId: number;
+
+  /**
+   * number in string
+   */
+  showLon: string;
+
+  /**
+   * number in string
+   */
+  showLat: string;
   vector: string;
 }
 
 export type Stop = Array<StopItem>;
 
 export interface SimplifiedStopItem {
+  /**
+   * sequence on the route
+   */
   seqNo: number;
-  goBack: '0' | '1' | '2'; // GoBack (0: go, 1: back, 2: unknown)
+
+  /**
+   * same as GoBack
+   * - 0: go
+   * - 1: back
+   * - 2: unknown
+   */
+  goBack: '0' | '1' | '2';
+
+  /**
+   * LocationID
+   */
   stopLocationId: number;
 }
 

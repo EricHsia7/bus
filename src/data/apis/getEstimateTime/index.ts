@@ -4,24 +4,24 @@ import { fetchInflate } from '../loader';
 
 export interface EstimateTimeItem {
   RouteID: number;
+
   StopID: number;
+
   /**
    * @EstimateTime
-   * x >= 0: remaining time to wait measured in seconds
-   *
-   * x = -1: no departed bus
-   *
-   * x = -2: skip stopping (due to traffic moderation)
-   *
-   * x = -3: the next bus will not come until tomorrow
-   *
-   * x = -4: not in operation
-   * 
-   * EstimateTime should be parsed as an integer and x = parseInt(EstimateTime, 10).
+   * x = parseInt(EstimateTime, 10)
+   * - x >= 0: remaining time to wait measured in seconds
+   * - x == -1: no departed bus
+   * - x == -2: skip stopping (due to traffic moderation)
+   * - x == -3: the next bus will not come until tomorrow
+   * - x == -4: not in operation
    */
   EstimateTime: string | '-1' | '-2' | '-3' | '-4';
+
   /**
-   * @GoBack 0: go | 1: back | 2: unknown
+   * - 0: go
+   * - 1: back
+   * - 2: unknown
    */
   GoBack: '0' | '1' | '2';
 }

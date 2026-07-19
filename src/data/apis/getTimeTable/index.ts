@@ -5,11 +5,41 @@ import { fetchInflate } from '../loader';
 
 export interface TimetableItem {
   Id: number;
+
   PathAttributeId: number;
+
+  /**
+   * the type of DateValue
+   * - 0: weekday index
+   * - 1: specific date
+   */
   DateType: '0' | '1';
-  DateValue: string; // DateType: 0 -> [1: Sun, 2: Mon, 3: Tue, 4: Wed, 5: Thu, 6: Fri, 7: Sat]; DateType: 1 -> yyyymmdd (UTC+8)
-  DepartureTime: string; // hhmm
-  IsLastBus: string; // 0: false, 1: true
+
+  /**
+   * DateType == 0
+   * - 1: Sun
+   * - 2: Mon
+   * - 3: Tue
+   * - 4: Wed
+   * - 5: Thu
+   * - 6: Fri
+   * - 7: Sat
+   *
+   * DateType == 1
+   * - yyyymmdd (UTC+8)
+   */
+  DateValue: string;
+
+  /**
+   * hhmm
+   */
+  DepartureTime: string;
+
+  /**
+   * - 0: false
+   * - 1: true
+   */
+  IsLastBus: string;
 }
 
 export type Timetable = Array<TimetableItem>;

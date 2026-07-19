@@ -4,12 +4,29 @@ import { getMaterialSymbolsAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 interface MaterialSymbolsSearchIndex {
+  /**
+   * a stringified array of words
+   * @example "word,1,word,2,word,3,..."
+   */
   dictionary: string;
+
+  /**
+   * symbol key -> a stringified array of word indices (base-36)
+   * @example {"0_1_2_3": "4,5,6,a,b,c"}
+   */
   symbols: { [symbolKey: string]: string };
 }
 
 export interface UnpackedMaterialSymbolsSearchIndex {
+  /**
+   * a stringified array of words (word_1,word_2,word_3,...)
+   */
   dictionary: string;
+
+  /**
+   * symbol name -> an array of word indices
+   * @example {"word_1_word_2": [4, 5, 6, 10, 11, 12]}
+   */
   symbols: { [symbol: string]: Array<number> };
 }
 

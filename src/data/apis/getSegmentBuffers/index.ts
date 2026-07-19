@@ -4,7 +4,13 @@ import { getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface BufferZoneItem {
-  Direction: 0 | 1 | 2; // (goBack/GoBack)
+  /**
+   * same as goBack GoBack
+   * - 0: go
+   * - 1: back
+   * - 2: unknown
+   */
+  Direction: 0 | 1 | 2;
   OriginStopID: number;
   DestinationStopID: number;
 }

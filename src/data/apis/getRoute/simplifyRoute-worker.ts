@@ -3,7 +3,7 @@ declare const self: DedicatedWorkerGlobalScope;
 // export {}; // make a script a module if no any export or import
 
 import { hasOwnProperty } from '../../../tools/index';
-import { Route, SimplifiedRoute, SimplifiedRouteItem } from './index';
+import { Route, SimplifiedRoute } from './index';
 
 self.onmessage = function (event: MessageEvent) {
   processWorkerTask(event.data);
@@ -12,19 +12,18 @@ self.onmessage = function (event: MessageEvent) {
 function processWorkerTask(Route: Route): void {
   const result: SimplifiedRoute = {};
   for (const item of Route) {
-    const simplifiedItem = {} as SimplifiedRouteItem;
-    simplifiedItem.pd = item.providerId;
-    simplifiedItem.n = item.nameZh;
-    simplifiedItem.pid = [item.pathAttributeId];
-    simplifiedItem.dep = item.departureZh;
-    simplifiedItem.des = item.destinationZh;
-    simplifiedItem.id = item.Id;
     const routeKey = `r_${item.Id}`;
     if (!hasOwnProperty(result, routeKey)) {
-      result[routeKey] = simplifiedItem;
-    } else {
-      result[routeKey]['pid'].push(item.pathAttributeId);
+      result[routeKey] = {
+        pd: item.providerId,
+        n: item.nameZh,
+        pid: [],
+        dep: item.departureZh,
+        des: item.destinationZh,
+        id: item.Id
+      };
     }
+    result[routeKey].pid.push(item.pathAttributeId);
   }
   self.postMessage(result); // Send the result back to the main thread
 }

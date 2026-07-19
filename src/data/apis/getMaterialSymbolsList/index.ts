@@ -4,6 +4,9 @@ import { getMaterialSymbolsAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface MaterialSymbolsList {
+  /**
+   * a stringified array of symbols (symbol_1,symbol_2,symbol_3,...)
+   */
   list: string;
 }
 

@@ -4,15 +4,40 @@ import { getAPIURL } from '../getAPIURL/index';
 import { fetchInflate } from '../loader';
 
 export interface ProviderItem {
+  /**
+   * a numeric identifier associated with the company
+   */
   id: number;
-  nameZn: string; // name in Chinese (Zhōngwén)
-  nameEn: string; // name in English
+
+  /**
+   * name in Chinese (Zhōngwén)
+   */
+  nameZn: string;
+
+  /**
+   * name in English
+   */
+  nameEn: string;
+
   email: string;
+
   phoneInfo: string;
+
   stationId: string;
+
   stationNameZn: string;
+
   stationNameEn: string;
-  type: '0' | '1' | '2' | '3' | '4' | '5'; // 0: city bus station, 1: coach bus station, 2: MRT station, 3: train station, 4: airport, 5: port
+
+  /**
+   * - 0: city bus station
+   * - 1: coach bus station
+   * - 2: MRT station
+   * - 3: train station
+   * - 4: airport
+   * - 5: port
+   */
+  type: '0' | '1' | '2' | '3' | '4' | '5';
 }
 
 export type Provider = Array<ProviderItem>;

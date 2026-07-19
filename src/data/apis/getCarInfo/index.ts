@@ -5,31 +5,57 @@ import { fetchInflate } from '../loader';
 
 export interface CarInfoItem {
   /**
-   * @BusId numeric identifier of the object (BusId ≠ BusID)
+   * numeric identifier of the object (BusId ≠ BusID)
    */
   BusId: number;
+
   BusNId: string;
+
   /**
-   * @CarNum CarNumber = BusID = vehicle registration number
+   * CarNumber = BusID = vehicle registration number
    */
   CarNum: string;
+
   /**
-   * @CarType 0: normal bus (一般) | 1: low-floor bus (低底盤) | 2: disability-friendly bus (大復康巴士) | 3: dog-friendly bus (狗狗友善專車)
+   * - 0: normal bus (一般)
+   * - 1: low-floor bus (低底盤)
+   * - 2: disability-friendly bus (大復康巴士)
+   * - 3: dog-friendly bus (狗狗友善專車)
    */
   CarType: '0' | '1' | '2' | '3';
+
   IboxId: number;
+
   StationId: number;
+
   PathAttributeId: number;
+
   BuildPeriod: string;
+
   Ctime: string;
 }
 
 export type CarInfo = Array<CarInfoItem>;
 
 export interface SimplifiedCarInfoItem {
+  /**
+   * numeric identifier of the object (BusId ≠ BusID)
+   */
   BusId: CarInfoItem['BusId'];
+
+  /**
+   * CarNumber = BusID = vehicle registration number
+   */
   CarNum: CarInfoItem['CarNum'];
+
+  /**
+   * - 0: normal bus (一般)
+   * - 1: low-floor bus (低底盤)
+   * - 2: disability-friendly bus (大復康巴士)
+   * - 3: dog-friendly bus (狗狗友善專車)
+   */
   CarType: CarInfoItem['CarType'];
+
   PathAttributeId: CarInfoItem['PathAttributeId'];
 }
 
