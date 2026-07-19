@@ -5,11 +5,16 @@ import { fetchInflate } from '../loader';
 
 export interface MaterialSymbolsList {
   /**
-   * a stringified array of symbols (symbol_1,symbol_2,symbol_3,...)
+   * a stringified array of symbols
+   * @example "symbol_1,symbol_2,symbol_3"
    */
   list: string;
 }
 
+/**
+ * an array of symbols
+ * @example ['symbol_1', 'symbol_2', 'symbol_3']
+ */
 export type UnpackedMaterialSymbolsList = Array<string>;
 
 let MaterialSymbolsListMemoryCache_available: boolean = false;
@@ -19,6 +24,11 @@ let MaterialSymbolsListMemoryCache_timestamp: number = -1;
 const cacheTimeToLive = 60 * 60 * 24 * 7 * 1000;
 const cacheKey = 'bus_material_symbols_list_v2_cache';
 
+/**
+ * get a list of symbols available
+ * @param progress Progress
+ * @returns an array of symbols
+ */
 export async function getMaterialSymbolsList(progress: Progress): Promise<UnpackedMaterialSymbolsList> {
   async function getData(): Promise<MaterialSymbolsList> {
     const apiurl = getMaterialSymbolsAPIURL(3);

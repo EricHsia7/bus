@@ -5,8 +5,14 @@ import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/i
 
 export interface PersonalSchedule {
   name: string;
+
   period: TimePeriod;
+
+  /**
+   * an array of weekday indices
+   */
   days: WeekDayIndexArray;
+
   id: string;
 }
 

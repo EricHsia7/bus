@@ -3,13 +3,13 @@ import { generateIdentifier, hasOwnProperty } from '../../tools/index';
 import { Progress, ProgressCallback } from '../../tools/progress';
 import { collectBusArrivalTimeData } from '../analytics/bus-arrival-time/index';
 import { collectUpdateRateData } from '../analytics/update-rate/index';
-import { EstimateTime, EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
+import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation, MergedLocation, SimplifiedLocation } from '../apis/getLocation/index';
 import { getMaterialSymbolsList } from '../apis/getMaterialSymbolsList';
 import { getRoute, SimplifiedRoute } from '../apis/getRoute/index';
 import { getStop, SimplifiedStop } from '../apis/getStop/index';
 import { batchFindEstimateTime, EstimateTimeStatus, parseEstimateTime } from '../apis/index';
-import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../settings/index';
+import { getSettingOptionValue } from '../settings/index';
 import { lfGetItem, lfListItemKeys, lfRemoveItem, lfSetItem } from '../storage/index';
 
 export interface FolderContentRouteEndPoints {
@@ -42,16 +42,31 @@ export interface FolderContentRoute {
 
 export interface FolderContentLocation {
   type: 'location';
-  id: string; // hash
+
+  /**
+   * hash of the deduplicated name
+   */
+  id: string;
+
   timestamp: number;
+
   name: string;
 }
 
 export interface FolderContentBus {
   type: 'bus';
-  id: number; // CarID
+
+  /**
+   * CarID
+   */
+  id: number;
+
   timestamp: number;
-  busID: string; // BusID
+
+  /**
+   * BusID
+   */
+  busID: string;
 }
 
 export interface FolderContentEmpty {
@@ -83,10 +98,25 @@ export interface FolderWithContentLength extends Folder {
 
 export type FolderWithContentLengthArray = Array<FolderWithContentLength>;
 
-const Folders = new Map<string, Folder>(); // folderKey -> folder
-const FolderContents = new Map<string, FolderContent>(); // contentKey -> content
-const FolderContentIndices = new Map<string, Array<string>>(); // folderKey -> contentKey(n)
-const FolderIndex: Array<string> = []; // folderKey(n)
+/**
+ * folderKey -> folder
+ */
+const Folders = new Map<string, Folder>();
+
+/**
+ * contentKey -> content
+ */
+const FolderContents = new Map<string, FolderContent>();
+
+/**
+ * folderKey -> contentKey(n)
+ */
+const FolderContentIndices = new Map<string, Array<string>>();
+
+/**
+ * folderKey(n)
+ */
+const FolderIndex: Array<string> = [];
 
 export async function initializeFolders() {
   const folderIndexJSON = await lfGetItem(10, 'folderIndex');

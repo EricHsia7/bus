@@ -9,7 +9,7 @@ import { MaterialSymbol } from '../icons/material-symbols-type';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 
 let previousSearchResults: MaterialSymbolsSearchResults = [];
-let previousInputElement;
+let previousInputElement: HTMLInputElement;
 let previousQuery: string = '';
 let initialized: boolean = false;
 
