@@ -306,7 +306,7 @@ export async function getLocation(progress: Progress, type: 0 | 1 | 2): Promise<
   }
 
   const cacheType = ['simplified', 'merged', 'indexed'][type];
-  const cacheKey = `bus_${cacheType}_location_v3_cache`;
+  const cacheKey = `bus_${cacheType}_location_v4_cache`;
   const now = new Date().getTime();
 
   if (type === 0 && SimplifiedLocationMemoryCache_timestamp === -1) {

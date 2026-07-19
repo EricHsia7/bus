@@ -38,19 +38,27 @@ function processWorkerTask(Location: Location): void {
     let vector;
     const locationsOnThisRoute = locationsByRoute[thisRouteKey];
     const locationsOnThisRouteLength = locationsOnThisRoute.length;
-    let nextLocation = null;
+    let index0 = -1;
+    let index1 = -1;
     for (let i = 0; i < locationsOnThisRouteLength; i++) {
       if (locationsOnThisRoute[i].Id === item.Id) {
-        let nextIndex = 0;
         if (i < locationsOnThisRouteLength - 1) {
-          nextIndex = i + 1;
+          index0 = i;
+          index1 = i + 1;
+        } else {
+          index0 = i - 1;
+          index1 = i;
         }
-        nextLocation = locationsOnThisRoute[nextIndex];
+        break;
       }
     }
-    if (nextLocation) {
-      const x = parseFloat(nextLocation.longitude) - thisItemLongitude;
-      const y = parseFloat(nextLocation.latitude) - thisItemLatitude;
+
+    if (index0 > -1 && index1 > -1) {
+      const location0 = locationsOnThisRoute[index0];
+      const location1 = locationsOnThisRoute[index1];
+      const [longitude0, latitude0, longitude1, latitude1] = [parseFloat(location0.longitude), parseFloat(location0.latitude), parseFloat(location1.longitude), parseFloat(location1.latitude)];
+      const x = (longitude1 - longitude0) * Math.cos((latitude0 / 180) * Math.PI);
+      const y = latitude1 - latitude0;
       vector = normalizeVector([x, y]);
     }
 
