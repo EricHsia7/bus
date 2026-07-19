@@ -15,7 +15,10 @@ const HomeBodyElement = elementQuerySelector(HomeField, '.css_home_body');
 const RecentViewsField = elementQuerySelector(HomeBodyElement, '.css_home_recent_views');
 const RecentViewsContentElement = elementQuerySelector(RecentViewsField, '.css_home_recent_views_content');
 
-const itemElements: Array<HTMLElement> = []; // div.css_home_recent_views_item in div.css_home_recent_views
+/**
+ * div.css_home_recent_views_item(n) in div.css_home_recent_views(1)
+ */
+const itemElements: Array<HTMLElement> = [];
 
 let previousIntegration = {} as integratedRecentViews;
 let previousAnimation: boolean = false;

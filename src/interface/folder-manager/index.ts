@@ -12,6 +12,9 @@ const listElement = elementQuerySelector(bodyElement, '.css_folder_manager_folde
 const headElement = elementQuerySelector(FolderManagerField, '.css_folder_manager_head');
 const rightButtonElement = elementQuerySelector(headElement, '.css_folder_manager_button_right');
 
+/**
+ * div.css_folder_manager_folder_item(n) in div.css_folder_manager_folder_list(1)
+ */
 const folderItemElements: Array<HTMLElement> = [];
 
 let previousFoldersWithContentLength: FolderWithContentLengthArray = [];

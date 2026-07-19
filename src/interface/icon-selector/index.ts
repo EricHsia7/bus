@@ -15,6 +15,9 @@ const contentElement = elementQuerySelector(trayElement, '.css_icon_selector_con
 const headElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_head');
 const rightButtonElement = elementQuerySelector(headElement, '.css_icon_selector_button_right');
 
+/**
+ * div.css_icon_selector_item(n) in div.css_icon_selector_content(1)
+ */
 const itemElements: Array<HTMLElement> = [];
 
 let currentIntegration: IntegratedMaterialSymbols = [];

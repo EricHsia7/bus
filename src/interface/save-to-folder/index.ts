@@ -11,6 +11,9 @@ const listElement = elementQuerySelector(bodyElement, '.css_save_to_folder_list'
 const headElement = elementQuerySelector(SaveToFolderField, '.css_save_to_folder_head');
 const rightButtonElement = elementQuerySelector(headElement, '.css_save_to_folder_button_right');
 
+/**
+ * div.css_save_to_folder_list_item(n) in div.css_save_to_folder_list(1)
+ */
 const itemElements: Array<HTMLElement> = [];
 
 const successfulSaveMessage = '已儲存至資料夾';

@@ -11,6 +11,9 @@ const HeadElement = elementQuerySelector(Field, '.css_settings_options_head');
 const TitleElement = elementQuerySelector(HeadElement, '.css_settings_options_title');
 const LeftButtonElement = elementQuerySelector(HeadElement, '.css_settings_options_button_left');
 
+/**
+ * label.css_option(n) in div.css_settings_options
+ */
 const optionElements: Array<HTMLElement> = [];
 
 function generateElementOfItem(): HTMLElement {
