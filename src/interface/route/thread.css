@@ -10,14 +10,6 @@
   initial-value: 0;
 }
 
-/* thread box space top */
-.css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box_space_top {
-  position: relative;
-  width: 45px;
-  height: calc(var(--b-cssvar-safe-area-top) + 95px);
-  background: transparent;
-}
-
 /* thread box */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box {
   position: relative;

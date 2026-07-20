@@ -3,9 +3,10 @@ import { isFolderContentSaved } from '../../data/folder/index';
 import { IntegratedLocation, IntegratedLocationItem, integrateLocation, LocationGroupProperty } from '../../data/location/index';
 import { stopHasNotifcationSchedules } from '../../data/notification/index';
 import { logRecentView } from '../../data/recent-views/index';
-import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
+import { getSettingOptionValue } from '../../data/settings/index';
+import { BitState } from '../../tools/bit-state';
 import { deepEqual } from '../../tools/deep-equal';
-import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, getSubpixelPrecision, hasOwnProperty } from '../../tools/index';
 import { Tick } from '../../tools/tick';
@@ -63,15 +64,23 @@ let locationSliding_fieldWidth: number = 0;
 let locationSliding_fieldHeight: number = 0;
 let locationSliding_sliding: boolean = false;
 
+let currentHashSet_hash: string = '';
+
 const locationTick = new Tick(refreshLocation, 15 * 1000);
 const locationTickRetryInterval = 10 * 1000;
 const locationVisibilityMonitor = new VisibilityMonitor({ root: GroupsElement, threshold: 0.5 });
 const decoder = new TextDecoder();
 
-let currentHashSet_hash: string = '';
-
 const tabPadding: number = 20;
 const subpixelPrecision: number = getSubpixelPrecision();
+
+const itemElementHeight = 50;
+const itemElementExtraHeight = 171;
+const stretchStates: Array<BitState> = [];
+
+function getElementRelativeTop(groupIndex: number, index: number): number {
+  return index * itemElementHeight + stretchStates[groupIndex].sum(index - 1) * itemElementExtraHeight;
+}
 
 export function initializeLocationSliding(): void {
   GroupsElement.addEventListener(
@@ -141,7 +150,7 @@ function animateUpdateTimer(interval: number): void {
   UpdateTimerElement.classList.add('css_location_update_timer_slide_rtl');
 }
 
-function generateElementOfItem(): HTMLElement {
+function generateElementOfItem(groupIndex: number): HTMLElement {
   // Main container
   const itemElement = documentCreateDivElement();
   itemElement.classList.add('css_location_group_item');
@@ -199,7 +208,7 @@ function generateElementOfItem(): HTMLElement {
   stretchElement.classList.add('css_location_group_item_stretch');
   stretchElement.appendChild(getIconElement('keyboard_arrow_down'));
   stretchElement.onclick = function () {
-    stretchLocationItem(itemElement);
+    stretchLocationItem(groupIndex, itemElement);
   };
 
   // Capsule separator
@@ -841,6 +850,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         tabElements.push(newTabElement);
         propertyElements.push([]);
         itemElements.push([]);
+        stretchStates.push(new BitState(1));
       }
       GroupsElement.append(groupsFragment);
       GroupTabsTrayElement.append(tabsFragment);
@@ -852,6 +862,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         tabElements.splice(p, 1);
         propertyElements.splice(p, 1);
         itemElements.splice(p, 1);
+        stretchStates.splice(p, 1);
       }
     }
   }
@@ -892,17 +903,19 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       if (difference < 0) {
         const fragment = new DocumentFragment();
         for (let o = 0; o > difference; o--) {
-          const newItemElement = generateElementOfItem();
+          const newItemElement = generateElementOfItem(i);
           fragment.appendChild(newItemElement);
           itemElements[i].push(newItemElement);
         }
         thisLocationGroupItemsElement.append(fragment);
         locationVisibilityMonitor.add(itemElements[i].slice(thisGroupItemElementsLength));
+        stretchStates[i].resize(itemQuantity[groupKey]);
       } else if (difference > 0) {
         for (let p = thisGroupItemElementsLength - 1, q = thisGroupItemElementsLength - difference - 1; p > q; p--) {
           itemElements[i][p].remove();
           itemElements[i].splice(p, 1);
         }
+        stretchStates[i].resize(itemQuantity[groupKey]);
       }
     }
 
@@ -916,6 +929,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 
     if (skeletonScreen) {
       thisLocationGroupElement.scrollTop = 0;
+      stretchStates[i].clear(); // clear state for updateStretch()
     }
 
     for (let k = 0; k < groupPropertyQuantity; k++) {
@@ -1038,22 +1052,18 @@ export function closeLocation(): void {
   revokePageHistory('Location');
 }
 
-export function stretchLocationItem(thisItemElement: HTMLElement): void {
+export function stretchLocationItem(groupIndex: number, thisItemElement: HTMLElement): void {
+  const index = itemElements[groupIndex].indexOf(thisItemElement);
+  if (index < 0) return;
+
+  const itemElementsLength = itemElements[groupIndex].length;
+
   const itemBodyElement = elementQuerySelector(thisItemElement, '.css_location_group_item_body');
 
-  const itemsElement = thisItemElement.parentElement as HTMLElement;
+  const itemElementY = getElementRelativeTop(groupIndex, index);
 
-  const elementsBelowItemElement = getElementsBelow(thisItemElement, 'css_location_group_item');
-  const elementsBelowLength = elementsBelowItemElement.length;
-
-  const itemsElementRect = itemsElement.getBoundingClientRect();
-  const itemElementRect = thisItemElement.getBoundingClientRect();
-
-  // const itemElementX = itemElementRect.left - itemsElementRect.left;
-  const itemElementY = itemElementRect.top - itemsElementRect.top;
-
-  const stretched = thisItemElement.getAttribute('stretched') === 'true' ? true : false;
-  const animation = thisItemElement.getAttribute('animation') === 'true' ? true : false;
+  const stretched = stretchStates[groupIndex].state[index] === 1;
+  const animation = previousAnimation;
 
   if (animation) {
     const pushDirection = stretched ? '2' : '1';
@@ -1063,8 +1073,8 @@ export function stretchLocationItem(thisItemElement: HTMLElement): void {
     thisItemElement.style.setProperty('--b-cssvar-css-location-group-item-y', `${itemElementY}px`);
 
     // Set push direction and push state
-    for (let i = 0; i < elementsBelowLength; i++) {
-      const thisItemElement = elementsBelowItemElement[i];
+    for (let i = index + 1; i < itemElementsLength; i++) {
+      const thisItemElement = itemElements[groupIndex][i];
       thisItemElement.setAttribute('push-direction', pushDirection);
       thisItemElement.setAttribute('push-state', '1');
     }
@@ -1073,8 +1083,8 @@ export function stretchLocationItem(thisItemElement: HTMLElement): void {
       'transitionend',
       function () {
         // Reset the push direction and push state
-        for (let i = 0; i < elementsBelowLength; i++) {
-          const thisItemElement = elementsBelowItemElement[i];
+        for (let i = index + 1; i < itemElementsLength; i++) {
+          const thisItemElement = itemElements[groupIndex][i];
           thisItemElement.setAttribute('push-direction', '0');
           thisItemElement.setAttribute('push-state', '0');
         }
@@ -1088,8 +1098,8 @@ export function stretchLocationItem(thisItemElement: HTMLElement): void {
       'transitionstart',
       function () {
         // Transition the elements below
-        for (let i = 0; i < elementsBelowLength; i++) {
-          const thisItemElement = elementsBelowItemElement[i];
+        for (let i = index + 1; i < itemElementsLength; i++) {
+          const thisItemElement = itemElements[groupIndex][i];
           thisItemElement.setAttribute('push-state', '2');
         }
       },
@@ -1110,9 +1120,11 @@ export function stretchLocationItem(thisItemElement: HTMLElement): void {
       itemBodyElement.setAttribute('displayed', 'false');
     }
     thisItemElement.setAttribute('stretched', 'false');
+    stretchStates[groupIndex].set(index, 0);
   } else {
     itemBodyElement.setAttribute('displayed', 'true');
     thisItemElement.setAttribute('stretched', 'true');
+    stretchStates[groupIndex].set(index, 1);
   }
 }
 

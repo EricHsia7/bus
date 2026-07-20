@@ -10,20 +10,23 @@ export class BitState {
   }
 
   resize(length: number): void {
-    if (length > this.length) {
-      const newState = new Uint8Array(length);
-      newState.set(this.state, 0);
-      this.state = newState;
+    if (length === this.length) return;
 
-      const newBit = new Int32Array(length + 1);
-      newBit.set(this.bit, 0);
-      this.bit = newBit;
+    // Preserve overlapping state; new cells default to 0, extra cells are dropped.
+    const newState = new Uint8Array(length);
+    newState.set(this.state.subarray(0, Math.min(length, this.length)));
 
-      this.length = length;
-    } else if (length < this.length) {
-      this.state = new Uint8Array(length);
-      this.bit = new Int32Array(length + 1);
-      this.length = length;
+    this.state = newState;
+    this.bit = new Int32Array(length + 1);
+    this.length = length;
+
+    // O(n) Fenwick build from state.
+    for (let i = 1; i <= length; i++) {
+      this.bit[i] += this.state[i - 1];
+      const parent = i + (i & -i);
+      if (parent <= length) {
+        this.bit[parent] += this.bit[i];
+      }
     }
   }
 
@@ -46,12 +49,7 @@ export class BitState {
   }
 
   sum(index: number): number {
-    if (index < 0) {
-      index += this.length + 1;
-    }
-    if (index < 1) {
-      return 0;
-    }
+    if (index < 0) return 0;
     let total = 0;
     for (let i = index; i > 0; i -= i & -i) {
       total += this.bit[i];
