@@ -49,7 +49,7 @@ export class BitState {
   }
 
   sum(index: number): number {
-    if (index < 1) return 0;
+    if (index < 0) return 0;
     let total = 0;
     for (let i = index; i > 0; i -= i & -i) {
       total += this.bit[i];
