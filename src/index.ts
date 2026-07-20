@@ -219,8 +219,6 @@ interface BusWindow extends Window {
     folder: pageFunctions;
     iconSelector: pageFunctions;
     search: pageFunctions;
-    storage: pageFunctions;
-    dataUsage: pageFunctions;
     personalSchedule: pageFunctions;
     settings: pageFunctions;
     bus: pageFunctions;

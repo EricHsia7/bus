@@ -12,6 +12,7 @@ export let dataDownloadCompleted = false;
 
 const Field = documentQuerySelector('.css_home_field');
 const HeadElement = elementQuerySelector(Field, '.css_home_head');
+const HeadButtonLeftElement = elementQuerySelector(HeadElement, '.css_home_button_left');
 const HeadButtonRightElement = elementQuerySelector(HeadElement, '.css_home_button_right');
 const ProgressElement = elementQuerySelector(HeadButtonRightElement, 'svg#download-svg path[component="progress"]');
 

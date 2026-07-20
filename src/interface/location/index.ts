@@ -198,9 +198,9 @@ function generateElementOfItem(): HTMLElement {
   const stretchElement = documentCreateDivElement();
   stretchElement.classList.add('css_location_group_item_stretch');
   stretchElement.appendChild(getIconElement('keyboard_arrow_down'));
-  stretchElement.onclick = () => {
+  stretchElement.addEventListener('click', function () {
     stretchLocationItem(itemElement);
-  };
+  });
 
   // Capsule separator
   const capsuleSeparatorElement = documentCreateDivElement();
@@ -236,9 +236,9 @@ function generateElementOfItem(): HTMLElement {
   busTabIconElement.appendChild(getIconElement('directions_bus'));
   busTabButtonElement.appendChild(busTabIconElement);
   busTabButtonElement.appendChild(document.createTextNode('公車'));
-  busTabButtonElement.onclick = () => {
+  busTabButtonElement.addEventListener('click', function () {
     switchLocationBodyTab(itemElement, 0);
-  };
+  });
 
   // Tab: 抵達時間
   const arrivalTabButtonElement = documentCreateDivElement();
@@ -250,9 +250,9 @@ function generateElementOfItem(): HTMLElement {
   arrivalTabIconElement.appendChild(getIconElement('departure_board'));
   arrivalTabButtonElement.appendChild(arrivalTabIconElement);
   arrivalTabButtonElement.appendChild(document.createTextNode('抵達時間'));
-  arrivalTabButtonElement.onclick = () => {
+  arrivalTabButtonElement.addEventListener('click', function () {
     switchLocationBodyTab(itemElement, 1);
-  };
+  });
 
   // Button: 儲存
   const saveButtonElement = documentCreateDivElement();

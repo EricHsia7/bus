@@ -236,9 +236,9 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   const stretchElement = documentCreateDivElement();
   stretchElement.classList.add('css_route_group_item_stretch');
   stretchElement.appendChild(getIconElement('keyboard_arrow_down'));
-  stretchElement.onclick = () => {
+  stretchElement.addEventListener('click', function () {
     stretchRouteItem(itemElement, threadBoxElement);
-  };
+  });
   capsuleElement.appendChild(stretchElement);
 
   // Capsule separator
@@ -262,9 +262,9 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   tabBusElement.classList.add('css_route_group_item_button');
   tabBusElement.setAttribute('highlighted', 'true');
   tabBusElement.setAttribute('type', 'tab');
-  tabBusElement.onclick = () => {
+  tabBusElement.addEventListener('click', function () {
     switchRouteBodyTab(itemElement, 0);
-  };
+  });
 
   const tabBusIconElement = documentCreateDivElement();
   tabBusIconElement.classList.add('css_route_group_item_button_icon');
@@ -278,9 +278,9 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   tabArrivalElement.classList.add('css_route_group_item_button');
   tabArrivalElement.setAttribute('highlighted', 'false');
   tabArrivalElement.setAttribute('type', 'tab');
-  tabArrivalElement.onclick = () => {
+  tabArrivalElement.addEventListener('click', function () {
     switchRouteBodyTab(itemElement, 1);
-  };
+  });
 
   const tabArrivalIconElement = documentCreateDivElement();
   tabArrivalIconElement.classList.add('css_route_group_item_button_icon');
@@ -294,9 +294,9 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   tabRouteElement.classList.add('css_route_group_item_button');
   tabRouteElement.setAttribute('highlighted', 'false');
   tabRouteElement.setAttribute('type', 'tab');
-  tabRouteElement.onclick = () => {
+  tabRouteElement.addEventListener('click', function () {
     switchRouteBodyTab(itemElement, 2);
-  };
+  });
 
   const tabRouteIconElement = documentCreateDivElement();
   tabRouteIconElement.classList.add('css_route_group_item_button_icon');
@@ -310,9 +310,9 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   tabLocationElement.classList.add('css_route_group_item_button');
   tabLocationElement.setAttribute('highlighted', 'false');
   tabLocationElement.setAttribute('type', 'tab');
-  tabLocationElement.onclick = () => {
+  tabLocationElement.addEventListener('click', function () {
     switchRouteBodyTab(itemElement, 3);
-  };
+  });
 
   const tabLocationIconElement = documentCreateDivElement();
   tabLocationIconElement.classList.add('css_route_group_item_button_icon');
