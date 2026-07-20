@@ -10,6 +10,8 @@ let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
 const StorageField = documentQuerySelector('.css_storage_field');
+const StorageHeadElement = elementQuerySelector(StorageField, '.css_storage_head');
+const HeadButtonLeftElement = elementQuerySelector(StorageHeadElement, '.css_storage_button_left');
 const StorageBodyElement = elementQuerySelector(StorageField, '.css_storage_body');
 const StatisticsElement = elementQuerySelector(StorageBodyElement, '.css_storage_statistics');
 
@@ -153,6 +155,7 @@ function setupStorageFieldSkeletonScreen(): void {
 
 async function initializeStorageStatisticsFeild() {
   const playing_animation = getSettingOptionValue('playing_animation');
+  HeadButtonLeftElement.onclick = closeStorage;
   setupStorageFieldSkeletonScreen();
   const statistics = await getStoresSizeStatistics();
   updateStorageField(statistics, false, playing_animation);

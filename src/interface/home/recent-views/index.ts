@@ -10,10 +10,10 @@ import { querySize } from '../../index';
 import { openLocation } from '../../location/index';
 import { openRoute } from '../../route/index';
 
-const HomeField = documentQuerySelector('.css_home_field');
-const HomeBodyElement = elementQuerySelector(HomeField, '.css_home_body');
-const RecentViewsField = elementQuerySelector(HomeBodyElement, '.css_home_recent_views');
-const RecentViewsContentElement = elementQuerySelector(RecentViewsField, '.css_home_recent_views_content');
+const Field = documentQuerySelector('.css_home_field');
+const BodyElement = elementQuerySelector(Field, '.css_home_body');
+const RecentViewsElement = elementQuerySelector(BodyElement, '.css_home_recent_views');
+const RecentViewsContentElement = elementQuerySelector(RecentViewsElement, '.css_home_recent_views_content');
 
 /**
  * div.css_home_recent_views_item(n) in div.css_home_recent_views(1)

@@ -7,15 +7,26 @@ import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
-const FolderEditorField = documentQuerySelector('.css_folder_editor_field');
-const FolderEditorHeadElement = elementQuerySelector(FolderEditorField, '.css_folder_editor_head');
-const LeftButtonElement = elementQuerySelector(FolderEditorHeadElement, '.css_folder_editor_button_left');
-const FolderEditorBodyElement = elementQuerySelector(FolderEditorField, '.css_folder_editor_body');
-const FolderEditorGroupsElement = elementQuerySelector(FolderEditorBodyElement, '.css_folder_editor_groups');
-const NameInputElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-name"] .css_folder_editor_group_body input') as HTMLInputElement;
-const IconInputElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input input') as HTMLInputElement;
-const OpenIconSelectorElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-icon"] .css_folder_editor_group_body .css_folder_editor_icon_input .css_folder_editor_open_icon_selector');
-const FolderContentElement = elementQuerySelector(FolderEditorGroupsElement, '.css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body');
+const Field = documentQuerySelector('.css_folder_editor_field');
+
+const HeadElement = elementQuerySelector(Field, '.css_folder_editor_head');
+const HeadButtonLeftElement = elementQuerySelector(HeadElement, '.css_folder_editor_button_left');
+
+const BodyElement = elementQuerySelector(Field, '.css_folder_editor_body');
+const GroupsElement = elementQuerySelector(BodyElement, '.css_folder_editor_groups');
+
+const FolderNameGroupElement = elementQuerySelector(GroupsElement, '.css_folder_editor_group[group="folder-name"]');
+const FolderNameGroupBodyElement = elementQuerySelector(FolderNameGroupElement, '.css_folder_editor_group_body');
+const NameInputElement = elementQuerySelector(FolderNameGroupBodyElement, 'input') as HTMLInputElement;
+
+const FolderIconGroupElement = elementQuerySelector(GroupsElement, '.css_folder_editor_group[group="folder-icon"]');
+const FolderIconGroupBodyElement = elementQuerySelector(FolderIconGroupElement, '.css_folder_editor_group_body');
+const FolderIconGroupInputElement = elementQuerySelector(FolderIconGroupBodyElement, '.css_folder_editor_icon_input');
+const IconInputElement = elementQuerySelector(FolderIconGroupInputElement, 'input') as HTMLInputElement;
+const OpenIconSelectorElement = elementQuerySelector(FolderIconGroupInputElement, '.css_folder_editor_open_icon_selector');
+
+const FolderContentGroupElement = elementQuerySelector(GroupsElement, '.css_folder_editor_group[group="folder-content"]');
+const FolderContentGroupBodyElement = elementQuerySelector(FolderContentGroupElement, '.css_folder_editor_group_body');
 
 /**
  * div.css_folder_editor_folder_item(n) in div.css_folder_editor_group_body(1)
@@ -215,7 +226,7 @@ function updateFolderEditorField(folder: Folder, content: Array<FolderContent>, 
     }
   }
 
-  LeftButtonElement.onclick = function () {
+  HeadButtonLeftElement.onclick = function () {
     saveEditedFolder(folder.id, callback);
   };
   NameInputElement.value = folder.name;
@@ -233,7 +244,7 @@ function updateFolderEditorField(folder: Folder, content: Array<FolderContent>, 
         fragment.appendChild(newItemElement);
         itemElements.push(newItemElement);
       }
-      FolderContentElement.append(fragment);
+      FolderContentGroupBodyElement.append(fragment);
     } else if (difference > 0) {
       for (let p = itemElementsLength - 1, q = itemElementsLength - difference - 1; p > q; p--) {
         itemElements[p].remove();
@@ -296,11 +307,11 @@ function initializeFolderEditorField(folderID: string, callback: Function): void
 }
 
 export function showFolderEditor(): void {
-  FolderEditorField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hideFolderEditor(): void {
-  FolderEditorField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openFolderEditor(folderID: string, callback: Function): void {

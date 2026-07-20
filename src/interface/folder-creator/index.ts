@@ -5,26 +5,26 @@ import { MaterialSymbol } from '../icons/material-symbols-type';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
-const FolderCreatorField = documentQuerySelector('.css_folder_creator_field');
+const Field = documentQuerySelector('.css_folder_creator_field');
 
-const headElement = elementQuerySelector(FolderCreatorField, '.css_folder_creator_head');
-const rightButtonElement = elementQuerySelector(headElement, '.css_folder_creator_button_right');
+const HeadElement = elementQuerySelector(Field, '.css_folder_creator_head');
+const HeadButtonRightElement = elementQuerySelector(HeadElement, '.css_folder_creator_button_right');
 
-const bodyElement = elementQuerySelector(FolderCreatorField, '.css_folder_creator_body');
-const groupsElement = elementQuerySelector(bodyElement, '.css_folder_creator_groups');
+const BodyElement = elementQuerySelector(Field, '.css_folder_creator_body');
+const GroupsElement = elementQuerySelector(BodyElement, '.css_folder_creator_groups');
 
-const folderNameGroupElement = elementQuerySelector(groupsElement, '.css_folder_creator_group[group="folder-name"]');
-const folderNameGroupBodyElement = elementQuerySelector(folderNameGroupElement, '.css_folder_creator_group_body');
-const folderNameInputElement = elementQuerySelector(folderNameGroupBodyElement, 'input') as HTMLInputElement;
+const FolderNameGroupElement = elementQuerySelector(GroupsElement, '.css_folder_creator_group[group="folder-name"]');
+const FolderNameGroupBodyElement = elementQuerySelector(FolderNameGroupElement, '.css_folder_creator_group_body');
+const FolderNameInputElement = elementQuerySelector(FolderNameGroupBodyElement, 'input') as HTMLInputElement;
 
-const iconGroupElement = elementQuerySelector(groupsElement, '.css_folder_creator_group[group="folder-icon"]');
-const iconGroupBodyElement = elementQuerySelector(iconGroupElement, '.css_folder_creator_group_body');
-const iconInputElement = elementQuerySelector(iconGroupBodyElement, '.css_folder_creator_icon_input input') as HTMLInputElement;
-const openIconSelectorElement = elementQuerySelector(groupsElement, '.css_folder_creator_icon_input .css_folder_creator_open_icon_selector');
+const IconGroupElement = elementQuerySelector(GroupsElement, '.css_folder_creator_group[group="folder-icon"]');
+const IconGroupBodyElement = elementQuerySelector(IconGroupElement, '.css_folder_creator_group_body');
+const IconInputElement = elementQuerySelector(IconGroupBodyElement, '.css_folder_creator_icon_input input') as HTMLInputElement;
+const OpenIconSelectorElement = elementQuerySelector(GroupsElement, '.css_folder_creator_icon_input .css_folder_creator_open_icon_selector');
 
 export async function createFormulatedFolder(callback: Function) {
-  const name = folderNameInputElement.value;
-  const icon = iconInputElement.value;
+  const name = FolderNameInputElement.value;
+  const icon = IconInputElement.value;
   const creation = await createFolder(name, icon as MaterialSymbol);
   if (creation) {
     closeFolderCreator();
@@ -38,22 +38,22 @@ export async function createFormulatedFolder(callback: Function) {
 }
 
 function initializeFolderCreatorFeild(callback: Function): void {
-  folderNameInputElement.value = '';
-  iconInputElement.value = '';
-  rightButtonElement.onclick = function () {
+  FolderNameInputElement.value = '';
+  IconInputElement.value = '';
+  HeadButtonRightElement.onclick = function () {
     createFormulatedFolder(callback);
   };
-  openIconSelectorElement.onclick = function () {
-    openIconSelector(iconInputElement);
+  OpenIconSelectorElement.onclick = function () {
+    openIconSelector(IconInputElement);
   };
 }
 
 export function showFolderCreator(): void {
-  FolderCreatorField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hideFolderCreator(): void {
-  FolderCreatorField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openFolderCreator(callback: Function): void {

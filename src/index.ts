@@ -9,9 +9,7 @@ import { initializeSettings } from './data/settings/index';
 import { askForCalibratingPermission } from './data/user-orientation/index';
 import { askForPositioningPermission } from './data/user-position/index';
 import { closeBus } from './interface/bus/index';
-import { closeDataUsage } from './interface/data-usage/index';
 import { closeFolderCreator } from './interface/folder-creator/index';
-import { closeFolderManager } from './interface/folder-manager/index';
 import { initializeFoldersField, setupFolderFieldSkeletonScreen } from './interface/home/folders/index';
 import { downloadData } from './interface/home/index';
 import { initializeRecentViewsField, setupRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
@@ -33,7 +31,6 @@ import { closeScheduleNotification } from './interface/schedule-notification/ind
 import { closeSearch, initializeSearchInput, openSearch, resizeSearchInputSVG, switchSearchTypeFilter } from './interface/search/index';
 import { closeSettings, openSettings } from './interface/settings/index';
 import { closeSettingsOptions } from './interface/settings/options';
-import { closeStorage } from './interface/storage/index';
 import { openPermalink } from './tools/permalink';
 import { closeIconSelectorSearch, initializeIconSelectorSearchInput } from './interface/icon-selector-search';
 import { promptMessage } from './interface/prompt';
@@ -351,7 +348,6 @@ interface BusWindow extends Window {
   },
   folder: {
     closeSaveToFolder,
-    closeFolderManager,
     closeFolderCreator
   },
   iconSelector: {
@@ -362,12 +358,6 @@ interface BusWindow extends Window {
     openSearch,
     closeSearch,
     switchSearchTypeFilter
-  },
-  storage: {
-    closeStorage
-  },
-  dataUsage: {
-    closeDataUsage
   },
   personalSchedule: {
     closePersonalScheduleManager,

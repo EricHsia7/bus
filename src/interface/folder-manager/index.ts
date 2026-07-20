@@ -6,11 +6,14 @@ import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
-const FolderManagerField = documentQuerySelector('.css_folder_manager_field');
-const bodyElement = elementQuerySelector(FolderManagerField, '.css_folder_manager_body');
-const listElement = elementQuerySelector(bodyElement, '.css_folder_manager_folder_list');
-const headElement = elementQuerySelector(FolderManagerField, '.css_folder_manager_head');
-const rightButtonElement = elementQuerySelector(headElement, '.css_folder_manager_button_right');
+const Field = documentQuerySelector('.css_folder_manager_field');
+
+const HeadElement = elementQuerySelector(Field, '.css_folder_manager_head');
+const HeadButtonLeftElement = elementQuerySelector(HeadElement, '.css_folder_manager_button_left');
+const HeadButtonRightElement = elementQuerySelector(HeadElement, '.css_folder_manager_button_right');
+
+const BodyElement = elementQuerySelector(Field, '.css_folder_manager_body');
+const ListElement = elementQuerySelector(BodyElement, '.css_folder_manager_folder_list');
 
 /**
  * div.css_folder_manager_folder_item(n) in div.css_folder_manager_folder_list(1)
@@ -83,7 +86,8 @@ function generateElementOfItem(): HTMLElement {
 }
 
 function initializeFolderManagerField(): void {
-  rightButtonElement.onclick = function () {
+  HeadButtonLeftElement.onclick = closeFolderManager;
+  HeadButtonRightElement.onclick = function () {
     openFolderCreator(function () {
       initializeFolderManagerField();
     });
@@ -173,7 +177,7 @@ function updateFolderManagerField(foldersWithContentLength: FolderWithContentLen
         fragment.appendChild(newFolderItemElement);
         folderItemElements.push(newFolderItemElement);
       }
-      listElement.append(fragment);
+      ListElement.append(fragment);
     } else if (difference > 0) {
       for (let p = folderElementsLength - 1, q = folderElementsLength - difference - 1; p > q; p--) {
         folderItemElements[p].remove();
@@ -197,11 +201,11 @@ function updateFolderManagerField(foldersWithContentLength: FolderWithContentLen
 }
 
 export function showFolderManager(): void {
-  FolderManagerField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hideFolderManager(): void {
-  FolderManagerField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openFolderManager(): void {

@@ -13,11 +13,14 @@ import { openLocation } from '../../location/index';
 import { promptMessage } from '../../prompt/index';
 import { openRoute } from '../../route/index';
 
-const HomeField = documentQuerySelector('.css_home_field');
-const HomeHeadElement = elementQuerySelector(HomeField, '.css_home_head');
-const HomeBodyElement = elementQuerySelector(HomeField, '.css_home_body');
-const HomeFoldersElement = elementQuerySelector(HomeBodyElement, '.css_home_folders');
-const HomeUpdateTimerElement = elementQuerySelector(HomeHeadElement, '.css_home_update_timer_box .css_home_update_timer');
+const Field = documentQuerySelector('.css_home_field');
+
+const HeadElement = elementQuerySelector(Field, '.css_home_head');
+const UpdateTimerBoxElement = elementQuerySelector(HeadElement, '.css_home_update_timer_box');
+const UpdateTimerElement = elementQuerySelector(UpdateTimerBoxElement, '.css_home_update_timer');
+
+const BodyElement = elementQuerySelector(Field, '.css_home_body');
+const FoldersElement = elementQuerySelector(BodyElement, '.css_home_folders');
 
 /**
  * div.css_home_folder(n) in div.css_home_folders(1)
@@ -35,7 +38,7 @@ let previousSkeletonScreen: boolean = false;
 
 const foldersTick = new Tick(refreshFolders, 15 * 1000);
 const foldersTickRetryInterval = 10 * 1000;
-const foldersVisibilityMonitor = new VisibilityMonitor({ root: HomeBodyElement, threshold: 1 });
+const foldersVisibilityMonitor = new VisibilityMonitor({ root: BodyElement, threshold: 1 });
 
 function generateElementOfItem(): HTMLElement {
   // Main container
@@ -134,8 +137,8 @@ function generateElementOfFolder(): HTMLElement {
 }
 
 function animateUpdateTimer(interval: number): void {
-  HomeUpdateTimerElement.style.setProperty('--b-cssvar-home-update-timer-interval', `${interval}ms`);
-  HomeUpdateTimerElement.classList.add('css_home_update_timer_slide_rtl');
+  UpdateTimerElement.style.setProperty('--b-cssvar-home-update-timer-interval', `${interval}ms`);
+  UpdateTimerElement.classList.add('css_home_update_timer_slide_rtl');
 }
 
 export function setupFolderFieldSkeletonScreen(): void {
@@ -479,7 +482,7 @@ function updateFoldersElement(integration: integratedFolders, skeletonScreen: bo
         folderElements.push(newFolderElement);
         folderContentItemElements.push([]); // push an empty array to store children
       }
-      HomeFoldersElement.append(fragment);
+      FoldersElement.append(fragment);
     } else if (difference > 0) {
       for (let p = folderElementsLength - 1, q = folderElementsLength - difference - 1; p > q; p--) {
         folderElements[p].remove();
@@ -557,10 +560,10 @@ async function refreshFolders(): Promise<number> {
   try {
     const playing_animation = getSettingOptionValue('playing_animation');
     const refresh_interval_setting = getSettingOptionValue('refresh_interval');
-    HomeUpdateTimerElement.setAttribute('refreshing', 'true');
-    HomeUpdateTimerElement.classList.remove('css_home_update_timer_slide_rtl');
+    UpdateTimerElement.setAttribute('refreshing', 'true');
+    UpdateTimerElement.classList.remove('css_home_update_timer_slide_rtl');
     const integration = await integrateFolders(function (message) {
-      HomeUpdateTimerElement.style.setProperty('--b-cssvar-home-update-timer-scale-x', message.percent.toString());
+      UpdateTimerElement.style.setProperty('--b-cssvar-home-update-timer-scale-x', message.percent.toString());
     });
     updateFoldersElement(integration, false, playing_animation);
     let updateRate = 0;
@@ -575,7 +578,7 @@ async function refreshFolders(): Promise<number> {
       nextUpdate = lastUpdate + refresh_interval_setting.baseInterval;
     }
     const interval = Math.max(5000, nextUpdate - lastUpdate);
-    HomeUpdateTimerElement.setAttribute('refreshing', 'false');
+    UpdateTimerElement.setAttribute('refreshing', 'false');
     animateUpdateTimer(interval);
     return interval;
   } catch (err) {
