@@ -3,9 +3,10 @@ import { isFolderContentSaved } from '../../data/folder/index';
 import { stopHasNotifcationSchedules } from '../../data/notification/index';
 import { logRecentView } from '../../data/recent-views/index';
 import { IntegratedRoute, integratedStopItem, integrateRoute } from '../../data/route/index';
-import { getSettingOptionValue, SettingSelectOptionRefreshIntervalValue } from '../../data/settings/index';
+import { getSettingOptionValue } from '../../data/settings/index';
+import { BitState } from '../../tools/bit-state';
 import { deepEqual } from '../../tools/deep-equal';
-import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { getTextWidth } from '../../tools/graphic';
 import { booleanToString, getSubpixelPrecision, hasOwnProperty } from '../../tools/index';
 import { Tick } from '../../tools/tick';
@@ -64,15 +65,23 @@ let routeSliding_fieldWidth: number = 0;
 let routeSliding_fieldHeight: number = 0;
 let routeSliding_sliding: boolean = false;
 
+let currentRouteID: number = 0;
+
 const routeTick = new Tick(refreshRoute, 15 * 1000);
 const routeTickRetryInterval = 10 * 1000;
 const routeVisibilityMonitor = new VisibilityMonitor({ root: GroupsElement, threshold: 0.5 });
 const decoder = new TextDecoder();
 
-let currentRouteID: number = 0;
-
 const tabPadding: number = 20;
 const subpixelPrecision: number = getSubpixelPrecision();
+
+const stretchStates: Array<BitState> = [];
+const itemElementHeight = 50;
+const itemElementExtraHeight = 171;
+
+function getElementRelativeTop(groupIndex: number, index: number): number {
+  return index * itemElementHeight + stretchStates[groupIndex].sum(index - 1) * itemElementExtraHeight;
+}
 
 export function initializeRouteSliding(): void {
   GroupsElement.addEventListener(
@@ -192,7 +201,7 @@ function generateElementOfThreadBox(index: number): HTMLElement {
   return threadBoxElement;
 }
 
-function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
+function generateElementOfItem(groupIndex: number): HTMLElement {
   // Main item element
   const itemElement = documentCreateDivElement();
   itemElement.classList.add('css_route_group_item');
@@ -237,7 +246,7 @@ function generateElementOfItem(threadBoxElement: HTMLElement): HTMLElement {
   stretchElement.classList.add('css_route_group_item_stretch');
   stretchElement.appendChild(getIconElement('keyboard_arrow_down'));
   stretchElement.onclick = function () {
-    stretchRouteItem(itemElement, threadBoxElement);
+    stretchRouteItem(groupIndex, itemElement);
   };
   capsuleElement.appendChild(stretchElement);
 
@@ -392,17 +401,9 @@ function generateElementOfGroup(): HTMLElement {
   const threadTrackElement = documentCreateDivElement();
   threadTrackElement.classList.add('css_route_group_threads_track');
 
-  const threadBoxSpace = documentCreateDivElement();
-  threadBoxSpace.classList.add('css_route_group_thread_box_space_top');
-
   const itemsTrackElement = documentCreateDivElement();
   itemsTrackElement.classList.add('css_route_group_items_track');
 
-  const itemSpaceElement = documentCreateDivElement();
-  itemSpaceElement.classList.add('css_route_group_item_space_top');
-
-  itemsTrackElement.appendChild(itemSpaceElement);
-  threadTrackElement.appendChild(threadBoxSpace);
   tracksElement.appendChild(threadTrackElement);
   tracksElement.appendChild(itemsTrackElement);
   element.appendChild(tracksElement);
@@ -908,6 +909,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         thisItemBodyElement.setAttribute('displayed', 'false');
         thisItemElement.setAttribute('stretched', 'false');
         thisThreadBoxElement.setAttribute('stretched', 'false');
+        // the states are cleared (L1137)
       }
     }
 
@@ -1072,6 +1074,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         // push an empty array to hold its children
         itemElements.push([]);
         threadBoxElements.push([]);
+        stretchStates.push(new BitState(1));
       }
       GroupsElement.append(newGroupsFragment);
       GroupTabsTrayElement.append(newTabsFragment);
@@ -1084,6 +1087,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         itemElements.splice(p, 1);
         threadBoxElements.splice(p, 1);
         // the children are already removed since thier parant nodes are removed
+        stretchStates.splice(p, 1);
       }
     }
   }
@@ -1103,7 +1107,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         const newThreadBoxesFragment = new DocumentFragment();
         for (let o = 0; o > difference; o--) {
           const newThreadBoxElement = generateElementOfThreadBox(-1 * currentItemElementsLength + o);
-          const newItemElement = generateElementOfItem(newThreadBoxElement);
+          const newItemElement = generateElementOfItem(i);
           newItemsFragment.appendChild(newItemElement);
           itemElements[i].push(newItemElement);
           newThreadBoxesFragment.appendChild(newThreadBoxElement);
@@ -1112,6 +1116,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         thisGroupItemsTrackElement.append(newItemsFragment);
         thisGroupThreadsTrackElement.append(newThreadBoxesFragment);
         routeVisibilityMonitor.add(itemElements[i].slice(currentItemElementsLength));
+        stretchStates[i].resize(itemQuantity[groupKey]);
       } else if (difference > 0) {
         for (let p = currentItemElementsLength - 1, q = currentItemElementsLength - difference - 1; p > q; p--) {
           itemElements[i][p].remove();
@@ -1119,6 +1124,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
           threadBoxElements[i][p].remove();
           threadBoxElements[i].splice(p, 1);
         }
+        stretchStates[i].resize(itemQuantity[groupKey]);
       }
     }
 
@@ -1131,6 +1137,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
     if (skeletonScreen) {
       thisGroupElement.scrollTop = 0;
+      stretchStates[i].clear(); // reset the states for updateStretch()
     }
 
     for (let j = 0; j < itemQuantity[groupKey]; j++) {
@@ -1240,27 +1247,14 @@ export function switchRoute(RouteID: IntegratedRoute['RouteID']): void {
   openRoute(RouteID);
 }
 
-export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTMLElement): void {
+export function stretchRouteItem(groupIndex: number, itemElement: HTMLElement): void {
+  const itemElementsLength = itemElements[groupIndex].length;
+  const index = itemElements[groupIndex].indexOf(itemElement);
+
+  const threadBoxElement = threadBoxElements[groupIndex][index];
   const itemBodyElement = elementQuerySelector(itemElement, '.css_route_group_item_body');
 
-  const itemsTrackElement = itemElement.parentElement as HTMLElement;
-  const threadTrackElement = threadBoxElement.parentElement as HTMLElement;
-
-  const elementsBelowThreadBoxElement = getElementsBelow(threadBoxElement, 'css_route_group_thread_box');
-  const elementsBelowItemElement = getElementsBelow(itemElement, 'css_route_group_item');
-
-  const elementsBelowLength = elementsBelowItemElement.length; // = elementsBelowThreadBoxElement.length
-
-  const itemsTrackElementRect = itemsTrackElement.getBoundingClientRect();
-  const itemElementRect = itemElement.getBoundingClientRect();
-  const threadTrackElementRect = threadTrackElement.getBoundingClientRect();
-  const threadBoxElementRect = threadBoxElement.getBoundingClientRect();
-
-  // const threadBoxElementX = threadBoxElementRect.left - threadTrackElementRect.left;
-  const threadBoxElementY = threadBoxElementRect.top - threadTrackElementRect.top;
-
-  // const itemElementX = itemElementRect.left - itemsTrackElementRect.left;
-  const itemElementY = itemElementRect.top - itemsTrackElementRect.top; // itemElementRect.top + scrollTop - (itemsTrackElementRect.top + scrollTop)
+  const elementY = getElementRelativeTop(groupIndex, index);
 
   const stretched = itemElement.getAttribute('stretched') === 'true' ? true : false;
   const animation = itemElement.getAttribute('animation') === 'true' ? true : false;
@@ -1270,15 +1264,15 @@ export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTM
 
     // Separate the elements from the document flow while keeping its position
     threadBoxElement.setAttribute('stretching', 'true');
-    threadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-box-y', `${threadBoxElementY}px`);
+    threadBoxElement.style.setProperty('--b-cssvar-css-route-group-thread-box-y', `${elementY}px`);
 
     itemElement.setAttribute('stretching', 'true');
-    itemElement.style.setProperty('--b-cssvar-css-route-group-item-y', `${itemElementY}px`);
+    itemElement.style.setProperty('--b-cssvar-css-route-group-item-y', `${elementY}px`);
 
     // Set push direction and push state
-    for (let i = 0; i < elementsBelowLength; i++) {
-      const thisItemElement = elementsBelowItemElement[i];
-      const thisThreadBoxElement = elementsBelowThreadBoxElement[i];
+    for (let i = index + 1; i < itemElementsLength; i++) {
+      const thisItemElement = itemElements[groupIndex][i];
+      const thisThreadBoxElement = threadBoxElements[groupIndex][i];
       thisThreadBoxElement.setAttribute('push-direction', pushDirection);
       thisThreadBoxElement.setAttribute('push-state', '1');
       thisItemElement.setAttribute('push-direction', pushDirection);
@@ -1289,9 +1283,9 @@ export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTM
       'transitionend',
       function () {
         // Reset the push direction and push state
-        for (let i = 0; i < elementsBelowLength; i++) {
-          const thisItemElement = elementsBelowItemElement[i];
-          const thisThreadBoxElement = elementsBelowThreadBoxElement[i];
+        for (let i = index + 1; i < itemElementsLength; i++) {
+          const thisItemElement = itemElements[groupIndex][i];
+          const thisThreadBoxElement = threadBoxElements[groupIndex][i];
           thisThreadBoxElement.setAttribute('push-direction', '0');
           thisThreadBoxElement.setAttribute('push-state', '0');
           thisItemElement.setAttribute('push-direction', '0');
@@ -1308,9 +1302,9 @@ export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTM
       'transitionstart',
       function () {
         // Transition the elements below
-        for (let i = 0; i < elementsBelowLength; i++) {
-          const thisItemElement = elementsBelowItemElement[i];
-          const thisThreadBoxElement = elementsBelowThreadBoxElement[i];
+        for (let i = index + 1; i < itemElementsLength; i++) {
+          const thisItemElement = itemElements[groupIndex][i];
+          const thisThreadBoxElement = threadBoxElements[groupIndex][i];
           thisThreadBoxElement.setAttribute('push-state', '2');
           thisItemElement.setAttribute('push-state', '2');
         }
@@ -1334,10 +1328,12 @@ export function stretchRouteItem(itemElement: HTMLElement, threadBoxElement: HTM
     }
     itemElement.setAttribute('stretched', 'false');
     threadBoxElement.setAttribute('stretched', 'false');
+    stretchStates[groupIndex].set(index, 0);
   } else {
     itemBodyElement.setAttribute('displayed', 'true');
     itemElement.setAttribute('stretched', 'true');
     threadBoxElement.setAttribute('stretched', 'true');
+    stretchStates[groupIndex].set(index, 1);
   }
 }
 

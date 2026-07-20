@@ -21,8 +21,8 @@ export class BitState {
 
       this.length = length;
     } else if (length < this.length) {
-      this.state = new Uint8Array(length);
-      this.bit = new Int32Array(length + 1);
+      this.state = this.state.slice(0, length);
+      this.bit = this.bit.slice(0, length + 1);
       this.length = length;
     }
   }
