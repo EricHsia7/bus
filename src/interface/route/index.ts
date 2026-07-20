@@ -1256,8 +1256,8 @@ export function stretchRouteItem(groupIndex: number, itemElement: HTMLElement): 
 
   const elementY = getElementRelativeTop(groupIndex, index);
 
-  const stretched = itemElement.getAttribute('stretched') === 'true' ? true : false;
-  const animation = itemElement.getAttribute('animation') === 'true' ? true : false;
+  const stretched = stretchStates[groupIndex].state[index];
+  const animation = previousAnimation;
 
   if (animation) {
     const pushDirection = stretched ? '2' : '1';
