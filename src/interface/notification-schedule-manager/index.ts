@@ -302,7 +302,7 @@ export async function cancelNotificationOnNotificationScheduleManager(thisItemEl
       promptMessage('error', '未知到站通知');
       break;
     case 5:
-      promptMessage('error', '驗證錯誤');
+      promptMessage('error', '驗證失敗');
       break;
     case 6:
       promptMessage('error', '無法取消已過期的到站通知');
