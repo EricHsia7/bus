@@ -1137,7 +1137,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
 
     if (skeletonScreen) {
       thisGroupElement.scrollTop = 0;
-      stretchStates[i].clear(); // reset the states for updateStretch()
+      stretchStates[i].clear(); // clear state for updateStretch()
     }
 
     for (let j = 0; j < itemQuantity[groupKey]; j++) {
@@ -1256,7 +1256,7 @@ export function stretchRouteItem(groupIndex: number, itemElement: HTMLElement): 
 
   const elementY = getElementRelativeTop(groupIndex, index);
 
-  const stretched = stretchStates[groupIndex].state[index];
+  const stretched = stretchStates[groupIndex].state[index] === 1;
   const animation = previousAnimation;
 
   if (animation) {
