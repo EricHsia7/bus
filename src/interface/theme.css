@@ -68,17 +68,17 @@
   --b-cssvar-333333-15-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(51, 51, 51) 15%);
 
   /* ranking color */
-  --b-cssvar-ranking-color-0: rgb(36, 178, 152);
-  --b-cssvar-ranking-color-0-27-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(36, 178, 152) 19%);
+  --b-cssvar-ranking-color-0: rgb(0, 209, 143);
+  --b-cssvar-ranking-color-0-27-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(0, 209, 143) 20%);
 
-  --b-cssvar-ranking-color-1: rgb(28, 162, 138);
-  --b-cssvar-ranking-color-1-20-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(28, 162, 138) 13%);
+  --b-cssvar-ranking-color-1: rgb(5, 188, 130);
+  --b-cssvar-ranking-color-1-20-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(5, 188, 130) 14%);
 
-  --b-cssvar-ranking-color-2: rgb(21, 146, 123);
-  --b-cssvar-ranking-color-2-13-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(21, 146, 123) 7%);
+  --b-cssvar-ranking-color-2: rgb(10, 166, 117);
+  --b-cssvar-ranking-color-2-13-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(10, 166, 117) 8%);
 
-  --b-cssvar-ranking-color-3: rgb(13, 130, 109);
-  --b-cssvar-ranking-color-3-6-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(13, 130, 109) 3%);
+  --b-cssvar-ranking-color-3: rgb(15, 145, 104);
+  --b-cssvar-ranking-color-3-6-flattened: color-mix(in srgb, rgb(255, 255, 255), rgb(15, 145, 104) 4%);
 
   --b-cssvar-disabled-opacity: 0.6;
 
@@ -164,13 +164,13 @@
     --b-cssvar-333333-15-flattened: color-mix(in srgb, rgb(9, 10, 12), rgb(255, 255, 255) 15%);
 
     /* ranking color */
-    --b-cssvar-ranking-color-0-27-flattened: color-mix(in srgb, rgb(0, 0, 0), rgb(36, 178, 152) 27%);
+    --b-cssvar-ranking-color-0-27-flattened: color-mix(in srgb, rgb(0, 0, 0), rgb(0, 209, 143) 27%);
 
-    --b-cssvar-ranking-color-1-20-flattened: color-mix(in srgb, rgb(0, 0, 0), rgb(28, 162, 138) 22%);
+    --b-cssvar-ranking-color-1-20-flattened: color-mix(in srgb, rgb(0, 0, 0), rgb(5, 188, 130) 22%);
 
-    --b-cssvar-ranking-color-2-13-flattened: color-mix(in srgb, rgb(0, 0, 0), rgb(21, 146, 123) 17%);
+    --b-cssvar-ranking-color-2-13-flattened: color-mix(in srgb, rgb(0, 0, 0), rgb(10, 166, 117) 17%);
 
-    --b-cssvar-ranking-color-3-6-flattened: color-mix(in srgb, rgb(0, 0, 0), rgb(13, 130, 109) 12%);
+    --b-cssvar-ranking-color-3-6-flattened: color-mix(in srgb, rgb(0, 0, 0), rgb(15, 145, 104) 12%);
 
     --b-cssvar-backdrop-filter: brightness(95%) blur(7px);
   }
