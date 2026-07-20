@@ -1,7 +1,7 @@
 import { getSettingOptionValue } from '../../data/settings/index';
 import { IntegratedMaterialSymbols, IntegratedMaterialSymbolsItem, integrateMaterialSymbols } from '../../data/symbols';
 import { BitState } from '../../tools/bit-state';
-import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll, getElementsBelow } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
 import { booleanToString } from '../../tools/index';
 import { getCSSVariableValue } from '../../tools/style';
 import { openIconSelectorSearch } from '../icon-selector-search';
@@ -72,6 +72,11 @@ function getTrayHeight(): number {
 
 function getElementTop(index: number): number {
   return offsetY + index * itemHeight + stretchState.sum(index) * itemExtraHeight;
+}
+
+function getElementRelativeTop(index: number): number {
+  // distance to the top of the content element
+  return index * itemHeight + stretchState.sum(index - 1) * itemExtraHeight;
 }
 
 function getFirstVisibleIndex(scrollTop: number): number {
@@ -551,18 +556,15 @@ export function closeIconSelector(): void {
 }
 
 function stretchItemElement(itemElement: HTMLElement): void {
-  const contentElement = itemElement.parentElement as HTMLElement;
+  const itemElementsLength = itemElements.length;
+  const index = itemElements.indexOf(itemElement);
+
+  const itemElementY = getElementRelativeTop(index);
+
+  const stretched = stretchState.state[index] === 1;
+  const animation = previousAnimation;
+
   const itemBodyElement = elementQuerySelector(itemElement, '.css_icon_selector_item_body');
-
-  const elementsBelow = getElementsBelow(itemElement, 'css_icon_selector_item');
-  const elementsBelowLength = elementsBelow.length;
-
-  const itemElementRect = itemElement.getBoundingClientRect();
-  const contentElementRect = contentElement.getBoundingClientRect();
-  const itemElementY = itemElementRect.top - contentElementRect.top; // itemElementRect.top + scrollTop - (contentElementRect.top + scrollTop)
-
-  const stretched = itemElement.getAttribute('stretched') === 'true' ? true : false;
-  const animation = itemElement.getAttribute('animation') === 'true' ? true : false;
 
   if (animation) {
     const pushDirection = stretched ? '2' : '1';
@@ -572,8 +574,8 @@ function stretchItemElement(itemElement: HTMLElement): void {
     itemElement.style.setProperty('--b-cssvar-icon-selector-item-y', `${itemElementY}px`);
 
     // Set push direction and push state
-    for (let i = 0; i < elementsBelowLength; i++) {
-      const thisItemElement = elementsBelow[i];
+    for (let i = index + 1; i < itemElementsLength; i++) {
+      const thisItemElement = itemElements[i];
       thisItemElement.setAttribute('push-direction', pushDirection);
       thisItemElement.setAttribute('push-state', '1');
     }
@@ -582,8 +584,8 @@ function stretchItemElement(itemElement: HTMLElement): void {
       'transitionend',
       function () {
         // Reset the push direction and push state
-        for (let i = 0; i < elementsBelowLength; i++) {
-          const thisItemElement = elementsBelow[i];
+        for (let i = index + 1; i < itemElementsLength; i++) {
+          const thisItemElement = itemElements[i];
           thisItemElement.setAttribute('push-direction', '0');
           thisItemElement.setAttribute('push-state', '0');
         }
@@ -597,16 +599,14 @@ function stretchItemElement(itemElement: HTMLElement): void {
       'transitionstart',
       function () {
         // Transition the elements below
-        for (let i = 0; i < elementsBelowLength; i++) {
-          const thisItemElement = elementsBelow[i];
+        for (let i = index + 1; i < itemElementsLength; i++) {
+          const thisItemElement = itemElements[i];
           thisItemElement.setAttribute('push-state', '2');
         }
       },
       { once: true }
     );
   }
-
-  const index = parseInt(itemElement.getAttribute('index') || '0', 10);
 
   if (stretched) {
     if (animation) {
