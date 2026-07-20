@@ -414,7 +414,6 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
       const bodyElement = elementQuerySelector(thisElement, '.css_icon_selector_item_body');
       thisElement.setAttribute('stretched', booleanToString(thisStretched));
       bodyElement.setAttribute('displayed', booleanToString(thisStretched));
-      stretchState.set;
     }
 
     function updateTab(thisElement: HTMLElement, thisIndex: number, thisTabCode: number): void {
