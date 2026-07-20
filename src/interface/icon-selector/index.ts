@@ -414,6 +414,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
       const bodyElement = elementQuerySelector(thisElement, '.css_icon_selector_item_body');
       thisElement.setAttribute('stretched', booleanToString(thisStretched));
       bodyElement.setAttribute('displayed', booleanToString(thisStretched));
+      stretchState.set;
     }
 
     function updateTab(thisElement: HTMLElement, thisIndex: number, thisTabCode: number): void {
@@ -556,15 +557,21 @@ export function closeIconSelector(): void {
 }
 
 function stretchItemElement(itemElement: HTMLElement): void {
-  const itemElementsLength = itemElements.length;
-  const index = itemElements.indexOf(itemElement);
+  const itemIndex = itemElements.indexOf(itemElement);
 
-  const itemElementY = getElementRelativeTop(index);
-
-  const stretched = stretchState.state[index] === 1;
-  const animation = previousAnimation;
-
+  const contentElement = itemElement.parentElement as HTMLElement;
   const itemBodyElement = elementQuerySelector(itemElement, '.css_icon_selector_item_body');
+
+  const itemElementsLength = itemElements.length;
+
+  const itemElementRect = itemElement.getBoundingClientRect();
+  const contentElementRect = contentElement.getBoundingClientRect();
+  const itemElementY = itemElementRect.top - contentElementRect.top; // itemElementRect.top + scrollTop - (contentElementRect.top + scrollTop)
+
+  const virtualIndex = parseInt(itemElement.getAttribute('index') || '0', 10);
+
+  const stretched = stretchState.state[virtualIndex];
+  const animation = previousAnimation;
 
   if (animation) {
     const pushDirection = stretched ? '2' : '1';
@@ -574,7 +581,7 @@ function stretchItemElement(itemElement: HTMLElement): void {
     itemElement.style.setProperty('--b-cssvar-icon-selector-item-y', `${itemElementY}px`);
 
     // Set push direction and push state
-    for (let i = index + 1; i < itemElementsLength; i++) {
+    for (let i = itemIndex + 1; i < itemElementsLength; i++) {
       const thisItemElement = itemElements[i];
       thisItemElement.setAttribute('push-direction', pushDirection);
       thisItemElement.setAttribute('push-state', '1');
@@ -584,7 +591,7 @@ function stretchItemElement(itemElement: HTMLElement): void {
       'transitionend',
       function () {
         // Reset the push direction and push state
-        for (let i = index + 1; i < itemElementsLength; i++) {
+        for (let i = itemIndex + 1; i < itemElementsLength; i++) {
           const thisItemElement = itemElements[i];
           thisItemElement.setAttribute('push-direction', '0');
           thisItemElement.setAttribute('push-state', '0');
@@ -599,7 +606,7 @@ function stretchItemElement(itemElement: HTMLElement): void {
       'transitionstart',
       function () {
         // Transition the elements below
-        for (let i = index + 1; i < itemElementsLength; i++) {
+        for (let i = itemIndex + 1; i < itemElementsLength; i++) {
           const thisItemElement = itemElements[i];
           thisItemElement.setAttribute('push-state', '2');
         }
@@ -621,11 +628,11 @@ function stretchItemElement(itemElement: HTMLElement): void {
       itemBodyElement.setAttribute('displayed', 'false');
     }
     itemElement.setAttribute('stretched', 'false');
-    stretchState.set(index, 0);
+    stretchState.set(virtualIndex, 0);
   } else {
     itemBodyElement.setAttribute('displayed', 'true');
     itemElement.setAttribute('stretched', 'true');
-    stretchState.set(index, 1);
+    stretchState.set(virtualIndex, 1);
   }
 
   TrayElement.style.setProperty('--b-cssvar-icon-selector-tray-height', `${getTrayHeight()}px`);
