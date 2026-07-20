@@ -1053,8 +1053,10 @@ export function closeLocation(): void {
 }
 
 export function stretchLocationItem(groupIndex: number, thisItemElement: HTMLElement): void {
-  const itemElementsLength = itemElements[groupIndex].length;
   const index = itemElements[groupIndex].indexOf(thisItemElement);
+  if (index < 0) return;
+
+  const itemElementsLength = itemElements[groupIndex].length;
 
   const itemBodyElement = elementQuerySelector(thisItemElement, '.css_location_group_item_body');
 
@@ -1081,7 +1083,7 @@ export function stretchLocationItem(groupIndex: number, thisItemElement: HTMLEle
       'transitionend',
       function () {
         // Reset the push direction and push state
-        for (let i = 0; i < itemElementsLength; i++) {
+        for (let i = index + 1; i < itemElementsLength; i++) {
           const thisItemElement = itemElements[groupIndex][i];
           thisItemElement.setAttribute('push-direction', '0');
           thisItemElement.setAttribute('push-state', '0');
@@ -1096,7 +1098,7 @@ export function stretchLocationItem(groupIndex: number, thisItemElement: HTMLEle
       'transitionstart',
       function () {
         // Transition the elements below
-        for (let i = 0; i < itemElementsLength; i++) {
+        for (let i = index + 1; i < itemElementsLength; i++) {
           const thisItemElement = itemElements[groupIndex][i];
           thisItemElement.setAttribute('push-state', '2');
         }

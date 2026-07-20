@@ -1248,8 +1248,10 @@ export function switchRoute(RouteID: IntegratedRoute['RouteID']): void {
 }
 
 export function stretchRouteItem(groupIndex: number, itemElement: HTMLElement): void {
-  const itemElementsLength = itemElements[groupIndex].length;
   const index = itemElements[groupIndex].indexOf(itemElement);
+  if (index < 0) return;
+
+  const itemElementsLength = itemElements[groupIndex].length;
 
   const threadBoxElement = threadBoxElements[groupIndex][index];
   const itemBodyElement = elementQuerySelector(itemElement, '.css_route_group_item_body');
