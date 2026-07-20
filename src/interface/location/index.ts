@@ -142,7 +142,7 @@ export function initializeLocationSliding(): void {
 export function updateLocationCSS(groupQuantity: number, offset: number, tabLineWidth: number, percentage: number): void {
   GroupsElement.style.setProperty('--b-cssvar-location-group-quantity', groupQuantity.toString());
   GroupTabLineElement.style.setProperty('--b-cssvar-location-tab-line-width-scale', tabLineWidth.toString());
-  GroupTabsTrayElement.style.setProperty('--b-cssvar-location-tabs-tray-offset', `${((offset * subpixelPrecisionScaler) | 0) / subpixelPrecisionScaler}px`);
+  GroupTabsTrayElement.style.setProperty('--b-cssvar-location-tabs-tray-offset', `${(((offset * subpixelPrecisionScaler) | 0) / subpixelPrecisionScaler).toString()}px`);
   GroupTabsTrayElement.style.setProperty('--b-cssvar-location-percentage', percentage.toString());
 }
 
