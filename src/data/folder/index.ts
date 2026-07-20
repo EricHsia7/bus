@@ -351,7 +351,7 @@ export function listFolderContent(folderID: Folder['id']): Array<FolderContent> 
 
   const folderKey: string = `f_${folderID}`;
   const thisFolder = getFolder(folderID);
-  if (typeof thisFolder === 'boolean' && thisFolder === false) {
+  if (thisFolder === false) {
     return result;
   }
 
@@ -719,7 +719,7 @@ export async function updateFolderContentIndex(folderID: Folder['id'], type: Fol
   const folderKey = `f_${folderID}`;
   const thisFolderContentKey = `${type}_${id}`;
   const thisFolder = getFolder(folderID);
-  if (typeof thisFolder === 'boolean' && thisFolder === false) {
+  if (thisFolder === false) {
     return false;
   }
 
