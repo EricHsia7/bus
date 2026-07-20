@@ -6,11 +6,11 @@ import { truncateText } from '../../tools/text';
 import { dateToString, offsetDate } from '../../tools/time';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
-const routeCalendarField = documentQuerySelector('.css_route_calendar_field');
-const headElement = elementQuerySelector(routeCalendarField, '.css_route_calendar_head');
-const dateElement = elementQuerySelector(headElement, '.css_route_calendar_date');
-const timelinesElement = elementQuerySelector(routeCalendarField, '.css_route_calendar_timelines');
-const timelineElements = Array.from(elementQuerySelectorAll(timelinesElement, '.css_route_calendar_timeline'));
+const Field = documentQuerySelector('.css_route_calendar_field');
+const HeadElement = elementQuerySelector(Field, '.css_route_calendar_head');
+const DateElement = elementQuerySelector(HeadElement, '.css_route_calendar_date');
+const TimelinesElement = elementQuerySelector(Field, '.css_route_calendar_timelines');
+const TimelineElements = Array.from(elementQuerySelectorAll(TimelinesElement, '.css_route_calendar_timeline'));
 
 let currentDate = new Date();
 let currentIntegration = {} as integratedRouteCalendar;
@@ -118,31 +118,31 @@ function initializeRouteCalendarSliding(): void {
   if (routeCalendarSliding_initialized) return;
   routeCalendarSliding_initialized = true;
 
-  timelinesElement.addEventListener('scrollend', function () {
-    const scrollLeft = timelinesElement.scrollLeft;
+  TimelinesElement.addEventListener('scrollend', function () {
+    const scrollLeft = TimelinesElement.scrollLeft;
     const idx = Math.round(scrollLeft / routeCalendarSliding_fieldWidth);
     if (idx === 0) {
       currentDate = offsetDate(currentDate, -1, 0, 0);
       const yesterday = offsetDate(currentDate, -1, 0, 0);
-      timelineElements[0].before(timelineElements[2]);
-      timelinesElement.scrollTo({ left: routeCalendarSliding_fieldWidth });
-      [timelineElements[0], timelineElements[1], timelineElements[2]] = [timelineElements[2], timelineElements[0], timelineElements[1]];
+      TimelineElements[0].before(TimelineElements[2]);
+      TimelinesElement.scrollTo({ left: routeCalendarSliding_fieldWidth });
+      [TimelineElements[0], TimelineElements[1], TimelineElements[2]] = [TimelineElements[2], TimelineElements[0], TimelineElements[1]];
       [currentTimelineSVGs[0], currentTimelineSVGs[1], currentTimelineSVGs[2]] = [generateRouteCalendarSVG(currentIntegration, yesterday, routeCalendarSliding_fieldWidth), currentTimelineSVGs[0], currentTimelineSVGs[1]];
-      timelineElements[0].innerHTML = currentTimelineSVGs[0];
-      dateElement.textContent = dateToString(currentDate, 'YYYY-MM-DD WW');
+      TimelineElements[0].innerHTML = currentTimelineSVGs[0];
+      DateElement.textContent = dateToString(currentDate, 'YYYY-MM-DD WW');
     } else if (idx === 2) {
       currentDate = offsetDate(currentDate, 1, 0, 0);
       const tomorrow = offsetDate(currentDate, 1, 0, 0);
-      timelineElements[2].after(timelineElements[0]);
-      timelinesElement.scrollTo({ left: routeCalendarSliding_fieldWidth });
-      [timelineElements[0], timelineElements[1], timelineElements[2]] = [timelineElements[1], timelineElements[2], timelineElements[0]];
+      TimelineElements[2].after(TimelineElements[0]);
+      TimelinesElement.scrollTo({ left: routeCalendarSliding_fieldWidth });
+      [TimelineElements[0], TimelineElements[1], TimelineElements[2]] = [TimelineElements[1], TimelineElements[2], TimelineElements[0]];
       [currentTimelineSVGs[0], currentTimelineSVGs[1], currentTimelineSVGs[2]] = [currentTimelineSVGs[1], currentTimelineSVGs[2], generateRouteCalendarSVG(currentIntegration, tomorrow, routeCalendarSliding_fieldWidth)];
-      timelineElements[2].innerHTML = currentTimelineSVGs[2];
-      dateElement.textContent = dateToString(currentDate, 'YYYY-MM-DD WW');
+      TimelineElements[2].innerHTML = currentTimelineSVGs[2];
+      DateElement.textContent = dateToString(currentDate, 'YYYY-MM-DD WW');
     }
   });
 
-  timelinesElement.scrollTo({ left: routeCalendarSliding_fieldWidth });
+  TimelinesElement.scrollTo({ left: routeCalendarSliding_fieldWidth });
 }
 
 async function initializeRouteCalendarFeild(RouteID: SimplifiedRouteItem['id']) {
@@ -154,18 +154,18 @@ async function initializeRouteCalendarFeild(RouteID: SimplifiedRouteItem['id']) 
   for (let i = 0; i < 3; i++) {
     const date = offsetDate(currentDate, i - 1, 0, 0);
     currentTimelineSVGs[i] = generateRouteCalendarSVG(integration, date, routeCalendarSliding_fieldWidth);
-    timelineElements[i].innerHTML = currentTimelineSVGs[i];
+    TimelineElements[i].innerHTML = currentTimelineSVGs[i];
   }
-  dateElement.textContent = dateToString(currentDate, 'YYYY-MM-DD WW');
+  DateElement.textContent = dateToString(currentDate, 'YYYY-MM-DD WW');
   initializeRouteCalendarSliding();
 }
 
 export function showRouteCalendar(): void {
-  routeCalendarField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hideRouteCalendar(): void {
-  routeCalendarField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openRouteCalendar(RouteID: SimplifiedRouteItem['id']): void {

@@ -9,12 +9,14 @@ import { getIconElement } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
-const NotificationScheduleManagerField = documentQuerySelector('.css_notification_schedule_manager_field');
-const NotificationScheduleManagerHeadElement = elementQuerySelector(NotificationScheduleManagerField, '.css_notification_schedule_manager_head');
-const NotificationScheduleManagerUpdateTimerBoxElement = elementQuerySelector(NotificationScheduleManagerHeadElement, '.css_notification_schedule_manager_update_timer_box');
-const NotificationScheduleManagerUpdateTimerElement = elementQuerySelector(NotificationScheduleManagerUpdateTimerBoxElement, '.css_notification_schedule_manager_update_timer');
-const NotificationScheduleManagerBody = elementQuerySelector(NotificationScheduleManagerField, '.css_notification_schedule_manager_body');
-const NotificationScheduleList = elementQuerySelector(NotificationScheduleManagerBody, '.css_notification_schedule_manager_notification_schedule_list');
+const Field = documentQuerySelector('.css_notification_schedule_manager_field');
+
+const HeadElement = elementQuerySelector(Field, '.css_notification_schedule_manager_head');
+const UpdateTimerBoxElement = elementQuerySelector(HeadElement, '.css_notification_schedule_manager_update_timer_box');
+const UpdateTimerElement = elementQuerySelector(UpdateTimerBoxElement, '.css_notification_schedule_manager_update_timer');
+
+const BodyElement = elementQuerySelector(Field, '.css_notification_schedule_manager_body');
+const ListElement = elementQuerySelector(BodyElement, '.css_notification_schedule_manager_notification_schedule_list');
 
 /**
  * div.css_notification_schedule_manager_item(n) in div.css_notification_schedule_manager_notification_schedule_list(1)
@@ -29,8 +31,8 @@ const notifcationScheduleManagerTick = new Tick(refreshNotificationScheduleManag
 const notificationTickRetryInterval = 10 * 1000;
 
 function animateUpdateTimer(interval: number): void {
-  NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-notification-schedule-manager-update-timer-interval', `${interval}ms`);
-  NotificationScheduleManagerUpdateTimerElement.classList.add('css_notification_schedule_manager_update_timer_scale_down');
+  UpdateTimerElement.style.setProperty('--b-cssvar-notification-schedule-manager-update-timer-interval', `${interval}ms`);
+  UpdateTimerElement.classList.add('css_notification_schedule_manager_update_timer_scale_down');
 }
 
 function generateElementOfItem(): HTMLElement {
@@ -151,7 +153,7 @@ function updateNotificationScheduleManagerField(integration: IntegratedNotificat
         fragment.appendChild(newItemElement);
         itemElements.push(newItemElement);
       }
-      NotificationScheduleList.append(fragment);
+      ListElement.append(fragment);
     } else if (difference > 0) {
       for (let p = itemElementsLength - 1, q = itemElementsLength - difference - 1; p > q; p--) {
         itemElements[p].remove();
@@ -218,10 +220,10 @@ async function refreshNotificationScheduleManager(): Promise<number> {
   try {
     const playing_animation = getSettingOptionValue('playing_animation');
     const refresh_interval_setting = getSettingOptionValue('refresh_interval');
-    NotificationScheduleManagerUpdateTimerElement.setAttribute('refreshing', 'true');
-    NotificationScheduleManagerUpdateTimerElement.classList.remove('css_notification_schedule_manager_update_timer_scale_down');
+    UpdateTimerElement.setAttribute('refreshing', 'true');
+    UpdateTimerElement.classList.remove('css_notification_schedule_manager_update_timer_scale_down');
     const integration = await integrateNotifcationSchedules(function (message) {
-      NotificationScheduleManagerUpdateTimerElement.style.setProperty('--b-cssvar-notification-schedule-manager-update-timer-scale-x', message.percent.toString());
+      UpdateTimerElement.style.setProperty('--b-cssvar-notification-schedule-manager-update-timer-scale-x', message.percent.toString());
     });
     updateNotificationScheduleManagerField(integration, false, playing_animation);
     let updateRate = 0;
@@ -236,7 +238,7 @@ async function refreshNotificationScheduleManager(): Promise<number> {
       nextUpdate = lastUpdate + refresh_interval_setting.baseInterval;
     }
     const interval = Math.max(5000, nextUpdate - lastUpdate);
-    NotificationScheduleManagerUpdateTimerElement.setAttribute('refreshing', 'false');
+    UpdateTimerElement.setAttribute('refreshing', 'false');
     animateUpdateTimer(interval);
     return interval;
   } catch (err) {
@@ -247,11 +249,11 @@ async function refreshNotificationScheduleManager(): Promise<number> {
 }
 
 export function showNotificationScheduleManager(): void {
-  NotificationScheduleManagerField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hideNotificationScheduleManager(): void {
-  NotificationScheduleManagerField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openNotificationScheduleManager(): void {

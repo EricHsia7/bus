@@ -14,9 +14,9 @@ let previousIntegration = {} as IntegratedRouteDetails;
 let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
-const RouteDetailsField = documentQuerySelector('.css_route_details_field');
-const RouteDetailsBodyElement = elementQuerySelector(RouteDetailsField, '.css_route_details_body');
-const RouteDetailsActionsElement = elementQuerySelector(RouteDetailsBodyElement, '.css_route_details_actions');
+const Field = documentQuerySelector('.css_route_details_field');
+const BodyElement = elementQuerySelector(Field, '.css_route_details_body');
+const ActionsElement = elementQuerySelector(BodyElement, '.css_route_details_actions');
 
 /**
  * div.css_route_details_action(n) in div.css_route_details_actions(1)
@@ -105,7 +105,7 @@ function updateRouteDetailsField(integration: IntegratedRouteDetails, skeletonSc
         fragment.appendChild(newItemElement);
         actionElements.push(newItemElement);
       }
-      RouteDetailsActionsElement.append(fragment);
+      ActionsElement.append(fragment);
     } else if (difference > 0) {
       for (let p = actionElementsLength - 1, q = actionElementsLength - difference - 1; p > q; p--) {
         actionElements[p].remove();
@@ -163,11 +163,11 @@ async function initializeRouteDetailsField(RouteID: SimplifiedRouteItem['id']) {
 }
 
 export function showRouteDetails(): void {
-  RouteDetailsField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hideRouteDetails(): void {
-  RouteDetailsField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openRouteDetails(RouteID: SimplifiedRouteItem['id']): void {

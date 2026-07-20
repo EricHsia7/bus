@@ -19,23 +19,16 @@ import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
 
 const Field = documentQuerySelector('.css_location_field');
-
 const HeadElement = elementQuerySelector(Field, '.css_location_head');
-
 const HeadNameElement = elementQuerySelector(HeadElement, '.css_location_name');
 const HeadNameSpanElement = elementQuerySelector(HeadNameElement, 'span');
-
 const HeadButtonRightElement = elementQuerySelector(HeadElement, '.css_location_button_right');
-
 const GroupTabsElement = elementQuerySelector(HeadElement, '.css_location_group_tabs');
 const GroupTabsTrayElement = elementQuerySelector(GroupTabsElement, '.css_location_group_tabs_tray');
-
 const GroupTabLineTrackElement = elementQuerySelector(HeadElement, '.css_location_group_tab_line_track');
 const GroupTabLineElement = elementQuerySelector(GroupTabLineTrackElement, '.css_location_group_tab_line');
-
 const UpdateTimerBoxElement = elementQuerySelector(HeadElement, '.css_location_update_timer_box');
 const UpdateTimerElement = elementQuerySelector(UpdateTimerBoxElement, '.css_location_update_timer_box .css_location_update_timer');
-
 const GroupsElement = elementQuerySelector(Field, '.css_location_groups');
 
 /**

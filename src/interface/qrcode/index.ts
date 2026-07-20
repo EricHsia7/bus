@@ -3,25 +3,25 @@ import { generateRoundedQRCodeSVG } from '../../tools/qrcode';
 import { shareFile } from '../../tools/share';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 
-const QRCodeField = documentQuerySelector('.css_qrcode_field');
-const headElement = elementQuerySelector(QRCodeField, '.css_qrcode_head');
-const rightButtonElement = elementQuerySelector(headElement, '.css_qrcode_button_right');
-const bodyElement = elementQuerySelector(QRCodeField, '.css_qrcode_body');
+const Field = documentQuerySelector('.css_qrcode_field');
+const HeadElement = elementQuerySelector(Field, '.css_qrcode_head');
+const HeadButtonRightElement = elementQuerySelector(HeadElement, '.css_qrcode_button_right');
+const BodyElement = elementQuerySelector(Field, '.css_qrcode_body');
 
 export function initializeQRCodeField(text: string): void {
   const svg = generateRoundedQRCodeSVG(text, 'M', 0.5, 0.3, 10, 10);
-  bodyElement.innerHTML = svg;
-  rightButtonElement.onclick = function () {
+  BodyElement.innerHTML = svg;
+  HeadButtonRightElement.onclick = function () {
     shareFile(svg, 'image/svg+xml', 'qrcode.svg');
   };
 }
 
 export function showQRCode(): void {
-  QRCodeField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hideQRCode(): void {
-  QRCodeField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openQRCode(text: string): void {

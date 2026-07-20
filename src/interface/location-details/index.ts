@@ -14,9 +14,9 @@ let previousIntegration = {} as IntegratedLocationDetails;
 let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
-const LocationDetailsField = documentQuerySelector('.css_location_details_field');
-const LocationDetailsBodyElement = elementQuerySelector(LocationDetailsField, '.css_location_details_body');
-const LocationDetailsActionsElement = elementQuerySelector(LocationDetailsBodyElement, '.css_location_details_actions');
+const Field = documentQuerySelector('.css_location_details_field');
+const BodyElement = elementQuerySelector(Field, '.css_location_details_body');
+const ActionsElement = elementQuerySelector(BodyElement, '.css_location_details_actions');
 
 /**
  * div.css_location_details_action(n) in div.css_location_details_actions(1)
@@ -105,7 +105,7 @@ function updateLocationDetailsField(integration: IntegratedLocationDetails, skel
         fragment.appendChild(newItemElement);
         actionElements.push(newItemElement);
       }
-      LocationDetailsActionsElement.append(fragment);
+      ActionsElement.append(fragment);
     } else if (difference > 0) {
       for (let p = actionElementsLength - 1, q = actionElementsLength - difference - 1; p > q; p--) {
         actionElements[p].remove();
@@ -163,10 +163,10 @@ async function initializeLocationDetailsField(hash: string) {
 }
 
 export function showLocationDetails(): void {
-  LocationDetailsField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 export function hideLocationDetails(): void {
-  LocationDetailsField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openLocationDetails(hash: string): void {

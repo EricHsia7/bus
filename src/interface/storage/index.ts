@@ -9,11 +9,13 @@ let previousCategories: Array<StoreSize> = [];
 let previousAnimation: boolean = false;
 let previousSkeletonScreen: boolean = false;
 
-const StorageField = documentQuerySelector('.css_storage_field');
-const StorageHeadElement = elementQuerySelector(StorageField, '.css_storage_head');
-const HeadButtonLeftElement = elementQuerySelector(StorageHeadElement, '.css_storage_button_left');
-const StorageBodyElement = elementQuerySelector(StorageField, '.css_storage_body');
-const StatisticsElement = elementQuerySelector(StorageBodyElement, '.css_storage_statistics');
+const Field = documentQuerySelector('.css_storage_field');
+
+const HeadElement = elementQuerySelector(Field, '.css_storage_head');
+const HeadButtonLeftElement = elementQuerySelector(HeadElement, '.css_storage_button_left');
+
+const BodyElement = elementQuerySelector(Field, '.css_storage_body');
+const StatisticsElement = elementQuerySelector(BodyElement, '.css_storage_statistics');
 
 /**
  * div.css_storage_statistics_item(n) in div.css_storage_statistics(1)
@@ -162,11 +164,11 @@ async function initializeStorageStatisticsFeild() {
 }
 
 export function showStorage(): void {
-  StorageField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hideStorage(): void {
-  StorageField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openStorage(): void {

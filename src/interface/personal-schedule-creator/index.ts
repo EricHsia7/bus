@@ -6,30 +6,30 @@ import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage 
 import { initializePersonalScheduleManagerField } from '../personal-schedule-manager/index';
 import { promptMessage } from '../prompt/index';
 
-const PersonalScheduleCreatorField = documentQuerySelector('.css_personal_schedule_creator_field');
-const bodyElement = elementQuerySelector(PersonalScheduleCreatorField, '.css_personal_schedule_creator_body');
-const groupsElement = elementQuerySelector(bodyElement, '.css_personal_schedule_creator_groups');
+const Field = documentQuerySelector('.css_personal_schedule_creator_field');
+const BodyElement = elementQuerySelector(Field, '.css_personal_schedule_creator_body');
+const GroupsElement = elementQuerySelector(BodyElement, '.css_personal_schedule_creator_groups');
 
-const scheduleNameGroupElement = elementQuerySelector(groupsElement, '.css_personal_schedule_creator_group[group="schedule-name"]');
-const scheduleNameGroupBodyElement = elementQuerySelector(scheduleNameGroupElement, '.css_personal_schedule_creator_group_body');
-const scheduleNameInputElement = elementQuerySelector(scheduleNameGroupBodyElement, 'input') as HTMLInputElement;
+const ScheduleNameGroupElement = elementQuerySelector(GroupsElement, '.css_personal_schedule_creator_group[group="schedule-name"]');
+const ScheduleNameGroupBodyElement = elementQuerySelector(ScheduleNameGroupElement, '.css_personal_schedule_creator_group_body');
+const ScheduleNameInputElement = elementQuerySelector(ScheduleNameGroupBodyElement, 'input') as HTMLInputElement;
 
-const scheduleStartTimeGroupElement = elementQuerySelector(groupsElement, '.css_personal_schedule_creator_group[group="schedule-start-time"]');
-const scheduleStartTimeGroupBodyElement = elementQuerySelector(scheduleStartTimeGroupElement, '.css_personal_schedule_creator_group_body');
-const scheduleStartTimeInputElement = elementQuerySelector(scheduleStartTimeGroupBodyElement, 'input') as HTMLInputElement;
+const ScheduleStartTimeGroupElement = elementQuerySelector(GroupsElement, '.css_personal_schedule_creator_group[group="schedule-start-time"]');
+const ScheduleStartTimeGroupBodyElement = elementQuerySelector(ScheduleStartTimeGroupElement, '.css_personal_schedule_creator_group_body');
+const ScheduleStartTimeInputElement = elementQuerySelector(ScheduleStartTimeGroupBodyElement, 'input') as HTMLInputElement;
 
-const scheduleEndTimeGroupElement = elementQuerySelector(groupsElement, '.css_personal_schedule_creator_group[group="schedule-end-time"]');
-const scheduleEndTimeGroupBodyElement = elementQuerySelector(scheduleEndTimeGroupElement, '.css_personal_schedule_creator_group_body');
-const scheduleEndTimeInputElement = elementQuerySelector(scheduleEndTimeGroupBodyElement, 'input') as HTMLInputElement;
+const ScheduleEndTimeGroupElement = elementQuerySelector(GroupsElement, '.css_personal_schedule_creator_group[group="schedule-end-time"]');
+const ScheduleEndTimeGroupBodyElement = elementQuerySelector(ScheduleEndTimeGroupElement, '.css_personal_schedule_creator_group_body');
+const ScheduleEndTimeInputElement = elementQuerySelector(ScheduleEndTimeGroupBodyElement, 'input') as HTMLInputElement;
 
-const scheduleDaysGroupElement = elementQuerySelector(groupsElement, '.css_personal_schedule_creator_group[group="schedule-days"]');
-const scheduleDaysGroupBodyElement = elementQuerySelector(scheduleDaysGroupElement, '.css_personal_schedule_creator_group_body');
-const scheduleDayElements = elementQuerySelectorAll(scheduleDaysGroupBodyElement, '.css_personal_schedule_creator_day');
+const ScheduleDaysGroupElement = elementQuerySelector(GroupsElement, '.css_personal_schedule_creator_group[group="schedule-days"]');
+const ScheduleDaysGroupBodyElement = elementQuerySelector(ScheduleDaysGroupElement, '.css_personal_schedule_creator_group_body');
+const ScheduleDayElements = elementQuerySelectorAll(ScheduleDaysGroupBodyElement, '.css_personal_schedule_creator_day');
 
 export async function createFormulatedPersonalSchedule() {
-  const name = scheduleNameInputElement.value;
-  const startTime = scheduleStartTimeInputElement.value;
-  const endTime = scheduleEndTimeInputElement.value;
+  const name = ScheduleNameInputElement.value;
+  const startTime = ScheduleStartTimeInputElement.value;
+  const endTime = ScheduleEndTimeInputElement.value;
 
   const [startHours, startMinutes] = String(startTime)
     .split(':')
@@ -40,7 +40,7 @@ export async function createFormulatedPersonalSchedule() {
 
   const days: WeekDayIndexArray = [];
   for (let i = 0; i < 7; i++) {
-    const thisDayElement = scheduleDayElements[i];
+    const thisDayElement = ScheduleDayElements[i];
     const highlighted = thisDayElement.getAttribute('highlighted');
     if (highlighted === 'true') {
       days.push(i as WeekDayIndex);
@@ -59,11 +59,11 @@ export async function createFormulatedPersonalSchedule() {
 }
 
 export function showPersonalScheduleCreator(): void {
-  PersonalScheduleCreatorField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hidePersonalScheduleCreator(): void {
-  PersonalScheduleCreatorField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openPersonalScheduleCreator(): void {
@@ -79,7 +79,7 @@ export function closePersonalScheduleCreator(): void {
 }
 
 export function switchPersonalScheduleCreatorDay(day: WeekDayIndex): void {
-  const thisDayElement = scheduleDayElements[day];
+  const thisDayElement = ScheduleDayElements[day];
   const highlighted = thisDayElement.getAttribute('highlighted') === 'true';
   thisDayElement.setAttribute('highlighted', booleanToString(!highlighted));
 }

@@ -5,9 +5,9 @@ import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage 
 import { promptMessage } from '../prompt/index';
 import { openRegisterNotification } from '../register-notification';
 
-const ScheduleNotificationField = documentQuerySelector('.css_schedule_notification_field');
-const ScheduleNotificationBodyElement = elementQuerySelector(ScheduleNotificationField, '.css_schedule_notification_body');
-const ScheduleNotificationListElement = elementQuerySelector(ScheduleNotificationBodyElement, '.css_schedule_notification_list');
+const Field = documentQuerySelector('.css_schedule_notification_field');
+const BodyElement = elementQuerySelector(Field, '.css_schedule_notification_body');
+const ListElement = elementQuerySelector(BodyElement, '.css_schedule_notification_list');
 
 /**
  * div.css_schedule_notification_list_item(n) in div.css_schedule_notification_list(1)
@@ -73,7 +73,7 @@ function updateScheduleNotificationField(thisButtonElement: HTMLElement, StopID:
         fragment.appendChild(newItemElement);
         itemElements.push(newItemElement);
       }
-      ScheduleNotificationListElement.append(fragment);
+      ListElement.append(fragment);
     } else if (difference > 0) {
       for (let p = itemElementsLength - 1, q = itemElementsLength - difference - 1; p > q; p--) {
         itemElements[p].remove();
@@ -92,11 +92,11 @@ function updateScheduleNotificationField(thisButtonElement: HTMLElement, StopID:
 }
 
 export function showScheduleNotification(): void {
-  ScheduleNotificationField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hideScheduleNotification(): void {
-  ScheduleNotificationField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openScheduleNotification(thisButtonElement: HTMLElement, StopID: number, RouteID: number, EstimateTime: number): void {

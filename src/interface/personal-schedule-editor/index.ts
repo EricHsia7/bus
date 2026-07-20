@@ -6,21 +6,34 @@ import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage 
 import { initializePersonalScheduleManagerField } from '../personal-schedule-manager/index';
 import { promptMessage } from '../prompt/index';
 
-const PersonalScheduleEditorField = documentQuerySelector('.css_personal_schedule_editor_field');
-const PersonalScheduleEditorBodyElement = elementQuerySelector(PersonalScheduleEditorField, '.css_personal_schedule_editor_body');
-const PersonalScheduleEditorHeadElement = elementQuerySelector(PersonalScheduleEditorField, '.css_personal_schedule_editor_head');
-const leftButtonElement = elementQuerySelector(PersonalScheduleEditorHeadElement, '.css_personal_schedule_editor_button_left');
-const PersonalScheduleEditorGroups = elementQuerySelector(PersonalScheduleEditorBodyElement, '.css_personal_schedule_editor_groups');
-const nameInputElement = elementQuerySelector(PersonalScheduleEditorGroups, '.css_personal_schedule_editor_group[group="schedule-name"] .css_personal_schedule_editor_group_body input') as HTMLInputElement;
-const startTimeInputElement = elementQuerySelector(PersonalScheduleEditorGroups, '.css_personal_schedule_editor_group[group="schedule-start-time"] .css_personal_schedule_editor_group_body input') as HTMLInputElement;
-const endTimeInputElement = elementQuerySelector(PersonalScheduleEditorGroups, '.css_personal_schedule_editor_group[group="schedule-end-time"] .css_personal_schedule_editor_group_body input') as HTMLInputElement;
-const dayGroupBodyElement = elementQuerySelector(PersonalScheduleEditorGroups, '.css_personal_schedule_editor_group[group="schedule-days"] .css_personal_schedule_editor_group_body');
-const dayElements = elementQuerySelectorAll(dayGroupBodyElement, '.css_personal_schedule_editor_day');
+const Field = documentQuerySelector('.css_personal_schedule_editor_field');
+
+const HeadElement = elementQuerySelector(Field, '.css_personal_schedule_editor_head');
+const HeadButtonLeftElement = elementQuerySelector(HeadElement, '.css_personal_schedule_editor_button_left');
+
+const BodyElement = elementQuerySelector(Field, '.css_personal_schedule_editor_body');
+const GroupsElement = elementQuerySelector(BodyElement, '.css_personal_schedule_editor_groups');
+
+const NameGroupElement = elementQuerySelector(GroupsElement, '.css_personal_schedule_editor_group[group="schedule-name"]');
+const NameGroupBodyElement = elementQuerySelector(NameGroupElement, '.css_personal_schedule_editor_group_body');
+const NameInputElement = elementQuerySelector(NameGroupBodyElement, 'input') as HTMLInputElement;
+
+const StartTimeGroupElement = elementQuerySelector(GroupsElement, '.css_personal_schedule_editor_group[group="schedule-start-time"]');
+const StartTimeGroupBodyElement = elementQuerySelector(StartTimeGroupElement, '.css_personal_schedule_editor_group_body');
+const StartTimeInputElement = elementQuerySelector(StartTimeGroupBodyElement, 'input') as HTMLInputElement;
+
+const EndTimeGroupElement = elementQuerySelector(GroupsElement, '.css_personal_schedule_editor_group[group="schedule-end-time"]');
+const EndTimeGroupBodyElement = elementQuerySelector(EndTimeGroupElement, '.css_personal_schedule_editor_group_body');
+const EndTimeInputElement = elementQuerySelector(EndTimeGroupBodyElement, 'input') as HTMLInputElement;
+
+const ScheduleDayGroupElement = elementQuerySelector(GroupsElement, '.css_personal_schedule_editor_group[group="schedule-days"]');
+const ScheduleDayGroupBodyElement = elementQuerySelector(ScheduleDayGroupElement, '.css_personal_schedule_editor_group_body');
+const DayElements = elementQuerySelectorAll(ScheduleDayGroupBodyElement, '.css_personal_schedule_editor_day');
 
 export async function saveEditedPersonalSchedule(personalScheduleID: string) {
-  const name = nameInputElement.value;
-  const startTime = startTimeInputElement.value;
-  const endTime = endTimeInputElement.value;
+  const name = NameInputElement.value;
+  const startTime = StartTimeInputElement.value;
+  const endTime = EndTimeInputElement.value;
 
   const [startHours, startMinutes] = String(startTime)
     .split(':')
@@ -31,7 +44,7 @@ export async function saveEditedPersonalSchedule(personalScheduleID: string) {
 
   const days: WeekDayIndexArray = [];
   for (let i = 0; i < 7; i++) {
-    const thisDayElement = dayElements[i];
+    const thisDayElement = DayElements[i];
     const highlighted = thisDayElement.getAttribute('highlighted');
     if (highlighted === 'true') {
       days.push(i as WeekDayIndex);
@@ -64,29 +77,29 @@ async function initializePersonalScheduleEditorField(personalScheduleID: string)
   const personalSchedule = await getPersonalSchedule(personalScheduleID);
   if (personalSchedule === false) return;
 
-  nameInputElement.value = personalSchedule.name;
-  startTimeInputElement.value = timeObjectToString(personalSchedule.period.start);
-  endTimeInputElement.value = timeObjectToString(personalSchedule.period.end);
+  NameInputElement.value = personalSchedule.name;
+  StartTimeInputElement.value = timeObjectToString(personalSchedule.period.start);
+  EndTimeInputElement.value = timeObjectToString(personalSchedule.period.end);
 
   for (let i = 0; i < 7; i++) {
-    const thisDayElement = dayElements[i];
+    const thisDayElement = DayElements[i];
     if (personalSchedule.days.indexOf(i as WeekDayIndex) > -1) {
       thisDayElement.setAttribute('highlighted', 'true');
     } else {
       thisDayElement.setAttribute('highlighted', 'false');
     }
   }
-  leftButtonElement.onclick = function () {
+  HeadButtonLeftElement.onclick = function () {
     saveEditedPersonalSchedule(personalScheduleID);
   };
 }
 
 export function showPersonalScheduleEditor(): void {
-  PersonalScheduleEditorField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hidePersonalScheduleEditor(): void {
-  PersonalScheduleEditorField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openPersonalScheduleEditor(personalScheduleID: string): void {
@@ -103,7 +116,7 @@ export function closePersonalScheduleEditor(): void {
 }
 
 export function switchPersonalScheduleEditorDay(day: WeekDayIndex): void {
-  const thisDayElement = dayElements[day];
+  const thisDayElement = DayElements[day];
   const highlighted = thisDayElement.getAttribute('highlighted') === 'true';
   thisDayElement.setAttribute('highlighted', booleanToString(!highlighted));
 }

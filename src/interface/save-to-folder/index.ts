@@ -5,11 +5,13 @@ import { getBlankIconElement, setIcon } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
 import { promptMessage } from '../prompt/index';
 
-const SaveToFolderField = documentQuerySelector('.css_save_to_folder_field');
-const bodyElement = elementQuerySelector(SaveToFolderField, '.css_save_to_folder_body');
-const listElement = elementQuerySelector(bodyElement, '.css_save_to_folder_list');
-const headElement = elementQuerySelector(SaveToFolderField, '.css_save_to_folder_head');
-const rightButtonElement = elementQuerySelector(headElement, '.css_save_to_folder_button_right');
+const Field = documentQuerySelector('.css_save_to_folder_field');
+
+const HeadElement = elementQuerySelector(Field, '.css_save_to_folder_head');
+const HeadButtonRightElement = elementQuerySelector(HeadElement, '.css_save_to_folder_button_right');
+
+const BodyElement = elementQuerySelector(Field, '.css_save_to_folder_body');
+const ListElement = elementQuerySelector(BodyElement, '.css_save_to_folder_list');
 
 /**
  * div.css_save_to_folder_list_item(n) in div.css_save_to_folder_list(1)
@@ -97,7 +99,7 @@ function updateSaveToFolderField(folders: Array<Folder>, type: FolderContent['ty
     }
   }
 
-  rightButtonElement.onclick = function () {
+  HeadButtonRightElement.onclick = function () {
     openFolderCreator(function () {
       initializeSaveToFolderField(type, parameters, saveToFolderButtonElement);
     });
@@ -115,7 +117,7 @@ function updateSaveToFolderField(folders: Array<Folder>, type: FolderContent['ty
         fragment.appendChild(newItemElement);
         itemElements.push(newItemElement);
       }
-      listElement.append(fragment);
+      ListElement.append(fragment);
     } else if (difference > 0) {
       for (let p = itemElementsLength - 1, q = itemElementsLength - difference - 1; p > q; p--) {
         itemElements[p].remove();
@@ -139,11 +141,11 @@ function updateSaveToFolderField(folders: Array<Folder>, type: FolderContent['ty
 }
 
 export function showSaveToFolder(): void {
-  SaveToFolderField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hideSaveToFolder(): void {
-  SaveToFolderField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openSaveToFolder(type: FolderContent['type'], parameters: Array<any>, saveToFolderButtonElement?: HTMLElement | null | undefined): void {

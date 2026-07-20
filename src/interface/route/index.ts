@@ -19,17 +19,18 @@ import { openRouteDetails } from '../route-details/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
 
-const RouteField = documentQuerySelector('.css_route_field');
-const RouteHeadElement = elementQuerySelector(RouteField, '.css_route_head');
-const RouteNameElement = elementQuerySelector(RouteHeadElement, '.css_route_name');
-const RouteNameSpanElement = elementQuerySelector(RouteNameElement, 'span');
-const RouteButtonRightElement = elementQuerySelector(RouteHeadElement, '.css_route_button_right');
-const RouteUpdateTimerElement = elementQuerySelector(RouteHeadElement, '.css_route_update_timer_box .css_route_update_timer');
-const RouteGroupTabsElement = elementQuerySelector(RouteHeadElement, '.css_route_group_tabs');
-const RouteGroupTabsTrayElement = elementQuerySelector(RouteGroupTabsElement, '.css_route_group_tabs_tray');
-const RouteGroupTabLineTrackElement = elementQuerySelector(RouteHeadElement, '.css_route_group_tab_line_track');
-const RouteGroupTabLineElement = elementQuerySelector(RouteGroupTabLineTrackElement, '.css_route_group_tab_line');
-const RouteGroupsElement = elementQuerySelector(RouteField, '.css_route_groups');
+const Field = documentQuerySelector('.css_route_field');
+const HeadElement = elementQuerySelector(Field, '.css_route_head');
+const HeadNameElement = elementQuerySelector(HeadElement, '.css_route_name');
+const HeadNameSpanElement = elementQuerySelector(HeadNameElement, 'span');
+const HeadButtonRightElement = elementQuerySelector(HeadElement, '.css_route_button_right');
+const UpdateTimerBoxElement = elementQuerySelector(HeadElement, '.css_route_update_timer_box');
+const UpdateTimerElement = elementQuerySelector(UpdateTimerBoxElement, '.css_route_update_timer');
+const GroupTabsElement = elementQuerySelector(HeadElement, '.css_route_group_tabs');
+const GroupTabsTrayElement = elementQuerySelector(GroupTabsElement, '.css_route_group_tabs_tray');
+const GroupTabLineTrackElement = elementQuerySelector(HeadElement, '.css_route_group_tab_line_track');
+const GroupTabLineElement = elementQuerySelector(GroupTabLineTrackElement, '.css_route_group_tab_line');
+const GroupsElement = elementQuerySelector(Field, '.css_route_groups');
 
 /**
  * div.css_route_group(n) in div.css_route_groups(1)
@@ -65,7 +66,7 @@ let routeSliding_sliding: boolean = false;
 
 const routeTick = new Tick(refreshRoute, 15 * 1000);
 const routeTickRetryInterval = 10 * 1000;
-const routeVisibilityMonitor = new VisibilityMonitor({ root: RouteGroupsElement, threshold: 0.5 });
+const routeVisibilityMonitor = new VisibilityMonitor({ root: GroupsElement, threshold: 0.5 });
 const decoder = new TextDecoder();
 
 let currentRouteID: number = 0;
@@ -74,15 +75,15 @@ const tabPadding: number = 20;
 const subpixelPrecision: number = getSubpixelPrecision();
 
 export function initializeRouteSliding(): void {
-  RouteGroupsElement.addEventListener(
+  GroupsElement.addEventListener(
     'pointerdown',
     function () {
-      routeSliding_initialIndex = Math.round(RouteGroupsElement.scrollLeft / routeSliding_fieldWidth);
+      routeSliding_initialIndex = Math.round(GroupsElement.scrollLeft / routeSliding_fieldWidth);
     },
     { passive: true }
   );
 
-  RouteGroupsElement.addEventListener(
+  GroupsElement.addEventListener(
     'scroll',
     function (event: Event) {
       routeSliding_sliding = true;
@@ -114,7 +115,7 @@ export function initializeRouteSliding(): void {
     { passive: true }
   );
 
-  RouteGroupsElement.addEventListener(
+  GroupsElement.addEventListener(
     'scrollend',
     function (event: Event) {
       const target = event.target as HTMLElement;
@@ -130,15 +131,15 @@ export function initializeRouteSliding(): void {
 }
 
 export function updateRouteCSS(groupQuantity: number, offset: number, tabLineWidth: number, percentage: number): void {
-  RouteGroupsElement.style.setProperty('--b-cssvar-route-group-quantity', groupQuantity.toString());
-  RouteGroupTabLineElement.style.setProperty('--b-cssvar-route-tab-line-width-scale', tabLineWidth.toString());
-  RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-offset', `${offset.toFixed(subpixelPrecision)}px`);
-  RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage.toString());
+  GroupsElement.style.setProperty('--b-cssvar-route-group-quantity', groupQuantity.toString());
+  GroupTabLineElement.style.setProperty('--b-cssvar-route-tab-line-width-scale', tabLineWidth.toString());
+  GroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-offset', `${offset.toFixed(subpixelPrecision)}px`);
+  GroupTabsTrayElement.style.setProperty('--b-cssvar-route-percentage', percentage.toString());
 }
 
 function animateUpdateTimer(interval: number): void {
-  RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-interval', `${interval.toString()}ms`);
-  RouteUpdateTimerElement.classList.add('css_route_update_timer_scale_down');
+  UpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-interval', `${interval.toString()}ms`);
+  UpdateTimerElement.classList.add('css_route_update_timer_scale_down');
 }
 
 function generateElementOfThreadBox(index: number): HTMLElement {
@@ -1034,25 +1035,25 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
   }
 
   if (previousSkeletonScreen !== skeletonScreen) {
-    RouteNameElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-    RouteGroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-    RouteGroupTabLineTrackElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    HeadNameElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    GroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    GroupTabLineTrackElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
   }
 
   if (previousAnimation !== animation) {
-    RouteNameElement.setAttribute('animation', booleanToString(animation));
-    RouteGroupTabsElement.setAttribute('animation', booleanToString(animation));
-    RouteGroupTabLineTrackElement.setAttribute('animation', booleanToString(animation));
+    HeadNameElement.setAttribute('animation', booleanToString(animation));
+    GroupTabsElement.setAttribute('animation', booleanToString(animation));
+    GroupTabLineTrackElement.setAttribute('animation', booleanToString(animation));
   }
 
   if (previousIntegration?.RouteID !== integration.RouteID) {
-    RouteButtonRightElement.onclick = function () {
+    HeadButtonRightElement.onclick = function () {
       openRouteDetails(integration.RouteID);
     };
   }
 
   if (previousIntegration?.RouteName !== integration.RouteName) {
-    RouteNameSpanElement.textContent = integration.RouteName;
+    HeadNameSpanElement.textContent = integration.RouteName;
   }
 
   const groupElementsLength = groupElements.length;
@@ -1072,8 +1073,8 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
         itemElements.push([]);
         threadBoxElements.push([]);
       }
-      RouteGroupsElement.append(newGroupsFragment);
-      RouteGroupTabsTrayElement.append(newTabsFragment);
+      GroupsElement.append(newGroupsFragment);
+      GroupTabsTrayElement.append(newTabsFragment);
     } else if (difference > 0) {
       for (let p = groupElementsLength - 1, q = groupElementsLength - difference - 1; p > q; p--) {
         groupElements[p].remove();
@@ -1153,7 +1154,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     }
   }
 
-  RouteGroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-width', `${cumulativeOffset}px`);
+  GroupTabsTrayElement.style.setProperty('--b-cssvar-route-tabs-tray-width', `${cumulativeOffset}px`);
 
   previousIntegration = integration;
   previousAnimation = animation;
@@ -1165,10 +1166,10 @@ async function refreshRoute(): Promise<number> {
     const playing_animation = getSettingOptionValue('playing_animation');
     const refresh_interval_setting = getSettingOptionValue('refresh_interval');
     const busArrivalTimeChartSize = querySize('route-bus-arrival-time-chart');
-    RouteUpdateTimerElement.setAttribute('refreshing', 'true');
-    RouteUpdateTimerElement.classList.remove('css_route_update_timer_scale_down');
+    UpdateTimerElement.setAttribute('refreshing', 'true');
+    UpdateTimerElement.classList.remove('css_route_update_timer_scale_down');
     const integration = await integrateRoute(currentRouteID, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, function (message) {
-      RouteUpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-scale-x', message.percent.toString());
+      UpdateTimerElement.style.setProperty('--b-cssvar-route-update-timer-scale-x', message.percent.toString());
     });
     updateRouteField(integration, false, playing_animation);
     let updateRate = 0;
@@ -1182,7 +1183,7 @@ async function refreshRoute(): Promise<number> {
     } else {
       nextUpdate = lastUpdate + refresh_interval_setting.baseInterval;
     }
-    RouteUpdateTimerElement.setAttribute('refreshing', 'false');
+    UpdateTimerElement.setAttribute('refreshing', 'false');
     const interval = Math.max(5000, nextUpdate - lastUpdate);
     animateUpdateTimer(interval);
     return interval;
@@ -1199,8 +1200,8 @@ function initializeRouteFeild(RouteID: IntegratedRoute['RouteID']): void {
   routeSliding_initialIndex = 0;
   routeSliding_groupStyles = {};
 
-  RouteGroupsElement.scrollLeft = 0;
-  RouteGroupsElement.focus();
+  GroupsElement.scrollLeft = 0;
+  GroupsElement.focus();
 
   setupRouteFieldSkeletonScreen();
 
@@ -1212,11 +1213,11 @@ function initializeRouteFeild(RouteID: IntegratedRoute['RouteID']): void {
 }
 
 export function showRoute(): void {
-  RouteField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hideRoute(): void {
-  RouteField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openRoute(RouteID: IntegratedRoute['RouteID']): void {

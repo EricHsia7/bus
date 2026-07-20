@@ -1,7 +1,7 @@
 import { prepareForSearch, searchFor, SearchItem, SearchResult } from '../../data/search/index';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { getTextBoundingBox } from '../../tools/graphic';
-import { booleanToString, supportTouch } from '../../tools/index';
+import { booleanToString } from '../../tools/index';
 import { clamp } from '../../tools/math';
 import { containPhoneticSymbols } from '../../tools/text';
 import { openBus } from '../bus/index';
@@ -15,18 +15,21 @@ import { openRoute } from '../route/index';
 
 let previousSearchResults: Array<SearchResult> = [];
 
-const searchField = documentQuerySelector('.css_search_field');
-const searchHeadElement = elementQuerySelector(searchField, '.css_search_head');
-const searchBodyElement = elementQuerySelector(searchField, '.css_search_body');
-const searchInputElement = elementQuerySelector(searchHeadElement, '.css_search_search_input #search_input') as HTMLInputElement;
+const Field = documentQuerySelector('.css_search_field');
 
-const searchInputSVGElement = elementQuerySelector(searchHeadElement, '.css_search_search_input svg') as Element as SVGElement;
-const searchInputSVGTextElement = elementQuerySelector(searchInputSVGElement as Element as HTMLElement, 'text[component="text"]') as Element as SVGTextElement;
-const searchInputSVGCursorElement = elementQuerySelector(searchInputSVGElement as Element as HTMLElement, 'path[component="cursor"]') as Element as SVGPathElement;
+const HeadElement = elementQuerySelector(Field, '.css_search_head');
 
-const searchTypeFilterButtonElement = elementQuerySelector(searchHeadElement, '.css_search_button_right');
-const searchResultsElement = elementQuerySelector(searchBodyElement, '.css_search_results');
-const searchKeyboardElement = elementQuerySelector(searchBodyElement, '.css_search_keyboard');
+const HeadSearchInputElement = elementQuerySelector(HeadElement, '.css_search_search_input');
+const SearchInputElement = elementQuerySelector(HeadSearchInputElement, 'input') as HTMLInputElement;
+const SearchInputSVGElement = elementQuerySelector(HeadSearchInputElement, 'svg') as Element as SVGElement;
+const SearchInputSVGTextElement = elementQuerySelector(SearchInputSVGElement as Element as HTMLElement, 'text[component="text"]') as Element as SVGTextElement;
+const SearchInputSVGCursorElement = elementQuerySelector(SearchInputSVGElement as Element as HTMLElement, 'path[component="cursor"]') as Element as SVGPathElement;
+
+const SearchTypeFilterButtonElement = elementQuerySelector(HeadElement, '.css_search_button_right');
+
+const BodyElement = elementQuerySelector(Field, '.css_search_body');
+const ResultsElement = elementQuerySelector(BodyElement, '.css_search_results');
+const KeyboardElement = elementQuerySelector(BodyElement, '.css_search_keyboard');
 
 /**
  * div.css_search_search_result(n) in div.css_search_results(1)
@@ -53,9 +56,9 @@ let previousValue: string = '';
 let previousType = 0;
 
 export function typeTextIntoInput(value: string): void {
-  const currentValue = searchInputElement.value;
+  const currentValue = SearchInputElement.value;
   const newValue = `${currentValue}${value}`;
-  searchInputElement.value = newValue;
+  SearchInputElement.value = newValue;
   updateSearchResult();
   bringToEnd();
   updateSearchInput();
@@ -63,9 +66,9 @@ export function typeTextIntoInput(value: string): void {
 }
 
 export function deleteCharFromInput(): void {
-  const currentValue = searchInputElement.value;
+  const currentValue = SearchInputElement.value;
   const newValue = currentValue.substring(0, currentValue.length - 1);
-  searchInputElement.value = newValue;
+  SearchInputElement.value = newValue;
   updateSearchResult();
   bringToEnd();
   updateSearchInput();
@@ -73,7 +76,7 @@ export function deleteCharFromInput(): void {
 }
 
 export function emptyInput(): void {
-  searchInputElement.value = '';
+  SearchInputElement.value = '';
   updateSearchResult();
   bringToEnd();
   updateSearchInput();
@@ -82,7 +85,7 @@ export function emptyInput(): void {
 
 export function openSystemKeyboard(event: Event): void {
   event.preventDefault();
-  searchInputElement.focus();
+  SearchInputElement.focus();
   scrollDocumentToTop();
 }
 
@@ -124,30 +127,30 @@ function initializeKeyboard(): void {
         fragment.appendChild(newButtonElement);
       }
     }
-    searchKeyboardElement.append(fragment);
+    KeyboardElement.append(fragment);
   }
 }
 
 export function openKeyboard(): void {
   initializeKeyboard();
-  searchKeyboardElement.setAttribute('displayed', 'true');
+  KeyboardElement.setAttribute('displayed', 'true');
   bringToEnd();
 }
 
 export function closeKeyboard(): void {
-  searchKeyboardElement.setAttribute('displayed', 'false');
+  KeyboardElement.setAttribute('displayed', 'false');
 }
 
 export function initializeSearchInput(): void {
-  searchInputElement.addEventListener('paste', function () {
+  SearchInputElement.addEventListener('paste', function () {
     updateSearchInput();
     updateSearchResult();
   });
-  searchInputElement.addEventListener('cut', function () {
+  SearchInputElement.addEventListener('cut', function () {
     updateSearchInput();
     updateSearchResult();
   });
-  searchInputElement.addEventListener('selectionchange', function () {
+  SearchInputElement.addEventListener('selectionchange', function () {
     updateSearchInput();
     updateSearchResult();
   });
@@ -155,24 +158,24 @@ export function initializeSearchInput(): void {
     updateSearchInput();
     updateSearchResult();
   });
-  searchInputElement.addEventListener('keyup', function () {
+  SearchInputElement.addEventListener('keyup', function () {
     updateSearchInput();
     updateSearchResult();
   });
-  searchInputElement.addEventListener('scroll', function () {
+  SearchInputElement.addEventListener('scroll', function () {
     updateSearchInput();
   });
 }
 
 function getSearchTypeFilterValue(): SearchItem['type'] | -1 {
-  return parseInt(searchTypeFilterButtonElement.getAttribute('type') || '-1') as SearchItem['type'] | -1;
+  return parseInt(SearchTypeFilterButtonElement.getAttribute('type') || '-1') as SearchItem['type'] | -1;
 }
 
 function updateSearchInput(): void {
-  const scrollLeft = searchInputElement.scrollLeft;
-  const currentValue = searchInputElement.value;
-  const selectionStart = searchInputElement.selectionStart || undefined;
-  const selectionEnd = searchInputElement.selectionEnd || undefined;
+  const scrollLeft = SearchInputElement.scrollLeft;
+  const currentValue = SearchInputElement.value;
+  const selectionStart = SearchInputElement.selectionStart || undefined;
+  const selectionEnd = SearchInputElement.selectionEnd || undefined;
 
   const empty = currentValue.length === 0;
   const text = empty ? searchInputPlaceholder : currentValue;
@@ -185,28 +188,28 @@ function updateSearchInput(): void {
   const x = scrollLeft * -1;
   const y = m[0] + (height - m[2]) / 2;
 
-  searchInputSVGTextElement.textContent = text;
-  searchInputSVGTextElement.setAttribute('transform', `translate(${x} ${y})`);
-  searchInputSVGCursorElement.setAttribute('transform', `translate(${empty ? 1 : clamp(m1[1] + x, 1, width - 1)} 0)`);
+  SearchInputSVGTextElement.textContent = text;
+  SearchInputSVGTextElement.setAttribute('transform', `translate(${x} ${y})`);
+  SearchInputSVGCursorElement.setAttribute('transform', `translate(${empty ? 1 : clamp(m1[1] + x, 1, width - 1)} 0)`);
 
-  searchInputSVGTextElement.setAttribute('empty', booleanToString(empty));
-  searchInputSVGCursorElement.setAttribute('selection', booleanToString(selection));
-  searchInputElement.setAttribute('selection', booleanToString(selection));
+  SearchInputSVGTextElement.setAttribute('empty', booleanToString(empty));
+  SearchInputSVGCursorElement.setAttribute('selection', booleanToString(selection));
+  SearchInputElement.setAttribute('selection', booleanToString(selection));
 }
 
 function bringToEnd(): void {
-  const currentValue = searchInputElement.value;
+  const currentValue = SearchInputElement.value;
   const length = currentValue.length;
   const m = getTextBoundingBox(currentValue, fontWeight, fontSize, fontFamily);
-  searchInputElement.setSelectionRange(length, length);
-  searchInputElement.scrollTo({ left: m[1] - width });
+  SearchInputElement.setSelectionRange(length, length);
+  SearchInputElement.scrollTo({ left: m[1] - width });
 }
 
 export function resizeSearchInputSVG(): void {
   size = querySize('head-two-button');
   width = size.width;
   height = size.height;
-  searchInputSVGElement.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  SearchInputSVGElement.setAttribute('viewBox', `0 0 ${width} ${height}`);
   bringToEnd();
   updateSearchInput();
 }
@@ -281,7 +284,7 @@ export function updateSearchResult(): void {
   }
 
   const currentType = getSearchTypeFilterValue();
-  const currentValue = searchInputElement.value;
+  const currentValue = SearchInputElement.value;
   if (!containPhoneticSymbols(currentValue) && (currentValue !== previousValue || currentType !== previousType)) {
     const searchResults = searchFor(currentValue, currentType, 30);
     const searchResultLength = searchResults.length;
@@ -295,7 +298,7 @@ export function updateSearchResult(): void {
           fragment.appendChild(newSearchResultElement);
           searchResultElements.push(newSearchResultElement);
         }
-        searchResultsElement.appendChild(fragment);
+        ResultsElement.appendChild(fragment);
       } else if (difference > 0) {
         for (let p = searchResultElementsLength - 1, q = searchResultElementsLength - difference - 1; p > q; p--) {
           searchResultElements[p].remove();
@@ -330,17 +333,17 @@ export function switchSearchTypeFilter(): void {
     newType = -1;
   }
   const icons: Array<MaterialSymbol> = ['filter_list', 'route', 'location_on', 'directions_bus'];
-  setIcon(searchTypeFilterButtonElement, icons[newType + 1]);
-  searchTypeFilterButtonElement.setAttribute('type', newType.toString());
+  setIcon(SearchTypeFilterButtonElement, icons[newType + 1]);
+  SearchTypeFilterButtonElement.setAttribute('type', newType.toString());
   updateSearchResult();
 }
 
 export function showSearch(): void {
-  searchField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hideSearch(): void {
-  searchField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openSearch(): void {
