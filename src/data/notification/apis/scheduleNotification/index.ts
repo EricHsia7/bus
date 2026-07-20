@@ -1,4 +1,3 @@
-import { promptMessage } from '../../../../interface/prompt';
 import { NotificationClientID, NotificationSchedule, NotificationSecret, saveNotificationSchedule } from '../../index';
 import { getNotificationAPIURL } from '../getNotificationAPIURL/index';
 import { getNotificationRequestBody } from '../getNotificationRequestBody/index';
@@ -29,7 +28,7 @@ export async function scheduleNotification(stop_id: NotificationSchedule['stop_i
   const requestBody = getNotificationRequestBody('schedule', [stop_id, location_name, route_id, route_name, direction, estimate_time, time_formatting_mode, time_offset, processed_schedule_time.toISOString()]);
   const response = await makeNotificationRequest('schedule', url, requestBody);
   if (response === false) return false;
-  promptMessage('', response.result);
+  alert(response.result);
   if (response.method !== 'schedule') return false;
   if (response.code === 0) {
     if (Math.random() > 0.8) {
