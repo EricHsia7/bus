@@ -410,7 +410,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
       thisElement.setAttribute('index', thisIndex.toString());
     }
 
-    function updateStretched(thisElement: HTMLElement, thisStretched: boolean): void {
+    function updateStretch(thisElement: HTMLElement, thisStretched: boolean): void {
       const bodyElement = elementQuerySelector(thisElement, '.css_icon_selector_item_body');
       thisElement.setAttribute('stretched', booleanToString(thisStretched));
       bodyElement.setAttribute('displayed', booleanToString(thisStretched));
@@ -444,7 +444,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
     updateKeywords(thisElement, inputElement, thisItem);
     updateCapsuleMainOnclick(thisElement, inputElement, thisItem);
     updateIndex(thisElement, thisIndex);
-    updateStretched(thisElement, thisStretched);
+    updateStretch(thisElement, thisStretched);
     updateTab(thisElement, thisIndex, thisTabCode);
 
     if (skeletonScreen !== previosuSkeletonScreen) {
