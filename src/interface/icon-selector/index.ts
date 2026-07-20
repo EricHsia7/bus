@@ -126,9 +126,9 @@ function generateElementOfItem(): HTMLElement {
   const stretchElement = documentCreateDivElement();
   stretchElement.classList.add('css_icon_selector_item_capsule_stretch');
   stretchElement.appendChild(getIconElement('keyboard_arrow_down'));
-  stretchElement.addEventListener('click', function () {
+  stretchElement.onclick = function () {
     stretchItemElement(element);
-  });
+  };
   capsuleElement.appendChild(stretchElement);
 
   const separatorElement = documentCreateDivElement();
@@ -149,9 +149,9 @@ function generateElementOfItem(): HTMLElement {
   tabDescriptionElement.classList.add('css_icon_selector_item_button');
   tabDescriptionElement.setAttribute('highlighted', 'true');
   tabDescriptionElement.setAttribute('type', 'tab');
-  tabDescriptionElement.addEventListener('click', function () {
+  tabDescriptionElement.onclick = function () {
     switchItemBodyElementTab(element, 0);
-  });
+  };
 
   const tabDescriptionIconElement = documentCreateDivElement();
   tabDescriptionIconElement.classList.add('css_icon_selector_item_button_icon');
@@ -165,9 +165,9 @@ function generateElementOfItem(): HTMLElement {
   tabRelatedElement.classList.add('css_icon_selector_item_button');
   tabRelatedElement.setAttribute('highlighted', 'false');
   tabRelatedElement.setAttribute('type', 'tab');
-  tabRelatedElement.addEventListener('click', function () {
+  tabRelatedElement.onclick = function () {
     switchItemBodyElementTab(element, 1);
-  });
+  };
 
   const tabRelatedIconElement = documentCreateDivElement();
   tabRelatedIconElement.classList.add('css_icon_selector_item_button_icon');
@@ -181,9 +181,9 @@ function generateElementOfItem(): HTMLElement {
   tabKeywordsElement.classList.add('css_icon_selector_item_button');
   tabKeywordsElement.setAttribute('highlighted', 'false');
   tabKeywordsElement.setAttribute('type', 'tab');
-  tabKeywordsElement.addEventListener('click', function () {
+  tabKeywordsElement.onclick = function () {
     switchItemBodyElementTab(element, 2);
-  });
+  };
 
   const tabKeywordsIconElement = documentCreateDivElement();
   tabKeywordsIconElement.classList.add('css_icon_selector_item_button_icon');
