@@ -13,11 +13,14 @@ let previousInputElement: HTMLInputElement;
 let previousQuery: string = '';
 let initialized: boolean = false;
 
-const iconSelectorSearchField = documentQuerySelector('.css_icon_selector_search_field');
-const headElement = elementQuerySelector(iconSelectorSearchField, '.css_icon_selector_search_head');
-const searchInputElement = elementQuerySelector(headElement, '.css_icon_selector_search_input input[type="text"]') as HTMLInputElement;
-const bodyElement = elementQuerySelector(iconSelectorSearchField, '.css_icon_selector_search_body');
-const resultsElement = elementQuerySelector(bodyElement, '.css_icon_selector_search_results');
+const Field = documentQuerySelector('.css_icon_selector_search_field');
+
+const HeadElement = elementQuerySelector(Field, '.css_icon_selector_search_head');
+const HeadSearchInputElement = elementQuerySelector(HeadElement, '.css_icon_selector_search_input');
+const SearchInputElement = elementQuerySelector(HeadSearchInputElement, 'input') as HTMLInputElement;
+
+const BodyElement = elementQuerySelector(Field, '.css_icon_selector_search_body');
+const ResultsElement = elementQuerySelector(BodyElement, '.css_icon_selector_search_results');
 
 /**
  * div.css_icon_selector_search_result(n) in div.css_icon_selector_search_results(1)
@@ -42,11 +45,11 @@ function generateElementOfResultItem(): HTMLElement {
 }
 
 export function showIconSelectorSearch(): void {
-  iconSelectorSearchField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hideIconSelectorSearch(): void {
-  iconSelectorSearchField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openIconSelectorSearch(query: string, inputElement: HTMLInputElement): void {
@@ -66,15 +69,15 @@ export function initializeIconSelectorSearchInput(): void {
   if (initialized) return;
   initialized = true;
 
-  searchInputElement.addEventListener('paste', function () {
+  SearchInputElement.addEventListener('paste', function () {
     updateResults();
   });
 
-  searchInputElement.addEventListener('cut', function () {
+  SearchInputElement.addEventListener('cut', function () {
     updateResults();
   });
 
-  searchInputElement.addEventListener('selectionchange', function () {
+  SearchInputElement.addEventListener('selectionchange', function () {
     updateResults();
   });
 
@@ -82,7 +85,7 @@ export function initializeIconSelectorSearchInput(): void {
     updateResults();
   });
 
-  searchInputElement.addEventListener('keyup', function () {
+  SearchInputElement.addEventListener('keyup', function () {
     updateResults();
   });
 }
@@ -122,7 +125,7 @@ function updateResults(): void {
     }
   }
 
-  const query = searchInputElement.value;
+  const query = SearchInputElement.value;
   if (!containPhoneticSymbols(query) && query !== previousQuery) {
     const searchResults = searchForMaterialSymbols(query);
     const searchResultsLength = searchResults.length;
@@ -137,7 +140,7 @@ function updateResults(): void {
           fragment.appendChild(newResultElement);
           resultElements.push(newResultElement);
         }
-        resultsElement.appendChild(fragment);
+        ResultsElement.appendChild(fragment);
       } else if (difference > 0) {
         for (let p = resultElementsLength - 1, q = resultElementsLength - difference - 1; p > q; p--) {
           resultElements[p].remove();
@@ -164,7 +167,7 @@ function updateResults(): void {
 
 async function initializeIconSelectorSearchField(query: string, inputElement: HTMLInputElement) {
   previousInputElement = inputElement;
-  searchInputElement.value = query;
+  SearchInputElement.value = query;
   const progress = new Progress(1, function () {});
   const materialSymbolsSearchIndex = await getMaterialSymbolsSearchIndex(progress);
   progress.terminate();

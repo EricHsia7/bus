@@ -18,17 +18,25 @@ import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
 
-const LocationField = documentQuerySelector('.css_location_field');
-const LocationHeadElement = elementQuerySelector(LocationField, '.css_location_head');
-const LocationNameElement = elementQuerySelector(LocationHeadElement, '.css_location_name');
-const LocationNameSpanElement = elementQuerySelector(LocationNameElement, 'span');
-const LocationButtonRightElement = elementQuerySelector(LocationHeadElement, '.css_location_button_right');
-const LocationGroupsElement = elementQuerySelector(LocationField, '.css_location_groups');
-const LocationGroupTabsElement = elementQuerySelector(LocationHeadElement, '.css_location_group_tabs');
-const LocationGroupTabsTrayElement = elementQuerySelector(LocationGroupTabsElement, '.css_location_group_tabs_tray');
-const LocationGroupTabLineTrackElement = elementQuerySelector(LocationHeadElement, '.css_location_group_tab_line_track');
-const LocationGroupTabLineElement = elementQuerySelector(LocationGroupTabLineTrackElement, '.css_location_group_tab_line');
-const LocationUpdateTimerElement = elementQuerySelector(LocationHeadElement, '.css_location_update_timer_box .css_location_update_timer');
+const Field = documentQuerySelector('.css_location_field');
+
+const HeadElement = elementQuerySelector(Field, '.css_location_head');
+
+const HeadNameElement = elementQuerySelector(HeadElement, '.css_location_name');
+const HeadNameSpanElement = elementQuerySelector(HeadNameElement, 'span');
+
+const HeadButtonRightElement = elementQuerySelector(HeadElement, '.css_location_button_right');
+
+const GroupTabsElement = elementQuerySelector(HeadElement, '.css_location_group_tabs');
+const GroupTabsTrayElement = elementQuerySelector(GroupTabsElement, '.css_location_group_tabs_tray');
+
+const GroupTabLineTrackElement = elementQuerySelector(HeadElement, '.css_location_group_tab_line_track');
+const GroupTabLineElement = elementQuerySelector(GroupTabLineTrackElement, '.css_location_group_tab_line');
+
+const UpdateTimerBoxElement = elementQuerySelector(HeadElement, '.css_location_update_timer_box');
+const UpdateTimerElement = elementQuerySelector(UpdateTimerBoxElement, '.css_location_update_timer_box .css_location_update_timer');
+
+const GroupsElement = elementQuerySelector(Field, '.css_location_groups');
 
 /**
  * div.css_location_group(n) in div.css_location_groups(1)
@@ -64,7 +72,7 @@ let locationSliding_sliding: boolean = false;
 
 const locationTick = new Tick(refreshLocation, 15 * 1000);
 const locationTickRetryInterval = 10 * 1000;
-const locationVisibilityMonitor = new VisibilityMonitor({ root: LocationGroupsElement, threshold: 0.5 });
+const locationVisibilityMonitor = new VisibilityMonitor({ root: GroupsElement, threshold: 0.5 });
 const decoder = new TextDecoder();
 
 let currentHashSet_hash: string = '';
@@ -73,15 +81,15 @@ const tabPadding: number = 20;
 const subpixelPrecision: number = getSubpixelPrecision();
 
 export function initializeLocationSliding(): void {
-  LocationGroupsElement.addEventListener(
+  GroupsElement.addEventListener(
     'pointerdown',
     function () {
-      locationSliding_initialIndex = Math.round(LocationGroupsElement.scrollLeft / locationSliding_fieldWidth);
+      locationSliding_initialIndex = Math.round(GroupsElement.scrollLeft / locationSliding_fieldWidth);
     },
     { passive: true }
   );
 
-  LocationGroupsElement.addEventListener(
+  GroupsElement.addEventListener(
     'scroll',
     function (event: Event) {
       locationSliding_sliding = true;
@@ -113,7 +121,7 @@ export function initializeLocationSliding(): void {
     { passive: true }
   );
 
-  LocationGroupsElement.addEventListener(
+  GroupsElement.addEventListener(
     'scrollend',
     function (event: Event) {
       const target = event.target as HTMLElement;
@@ -129,15 +137,15 @@ export function initializeLocationSliding(): void {
 }
 
 export function updateLocationCSS(groupQuantity: number, offset: number, tabLineWidth: number, percentage: number): void {
-  LocationGroupsElement.style.setProperty('--b-cssvar-location-group-quantity', groupQuantity.toString());
-  LocationGroupTabLineElement.style.setProperty('--b-cssvar-location-tab-line-width-scale', tabLineWidth.toString());
-  LocationGroupTabsTrayElement.style.setProperty('--b-cssvar-location-tabs-tray-offset', `${offset.toFixed(subpixelPrecision)}px`);
-  LocationGroupTabsTrayElement.style.setProperty('--b-cssvar-location-percentage', percentage.toString());
+  GroupsElement.style.setProperty('--b-cssvar-location-group-quantity', groupQuantity.toString());
+  GroupTabLineElement.style.setProperty('--b-cssvar-location-tab-line-width-scale', tabLineWidth.toString());
+  GroupTabsTrayElement.style.setProperty('--b-cssvar-location-tabs-tray-offset', `${offset.toFixed(subpixelPrecision)}px`);
+  GroupTabsTrayElement.style.setProperty('--b-cssvar-location-percentage', percentage.toString());
 }
 
 function animateUpdateTimer(interval: number): void {
-  LocationUpdateTimerElement.style.setProperty('--b-cssvar-location-update-timer-interval', `${interval}ms`);
-  LocationUpdateTimerElement.classList.add('css_location_update_timer_slide_rtl');
+  UpdateTimerElement.style.setProperty('--b-cssvar-location-update-timer-interval', `${interval}ms`);
+  UpdateTimerElement.classList.add('css_location_update_timer_slide_rtl');
 }
 
 function generateElementOfItem(): HTMLElement {
@@ -804,24 +812,24 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
   }
 
   if (previousIntegration?.hash !== integration.hash) {
-    LocationButtonRightElement.onclick = function () {
+    HeadButtonRightElement.onclick = function () {
       openLocationDetails(integration.hash);
     };
   }
 
   if (previousIntegration?.LocationName !== integration.LocationName) {
-    LocationNameSpanElement.textContent = integration.LocationName;
+    HeadNameSpanElement.textContent = integration.LocationName;
   }
 
   if (previousAnimation !== animation) {
-    LocationNameElement.setAttribute('animation', booleanToString(animation));
-    LocationGroupTabsElement.setAttribute('animation', booleanToString(animation));
+    HeadNameElement.setAttribute('animation', booleanToString(animation));
+    GroupTabsElement.setAttribute('animation', booleanToString(animation));
   }
 
   if (previousSkeletonScreen !== skeletonScreen) {
-    LocationNameElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-    LocationGroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
-    LocationGroupTabLineTrackElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    HeadNameElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    GroupTabsElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+    GroupTabLineTrackElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
   }
 
   // TODO: updateTab
@@ -841,8 +849,8 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         propertyElements.push([]);
         itemElements.push([]);
       }
-      LocationGroupsElement.append(groupsFragment);
-      LocationGroupTabsTrayElement.append(tabsFragment);
+      GroupsElement.append(groupsFragment);
+      GroupTabsTrayElement.append(tabsFragment);
     } else if (difference > 0) {
       for (let p = groupElementsLength - 1, q = groupElementsLength - difference - 1; p > q; p--) {
         groupElements[p].remove();
@@ -956,7 +964,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     }
   }
 
-  LocationGroupTabsTrayElement.style.setProperty('--b-cssvar-location-tabs-tray-width', `${cumulativeOffset}px`);
+  GroupTabsTrayElement.style.setProperty('--b-cssvar-location-tabs-tray-width', `${cumulativeOffset}px`);
 
   previousIntegration = integration;
   previousAnimation = animation;
@@ -968,10 +976,10 @@ async function refreshLocation(): Promise<number> {
     const playing_animation = getSettingOptionValue('playing_animation');
     const refresh_interval_setting = getSettingOptionValue('refresh_interval');
     const busArrivalTimeChartSize = querySize('location-bus-arrival-time-chart');
-    LocationUpdateTimerElement.setAttribute('refreshing', 'true');
-    LocationUpdateTimerElement.classList.remove('css_location_update_timer_slide_rtl');
+    UpdateTimerElement.setAttribute('refreshing', 'true');
+    UpdateTimerElement.classList.remove('css_location_update_timer_slide_rtl');
     const integration = await integrateLocation(currentHashSet_hash, busArrivalTimeChartSize.width, busArrivalTimeChartSize.height, function (message) {
-      LocationUpdateTimerElement.style.setProperty('--b-cssvar-location-update-timer-scale-x', message.percent.toString());
+      UpdateTimerElement.style.setProperty('--b-cssvar-location-update-timer-scale-x', message.percent.toString());
     });
     updateLocationField(integration, false, playing_animation);
     let updateRate = 0;
@@ -986,7 +994,7 @@ async function refreshLocation(): Promise<number> {
       nextUpdate = lastUpdate + refresh_interval_setting.baseInterval;
     }
     const interval = Math.max(5000, nextUpdate - lastUpdate);
-    LocationUpdateTimerElement.setAttribute('refreshing', 'false');
+    UpdateTimerElement.setAttribute('refreshing', 'false');
     animateUpdateTimer(interval);
     return interval;
   } catch (err) {
@@ -1002,8 +1010,8 @@ function initializeLocation(hash: IntegratedLocation['hash']): void {
   locationSliding_initialIndex = 0;
   locationSliding_groupStyles = {};
 
-  LocationGroupsElement.scrollLeft = 0;
-  LocationGroupsElement.focus();
+  GroupsElement.scrollLeft = 0;
+  GroupsElement.focus();
 
   setupLocationFieldSkeletonScreen(hash);
 
@@ -1015,11 +1023,11 @@ function initializeLocation(hash: IntegratedLocation['hash']): void {
 }
 
 export function showLocation(): void {
-  LocationField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hideLocation(): void {
-  LocationField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openLocation(hash: IntegratedLocation['hash']): void {

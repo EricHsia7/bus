@@ -8,12 +8,14 @@ import { openIconSelectorSearch } from '../icon-selector-search';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
-const iconSelectorField = documentQuerySelector('.css_icon_selector_field');
-const bodyElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_body');
-const trayElement = elementQuerySelector(bodyElement, '.css_icon_selector_tray');
-const contentElement = elementQuerySelector(trayElement, '.css_icon_selector_content');
-const headElement = elementQuerySelector(iconSelectorField, '.css_icon_selector_head');
-const rightButtonElement = elementQuerySelector(headElement, '.css_icon_selector_button_right');
+const Field = documentQuerySelector('.css_icon_selector_field');
+
+const BodyElement = elementQuerySelector(Field, '.css_icon_selector_body');
+const TrayElement = elementQuerySelector(BodyElement, '.css_icon_selector_tray');
+const ContentElement = elementQuerySelector(TrayElement, '.css_icon_selector_content');
+
+const HeadElement = elementQuerySelector(Field, '.css_icon_selector_head');
+const HeadButtonRightElement = elementQuerySelector(HeadElement, '.css_icon_selector_button_right');
 
 /**
  * div.css_icon_selector_item(n) in div.css_icon_selector_content(1)
@@ -50,18 +52,18 @@ export function initializeIconSelectorVirtualScroll(): void {
   visibleElementsQuantity = Math.ceil(windowHeight / itemHeight) + buffer * 2;
   offsetY = parseInt(getCSSVariableValue('--b-cssvar-safe-area-top')) + 55;
 
-  bodyElement.addEventListener('scroll', function () {
-    const firstVisibleIndex = getFirstVisibleIndex(bodyElement.scrollTop);
+  BodyElement.addEventListener('scroll', function () {
+    const firstVisibleIndex = getFirstVisibleIndex(BodyElement.scrollTop);
     const anchor = Math.max(0, firstVisibleIndex - (firstVisibleIndex % buffer));
     if (anchor !== currentStartIndex) {
       currentStartIndex = anchor;
       updateIconSelectorField(currentIntegration, previousInputElement, currentStartIndex, previosuSkeletonScreen, previousAnimation);
-      contentElement.style.setProperty('--b-cssvar-icon-selector-content-translate-y', `${getElementTop(anchor)}px`);
+      ContentElement.style.setProperty('--b-cssvar-icon-selector-content-translate-y', `${getElementTop(anchor)}px`);
     }
   });
 
-  contentElement.style.setProperty('--b-cssvar-icon-selector-content-translate-y', `${offsetY}px`);
-  trayElement.style.setProperty('--b-cssvar-icon-selector-tray-height', `${getTrayHeight()}px`);
+  ContentElement.style.setProperty('--b-cssvar-icon-selector-content-translate-y', `${offsetY}px`);
+  TrayElement.style.setProperty('--b-cssvar-icon-selector-tray-height', `${getTrayHeight()}px`);
 }
 
 function getTrayHeight(): number {
@@ -453,11 +455,11 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
   if (currentItemsLength !== itemsLength) {
     stretchState.resize(itemsLength);
     tabState.resize(itemsLength);
-    trayElement.style.setProperty('--b-cssvar-icon-selector-tray-height', `${getTrayHeight()}px`);
+    TrayElement.style.setProperty('--b-cssvar-icon-selector-tray-height', `${getTrayHeight()}px`);
   }
 
   if (previousInputElement !== inputElement) {
-    rightButtonElement.onclick = function () {
+    HeadButtonRightElement.onclick = function () {
       openIconSelectorSearch('', inputElement);
     };
   }
@@ -472,7 +474,7 @@ function updateIconSelectorField(integration: IntegratedMaterialSymbols, inputEl
         fragment.appendChild(newItemElement);
         itemElements.push(newItemElement);
       }
-      contentElement.append(fragment);
+      ContentElement.append(fragment);
     } else if (difference > 0) {
       for (let p = itemElementsLength - 1, q = itemElementsLength - difference - 1; p > q; p--) {
         itemElements[p].remove();
@@ -515,7 +517,7 @@ async function initializeIconSelectorField(inputElement: HTMLInputElement) {
 
   setupIconSelectorFieldSkeleton(inputElement);
 
-  bodyElement.scrollTop = 0;
+  BodyElement.scrollTop = 0;
 
   const integration = await integrateMaterialSymbols(function () {});
   currentIntegration = integration;
@@ -528,11 +530,11 @@ function selectIcon(symbol: string, inputElement: HTMLInputElement): void {
 }
 
 export function showIconSelector(): void {
-  iconSelectorField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
 }
 
 export function hideIconSelector(): void {
-  iconSelectorField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
 }
 
 export function openIconSelector(inputElement: HTMLInputElement): void {
@@ -626,7 +628,7 @@ function stretchItemElement(itemElement: HTMLElement): void {
     stretchState.set(index, 1);
   }
 
-  trayElement.style.setProperty('--b-cssvar-icon-selector-tray-height', `${getTrayHeight()}px`);
+  TrayElement.style.setProperty('--b-cssvar-icon-selector-tray-height', `${getTrayHeight()}px`);
 }
 
 function switchItemBodyElementTab(itemElement: HTMLElement, tabCode: number): void {
