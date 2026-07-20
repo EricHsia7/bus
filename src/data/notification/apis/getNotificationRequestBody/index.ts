@@ -22,8 +22,9 @@ export function getNotificationRequestBody(method: NotificationResponse['method'
         const currentDate = new Date();
         currentDate.setMilliseconds(0);
         currentDate.setSeconds(0);
+        const origin = location.origin;
         return {
-          hash: sha512(`${sha512(parameters[0])}${currentDate.getTime()}`)
+          hash: sha512(`${sha512(origin)}${sha512(parameters[0])}${currentDate.getTime()}`)
         };
       }
     case 'schedule':
