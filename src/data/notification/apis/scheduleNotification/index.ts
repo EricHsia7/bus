@@ -28,13 +28,12 @@ export async function scheduleNotification(stop_id: NotificationSchedule['stop_i
   const requestBody = getNotificationRequestBody('schedule', [stop_id, location_name, route_id, route_name, direction, estimate_time, time_formatting_mode, time_offset, processed_schedule_time.toISOString()]);
   const response = await makeNotificationRequest('schedule', url, requestBody);
   if (response === false) return false;
-  alert(response.result);
   if (response.method !== 'schedule') return false;
   if (response.code === 0) {
+    await saveNotificationSchedule(response.schedule_id, stop_id, location_name, route_id, route_name, direction, estimate_time, time_formatting_mode, time_offset, processed_schedule_time.getTime());
     if (Math.random() > 0.8) {
       await rotateNotificationSecret();
     }
-    await saveNotificationSchedule(response.schedule_id, stop_id, location_name, route_id, route_name, direction, estimate_time, time_formatting_mode, time_offset, processed_schedule_time.getTime());
   }
   return response.code;
 }
