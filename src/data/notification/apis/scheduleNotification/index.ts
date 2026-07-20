@@ -4,7 +4,7 @@ import { getNotificationRequestBody } from '../getNotificationRequestBody/index'
 import { makeNotificationRequest, NotificationResponseCode } from '../loader';
 import { rotateNotificationSecret } from '../rotateNotificationSecret/index';
 
-export async function scheduleNotification(stop_id: NotificationSchedule['stop_id'], location_name: NotificationSchedule['location_name'], route_id: NotificationSchedule['route_id'], route_name: NotificationSchedule['route_name'], direction: NotificationSchedule['direction'], estimate_time: NotificationSchedule['estimate_time'], time_formatting_mode: NotificationSchedule['time_formatting_mode'], time_offset: NotificationSchedule['time_offset'], scheduled_time: string | number | Date): Promise<string | NotificationResponseCode | false> {
+export async function scheduleNotification(stop_id: NotificationSchedule['stop_id'], location_name: NotificationSchedule['location_name'], route_id: NotificationSchedule['route_id'], route_name: NotificationSchedule['route_name'], direction: NotificationSchedule['direction'], estimate_time: NotificationSchedule['estimate_time'], time_formatting_mode: NotificationSchedule['time_formatting_mode'], time_offset: NotificationSchedule['time_offset'], scheduled_time: string | number | Date): Promise<NotificationResponseCode | false> {
   if (NotificationClientID === '' || NotificationSecret === '' || stop_id === undefined || location_name === undefined || route_id === undefined || route_name === undefined || direction === undefined || estimate_time === undefined || typeof time_formatting_mode !== 'number' || scheduled_time === undefined) {
     return false;
   }
@@ -34,7 +34,6 @@ export async function scheduleNotification(stop_id: NotificationSchedule['stop_i
       await rotateNotificationSecret();
     }
     await saveNotificationSchedule(response.schedule_id, stop_id, location_name, route_id, route_name, direction, estimate_time, time_formatting_mode, time_offset, processed_schedule_time.getTime());
-    return response.schedule_id;
   }
   return response.code;
 }

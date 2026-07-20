@@ -121,6 +121,9 @@ async function scheduleNotificationForStopItem(thisButtonElement: HTMLElement, S
     case false:
       promptMessage('error', '網路錯誤，請稍後再試');
       break;
+    case -2:
+      promptMessage('error', '發生錯誤');
+      break;
     case -1:
       promptMessage('warning', '註冊後才可設定到站通知', {
         text: '註冊',

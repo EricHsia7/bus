@@ -372,7 +372,7 @@ export const scheduleNotificationOptions: ScheduleNotificationOptions = [
   }
 ];
 
-export async function scheduleNotificationForStop(StopID: number, RouteID: number, EstimateTime: number, index: number): Promise<-1 | false | NotificationResponseCode> {
+export async function scheduleNotificationForStop(StopID: number, RouteID: number, EstimateTime: number, index: number): Promise<-1 | -2 | false | NotificationResponseCode> {
   if (!getNotificationClientStatus()) {
     return -1; // no registration
   }
@@ -389,7 +389,7 @@ export async function scheduleNotificationForStop(StopID: number, RouteID: numbe
   if (hasOwnProperty(Stop, StopKey)) {
     thisStop = Stop[StopKey];
   } else {
-    return 0;
+    return -2;
   }
   const thisStopLocationId = thisStop.stopLocationId;
   const thisStopGoBack = thisStop.goBack;
@@ -400,7 +400,7 @@ export async function scheduleNotificationForStop(StopID: number, RouteID: numbe
   if (hasOwnProperty(Location, thisLocationKey)) {
     thisLocation = Location[thisLocationKey];
   } else {
-    return 0;
+    return -2;
   }
   const thisLocationName = thisLocation.n;
 
@@ -410,7 +410,7 @@ export async function scheduleNotificationForStop(StopID: number, RouteID: numbe
   if (hasOwnProperty(Route, RouteKey)) {
     thisRoute = Route[RouteKey];
   } else {
-    return 0;
+    return -2;
   }
 
   const thisRouteName = thisRoute.n;
@@ -426,6 +426,5 @@ export async function scheduleNotificationForStop(StopID: number, RouteID: numbe
   const scheduled_time = now + EstimateTime * 1000 + timeOffset * 60 * 1000;
 
   const result = await scheduleNotification(StopID, thisLocationName, RouteID, thisRouteName, thisRouteDirection, EstimateTime, time_formatting_mode, timeOffset, scheduled_time);
-  if (typeof result === 'string') return 0;
   return result;
 }
