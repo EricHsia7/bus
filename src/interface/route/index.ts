@@ -1193,7 +1193,7 @@ async function refreshRoute(): Promise<number> {
   }
 }
 
-function initializeRoute(RouteID: IntegratedRoute['RouteID']): void {
+function initializeRouteFeild(RouteID: IntegratedRoute['RouteID']): void {
   currentRouteID = RouteID;
 
   routeSliding_initialIndex = 0;
@@ -1223,7 +1223,7 @@ export function openRoute(RouteID: IntegratedRoute['RouteID']): void {
   pushPageHistory('Route');
   logRecentView('route', RouteID);
   showRoute();
-  initializeRoute(RouteID);
+  initializeRouteFeild(RouteID);
   hidePreviousPage();
 }
 

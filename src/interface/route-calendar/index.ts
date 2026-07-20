@@ -145,7 +145,7 @@ function initializeRouteCalendarSliding(): void {
   timelinesElement.scrollTo({ left: routeCalendarSliding_fieldWidth });
 }
 
-async function initializeRouteCalendar(RouteID: SimplifiedRouteItem['id']) {
+async function initializeRouteCalendarFeild(RouteID: SimplifiedRouteItem['id']) {
   const FieldSize = querySize('window');
   routeCalendarSliding_fieldWidth = FieldSize.width;
   currentDate = new Date();
@@ -171,7 +171,7 @@ export function hideRouteCalendar(): void {
 export function openRouteCalendar(RouteID: SimplifiedRouteItem['id']): void {
   pushPageHistory('RouteCalendar');
   showRouteCalendar();
-  initializeRouteCalendar(RouteID);
+  initializeRouteCalendarFeild(RouteID);
   hidePreviousPage();
 }
 

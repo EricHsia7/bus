@@ -14,7 +14,7 @@ import { closeFolderCreator } from './interface/folder-creator/index';
 import { closeFolderManager } from './interface/folder-manager/index';
 import { initializeFoldersField, setupFolderFieldSkeletonScreen } from './interface/home/folders/index';
 import { downloadData } from './interface/home/index';
-import { initializeRecentViews, setupRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
+import { initializeRecentViewsField, setupRecentViewsFieldSkeletonScreen } from './interface/home/recent-views/index';
 import { closeIconSelector } from './interface/icon-selector/index';
 import { fadeOutSplashScreen } from './interface/index';
 import { closeLocationDetails } from './interface/location-details/index';
@@ -258,7 +258,7 @@ interface BusWindow extends Window {
     openPermalink();
 
     // initialize recent views
-    initializeRecentViews();
+    initializeRecentViewsField();
 
     // initialize folders
     initializeFoldersField();

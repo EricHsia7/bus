@@ -286,7 +286,7 @@ function setupFolderEditorFieldSkeletonScreen(): void {
   updateFolderEditorField(folder, content, function () {}, true, playing_animation);
 }
 
-function initializeFolderEditorField(folderID: string, callback: Function) {
+function initializeFolderEditorField(folderID: string, callback: Function): void {
   const playing_animation = getSettingOptionValue('playing_animation');
   setupFolderEditorFieldSkeletonScreen();
   const folder = getFolder(folderID);

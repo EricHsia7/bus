@@ -300,7 +300,7 @@ async function refreshRecentViews(): Promise<number> {
   }
 }
 
-export function initializeRecentViews(): void {
+export function initializeRecentViewsField(): void {
   // setupRecentViewsFieldSkeletonScreen();
   if (recentViewsTick.isPaused) {
     recentViewsTick.resume(true);

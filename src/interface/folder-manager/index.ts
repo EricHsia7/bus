@@ -82,7 +82,7 @@ function generateElementOfItem(): HTMLElement {
   return itemElement;
 }
 
-function initializeFolderManagerField() {
+function initializeFolderManagerField(): void {
   rightButtonElement.onclick = function () {
     openFolderCreator(function () {
       initializeFolderManagerField();

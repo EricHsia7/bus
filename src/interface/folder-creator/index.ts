@@ -37,7 +37,7 @@ export async function createFormulatedFolder(callback: Function) {
   }
 }
 
-function initializeFolderCreator(callback: Function): void {
+function initializeFolderCreatorFeild(callback: Function): void {
   folderNameInputElement.value = '';
   iconInputElement.value = '';
   rightButtonElement.onclick = function () {
@@ -58,7 +58,7 @@ export function hideFolderCreator(): void {
 
 export function openFolderCreator(callback: Function): void {
   pushPageHistory('FolderCreator');
-  initializeFolderCreator(callback);
+  initializeFolderCreatorFeild(callback);
   showFolderCreator();
   hidePreviousPage();
 }

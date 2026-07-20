@@ -151,7 +151,7 @@ function setupStorageFieldSkeletonScreen(): void {
   updateStorageField(statistics, true, playing_animation);
 }
 
-async function initializeStorageStatistics() {
+async function initializeStorageStatisticsFeild() {
   const playing_animation = getSettingOptionValue('playing_animation');
   setupStorageFieldSkeletonScreen();
   const statistics = await getStoresSizeStatistics();
@@ -169,7 +169,7 @@ export function hideStorage(): void {
 export function openStorage(): void {
   pushPageHistory('Storage');
   showStorage();
-  initializeStorageStatistics();
+  initializeStorageStatisticsFeild();
   hidePreviousPage();
 }
 

@@ -23,7 +23,7 @@ const headElement = elementQuerySelector(RegisterNotificationField, '.css_regist
 const leftButtonElement = elementQuerySelector(headElement, '.css_register_notification_button_left');
 const rightButtonElement = elementQuerySelector(headElement, '.css_register_notification_button_right');
 
-function initializeRegisterNotificationField() {
+function initializeRegisterNotificationField(): void {
   leftButtonElement.onclick = function () {
     closeRegisterNotification();
     // callback

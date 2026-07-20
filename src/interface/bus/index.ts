@@ -25,7 +25,7 @@ export function openBus(id: number): void {
   pushPageHistory('Bus');
   logRecentView('bus', id);
   showBus();
-  initializeBusPage(id);
+  initializeBusField(id);
   hidePreviousPage();
 }
 
@@ -35,7 +35,7 @@ export function closeBus(): void {
   revokePageHistory('Bus');
 }
 
-async function initializeBusPage(id: number) {
+async function initializeBusField(id: number) {
   setupBusPropertiesFieldSkeletonScreen();
   const playing_animation = getSettingOptionValue('playing_animation');
   const integration = await integrateBus(id, function () {});
