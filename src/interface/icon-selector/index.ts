@@ -74,11 +74,6 @@ function getElementTop(index: number): number {
   return offsetY + index * itemHeight + stretchState.sum(index) * itemExtraHeight;
 }
 
-function getElementRelativeTop(index: number): number {
-  // distance to the top of the content element
-  return index * itemHeight + stretchState.sum(index - 1) * itemExtraHeight;
-}
-
 function getFirstVisibleIndex(scrollTop: number): number {
   let low = 0;
   let high = stretchState.length * 1;
@@ -647,6 +642,6 @@ function switchItemBodyElementTab(itemElement: HTMLElement, tabCode: number): vo
     buttonElements[i].setAttribute('highlighted', state[i]);
     tabElements[i].setAttribute('displayed', state[i]);
   }
-  const index = parseInt(itemElement.getAttribute('index') || '0', 10);
-  tabState.set(index, tabCode);
+  const virtualIndex = parseInt(itemElement.getAttribute('index') || '0', 10);
+  tabState.set(virtualIndex, tabCode);
 }

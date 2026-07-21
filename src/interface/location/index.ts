@@ -79,7 +79,7 @@ const itemElementExtraHeight: number = 171;
 const stretchStates: Array<BitState> = [];
 
 function getElementRelativeTop(groupIndex: number, index: number): number {
-  return index * itemElementHeight + stretchStates[groupIndex].sum(index - 1) * itemElementExtraHeight;
+  return index * itemElementHeight + stretchStates[groupIndex].sum(index) * itemElementExtraHeight;
 }
 
 export function initializeLocationSliding(): void {

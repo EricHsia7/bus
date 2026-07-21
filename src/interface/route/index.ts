@@ -80,7 +80,7 @@ const itemElementHeight = 50;
 const itemElementExtraHeight = 171;
 
 function getElementRelativeTop(groupIndex: number, index: number): number {
-  return index * itemElementHeight + stretchStates[groupIndex].sum(index - 1) * itemElementExtraHeight;
+  return index * itemElementHeight + stretchStates[groupIndex].sum(index) * itemElementExtraHeight;
 }
 
 export function initializeRouteSliding(): void {

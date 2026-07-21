@@ -30,24 +30,29 @@ export class BitState {
     }
   }
 
+  /**
+   * @param index zero-based
+   */
   set(index: number, value: number): void {
     const difference = value - this.state[index];
     this.state[index] = value;
-    this.add(index, difference);
+    this.add(index + 1, difference);
   }
 
+  /**
+   * @param index one-based
+   */
   add(index: number, difference: number): void {
-    if (index < 0) {
-      index += this.length + 1;
-    }
-    if (index < 1) {
-      return;
-    }
+    if (index < 1) return;
     for (let i = index; i <= this.length; i += i & -i) {
       this.bit[i] += difference;
     }
   }
 
+  /**
+   * calculate the sum of states before the specified index (non-inclusive)
+   * @param index zero-based
+   */
   sum(index: number): number {
     if (index < 0) return 0;
     let total = 0;
