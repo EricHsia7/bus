@@ -451,7 +451,7 @@ function setupLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): voi
     routeName: '',
     routeDirection: '',
     routeId: -1,
-    bearing: [0, 0],
+    bearing: '',
     stopId: -1,
     status: {
       code: 8,
