@@ -451,6 +451,7 @@ function setupLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): voi
     routeName: '',
     routeDirection: '',
     routeId: -1,
+    bearing: [0, 0],
     stopId: -1,
     status: {
       code: 8,
@@ -557,7 +558,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     function updateRouteDirection(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {
       const thisHeadElement = elementQuerySelector(thisElement, '.css_location_group_item_head');
       const thisRouteDirectionElement = elementQuerySelector(thisHeadElement, '.css_location_group_item_route_direction');
-      thisRouteDirectionElement.textContent = thisItem.routeDirection;
+      thisRouteDirectionElement.textContent = `${thisItem.routeDirection} | ${thisItem.bearing}`;
     }
 
     function updateRouteName(thisElement: HTMLElement, thisItem: IntegratedLocationItem): void {

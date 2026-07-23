@@ -75,7 +75,7 @@ export interface IntegratedLocationItem {
   routeDirection: string;
   routeId: number;
   stopId: number;
-  bearing: [x: number, y: number];
+  bearing: string;
   status: EstimateTimeStatus;
   ranking: IntegratedLocationItemRanking;
   buses: Array<FormattedBus>;
@@ -220,7 +220,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
         continue;
       }
       integratedItem.routeName = thisRoute.n;
-      integratedItem.routeDirection = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack, 10)]} | ${cardinalDirections[i][o].name}${cardinalDirections[i][o].symbol}`;
+      integratedItem.routeDirection = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack, 10)]}`;
       integratedItem.routeId = thisRouteID;
 
       // Collect data from 'BusShape'
@@ -236,18 +236,25 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
         const index = thisShape.markers[stopLocationKey];
         const coordinatesLength = thisShape.longtitudes.length;
         if (index + 1 < coordinatesLength) {
-          bearingX = thisShape.longtitudes[index + 1] - thisShape.longtitudes[index];
+          bearingX = (thisShape.longtitudes[index + 1] - thisShape.longtitudes[index]) * Math.cos((thisShape.latitudes[index] / 180) * Math.PI);
           bearingY = thisShape.latitudes[index + 1] - thisShape.latitudes[index];
         } else if (index > 0) {
-          bearingX = thisShape.longtitudes[index] - thisShape.longtitudes[index - 1];
+          bearingX = (thisShape.longtitudes[index] - thisShape.longtitudes[index - 1]) * Math.cos((thisShape.latitudes[index - 1] / 180) * Math.PI);
           bearingY = thisShape.latitudes[index] - thisShape.latitudes[index - 1];
         }
         if (!thisShape.cis) {
           bearingX *= -1;
           bearingY *= -1;
         }
+        const bearingLength = Math.sqrt(bearingX * bearingX + bearingY * bearingY);
+        if (bearingLength > 0) {
+          bearingX /= bearingLength;
+          bearingY /= bearingLength;
+        }
       }
-      integratedItem.bearing = [bearingX, bearingY];
+      const bearing = bearingX === 0 && bearingY === 0 ? setsOfVectors[i][o] : [bearingX, bearingY]; // fallback to location vector
+      const rad = Math.PI / 2 - Math.atan2(bearing[1], bearing[0]);
+      integratedItem.bearing = `${((Math.floor((rad * 180) / Math.PI) + 360) % 360)}\u00B0`;
 
       // Collect data from 'batchFoundEstimateTime'
       let thisEstimateTime = {} as EstimateTimeItem;
