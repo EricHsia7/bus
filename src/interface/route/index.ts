@@ -876,7 +876,8 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
     function updateThread(thisThreadBoxElement: HTMLElement, thisItem: integratedStopItem, previousItem: integratedStopItem | null, skeletonScreen: boolean, animation: boolean): void {
       const previousProgress = previousItem?.progress || 0;
       const thisProgress = thisItem?.progress || 0;
-      const thisThreadProgressElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread .css_route_group_thread_progress');
+      const thisThreadElement = elementQuerySelector(thisThreadBoxElement, '.css_route_group_thread');
+      const thisThreadProgressElement = elementQuerySelector(thisThreadElement, '.css_route_group_thread_progress');
       if (!skeletonScreen) {
         if (animation) {
           if (routeVisibilityMonitor.isVisible(thisItemElement)) {
