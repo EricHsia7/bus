@@ -185,7 +185,7 @@ function rasterizePath(item: SimplifiedBusShapeItem, cell: number, ox: number, o
 
 function organize(item: SimplifiedBusShapeItem, stops: Array<Coordinate>): SimplifiedBusShapeItem {
   const markers: SimplifiedBusShapeItem['markers'] = {};
-  const markersList: Array<[stopLocationId: number, sequence: number, index: number]> = [];
+  const markerssSequence: Array<[sequence: number, index: number]> = [];
   const coordinatesLength = item.longtitudes.length;
   const stopsLength = stops.length;
   for (let i = 0; i < coordinatesLength; i++) {
@@ -200,16 +200,16 @@ function organize(item: SimplifiedBusShapeItem, stops: Array<Coordinate>): Simpl
     }
     if (index > 0) {
       const stopLocationKey = `l_${stops[index][2]}`;
-      markersList.push([stops[index][2], stops[index][3], i]);
+      markerssSequence.push([stops[index][3], i]);
       markers[stopLocationKey] = i;
     }
   }
-  markersList.sort(function (a, b) {
-    return a[2] - b[2];
+  markerssSequence.sort(function (a, b) {
+    return a[1] - b[1];
   });
   let sumDifference = 0;
-  for (let i = 1, l = markersList.length; i < l; i++) {
-    sumDifference += markersList[i][1] - markersList[i - 1][1];
+  for (let i = 1, l = markerssSequence.length; i < l; i++) {
+    sumDifference += markerssSequence[i][0] - markerssSequence[i - 1][0];
   }
   return {
     longtitudes: item.longtitudes,
