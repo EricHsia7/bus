@@ -31,7 +31,6 @@ export async function downloadData() {
   // getBusShape: 4
   await Promise.all([getRoute(progress, true), getLocation(progress, 1), getCarInfo(progress, true), getBusShape(progress)]);
   await Promise.all([getMaterialSymbolsSearchIndex(progress), getMaterialSymbolsDescription(progress), getMaterialSymbolsList(progress), getMaterialSymbolsSimilarity(progress)]);
-  getBusShape(progress).then((e) => console.log(e));
   progress.terminate();
 }
 
