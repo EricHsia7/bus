@@ -3,7 +3,6 @@ import { addressToString, generateLabelFromAddresses } from '../../tools/address
 import { CardinalDirection, getCardinalDirectionFromVector } from '../../tools/cardinal-direction';
 import { hasOwnProperty } from '../../tools/index';
 import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
-import { normalizeVector } from '../../tools/math';
 import { Progress, ProgressCallback } from '../../tools/progress';
 import { BusArrivalTime, plotBusArrivalTime } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
@@ -47,7 +46,7 @@ function rankBatchFoundEstimateTime(batchFoundEstimateTime: BatchFoundEstimateTi
     result[thisStopKey] = {
       number: index,
       text: index.toString(),
-      code: rankingCode
+      code: rankingCode as IntegratedLocationItemRanking['code']
     };
     index += 1;
   }
@@ -67,7 +66,15 @@ export interface LocationGroup {
 export interface IntegratedLocationItemRanking {
   number: number;
   text: '--' | string;
-  code: -1 | 0 | 1 | 2 | 3 | 4; // -1: not applicable, 0: 0-25%, 1: 25-50%, 2: 50-75%, 3: 75-100%, 4: 100%
+  /**
+   * - -1: not applicable
+   * - 0: 0-25%
+   * - 1: 25-50%
+   * - 2: 50-75%
+   * - 3: 75-100%
+   * - 4: 100%
+   */
+  code: -1 | 0 | 1 | 2 | 3 | 4;
 }
 
 export interface IntegratedLocationItem {
@@ -244,15 +251,10 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
           bearingX *= -1;
           bearingY *= -1;
         }
-        const bearingLength = Math.sqrt(bearingX * bearingX + bearingY * bearingY);
-        if (bearingLength > 0) {
-          bearingX /= bearingLength;
-          bearingY /= bearingLength;
-        }
       }
       const bearing = bearingX === 0 && bearingY === 0 ? setsOfVectors[i][o] : [bearingX, bearingY]; // fallback to location vector
       const rad = Math.PI / 2 - Math.atan2(bearing[1], bearing[0]);
-      integratedItem.bearing = `${((Math.floor((rad * 180) / Math.PI) + 360) % 360)}\u00B0`;
+      integratedItem.bearing = `${(Math.floor((rad * 180) / Math.PI) + 360) % 360}\u00B0`;
 
       // Collect data from 'batchFoundEstimateTime'
       let thisEstimateTime = {} as EstimateTimeItem;
