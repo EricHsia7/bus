@@ -1,7 +1,8 @@
 import { GenericNumberArray } from '../../../tools/math';
 import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
-import { getAPIURL } from '../getAPIURL/index';
+import { APIData, getAPIURL } from '../getAPIURL/index';
+import { Stop } from '../getStop';
 import { fetchInflate } from '../loader';
 
 export interface BusShapeItem {
@@ -40,22 +41,12 @@ export interface BusShapeItem {
 export type BusShape = Array<BusShapeItem>;
 
 export interface SimplifiedBusShapeItem {
-  /**
-   * RouteID
-   */
-  id: BusShapeItem['RouteID'];
-
-  /**
-   * coordinates
-   */
-  coordinates: {
-    longtitudes: GenericNumberArray;
-    latitudes: GenericNumberArray;
-  };
+  longtitudes: GenericNumberArray;
+  latitudes: GenericNumberArray;
 }
 
 export type SimplifiedBusShape = {
-  [r_id: string]: [go: Array<SimplifiedBusShapeItem>, back: Array<SimplifiedBusShapeItem>];
+  [r_id: string]: [go: SimplifiedBusShapeItem, back: SimplifiedBusShapeItem];
 };
 
 let BusShapeMemoryCache_available: boolean = false;
@@ -63,9 +54,9 @@ let BusShapeMemoryCache_data: SimplifiedBusShape = {};
 let BusShapeMemoryCache_timestamp: number = -1;
 
 const cacheTimeToLive = 60 * 60 * 24 * 14 * 1000;
-const cacheKey = 'bus_bus_shape_cache';
+const cacheKey = 'bus_bus_shape_v2_cache';
 
-async function simplifyBusShape(BusShape: BusShape): Promise<SimplifiedBusShape> {
+async function simplifyBusShape(BusShape: BusShape, Stop: Stop): Promise<SimplifiedBusShape> {
   const worker = new Worker(new URL('./simplifyBusShape-worker.ts', import.meta.url));
 
   // Wrap worker communication in a promise
@@ -80,7 +71,7 @@ async function simplifyBusShape(BusShape: BusShape): Promise<SimplifiedBusShape>
       worker.terminate(); // Terminate the worker if an error occurs
     };
 
-    worker.postMessage(BusShape); // Send data to the worker
+    worker.postMessage({ BusShape, Stop }); // Send data to the worker
   })) as SimplifiedBusShape;
 
   return result;
@@ -108,6 +99,27 @@ export async function getBusShape(progress: Progress): Promise<SimplifiedBusShap
     return result;
   }
 
+  async function getStopData() {
+    const apis = [
+      [0, 11],
+      [1, 11]
+    ];
+    const result: Stop = [];
+    const decoder = new TextDecoder();
+    for (const api of apis) {
+      const url = getAPIURL(api[0], api[1]);
+      const sourceId = progress.listen();
+      const inflatedData = await fetchInflate(url, function (message) {
+        progress.update(sourceId, message.loaded, message.total);
+      });
+      const data = JSON.parse(decoder.decode(inflatedData)) as APIData<Stop>;
+      for (let i = 0, l = data.BusInfo.length; i < l; i++) {
+        result.push(data.BusInfo[i]);
+      }
+    }
+    return result;
+  }
+
   const now = new Date().getTime();
 
   if (BusShapeMemoryCache_timestamp === -1) {
@@ -123,16 +135,19 @@ export async function getBusShape(progress: Progress): Promise<SimplifiedBusShap
   if (BusShapeMemoryCache_available && now - BusShapeMemoryCache_timestamp <= cacheTimeToLive) {
     progress.update(progress.listen(), 1, 1);
     progress.update(progress.listen(), 1, 1);
+    progress.update(progress.listen(), 1, 1);
+    progress.update(progress.listen(), 1, 1);
     return BusShapeMemoryCache_data;
   }
 
-  const result = await getData();
-  const simplified = await simplifyBusShape(result);
+  const data = await getData();
+  const stopData = await getStopData();
+  const simplified = await simplifyBusShape(data, stopData);
   for (const key in simplified) {
     for (let i = 0; i < 2; i++) {
-      for (let j = simplified[key][i].length - 1; j >= 0; j--) {
-        simplified[key][i][j].coordinates.longtitudes = Array.from(simplified[key][i][j].coordinates.longtitudes);
-        simplified[key][i][j].coordinates.latitudes = Array.from(simplified[key][i][j].coordinates.latitudes);
+      if (simplified[key][i]) {
+        simplified[key][i].longtitudes = Array.from(simplified[key][i].longtitudes);
+        simplified[key][i].latitudes = Array.from(simplified[key][i].latitudes);
       }
     }
   }

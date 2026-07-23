@@ -1,3 +1,4 @@
+import { getBusShape } from '../../data/apis/getBusShape';
 import { getCarInfo } from '../../data/apis/getCarInfo/index';
 import { getLocation } from '../../data/apis/getLocation/index';
 import { getMaterialSymbolsDescription } from '../../data/apis/getMaterialSymbolsDescription/index';
@@ -17,7 +18,7 @@ const HeadButtonRightElement = elementQuerySelector(HeadElement, '.css_home_butt
 const ProgressElement = elementQuerySelector(HeadButtonRightElement, 'svg#download-svg path[component="progress"]');
 
 export async function downloadData() {
-  const progress = new Progress(10, function (message) {
+  const progress = new Progress(14, function (message) {
     const pixels = (1 - message.percent) * 189;
     ProgressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${pixels}px`);
     if (message.type === 'end') {
@@ -27,7 +28,8 @@ export async function downloadData() {
     }
   });
   // getRoute: 2 + getLocation: 2 + getCarInfo: 2 + getMaterialSymbolsSearchIndex: 1 + getMaterialSymbolsDescription: 1 + getMaterialSymbolsSimilarity: 1 + getMaterialSymbolsList: 1
-  await Promise.all([getRoute(progress, true), getLocation(progress, 1), getCarInfo(progress, true)]);
+  // getBusShape: 4
+  await Promise.all([getRoute(progress, true), getLocation(progress, 1), getCarInfo(progress, true), getBusShape(progress)]);
   await Promise.all([getMaterialSymbolsSearchIndex(progress), getMaterialSymbolsDescription(progress), getMaterialSymbolsList(progress), getMaterialSymbolsSimilarity(progress)]);
   progress.terminate();
 }
