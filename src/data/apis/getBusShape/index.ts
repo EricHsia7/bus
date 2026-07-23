@@ -40,9 +40,18 @@ export interface BusShapeItem {
 
 export type BusShape = Array<BusShapeItem>;
 
+/**
+ * stop location id -> coordinate index
+ */
+export type SimplifiedBusShapeMarkers = {
+  [l_id: string]: number;
+};
+
 export interface SimplifiedBusShapeItem {
   longtitudes: GenericNumberArray;
   latitudes: GenericNumberArray;
+  markers: SimplifiedBusShapeMarkers;
+  cis: boolean
 }
 
 export type SimplifiedBusShape = {
@@ -54,7 +63,7 @@ let BusShapeMemoryCache_data: SimplifiedBusShape = {};
 let BusShapeMemoryCache_timestamp: number = -1;
 
 const cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
-const cacheKey = 'bus_bus_shape_v2_cache';
+const cacheKey = 'bus_bus_shape_v3_cache';
 
 async function simplifyBusShape(BusShape: BusShape, Stop: Stop): Promise<SimplifiedBusShape> {
   const worker = new Worker(new URL('./simplifyBusShape-worker.ts', import.meta.url));

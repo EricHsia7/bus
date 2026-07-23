@@ -7,7 +7,7 @@ import { hasOwnProperty } from '../../../tools/index';
 import { stripTopLevelModel } from '../../../tools/text';
 import { Stop } from '../getStop';
 
-type Coordinate = [longitude: number, latitude: number];
+type Coordinate = [longitude: number, latitude: number, stopLocationId: number, sequence: number];
 
 self.onmessage = function (e) {
   const { BusShape, Stop } = e.data;
@@ -54,7 +54,9 @@ function processWorkerTask(BusShape: BusShape, Stop: Stop): void {
     const [longtitudes, latitudes] = parseWKTLineString(item.wkt);
     candidates[routeKey][item.GoBack].push({
       longtitudes,
-      latitudes
+      latitudes,
+      markers: {},
+      cis: true
     });
   }
 
@@ -67,10 +69,13 @@ function processWorkerTask(BusShape: BusShape, Stop: Stop): void {
     if (!hasOwnProperty(stopsByRoute, routeKey)) {
       stopsByRoute[routeKey] = [[], []];
     }
-    const lon = parseFloat(StopItem.longitude);
-    const lat = parseFloat(StopItem.latitude);
-    if (Number.isFinite(lon) && Number.isFinite(lat)) {
-      stopsByRoute[routeKey][direction].push([lon, lat]);
+    stopsByRoute[routeKey][direction].push([parseFloat(StopItem.longitude), parseFloat(StopItem.latitude), StopItem.stopLocationId, StopItem.seqNo]);
+  }
+  for (const routeKey in stopsByRoute) {
+    for (let d = 0; d < 2; d++) {
+      stopsByRoute[routeKey][d].sort(function (a, b) {
+        return a[3] - b[3];
+      });
     }
   }
 
@@ -79,20 +84,24 @@ function processWorkerTask(BusShape: BusShape, Stop: Stop): void {
     if (!hasOwnProperty(candidates, routeKey)) continue;
     result[routeKey] = [
       {
-        latitudes: [],
-        longtitudes: []
+        latitudes: new Float32Array(0),
+        longtitudes: new Float32Array(0),
+        markers: {},
+        cis: true
       },
       {
-        latitudes: [],
-        longtitudes: []
+        latitudes: new Float32Array(0),
+        longtitudes: new Float32Array(0),
+        markers: {},
+        cis: true
       }
     ];
-    for (let dir = 0; dir < 2; dir++) {
-      const bucket = candidates[routeKey][dir];
+    for (let d = 0; d < 2; d++) {
+      const bucket = candidates[routeKey][d];
       if (bucket.length === 0) continue;
-      const stops = stopsByRoute[routeKey]?.[dir] ?? [];
+      const stops = stopsByRoute[routeKey]?.[d] ?? [];
       const chosen = bucket.length === 1 ? bucket[0] : pickByCoverage(bucket, stops);
-      result[routeKey][dir] = chosen; // keep the [go, back] shape; one element each
+      result[routeKey][d] = organize(chosen, stops);
       transfer.push((chosen.longtitudes as Float32Array<ArrayBuffer>).buffer, (chosen.latitudes as Float32Array<ArrayBuffer>).buffer);
     }
   }
@@ -110,9 +119,9 @@ function pickByCoverage(candidates: Array<SimplifiedBusShapeItem>, stops: Array<
   // Local equirectangular frame anchored at the stops' mean (metres, cos-lat scaled).
   let sumLon = 0;
   let sumLat = 0;
-  for (const [lon, lat] of stops) {
-    sumLon += lon;
-    sumLat += lat;
+  for (const stop of stops) {
+    sumLon += stop[0];
+    sumLat += stop[1];
   }
   const originLon = sumLon / stops.length;
   const originLat = sumLat / stops.length;
@@ -143,13 +152,13 @@ function isBetter(scores: Array<number>, candidate: SimplifiedBusShapeItem, best
 // Fraction of stops whose quantized cell lies on the path's rasterized footprint.
 function coverageRatio(item: SimplifiedBusShapeItem, stops: Array<Coordinate>, cell: number, ox: number, oy: number, kx: number, ky: number): number {
   const cells = rasterizePath(item, cell, ox, oy, kx, ky);
-  let on = 0;
-  for (const [lon, lat] of stops) {
-    const col = Math.floor(((lon - ox) * kx) / cell);
-    const row = Math.floor(((lat - oy) * ky) / cell);
-    if (cells.has(`${col},${row}`)) on++;
+  let count = 0;
+  for (const stop of stops) {
+    const col = Math.floor(((stop[0] - ox) * kx) / cell);
+    const row = Math.floor(((stop[1] - oy) * ky) / cell);
+    if (cells.has(`${col},${row}`)) count++;
   }
-  return on / stops.length;
+  return count / stops.length;
 }
 
 // Rasterize a polyline into the set of grid cells it passes through
@@ -172,4 +181,40 @@ function rasterizePath(item: SimplifiedBusShapeItem, cell: number, ox: number, o
     }
   }
   return cells;
+}
+
+function organize(item: SimplifiedBusShapeItem, stops: Array<Coordinate>): SimplifiedBusShapeItem {
+  const markers: SimplifiedBusShapeItem['markers'] = {};
+  const markersList: Array<[stopLocationId: number, sequence: number, index: number]> = [];
+  const coordinatesLength = item.longtitudes.length;
+  const stopsLength = stops.length;
+  for (let i = 0; i < coordinatesLength; i++) {
+    let minDistance = Infinity;
+    let index = -1;
+    for (let j = 0; j < stopsLength; j++) {
+      const distance = Math.abs(stops[j][0] - item.longtitudes[i]) + Math.abs(stops[j][1] - item.latitudes[i]);
+      if (distance < minDistance) {
+        minDistance = distance;
+        index = j;
+      }
+    }
+    if (index > 0) {
+      const stopLocationKey = `l_${stops[index][2]}`;
+      markersList.push([stops[index][2], stops[index][3], i]);
+      markers[stopLocationKey] = i;
+    }
+  }
+  markersList.sort(function (a, b) {
+    return a[2] - b[2];
+  });
+  let sumDifference = 0;
+  for (let i = 1, l = markersList.length; i < l; i++) {
+    sumDifference += markersList[i][1] - markersList[i - 1][1];
+  }
+  return {
+    longtitudes: item.longtitudes,
+    latitudes: item.latitudes,
+    markers,
+    cis: sumDifference >= 0 // cis or trans coordinates
+  };
 }
