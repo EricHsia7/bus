@@ -12,7 +12,7 @@
   margin: 0px;
   padding: 0px;
   display: block;
-  background: var(--b-cssvar-ffffff-normal);
+  background-color: var(--b-cssvar-ffffff-normal);
   overflow: clip;
   contain: layout;
   will-change: transform;
@@ -100,12 +100,12 @@
 
 /* segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] {
-  background: var(--b-cssvar-f9f9fb-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-f9f9fb-inflected-to-segment-buffer);
 }
 
 /* nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] {
-  background: var(--b-cssvar-f9f9fb-inflected-to-user-position);
+  background-color: var(--b-cssvar-f9f9fb-inflected-to-user-position);
 }
 
 /* head */
@@ -152,18 +152,18 @@
   right: 15px;
   width: 85px;
   height: 30px;
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-normal);
   overflow: clip;
   contain: layout;
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule {
-  background: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule {
-  background: var(--b-cssvar-ededf2-inflected-to-user-position);
+  background-color: var(--b-cssvar-ededf2-inflected-to-user-position);
 }
 
 /* head > capsule > capsule separator */
@@ -173,17 +173,17 @@
   left: calc(55px - 1px / 2);
   width: 1px;
   height: 24px;
-  background: var(--b-cssvar-aeaeb2);
+  background-color: var(--b-cssvar-aeaeb2);
 }
 
 /* segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_capsule_separator {
-  background: var(--b-cssvar-aeaeb2-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-aeaeb2-inflected-to-segment-buffer);
 }
 
 /* nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_capsule_separator {
-  background: var(--b-cssvar-aeaeb2-inflected-to-user-position);
+  background-color: var(--b-cssvar-aeaeb2-inflected-to-user-position);
 }
 
 /* skeleton screen: true */
@@ -205,11 +205,11 @@
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_stretch {
-  background: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_stretch {
-  background: var(--b-cssvar-ededf2-inflected-to-user-position);
+  background-color: var(--b-cssvar-ededf2-inflected-to-user-position);
 }
 
 /* skeleton screen: true */
@@ -277,13 +277,13 @@
 /* code: 8 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_next_slide[code="8"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="8"] {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
 }
 
 /* code: 7 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_next_slide[code="7"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="7"] {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   color: var(--b-cssvar-333333-60-flattened);
   font-size: 11px;
   font-weight: 500;
@@ -292,13 +292,13 @@
 /* code: 7 && segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_next_slide[code="7"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="7"] {
-  background: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
 }
 
 /* code: 7 && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_next_slide[code="7"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="7"] {
-  background: var(--b-cssvar-ededf2-inflected-to-user-position);
+  background-color: var(--b-cssvar-ededf2-inflected-to-user-position);
 }
 
 /* code: 6, 5, 4, 3 */
@@ -310,7 +310,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="5"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="4"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="3"] {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   color: var(--b-cssvar-333333-60-flattened);
   font-size: 11px;
   font-weight: 500;
@@ -325,7 +325,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="5"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="4"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="3"] {
-  background: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
 }
 
 /* code: 6, 5, 4, 3 && nearest: true */
@@ -337,7 +337,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="5"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="4"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="3"] {
-  background: var(--b-cssvar-ededf2-inflected-to-user-position);
+  background-color: var(--b-cssvar-ededf2-inflected-to-user-position);
 }
 
 /* code: 2 */
@@ -346,19 +346,19 @@
   color: var(--b-cssvar-ffffff-normal);
   font-size: 13px;
   font-weight: 700;
-  background: var(--b-cssvar-main-color);
+  background-color: var(--b-cssvar-main-color);
 }
 
 /* code: 2 && segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_next_slide[code="2"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="2"] {
-  background: var(--b-cssvar-main-color-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-main-color-inflected-to-segment-buffer);
 }
 
 /* code: 2 && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_next_slide[code="2"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="2"] {
-  background: var(--b-cssvar-main-color-inflected-to-user-position);
+  background-color: var(--b-cssvar-main-color-inflected-to-user-position);
 }
 
 /* code: 1 */
@@ -367,27 +367,27 @@
   color: var(--b-cssvar-main-color);
   font-size: 13px;
   font-weight: 700;
-  background: var(--b-cssvar-main-color-22-flattened);
+  background-color: var(--b-cssvar-main-color-22-flattened);
 }
 
 /* code: 1 && segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_next_slide[code="1"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="1"] {
   color: var(--b-cssvar-main-color-inflected-to-segment-buffer);
-  background: var(--b-cssvar-main-color-inflected-to-segment-buffer-22-flattened);
+  background-color: var(--b-cssvar-main-color-inflected-to-segment-buffer-22-flattened);
 }
 
 /* code: 1 && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_next_slide[code="1"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="1"] {
   color: var(--b-cssvar-main-color-inflected-to-user-position);
-  background: var(--b-cssvar-main-color-inflected-to-user-position-22-flattened);
+  background-color: var(--b-cssvar-main-color-inflected-to-user-position-22-flattened);
 }
 
 /* code: 0 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_next_slide[code="0"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="0"] {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   color: var(--b-cssvar-333333);
   font-size: 13px;
   font-weight: 700;
@@ -396,13 +396,13 @@
 /* code: 0 && segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_next_slide[code="0"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[segment-buffer="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="0"] {
-  background: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
 }
 
 /* code: 0 && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_next_slide[code="0"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_items_track .css_route_group_item[nearest="true"] .css_route_group_item_head .css_route_group_item_capsule .css_route_group_item_status .css_current_slide[code="0"] {
-  background: var(--b-cssvar-ededf2-inflected-to-user-position);
+  background-color: var(--b-cssvar-ededf2-inflected-to-user-position);
 }
 
 /* fadeout */
@@ -945,7 +945,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-large);
   color: var(--b-cssvar-333333);
   touch-action: manipulation;

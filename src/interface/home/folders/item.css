@@ -91,7 +91,7 @@
   right: 10px;
   width: 85px;
   height: 30px;
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-normal);
   overflow: clip;
   display: block;
@@ -179,7 +179,7 @@
   left: calc(55px - 1px / 2);
   width: 1px;
   height: 24px;
-  background: var(--b-cssvar-aeaeb2);
+  background-color: var(--b-cssvar-aeaeb2);
   display: block;
 }
 
@@ -280,13 +280,13 @@
 /* code: 8 */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide[code="8"],
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="8"] {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
 }
 
 /* code: 7 */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide[code="7"],
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="7"] {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   color: var(--b-cssvar-333333-60-flattened);
   font-size: 11px;
   font-weight: 500;
@@ -301,7 +301,7 @@
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="5"],
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="4"],
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="3"] {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   color: var(--b-cssvar-333333-60-flattened);
   font-size: 11px;
   font-weight: 500;
@@ -313,7 +313,7 @@
   color: var(--b-cssvar-ffffff-normal);
   font-size: 13px;
   font-weight: 700;
-  background: var(--b-cssvar-main-color);
+  background-color: var(--b-cssvar-main-color);
 }
 
 /* code: 1 */
@@ -322,13 +322,13 @@
   color: var(--b-cssvar-main-color);
   font-size: 13px;
   font-weight: 700;
-  background: var(--b-cssvar-main-color-22-flattened);
+  background-color: var(--b-cssvar-main-color-22-flattened);
 }
 
 /* code: 0 */
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_next_slide[code="0"],
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_content .css_home_folder_item .css_home_folder_item_capsule .css_home_folder_item_status .css_current_slide[code="0"] {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   color: var(--b-cssvar-333333);
   font-size: 13px;
   font-weight: 700;
@@ -346,8 +346,8 @@
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[animation="true"][skeleton-screen="true"] .css_home_folder_item_capsule,
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[animation="true"][skeleton-screen="true"] .css_home_folder_item_context,
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[animation="true"][skeleton-screen="true"] .css_home_folder_item_main {
-  background: var(--b-cssvar-ededf2);
-  background: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-ffffff-blocky) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
+  background-color: var(--b-cssvar-ededf2);
+  background-image: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-ffffff-blocky) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
   background-size: 400% 100%;
   background-position-x: 0% 0%;
   animation: b-css-skeleton-loading;
@@ -360,5 +360,5 @@
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[animation="false"][skeleton-screen="true"] .css_home_folder_item_capsule,
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[animation="false"][skeleton-screen="true"] .css_home_folder_item_context,
 .css_home_field .css_home_body .css_home_folders .css_home_folder .css_home_folder_item[animation="false"][skeleton-screen="true"] .css_home_folder_item_main {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
 }

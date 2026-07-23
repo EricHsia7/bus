@@ -6,7 +6,7 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_capsule,
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[skeleton-screen="true"] .css_location_details_property_icon,
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[skeleton-screen="true"] .css_location_details_property_value {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
 }
 
 .css_location_field .css_location_head .css_location_name[animation="true"][skeleton-screen="true"] span,
@@ -17,8 +17,8 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_capsule,
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[animation="true"][skeleton-screen="true"] .css_location_details_property_icon,
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[animation="true"][skeleton-screen="true"] .css_location_details_property_value {
-  background: var(--b-cssvar-ededf2);
-  background: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-f9f9fb-normal-50-flatten) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
+  background-color: var(--b-cssvar-ededf2);
+  background-image: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-f9f9fb-normal-50-flatten) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
   background-size: 400% 100%;
   background-position-x: 0% 0%;
   animation: b-css-skeleton-loading;

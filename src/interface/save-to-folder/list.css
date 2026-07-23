@@ -4,7 +4,7 @@
   width: calc(100% - 20px);
   height: auto;
   display: inline-block;
-  background: var(--b-cssvar-ffffff-blocky);
+  background-color: var(--b-cssvar-ffffff-blocky);
   border-radius: var(--b-cssvar-border-radius-normal);
   margin-top: calc(var(--b-cssvar-safe-area-top) + 55px + 10px);
   margin-bottom: var(--b-cssvar-safe-area-bottom);

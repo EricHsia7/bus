@@ -9,7 +9,7 @@
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-  background: var(--b-cssvar-ffffff-normal);
+  background-color: var(--b-cssvar-ffffff-normal);
 }
 
 .css_icon_selector_search_field .css_icon_selector_search_body .css_icon_selector_search_results::-webkit-scrollbar {

@@ -3,7 +3,7 @@
   position: relative;
   left: 10px;
   width: calc(100% - 20px);
-  background: var(--b-cssvar-ffffff-blocky);
+  background-color: var(--b-cssvar-ffffff-blocky);
   display: inline-block;
   border-radius: var(--b-cssvar-border-radius-normal);
   color: var(--b-cssvar-333333-60-flattened);

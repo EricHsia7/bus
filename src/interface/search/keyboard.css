@@ -7,7 +7,7 @@
   padding: 10px;
   padding-bottom: calc(var(--b-cssvar-safe-area-bottom) + 10px);
   box-sizing: border-box;
-  background: var(--b-cssvar-ffffff-normal);
+  background-color: var(--b-cssvar-ffffff-normal);
   border-top: 1px solid var(--b-cssvar-f9f9fb-normal);
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -22,7 +22,7 @@
 
 .css_search_keyboard .css_search_keyboard_key {
   position: relative;
-  background: var(--b-cssvar-f9f9fb-normal);
+  background-color: var(--b-cssvar-f9f9fb-normal);
   display: flex;
   justify-content: center;
   align-items: center;

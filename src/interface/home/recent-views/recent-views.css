@@ -95,12 +95,12 @@
 
 .css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_head .css_home_recent_views_name,
 .css_home_field .css_home_body .css_home_recent_views[skeleton-screen="true"] .css_home_recent_views_head .css_home_recent_views_icon {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
 }
 
 .css_home_field .css_home_body .css_home_recent_views[animation="true"][skeleton-screen="true"] .css_home_recent_views_head .css_home_recent_views_name,
 .css_home_field .css_home_body .css_home_recent_views[animation="true"][skeleton-screen="true"] .css_home_recent_views_head .css_home_recent_views_icon {
-  background: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-ffffff-blocky) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
+  background-image: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-ffffff-blocky) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
   background-size: 400% 100%;
   background-position-x: 0% 0%;
   animation: b-css-skeleton-loading;

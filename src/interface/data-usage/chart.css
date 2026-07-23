@@ -3,7 +3,7 @@
   position: relative;
   left: 10px;
   width: calc(100% - 20px);
-  background: var(--b-cssvar-ffffff-blocky);
+  background-color: var(--b-cssvar-ffffff-blocky);
   display: inline-block;
   border-radius: var(--b-cssvar-border-radius-normal);
   margin-top: calc(var(--b-cssvar-safe-area-top) + 55px + 10px);

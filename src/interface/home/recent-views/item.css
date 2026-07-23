@@ -4,7 +4,7 @@
   width: 100%;
   height: 70px;
   overflow: clip;
-  background: var(--b-cssvar-ffffff-blocky);
+  background-color: var(--b-cssvar-ffffff-blocky);
   border-radius: var(--b-cssvar-border-radius-normal);
   display: inline-flex;
   margin-right: 10px;
@@ -141,14 +141,14 @@
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[skeleton-screen="true"] .css_home_recent_views_item_head .css_home_recent_views_item_title,
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[skeleton-screen="true"] .css_home_recent_views_item_head .css_home_recent_views_item_time,
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[skeleton-screen="true"] .css_home_recent_views_item_name {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
 }
 
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[animation="true"][skeleton-screen="true"] .css_home_recent_views_item_head .css_home_recent_views_item_icon,
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[animation="true"][skeleton-screen="true"] .css_home_recent_views_item_head .css_home_recent_views_item_title,
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[animation="true"][skeleton-screen="true"] .css_home_recent_views_item_head .css_home_recent_views_item_time,
 .css_home_field .css_home_body .css_home_recent_views .css_home_recent_views_content .css_home_recent_views_item[animation="true"][skeleton-screen="true"] .css_home_recent_views_item_name {
-  background: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-ffffff-blocky) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
+  background-image: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-ffffff-blocky) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
   background-size: 400% 100%;
   background-position-x: 0% 0%;
   animation: b-css-skeleton-loading;
