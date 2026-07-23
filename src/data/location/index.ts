@@ -133,7 +133,6 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
   const batchFoundEstimateTime = batchFindEstimateTime(EstimateTime, StopIDs);
   const batchFoundBuses = batchFindBusesForLocation(BusEvent, BusData, Route, StopIDs);
 
-  const cardinalDirections: Array<Array<CardinalDirection>> = [];
   const averageCardinalDirections: Array<CardinalDirection> = [];
   for (const vectorSet of setsOfVectors) {
     let x: number = 0;
@@ -145,8 +144,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
     }
     x /= quantity;
     y /= quantity;
-    averageCardinalDirections.push(getCardinalDirectionFromVector(normalizeVector([x, y])));
-    cardinalDirections.push(vectorSet.map((v) => getCardinalDirectionFromVector(v)));
+    averageCardinalDirections.push(getCardinalDirectionFromVector([x, y]));
   }
 
   let labels: Array<string> = [];
