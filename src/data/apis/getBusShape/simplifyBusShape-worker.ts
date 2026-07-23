@@ -7,6 +7,8 @@ import { hasOwnProperty } from '../../../tools/index';
 import { stripTopLevelModel } from '../../../tools/text';
 import { Stop } from '../getStop';
 
+type Coordinate = [longitude: number, latitude: number];
+
 self.onmessage = function (e) {
   const { BusShape, Stop } = e.data;
   processWorkerTask(BusShape, Stop);
@@ -42,7 +44,7 @@ function processWorkerTask(BusShape: BusShape, Stop: Stop): void {
   const result: SimplifiedBusShape = {};
 
   // Collect every candidate shape per route, split by direction (go=0, back=1).
-  const candidates: Record<string, [Array<SimplifiedBusShapeItem>, Array<SimplifiedBusShapeItem>]> = {};
+  const candidates: Record<string, [go: Array<SimplifiedBusShapeItem>, back: Array<SimplifiedBusShapeItem>]> = {};
   for (const item of BusShape) {
     if (item.GoBack !== 0 && item.GoBack !== 1) continue;
     const routeKey = `r_${item.RouteID}`;
@@ -57,7 +59,7 @@ function processWorkerTask(BusShape: BusShape, Stop: Stop): void {
   }
 
   // Bucket stops per route per direction
-  const stopsByRoute: Record<string, [Array<[number, number]>, Array<[number, number]>]> = {};
+  const stopsByRoute: Record<string, [go: Array<Coordinate>, back: Array<Coordinate>]> = {};
   for (const StopItem of Stop) {
     const direction = parseInt(StopItem.goBack, 10);
     if (direction === 2) continue;
@@ -99,7 +101,7 @@ function processWorkerTask(BusShape: BusShape, Stop: Stop): void {
 }
 
 // Choose the candidate whose grid footprint covers the most of this direction's stops.
-function pickByCoverage(candidates: Array<SimplifiedBusShapeItem>, stops: Array<[number, number]>): SimplifiedBusShapeItem {
+function pickByCoverage(candidates: Array<SimplifiedBusShapeItem>, stops: Array<Coordinate>): SimplifiedBusShapeItem {
   // No stops to discriminate → fall back to the highest-resolution path.
   if (stops.length === 0) {
     return candidates.reduce((best, c) => (c.longtitudes.length > best.longtitudes.length ? c : best));
@@ -139,7 +141,7 @@ function isBetter(scores: Array<number>, candidate: SimplifiedBusShapeItem, best
 }
 
 // Fraction of stops whose quantized cell lies on the path's rasterized footprint.
-function coverageRatio(item: SimplifiedBusShapeItem, stops: Array<[number, number]>, cell: number, ox: number, oy: number, kx: number, ky: number): number {
+function coverageRatio(item: SimplifiedBusShapeItem, stops: Array<Coordinate>, cell: number, ox: number, oy: number, kx: number, ky: number): number {
   const cells = rasterizePath(item, cell, ox, oy, kx, ky);
   let on = 0;
   for (const [lon, lat] of stops) {
