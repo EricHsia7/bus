@@ -135,7 +135,7 @@
   padding: 0px;
   margin: 0px;
   border: none;
-  background: transparent;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .css_settings_options_field .css_settings_options_body .css_settings_options .css_option .css_option_checkbox svg {
