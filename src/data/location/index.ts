@@ -8,6 +8,7 @@ import { Progress, ProgressCallback } from '../../tools/progress';
 import { BusArrivalTime, plotBusArrivalTime } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
+import { getBusShape, SimplifiedBusShape, SimplifiedBusShapeItem } from '../apis/getBusShape';
 import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation, MergedLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
@@ -74,6 +75,7 @@ export interface IntegratedLocationItem {
   routeDirection: string;
   routeId: number;
   stopId: number;
+  bearing: [x: number, y: number];
   status: EstimateTimeStatus;
   ranking: IntegratedLocationItemRanking;
   buses: Array<FormattedBus>;
@@ -98,7 +100,7 @@ export interface IntegratedLocation {
 
 export async function integrateLocation(hash: string, chartWidth: number, chartHeight: number, progressCallback: ProgressCallback): Promise<IntegratedLocation> {
   const progress = new Progress(12, progressCallback); // getLocation: 2 + getRoute: 2 + getStop: 2 + getEstimateTime: 2 + getBusEvent: 2 + getBusData_0: 2
-  const [Route, Stop, Location] = (await Promise.all([await getRoute(progress, true), await getStop(progress), await getLocation(progress, 1)])) as [SimplifiedRoute, SimplifiedStop, MergedLocation];
+  const [Route, Stop, Location, BusShape] = (await Promise.all([await getRoute(progress, true), await getStop(progress), await getLocation(progress, 1), await getBusShape(progress)])) as [SimplifiedRoute, SimplifiedStop, MergedLocation, SimplifiedBusShape];
   const [EstimateTime, BusEvent, BusData, BusArrivalTimes] = await Promise.all([getEstimateTime(progress), getBusEvent(progress), getBusData(progress), plotBusArrivalTime(chartWidth, chartHeight)]);
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
@@ -220,6 +222,32 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       integratedItem.routeName = thisRoute.n;
       integratedItem.routeDirection = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack, 10)]} | ${cardinalDirections[i][o].name}${cardinalDirections[i][o].symbol}`;
       integratedItem.routeId = thisRouteID;
+
+      // Collect data from 'BusShape'
+      let thisShape = { longtitudes: [], latitudes: [], markers: {}, cis: true } as SimplifiedBusShapeItem;
+      if ((thisStop.goBack === '0' || thisStop.goBack === '1') && hasOwnProperty(BusShape, thisRouteKey)) {
+        thisShape = BusShape[thisRouteKey][parseInt(thisStop.goBack, 10)];
+      }
+
+      const stopLocationKey = `l_${stopLocationIds}`;
+      let bearingX = 0;
+      let bearingY = 0;
+      if (hasOwnProperty(thisShape.markers, stopLocationKey)) {
+        const index = thisShape.markers[stopLocationKey];
+        const coordinatesLength = thisShape.longtitudes.length;
+        if (index + 1 < coordinatesLength) {
+          bearingX = thisShape.longtitudes[index + 1] - thisShape.longtitudes[index];
+          bearingY = thisShape.latitudes[index + 1] - thisShape.latitudes[index];
+        } else if (index > 0) {
+          bearingX = thisShape.longtitudes[index] - thisShape.longtitudes[index - 1];
+          bearingY = thisShape.latitudes[index] - thisShape.latitudes[index - 1];
+        }
+        if (!thisShape.cis) {
+          bearingX *= -1;
+          bearingY *= -1;
+        }
+      }
+      integratedItem.bearing = [bearingX, bearingY];
 
       // Collect data from 'batchFoundEstimateTime'
       let thisEstimateTime = {} as EstimateTimeItem;

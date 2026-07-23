@@ -185,7 +185,7 @@ function rasterizePath(item: SimplifiedBusShapeItem, cell: number, ox: number, o
 
 function organize(item: SimplifiedBusShapeItem, stops: Array<Coordinate>): SimplifiedBusShapeItem {
   const markers: SimplifiedBusShapeItem['markers'] = {};
-  const markerssSequence: Array<[sequence: number, index: number]> = [];
+  const markersSequence: Array<[sequence: number, index: number]> = [];
   const coordinatesLength = item.longtitudes.length;
   const stopsLength = stops.length;
   for (let i = 0; i < coordinatesLength; i++) {
@@ -200,16 +200,16 @@ function organize(item: SimplifiedBusShapeItem, stops: Array<Coordinate>): Simpl
     }
     if (index > 0) {
       const stopLocationKey = `l_${stops[index][2]}`;
-      markerssSequence.push([stops[index][3], i]);
+      markersSequence.push([stops[index][3], i]);
       markers[stopLocationKey] = i;
     }
   }
-  markerssSequence.sort(function (a, b) {
+  markersSequence.sort(function (a, b) {
     return a[1] - b[1];
   });
   let sumDifference = 0;
-  for (let i = 1, l = markerssSequence.length; i < l; i++) {
-    sumDifference += markerssSequence[i][0] - markerssSequence[i - 1][0];
+  for (let i = 1, l = markersSequence.length; i < l; i++) {
+    sumDifference += markersSequence[i][0] - markersSequence[i - 1][0];
   }
   return {
     longtitudes: item.longtitudes,

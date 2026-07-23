@@ -110,7 +110,7 @@ export interface SimplifiedLocationItem {
   /**
    * an array of vectors
    */
-  v: Array<[number, number]>;
+  v: Array<[lon: number, lat: number]>;
 
   /**
    * an array of addresses
@@ -159,7 +159,7 @@ export interface MergedLocationItem {
   /**
    * a 2D array of vectors
    */
-  v: Array<Array<[number, number]>>;
+  v: Array<Array<[lon: number, lat: number]>>;
 
   /**
    * an array of addresses
