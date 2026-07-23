@@ -4,7 +4,7 @@
   width: calc(100% - 20px);
   left: 10px;
   display: inline-block;
-  background: var(--b-cssvar-ffffff-blocky);
+  background-color: var(--b-cssvar-ffffff-blocky);
   border-radius: var(--b-cssvar-border-radius-normal);
   margin-top: calc(var(--b-cssvar-safe-area-top) + 55px + 10px);
 }
@@ -135,7 +135,7 @@
   padding: 0px;
   margin: 0px;
   border: none;
-  background: transparent;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .css_settings_options_field .css_settings_options_body .css_settings_options .css_option .css_option_checkbox svg {

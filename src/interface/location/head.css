@@ -53,7 +53,7 @@
   width: 100%;
   height: calc(var(--b-cssvar-safe-area-top) + 95px);
   box-sizing: border-box;
-  background: var(--b-cssvar-large-head-background);
+  background-image: var(--b-cssvar-large-head-background);
   backdrop-filter: var(--b-cssvar-backdrop-filter);
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
 }
@@ -177,7 +177,7 @@
 }
 
 .css_location_field .css_location_head .css_location_group_tab_line_track .css_location_group_tab_line {
-  background: var(--b-cssvar-333333);
+  background-color: var(--b-cssvar-333333);
   width: 1px;
   height: 2px;
   border-radius: var(--b-cssvar-border-radius-none);
@@ -197,7 +197,7 @@
   width: 4px;
   height: 2px;
   border-radius: 2px;
-  background: var(--b-cssvar-333333);
+  background-color: var(--b-cssvar-333333);
   transform: scaleX(calc(1 / var(--b-cssvar-location-tab-line-width-scale))) translateX(-2px);
   transform-origin: top left;
 }
@@ -210,7 +210,7 @@
   width: 4px;
   height: 2px;
   border-radius: 2px;
-  background: var(--b-cssvar-333333);
+  background-color: var(--b-cssvar-333333);
   transform: scaleX(calc(1 / var(--b-cssvar-location-tab-line-width-scale))) translateX(2px);
   transform-origin: top right;
 }
@@ -222,7 +222,7 @@
   width: 100%;
   height: 1px;
   overflow: clip;
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   contain: layout;
 }
 
@@ -232,7 +232,7 @@
   left: 0px;
   width: 100%;
   height: 1px;
-  background: var(--b-cssvar-333333-33-flattened);
+  background-color: var(--b-cssvar-333333-33-flattened);
   transform-origin: top left;
 }
 

@@ -29,7 +29,7 @@
   bottom: calc(20px + var(--b-cssvar-safe-area-bottom));
   opacity: 0;
   transform: translateX(-50%) scale(0.98);
-  background: var(--b-cssvar-ededf2-65);
+  background-color: var(--b-cssvar-ededf2-65);
   /* border: 1px solid var(--b-cssvar-ededf2); */
   backdrop-filter: var(--b-cssvar-backdrop-filter);
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);

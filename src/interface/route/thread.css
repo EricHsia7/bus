@@ -97,7 +97,7 @@
   left: 0px;
   width: 45px;
   height: 50px;
-  background: var(--b-cssvar-ffffff-normal);
+  background-color: var(--b-cssvar-ffffff-normal);
   transform-origin: top left;
   transform: scaleY(1);
   z-index: -1;
@@ -105,12 +105,12 @@
 
 /* segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread_box_background {
-  background: var(--b-cssvar-f9f9fb-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-f9f9fb-inflected-to-segment-buffer);
 }
 
 /* nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread_box_background {
-  background: var(--b-cssvar-f9f9fb-inflected-to-user-position);
+  background-color: var(--b-cssvar-f9f9fb-inflected-to-user-position);
 }
 
 /* animation: true && skeleton screen: false && push-direction: 0 && push-state: 0 */
@@ -137,7 +137,7 @@
   left: calc((45px - 2px) / 2);
   width: 2px;
   height: calc(50px - 10px);
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   z-index: 2;
   overflow: clip;
   contain: layout;
@@ -150,12 +150,12 @@
 
 /* segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread {
-  background: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
 }
 
 /* nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread {
-  background: var(--b-cssvar-ededf2-inflected-to-user-position);
+  background-color: var(--b-cssvar-ededf2-inflected-to-user-position);
 }
 
 /* animation: true && skeleton screen: false && push-direction: 0 && push-state: 0 */
@@ -176,7 +176,7 @@
   left: 0px;
   width: 2px;
   height: calc(50px - 10px);
-  background: var(--b-cssvar-main-color);
+  background-color: var(--b-cssvar-main-color);
   transform-origin: top left;
   transform: translateY(var(--b-cssvar-thread-progress-translate-y));
 }
@@ -193,12 +193,12 @@
 
 /* segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread .css_route_group_thread_progress {
-  background: var(--b-cssvar-main-color-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-main-color-inflected-to-segment-buffer);
 }
 
 /* nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread .css_route_group_thread_progress {
-  background: var(--b-cssvar-main-color-inflected-to-user-position);
+  background-color: var(--b-cssvar-main-color-inflected-to-user-position);
 }
 
 /* animation: true && skeleton screen: false */
@@ -221,7 +221,7 @@
   width: 2px;
   height: 2px;
   border-radius: 1px;
-  background: var(--b-cssvar-main-color);
+  background-color: var(--b-cssvar-main-color);
   transform: scaleY(1) translateY(-1px);
   transform-origin: top left;
 }
@@ -238,12 +238,12 @@
 
 /* segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread .css_route_group_thread_progress::before {
-  background: var(--b-cssvar-main-color-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-main-color-inflected-to-segment-buffer);
 }
 
 /* nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread .css_route_group_thread_progress::before {
-  background: var(--b-cssvar-main-color-inflected-to-user-position);
+  background-color: var(--b-cssvar-main-color-inflected-to-user-position);
 }
 
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread .css_route_group_thread_progress::after {
@@ -254,7 +254,7 @@
   width: 2px;
   height: 2px;
   border-radius: 1px;
-  background: var(--b-cssvar-main-color);
+  background-color: var(--b-cssvar-main-color);
   transform: scaleY(1) translateY(1px);
   transform-origin: bottom left;
 }
@@ -271,12 +271,12 @@
 
 /* segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread .css_route_group_thread_progress::after {
-  background: var(--b-cssvar-main-color-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-main-color-inflected-to-segment-buffer);
 }
 
 /* nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread .css_route_group_thread_progress::after {
-  background: var(--b-cssvar-main-color-inflected-to-user-position);
+  background-color: var(--b-cssvar-main-color-inflected-to-user-position);
 }
 
 /* thread box > thread > status */
@@ -286,7 +286,7 @@
   left: calc((45px - 10px) / 2);
   width: 10px;
   height: 10px;
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   border-radius: 5px;
   overflow: clip;
   contain: layout;
@@ -316,19 +316,19 @@
 /* code: 7 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_next_slide[code="7"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_current_slide[code="7"] {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
 }
 
 /* code: 7 && segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread_status .css_next_slide[code="7"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread_status .css_current_slide[code="7"] {
-  background: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
 }
 
 /* code: 7 && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread_status .css_next_slide[code="7"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread_status .css_current_slide[code="7"] {
-  background: var(--b-cssvar-ededf2-inflected-to-user-position);
+  background-color: var(--b-cssvar-ededf2-inflected-to-user-position);
 }
 
 /* code: 6, 5, 4, 3 */
@@ -340,7 +340,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_current_slide[code="5"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_current_slide[code="4"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_current_slide[code="3"] {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
 }
 
 /* code: 6, 5, 4, 3 && segment buffer: true */
@@ -352,7 +352,7 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread_status .css_current_slide[code="5"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread_status .css_current_slide[code="4"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread_status .css_current_slide[code="3"] {
-  background: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
 }
 
 /* code: 6, 5, 4, 3 && nearest: true */
@@ -364,61 +364,61 @@
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread_status .css_current_slide[code="5"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread_status .css_current_slide[code="4"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread_status .css_current_slide[code="3"] {
-  background: var(--b-cssvar-ededf2-inflected-to-user-position);
+  background-color: var(--b-cssvar-ededf2-inflected-to-user-position);
 }
 
 /* code: 2 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_next_slide[code="2"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_current_slide[code="2"] {
-  background: var(--b-cssvar-main-color);
+  background-color: var(--b-cssvar-main-color);
 }
 
 /* code: 2 && segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread_status .css_next_slide[code="2"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread_status .css_current_slide[code="2"] {
-  background: var(--b-cssvar-main-color-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-main-color-inflected-to-segment-buffer);
 }
 
 /* code: 2 && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread_status .css_next_slide[code="2"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread_status .css_current_slide[code="2"] {
-  background: var(--b-cssvar-main-color-inflected-to-user-position);
+  background-color: var(--b-cssvar-main-color-inflected-to-user-position);
 }
 
 /* code: 1 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_next_slide[code="1"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_current_slide[code="1"] {
-  background: var(--b-cssvar-main-color-22-flattened);
+  background-color: var(--b-cssvar-main-color-22-flattened);
 }
 
 /* code: 1 && segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread_status .css_next_slide[code="1"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread_status .css_current_slide[code="1"] {
-  background: var(--b-cssvar-main-color-inflected-to-segment-buffer-22-flattened);
+  background-color: var(--b-cssvar-main-color-inflected-to-segment-buffer-22-flattened);
 }
 
 /* code: 1 && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread_status .css_next_slide[code="1"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread_status .css_current_slide[code="1"] {
-  background: var(--b-cssvar-main-color-inflected-to-user-position-22-flattened);
+  background-color: var(--b-cssvar-main-color-inflected-to-user-position-22-flattened);
 }
 
 /* code: 0 */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_next_slide[code="0"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box .css_route_group_thread_status .css_current_slide[code="0"] {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
 }
 
 /* code: 0 && segment buffer: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread_status .css_next_slide[code="0"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[segment-buffer="true"] .css_route_group_thread_status .css_current_slide[code="0"] {
-  background: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
+  background-color: var(--b-cssvar-ededf2-inflected-to-segment-buffer);
 }
 
 /* code: 0 && nearest: true */
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread_status .css_next_slide[code="0"],
 .css_route_field .css_route_groups .css_route_group .css_route_group_tracks .css_route_group_threads_track .css_route_group_thread_box[nearest="true"] .css_route_group_thread_status .css_current_slide[code="0"] {
-  background: var(--b-cssvar-ededf2-inflected-to-user-position);
+  background-color: var(--b-cssvar-ededf2-inflected-to-user-position);
 }
 
 /* fadeout */

@@ -22,7 +22,7 @@
   width: 100%;
   margin: 0px;
   padding: 0px;
-  background: var(--b-cssvar-ffffff-normal);
+  background-color: var(--b-cssvar-ffffff-normal);
   display: block;
   overflow: clip;
   contain: layout;
@@ -97,7 +97,6 @@
   left: 0px;
   width: 100%;
   height: 50px;
-  background: rgba(0, 0, 0, 0);
 }
 
 /* items > item > head > rank */
@@ -108,7 +107,7 @@
   width: 35px;
   /* 55px: 15px + 35px + 5px */
   height: 35px;
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-medium);
   overflow: clip;
   display: block;
@@ -147,7 +146,7 @@
 /* code: -1 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="-1"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="-1"] {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   color: var(--b-cssvar-333333-60-flattened);
   font-weight: 400;
   font-size: 18px;
@@ -156,7 +155,7 @@
 /* code: 0 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="0"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="0"] {
-  background: var(--b-cssvar-ranking-color-0-27-flattened);
+  background-color: var(--b-cssvar-ranking-color-0-27-flattened);
   color: var(--b-cssvar-ranking-color-0);
   font-weight: 500;
   font-size: 15px;
@@ -165,7 +164,7 @@
 /* code: 1 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="1"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="1"] {
-  background: var(--b-cssvar-ranking-color-1-20-flattened);
+  background-color: var(--b-cssvar-ranking-color-1-20-flattened);
   color: var(--b-cssvar-ranking-color-1);
   font-weight: 500;
   font-size: 15px;
@@ -174,7 +173,7 @@
 /* code: 2 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="2"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="2"] {
-  background: var(--b-cssvar-ranking-color-2-13-flattened);
+  background-color: var(--b-cssvar-ranking-color-2-13-flattened);
   color: var(--b-cssvar-ranking-color-2);
   font-weight: 500;
   font-size: 15px;
@@ -185,7 +184,7 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="3"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_next_slide[code="4"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_rank .css_location_group_item_rank_current_slide[code="4"] {
-  background: var(--b-cssvar-ranking-color-3-6-flattened);
+  background-color: var(--b-cssvar-ranking-color-3-6-flattened);
   color: var(--b-cssvar-ranking-color-3);
   font-weight: 500;
   font-size: 15px;
@@ -256,7 +255,7 @@
   right: 15px;
   width: 85px;
   height: 30px;
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-normal);
   overflow: clip;
 }
@@ -268,7 +267,7 @@
   left: calc(55px - 1px / 2);
   width: 1px;
   height: 24px;
-  background: var(--b-cssvar-aeaeb2);
+  background-color: var(--b-cssvar-aeaeb2);
 }
 
 /* skeleton screen: true */
@@ -351,13 +350,13 @@
 /* code: 8 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide[code="8"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="8"] {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
 }
 
 /* code: 7 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide[code="7"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="7"] {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   color: var(--b-cssvar-333333-60-flattened);
   font-size: 11px;
   font-weight: 500;
@@ -372,7 +371,7 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="5"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="4"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="3"] {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   color: var(--b-cssvar-333333-60-flattened);
   font-size: 11px;
   font-weight: 500;
@@ -384,7 +383,7 @@
   color: var(--b-cssvar-ffffff-normal);
   font-size: 13px;
   font-weight: 700;
-  background: var(--b-cssvar-main-color);
+  background-color: var(--b-cssvar-main-color);
 }
 
 /* code: 1 */
@@ -393,13 +392,13 @@
   color: var(--b-cssvar-main-color);
   font-size: 13px;
   font-weight: 700;
-  background: var(--b-cssvar-main-color-22-flattened);
+  background-color: var(--b-cssvar-main-color-22-flattened);
 }
 
 /* code: 0 */
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_next_slide[code="0"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item .css_location_group_item_head .css_location_group_item_capsule .css_location_group_item_status .css_current_slide[code="0"] {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   color: var(--b-cssvar-333333);
   font-size: 13px;
   font-weight: 700;

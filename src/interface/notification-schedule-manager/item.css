@@ -122,7 +122,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
   border-radius: var(--b-cssvar-border-radius-normal);
   touch-action: manipulation;
 }

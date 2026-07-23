@@ -1,14 +1,14 @@
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[skeleton-screen="true"] .css_icon_selector_item_head .css_icon_selector_item_icon,
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[skeleton-screen="true"] .css_icon_selector_item_head .css_icon_selector_item_name,
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[skeleton-screen="true"] .css_icon_selector_item_head .css_icon_selector_item_capsule {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
 }
 
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[animation="true"][skeleton-screen="true"] .css_icon_selector_item_head .css_icon_selector_item_icon,
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[animation="true"][skeleton-screen="true"] .css_icon_selector_item_head .css_icon_selector_item_name,
 .css_icon_selector_field .css_icon_selector_body .css_icon_selector_tray .css_icon_selector_content .css_icon_selector_item[animation="true"][skeleton-screen="true"] .css_icon_selector_item_head .css_icon_selector_item_capsule {
-  background: var(--b-cssvar-ededf2);
-  background: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-f9f9fb-normal-50-flatten) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
+  background-color: var(--b-cssvar-ededf2);
+  background-image: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-f9f9fb-normal-50-flatten) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
   background-size: 400% 100%;
   background-position-x: 0% 0%;
   animation: b-css-skeleton-loading;

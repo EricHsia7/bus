@@ -1,14 +1,14 @@
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item[skeleton-screen="true"] .css_folder_editor_folder_item_head .css_folder_editor_folder_item_icon,
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item[skeleton-screen="true"] .css_folder_editor_folder_item_head .css_folder_editor_folder_item_context,
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item[skeleton-screen="true"] .css_folder_editor_folder_item_head .css_folder_editor_folder_item_main {
-  background: var(--b-cssvar-ededf2);
+  background-color: var(--b-cssvar-ededf2);
 }
 
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item[animation="true"][skeleton-screen="true"] .css_folder_editor_folder_item_head .css_folder_editor_folder_item_icon,
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item[animation="true"][skeleton-screen="true"] .css_folder_editor_folder_item_head .css_folder_editor_folder_item_context,
 .css_folder_editor_field .css_folder_editor_body .css_folder_editor_groups .css_folder_editor_group[group="folder-content"] .css_folder_editor_group_body .css_folder_editor_folder_item[animation="true"][skeleton-screen="true"] .css_folder_editor_folder_item_head .css_folder_editor_folder_item_main {
-  background: var(--b-cssvar-ededf2);
-  background: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-ffffff-blocky) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
+  background-color: var(--b-cssvar-ededf2);
+  background-image: linear-gradient(-90deg, var(--b-cssvar-ededf2-50-flattened) 0%, var(--b-cssvar-ffffff-blocky) 50%, var(--b-cssvar-ededf2-50-flattened) 100%);
   background-size: 400% 100%;
   background-position-x: 0% 0%;
   animation: b-css-skeleton-loading;
