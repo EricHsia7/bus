@@ -53,7 +53,7 @@ let BusShapeMemoryCache_available: boolean = false;
 let BusShapeMemoryCache_data: SimplifiedBusShape = {};
 let BusShapeMemoryCache_timestamp: number = -1;
 
-const cacheTimeToLive = 60 * 60 * 24 * 14 * 1000;
+const cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
 const cacheKey = 'bus_bus_shape_v2_cache';
 
 async function simplifyBusShape(BusShape: BusShape, Stop: Stop): Promise<SimplifiedBusShape> {
