@@ -131,7 +131,6 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
   const batchFoundEstimateTime = batchFindEstimateTime(EstimateTime, StopIDs);
   const batchFoundBuses = batchFindBusesForLocation(BusEvent, BusData, Route, StopIDs);
 
-  const cardinalDirections: Array<Array<CardinalDirection>> = [];
   const averageCardinalDirections: Array<CardinalDirection> = [];
   for (const vectorSet of setsOfVectors) {
     let x: number = 0;
@@ -144,7 +143,6 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
     x /= quantity;
     y /= quantity;
     averageCardinalDirections.push(getCardinalDirectionFromVector(normalizeVector([x, y])));
-    cardinalDirections.push(vectorSet.map((v) => getCardinalDirectionFromVector(v)));
   }
 
   let labels: Array<string> = [];
@@ -218,7 +216,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
         continue;
       }
       integratedItem.routeName = thisRoute.n;
-      integratedItem.routeDirection = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack, 10)]} | ${cardinalDirections[i][o].name}${cardinalDirections[i][o].symbol}`;
+      integratedItem.routeDirection = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack, 10)]}`;
       integratedItem.routeId = thisRouteID;
 
       // Collect data from 'batchFoundEstimateTime'
