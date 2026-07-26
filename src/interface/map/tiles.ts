@@ -1,5 +1,6 @@
+import { MapConfig } from '.';
 import { Camera, latToMercY, lngToMercX } from './camera';
-import { formatUrl, tileKey, PackedLabelTile, ResolvedConfig, TileCoord, TileKey, WorkerResponse } from './types';
+import { tileKey, PackedLabelTile, TileCoord, TileKey, WorkerResponse } from './types';
 
 /* ---------------------------------------------------------------------- LRU */
 
@@ -226,7 +227,7 @@ export class TileManager {
   private box: { minX: number; minY: number; maxX: number; maxY: number } | null;
 
   constructor(
-    private cfg: ResolvedConfig,
+    private cfg: MapConfig,
     private onLoad: () => void,
     worker: Worker
   ) {
@@ -362,23 +363,14 @@ export class TileManager {
     }
   }
 
-  /**
-   * Relative templates must be resolved against the *document*, not the worker
-   * script (a worker's fetch() base is its own module URL, i.e. dist/).
-   */
-  private absolute(url: string): string {
-    return new URL(url, document.baseURI).href;
-  }
-
   private requestRaster(key: TileKey, coord: TileCoord): void {
-    const url = this.absolute(formatUrl(this.cfg.tileUrl, coord.z, coord.x, coord.y));
+    const url = `https://erichsia7.github.io/bus-map/tiles/${coord.z}/${coord.x}/${coord.y}.webp`;
     const id = this.io.submit({ type: 'raster', key, url }, (res) => {
       this.rasterJobs.delete(key);
       if (res.type === 'raster') {
         this.rasters.set(key, res.bitmap);
         this.onLoad();
       } else if (res.type === 'error' && !res.aborted) {
-        // 404/410 => tile really isn't there; remember it so we stop asking
         if (res.status === 404 || res.status === 403 || res.status === 410) {
           this.rasters.set(key, MISSING);
         }
@@ -388,7 +380,7 @@ export class TileManager {
   }
 
   private requestLabels(key: TileKey, coord: TileCoord): void {
-    const url = this.absolute(formatUrl(this.cfg.labelUrl!, coord.z, coord.x, coord.y));
+    const url = `https://erichsia7.github.io/bus-map/labels/${coord.z}/${coord.x}/${coord.y}.geojson.gz`;
     const id = this.io.submit({ type: 'labels', key, url, z: coord.z, x: coord.x, y: coord.y }, (res) => {
       this.labelJobs.delete(key);
       if (res.type === 'labels') {
