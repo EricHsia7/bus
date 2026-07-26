@@ -1,4 +1,4 @@
-.css_map {
+.css_map_field {
   position: fixed;
   top: 0px;
   left: 0px;
@@ -10,6 +10,6 @@
   visibility: hidden;
 }
 
-.css_map[displayed="true"] {
+.css_map_field[displayed="true"] {
   visibility: visible;
 }
