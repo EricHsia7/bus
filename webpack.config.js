@@ -78,6 +78,20 @@ module.exports = (env, argv) => {
             options: {
               cacheName: 'icons'
             }
+          },
+          {
+            urlPattern: /\/tiles\/[0-9]+\/[0-9]+\/[0-9]+\.webp$/,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'map-tiles'
+            }
+          },
+          {
+            urlPattern: /\/labels\/[0-9]+\/[0-9]+\/[0-9]+\.geojson\.gz$/, // TODO: replace geojson
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'map-labels'
+            }
           }
         ]
       }),

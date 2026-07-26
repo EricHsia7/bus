@@ -34,6 +34,7 @@ import { closeSettingsOptions } from './interface/settings/options';
 import { openPermalink } from './tools/permalink';
 import { closeIconSelectorSearch, initializeIconSelectorSearchInput } from './interface/icon-selector-search';
 import { promptMessage } from './interface/prompt';
+import { openMap } from './interface/map';
 
 import './interface/theme.css';
 
@@ -201,6 +202,10 @@ import './interface/qrcode/head.css';
 import './interface/qrcode/body.css';
 import './interface/qrcode/qrcode.css';
 
+import './interface/map/field.css';
+import './interface/map/viewer.css';
+import './interface/map/attribution.css';
+
 import './interface/prompt/index.css';
 
 let busInitialized: boolean = false;
@@ -224,6 +229,7 @@ interface BusWindow extends Window {
     bus: pageFunctions;
     notification: pageFunctions;
     qrcode: pageFunctions;
+    test: pageFunctions;
   };
 }
 
@@ -383,6 +389,9 @@ interface BusWindow extends Window {
   },
   qrcode: {
     closeQRCode
+  },
+  test: {
+    openMap
   }
 };
 
