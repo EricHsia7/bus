@@ -62,9 +62,9 @@ const config: MapConfig = {
   labelCacheSize: 300,
   rasterCacheSize: 400,
   concurrency: 8,
-  fadeDuration: 160,
+  fadeDuration: 320,
   wheelBehavior: 'auto',
-  debug: true
+  debug: false
 };
 
 export interface MapViewerHandle {
@@ -92,7 +92,7 @@ export function initializeMapViewer(): MapViewerHandle {
   };
 
   const tiles = new TileManager(config, invalidate, worker);
-  const labels = new LabelEngine({ fadeDuration: config.fadeDuration });
+  const labels = new LabelEngine({ fadeDuration: config.fadeDuration, maxLabels: 256 });
   const gestures = new Gestures({
     camera,
     element: MapCanvas,

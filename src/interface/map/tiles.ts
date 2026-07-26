@@ -296,26 +296,24 @@ export class TileManager {
 
     /* ------------------------------------------------------- label tiles */
     const labels: PackedLabelTile[] = [];
-    if (this.cfg.labelUrl) {
-      const lz = Math.max(this.cfg.labelMinZoom, Math.min(this.cfg.labelMaxZoom, z));
-      const labelCover = cover(camera, { zoom: lz, box: this.box, padPx: 128 });
-      const labelWanted = new Set<TileKey>();
-      for (const c of labelCover) labelWanted.add(tileKey(c.z, c.x, c.y));
-      for (const [key, id] of this.labelJobs) {
-        if (!labelWanted.has(key)) {
-          this.io.abort(id);
-          this.labelJobs.delete(key);
-        }
+    const lz = Math.max(this.cfg.labelMinZoom, Math.min(this.cfg.labelMaxZoom, z));
+    const labelCover = cover(camera, { zoom: lz, box: this.box, padPx: 128 });
+    const labelWanted = new Set<TileKey>();
+    for (const c of labelCover) labelWanted.add(tileKey(c.z, c.x, c.y));
+    for (const [key, id] of this.labelJobs) {
+      if (!labelWanted.has(key)) {
+        this.io.abort(id);
+        this.labelJobs.delete(key);
       }
-      for (const c of labelCover) {
-        const key = tileKey(c.z, c.x, c.y);
-        const entry = this.labels.get(key);
-        if (entry === undefined) {
-          if (!this.labelJobs.has(key)) this.requestLabels(key, c);
-          continue;
-        }
-        if (entry !== MISSING) labels.push(entry);
+    }
+    for (const c of labelCover) {
+      const key = tileKey(c.z, c.x, c.y);
+      const entry = this.labels.get(key);
+      if (entry === undefined) {
+        if (!this.labelJobs.has(key)) this.requestLabels(key, c);
+        continue;
       }
+      if (entry !== MISSING) labels.push(entry);
     }
 
     return { zoom: z, rasters, labels, pending: this.io.pending, missing };
