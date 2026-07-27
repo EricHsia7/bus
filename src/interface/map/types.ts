@@ -60,12 +60,7 @@ export interface PackedLabelTile {
   styles: LabelStyle[];
 }
 
-/* ---------------------------------------------------------------- worker IO */
-
-export type WorkerRequest =
-  | { type: 'raster'; id: number; key: TileKey; url: string }
-  | { type: 'labels'; id: number; key: TileKey; url: string; z: number; x: number; y: number }
-  | { type: 'abort'; id: number };
+export type WorkerRequest = { type: 'raster'; id: number; key: TileKey; url: string } | { type: 'labels'; id: number; key: TileKey; url: string; z: number; x: number; y: number } | { type: 'abort'; id: number };
 
 export type WorkerResponse =
   | { type: 'raster'; id: number; key: TileKey; bitmap: ImageBitmap }

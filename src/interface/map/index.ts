@@ -6,7 +6,6 @@ import { LabelEngine } from './labels';
 import { clear, drawDebug, drawLabels, drawRasters, resizeCanvas } from './render';
 import { TileManager } from './tiles';
 
-/* ----------------------------------------------------------------- config */
 /*
  * Every tunable value lives here as a single const object at the top of the
  * script, so nothing downstream carries a magic number. Values are grouped by
@@ -31,9 +30,9 @@ export interface MapConfig {
   zoom: number;
   /** max concurrent in-flight requests across the worker */
   concurrency: number;
-  /** raster LRU cache size, in tile count */
+  /** minimum raster LRU cache size in tiles; grown at runtime to fit the viewport */
   rasterCacheSize: number;
-  /** label LRU cache size, in tile count */
+  /** minimum label LRU cache size in tiles; grown at runtime to fit the viewport */
   labelCacheSize: number;
   /** label fade duration, ms */
   fadeDuration: number;
@@ -60,17 +59,16 @@ const config: MapConfig = {
   center: [121.5435, 25.0308],
   zoom: 13,
   constrainToBounds: true,
-  labelCacheSize: 300,
-  rasterCacheSize: 400,
+  labelCacheSize: 16,
+  rasterCacheSize: 16,
   concurrency: 8,
   fadeDuration: 160,
   maxLabels: 256,
-  maxDevicePixelRatio: 2,
+  maxDevicePixelRatio: 1.5,
   wheelBehavior: 'auto',
   debug: false
 };
 
-/* --------------------------------------------------------------- elements */
 /*
  * The field, canvas and drawing context are looked up once and kept constant
  * for the whole lifetime of the page. Nothing here is ever created, removed or
@@ -125,7 +123,10 @@ function createMapViewer(): MapViewerHandle {
   };
 
   const tiles = new TileManager(config, invalidate, worker);
-  const labels = new LabelEngine({ fadeDuration: config.fadeDuration, maxLabels: config.maxLabels });
+  const labels = new LabelEngine({
+    fadeDuration: config.fadeDuration,
+    maxLabels: config.maxLabels
+  });
   const gestures = new Gestures({
     camera,
     element: mapCanvas,
@@ -153,24 +154,26 @@ function createMapViewer(): MapViewerHandle {
   };
   window.addEventListener('keydown', handleKeyDown);
 
-  /* --------------------------------------------------------------- resize */
   const resizeObserver = new ResizeObserver(() => {
     // keep the shared viewport metrics fresh, then re-fit the canvas backing store
     querySize('window');
-    if (resizeCanvas(mapCanvas, camera, config.maxDevicePixelRatio)) invalidate();
+    if (resizeCanvas(mapCanvas, camera, config.maxDevicePixelRatio)) {
+      // adapt the size of tile caches to the new viewport so a large screen never evicts still-visible tiles and re-fetches them every frame
+      tiles.resizeCaches(camera);
+      invalidate();
+    }
   });
   resizeObserver.observe(mapField);
   resizeCanvas(mapCanvas, camera, config.maxDevicePixelRatio);
+  // size the caches for the initial viewport before the first frame
+  tiles.resizeCaches(camera);
 
-  /* ----------------------------------------------------------- the loop */
   const renderFrame = (now: number): void => {
     animationFrameId = requestAnimationFrame(renderFrame);
     const deltaTime = lastFrameTime ? now - lastFrameTime : 16;
     lastFrameTime = now;
     // exponential moving average of the frame rate (kept for debugging/HUD use)
-    framesPerSecond = framesPerSecond
-      ? framesPerSecond * 0.9 + (1000 / Math.max(1, deltaTime)) * 0.1
-      : 1000 / Math.max(1, deltaTime);
+    framesPerSecond = framesPerSecond ? framesPerSecond * 0.9 + (1000 / Math.max(1, deltaTime)) * 0.1 : 1000 / Math.max(1, deltaTime);
 
     // skip the whole frame when nothing changed and nothing is animating
     const animating = gestures.update(now);

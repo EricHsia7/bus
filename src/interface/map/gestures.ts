@@ -91,8 +91,6 @@ export class Gestures {
     element.addEventListener('gestureend', this.handleGestureEnd as EventListener);
   }
 
-  /* ------------------------------------------------------------ helpers */
-
   /** event position relative to the element's top-left corner, in CSS px */
   private getLocalPoint(event: PointerEvent | WheelEvent | MouseEvent): ScreenPoint {
     const rect = this.element.getBoundingClientRect();
@@ -142,8 +140,6 @@ export class Gestures {
     this.inertia = null;
     this.zoomAnimation = null;
   }
-
-  /* ------------------------------------------------------------ pointers */
 
   private handlePointerDown = (event: PointerEvent): void => {
     if (event.button !== 0 && event.pointerType === 'mouse') return;
@@ -217,8 +213,6 @@ export class Gestures {
     if (this.pointers.size) event.preventDefault();
   };
 
-  /* --------------------------------------------------------------- wheel */
-
   /**
    * Precision-touchpad detection. Touchpads emit fractional, tiny or diagonal
    * deltas at high frequency; notched wheels emit large integer steps (or use
@@ -287,8 +281,6 @@ export class Gestures {
     this.zoomToAnimated(this.zoomTarget - delta * rate, this.getLocalPoint(event), duration);
   };
 
-  /* ------------------------------------------------- Safari trackpad pinch */
-
   private handleGestureStart = (event: SafariGestureEvent): void => {
     event.preventDefault();
     this.stop();
@@ -348,8 +340,6 @@ export class Gestures {
     event.preventDefault();
     this.onChange();
   };
-
-  /* ----------------------------------------------------------- animation */
 
   /** advance inertia + zoom easing; returns true while something is animating */
   update(now: number): boolean {

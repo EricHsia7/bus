@@ -35,8 +35,6 @@ export interface MercBounds {
   maxY: number;
 }
 
-/* -------------------------------------------------- coordinate conversions */
-
 export const lngToMercX = (lng: number): number => (lng + 180) / 360;
 
 export function latToMercY(lat: number): number {

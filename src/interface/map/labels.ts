@@ -178,7 +178,7 @@ export class LabelEngine {
 
     if (this.enabled) this.place(context, camera, tiles, frame);
 
-    /* ---- advance fades and emit the draw list ---- */
+    // advance fades and emit the draw list
     const placedLabels: PlacedLabel[] = [];
     this.animating = false;
     for (const [id, state] of this.states) {
@@ -217,7 +217,7 @@ export class LabelEngine {
     const maxX = camera.width + pad;
     const maxY = camera.height + pad;
 
-    /* ---- 1. gather + dedupe candidates ---- */
+    // gather + dedupe candidates
     interface Candidate {
       id: string;
       tile: PackedLabelTile;
@@ -258,10 +258,10 @@ export class LabelEngine {
     }
     this.lastCandidates = candidates.length;
 
-    /* ---- 2. priority sort (sticky: visible labels keep their slot) ---- */
+    /// priority sort (sticky: visible labels keep their slot)
     candidates.sort((first, second) => first.wasVisible - second.wasVisible || first.priority - second.priority);
 
-    /* ---- 3. collision-test in priority order ---- */
+    // collision-test in priority order
     this.tree.clear();
     let placed = 0;
     for (const candidate of candidates) {

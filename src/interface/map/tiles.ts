@@ -2,8 +2,6 @@ import { MapConfig } from '.';
 import { Camera, latToMercY, lngToMercX } from './camera';
 import { buildTileKey, PackedLabelTile, TileCoord, TileKey, WorkerResponse } from './types';
 
-/* ------------------------------------------------------------- tile server */
-
 /** Origin the raster + label tiles are served from. */
 const TILE_SERVER_URL = 'https://erichsia7.github.io/bus-map';
 /** How far outside the viewport label tiles are pre-fetched, in screen px. */
@@ -17,7 +15,26 @@ const getTileUrl = (coord: TileCoord): string => `${TILE_SERVER_URL}/tiles/${coo
 /** URL of a single gzipped GeoJSON label tile. */
 const getLabelUrl = (coord: TileCoord): string => `${TILE_SERVER_URL}/labels/${coord.z}/${coord.x}/${coord.y}.geojson.gz`;
 
-/* ---------------------------------------------------------------------- LRU */
+/**
+ * Extra headroom for the runtime-sized tile caches: keep this many screens'
+ * worth of tiles so the working set (current viewport + prefetch ring) never
+ * evicts a still-visible tile. The spare screen also absorbs small pans and the
+ * adjacent zoom level's tiles during a zoom.
+ */
+const CACHE_BUFFER_FACTOR = 2;
+
+/**
+ * Upper bound on the number of tiles needed to cover a viewport plus its
+ * prefetch ring. On-screen tiles are never smaller than tileSize * 2^-0.5 (the
+ * tile zoom is the rounded camera zoom), so this slightly over-estimates; the
+ * +1 per axis accounts for a partial tile at each edge.
+ */
+function estimateVisibleTileCount(width: number, height: number, tileSize: number, padPx: number): number {
+  const minTilePx = tileSize * Math.SQRT1_2;
+  const tilesAcross = Math.ceil((width + 2 * padPx) / minTilePx) + 1;
+  const tilesDown = Math.ceil((height + 2 * padPx) / minTilePx) + 1;
+  return tilesAcross * tilesDown;
+}
 
 /** A small least-recently-used cache; the oldest entry is evicted past `max`. */
 export class LRU<V> {
@@ -47,6 +64,17 @@ export class LRU<V> {
   set(key: string, value: V): void {
     if (this.map.has(key)) this.map.delete(key);
     this.map.set(key, value);
+    this.trim();
+  }
+
+  /** Raise or lower the capacity, evicting least-recently-used entries if it shrank. */
+  setMax(max: number): void {
+    this.max = Math.max(1, Math.floor(max));
+    this.trim();
+  }
+
+  /** Evict least-recently-used entries until the cache is within `max`. */
+  private trim(): void {
     while (this.map.size > this.max) {
       const oldestKey = this.map.keys().next().value as string;
       const evicted = this.map.get(oldestKey)!;
@@ -64,8 +92,6 @@ export class LRU<V> {
     this.map.clear();
   }
 }
-
-/* --------------------------------------------------------------- cover() */
 
 export interface CoverOptions {
   zoom: number;
@@ -115,12 +141,7 @@ export function cover(camera: Camera, options: CoverOptions): TileCoord[] {
       coords.push({ z: zoom, x, y });
     }
   }
-  coords.sort(
-    (first, second) =>
-      (first.x - centerTileX) ** 2 +
-      (first.y - centerTileY) ** 2 -
-      ((second.x - centerTileX) ** 2 + (second.y - centerTileY) ** 2)
-  );
+  coords.sort((first, second) => (first.x - centerTileX) ** 2 + (first.y - centerTileY) ** 2 - ((second.x - centerTileX) ** 2 + (second.y - centerTileY) ** 2));
   return coords;
 }
 
@@ -134,8 +155,6 @@ export function tileScreenRect(camera: Camera, coord: TileCoord): { left: number
     bottom: camera.projectY((coord.y + 1) / tileCount)
   };
 }
-
-/* --------------------------------------------------------- worker client */
 
 interface QueuedJob {
   message: Record<string, unknown> & { id: number };
@@ -214,8 +233,6 @@ class WorkerClient {
   }
 }
 
-/* --------------------------------------------------------- TileManager */
-
 const MISSING = 'missing' as const;
 type RasterEntry = ImageBitmap | typeof MISSING;
 type LabelEntry = PackedLabelTile | typeof MISSING;
@@ -245,7 +262,12 @@ export class TileManager {
   private labels: LRU<LabelEntry>;
   private rasterJobs = new Map<TileKey, number>();
   private labelJobs = new Map<TileKey, number>();
-  private box: { minX: number; minY: number; maxX: number; maxY: number } | null;
+  private box: {
+    minX: number;
+    minY: number;
+    maxX: number;
+    maxY: number;
+  } | null;
 
   constructor(
     private config: MapConfig,
@@ -268,7 +290,25 @@ export class TileManager {
   }
 
   get stats(): { rasters: number; labels: number; pending: number } {
-    return { rasters: this.rasters.size, labels: this.labels.size, pending: this.io.pending };
+    return {
+      rasters: this.rasters.size,
+      labels: this.labels.size,
+      pending: this.io.pending
+    };
+  }
+
+  /**
+   * Size both LRU caches to the current viewport. Without this, a screen whose
+   * visible tiles outnumber a fixed cache would evict tiles that are still
+   * on-screen and re-fetch them every frame (LRU thrashing). The config cache
+   * sizes act as floors. Call whenever the viewport size changes.
+   */
+  resizeCaches(camera: Camera): void {
+    const { tileSize } = this.config;
+    const rasterVisible = estimateVisibleTileCount(camera.width, camera.height, tileSize, tileSize / 2);
+    const labelVisible = estimateVisibleTileCount(camera.width, camera.height, tileSize, LABEL_PREFETCH_PADDING);
+    this.rasters.setMax(Math.max(this.config.rasterCacheSize, Math.ceil(rasterVisible * CACHE_BUFFER_FACTOR)));
+    this.labels.setMax(Math.max(this.config.labelCacheSize, Math.ceil(labelVisible * CACHE_BUFFER_FACTOR)));
   }
 
   /**
@@ -278,9 +318,13 @@ export class TileManager {
   update(camera: Camera): FrameTiles {
     // tiles stop at config.maxZoom; beyond that the deepest level is scaled up (overzoom)
     const zoom = tileZoom(camera, this.config.minZoom, this.config.maxZoom);
-    const wantedTiles = cover(camera, { zoom, box: this.box, padPx: this.config.tileSize / 2 });
+    const wantedTiles = cover(camera, {
+      zoom,
+      box: this.box,
+      padPx: this.config.tileSize / 2
+    });
 
-    /* ---- raster requests (centre-first) + abort what left the viewport ---- */
+    // raster requests (centre-first) + abort what left the viewport
     const wantedKeys = new Set<TileKey>();
     for (const coord of wantedTiles) wantedKeys.add(buildTileKey(coord.z, coord.x, coord.y));
     for (const [key, id] of this.rasterJobs) {
@@ -295,7 +339,7 @@ export class TileManager {
       this.requestRaster(key, coord);
     }
 
-    /* -------------------------------- draw list with parent/child fallback */
+    // draw list with parent/child fallback
     const rasterDrawList: DrawTile[] = [];
     let missing = 0;
     for (const coord of wantedTiles) {
@@ -303,7 +347,13 @@ export class TileManager {
       const dst = tileScreenRect(camera, coord);
       const entry = this.rasters.get(key);
       if (entry && entry !== MISSING) {
-        rasterDrawList.push({ coord, bitmap: entry, src: null, dst, fallback: false });
+        rasterDrawList.push({
+          coord,
+          bitmap: entry,
+          src: null,
+          dst,
+          fallback: false
+        });
         continue;
       }
       missing++;
@@ -315,10 +365,13 @@ export class TileManager {
     // fallbacks first so sharp tiles paint on top
     rasterDrawList.sort((first, second) => Number(second.fallback) - Number(first.fallback));
 
-    /* ------------------------------------------------------- label tiles */
     const labelTiles: PackedLabelTile[] = [];
     const labelZoom = Math.max(this.config.labelMinZoom, Math.min(this.config.labelMaxZoom, zoom));
-    const labelCover = cover(camera, { zoom: labelZoom, box: this.box, padPx: LABEL_PREFETCH_PADDING });
+    const labelCover = cover(camera, {
+      zoom: labelZoom,
+      box: this.box,
+      padPx: LABEL_PREFETCH_PADDING
+    });
     const labelWanted = new Set<TileKey>();
     for (const coord of labelCover) labelWanted.add(buildTileKey(coord.z, coord.x, coord.y));
     for (const [key, id] of this.labelJobs) {
@@ -337,7 +390,13 @@ export class TileManager {
       if (entry !== MISSING) labelTiles.push(entry);
     }
 
-    return { zoom, rasters: rasterDrawList, labels: labelTiles, pending: this.io.pending, missing };
+    return {
+      zoom,
+      rasters: rasterDrawList,
+      labels: labelTiles,
+      pending: this.io.pending,
+      missing
+    };
   }
 
   /** walk up the pyramid for an already-decoded ancestor and crop it */
@@ -373,7 +432,11 @@ export class TileManager {
     if (coord.z + 1 > this.config.maxZoom) return;
     for (let offsetY = 0; offsetY < 2; offsetY++) {
       for (let offsetX = 0; offsetX < 2; offsetX++) {
-        const child = { z: coord.z + 1, x: coord.x * 2 + offsetX, y: coord.y * 2 + offsetY };
+        const child = {
+          z: coord.z + 1,
+          x: coord.x * 2 + offsetX,
+          y: coord.y * 2 + offsetY
+        };
         const entry = this.rasters.get(buildTileKey(child.z, child.x, child.y));
         if (!entry || entry === MISSING) continue;
         out.push({
@@ -404,15 +467,25 @@ export class TileManager {
   }
 
   private requestLabels(key: TileKey, coord: TileCoord): void {
-    const id = this.io.submit({ type: 'labels', key, url: getLabelUrl(coord), z: coord.z, x: coord.x, y: coord.y }, (response) => {
-      this.labelJobs.delete(key);
-      if (response.type === 'labels') {
-        this.labels.set(key, response.tile);
-        this.onLoad();
-      } else if (response.type === 'error' && !response.aborted) {
-        this.labels.set(key, MISSING);
+    const id = this.io.submit(
+      {
+        type: 'labels',
+        key,
+        url: getLabelUrl(coord),
+        z: coord.z,
+        x: coord.x,
+        y: coord.y
+      },
+      (response) => {
+        this.labelJobs.delete(key);
+        if (response.type === 'labels') {
+          this.labels.set(key, response.tile);
+          this.onLoad();
+        } else if (response.type === 'error' && !response.aborted) {
+          this.labels.set(key, MISSING);
+        }
       }
-    });
+    );
     this.labelJobs.set(key, id);
   }
 
