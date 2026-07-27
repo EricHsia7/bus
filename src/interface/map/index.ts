@@ -62,7 +62,7 @@ const config: MapConfig = {
   labelCacheSize: 300,
   rasterCacheSize: 400,
   concurrency: 8,
-  fadeDuration: 320,
+  fadeDuration: 160,
   wheelBehavior: 'auto',
   debug: false
 };

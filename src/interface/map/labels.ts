@@ -240,7 +240,7 @@ export class LabelEngine {
 
         const text = this.textOf(tile, i);
         // same feature can appear in neighbouring tiles: identity = text + position
-        const id = `${text}@${Math.round(mx * 4194304)},${Math.round(my * 4194304)}`;
+        const id = `${text}@${Math.round(mx * 256)},${Math.round(my * 256)}`;
         if (seen.has(id)) continue;
         seen.add(id);
         const state = this.states.get(id);

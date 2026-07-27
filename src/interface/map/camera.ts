@@ -231,20 +231,4 @@ export class Camera {
     }
     return this;
   }
-
-  /** #z/lat/lng permalink fragment */
-  toHash(): string {
-    const c = this.center;
-    const p = Math.max(0, Math.ceil((this.zoom * Math.LN2) / Math.LN10) + 1);
-    return `#${this.zoom.toFixed(2)}/${c.lat.toFixed(p)}/${c.lng.toFixed(p)}`;
-  }
-
-  applyHash(hash: string): boolean {
-    const m = /^#?(-?[\d.]+)\/(-?[\d.]+)\/(-?[\d.]+)$/.exec(hash.trim());
-    if (!m) return false;
-    const [, z, lat, lng] = m;
-    this.zoom = Number(z);
-    this.setCenter(Number(lng), Number(lat));
-    return true;
-  }
 }
