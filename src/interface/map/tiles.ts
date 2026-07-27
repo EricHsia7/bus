@@ -1,9 +1,25 @@
 import { MapConfig } from '.';
 import { Camera, latToMercY, lngToMercX } from './camera';
-import { tileKey, PackedLabelTile, TileCoord, TileKey, WorkerResponse } from './types';
+import { buildTileKey, PackedLabelTile, TileCoord, TileKey, WorkerResponse } from './types';
+
+/* ------------------------------------------------------------- tile server */
+
+/** Origin the raster + label tiles are served from. */
+const TILE_SERVER_URL = 'https://erichsia7.github.io/bus-map';
+/** How far outside the viewport label tiles are pre-fetched, in screen px. */
+const LABEL_PREFETCH_PADDING = 128;
+/** How many pyramid levels up we may borrow a parent tile as a fallback. */
+const MAX_PARENT_LEVELS = 5;
+
+/** URL of a single raster (basemap image) tile. */
+const getTileUrl = (coord: TileCoord): string => `${TILE_SERVER_URL}/tiles/${coord.z}/${coord.x}/${coord.y}.webp`;
+
+/** URL of a single gzipped GeoJSON label tile. */
+const getLabelUrl = (coord: TileCoord): string => `${TILE_SERVER_URL}/labels/${coord.z}/${coord.x}/${coord.y}.geojson.gz`;
 
 /* ---------------------------------------------------------------------- LRU */
 
+/** A small least-recently-used cache; the oldest entry is evicted past `max`. */
 export class LRU<V> {
   private map = new Map<string, V>();
   constructor(
@@ -12,12 +28,13 @@ export class LRU<V> {
   ) {}
 
   get(key: string): V | undefined {
-    const v = this.map.get(key);
-    if (v !== undefined) {
+    const value = this.map.get(key);
+    if (value !== undefined) {
+      // re-insert so this key becomes the most-recently-used
       this.map.delete(key);
-      this.map.set(key, v);
+      this.map.set(key, value);
     }
-    return v;
+    return value;
   }
 
   peek(key: string): V | undefined {
@@ -31,10 +48,10 @@ export class LRU<V> {
     if (this.map.has(key)) this.map.delete(key);
     this.map.set(key, value);
     while (this.map.size > this.max) {
-      const oldest = this.map.keys().next().value as string;
-      const victim = this.map.get(oldest)!;
-      this.map.delete(oldest);
-      this.dispose?.(victim);
+      const oldestKey = this.map.keys().next().value as string;
+      const evicted = this.map.get(oldestKey)!;
+      this.map.delete(oldestKey);
+      this.dispose?.(evicted);
     }
   }
 
@@ -43,7 +60,7 @@ export class LRU<V> {
   }
 
   clear(): void {
-    if (this.dispose) for (const v of this.map.values()) this.dispose(v);
+    if (this.dispose) for (const value of this.map.values()) this.dispose(value);
     this.map.clear();
   }
 }
@@ -60,63 +77,69 @@ export interface CoverOptions {
 
 /** integer tile zoom for a fractional camera zoom */
 export function tileZoom(camera: Camera, minZoom: number, maxZoom: number): number {
-  const z = Math.round(camera.zoom);
-  return Math.max(minZoom, Math.min(maxZoom, z));
+  const zoom = Math.round(camera.zoom);
+  return Math.max(minZoom, Math.min(maxZoom, zoom));
 }
 
 /** tile keys covering the viewport, ordered by distance from the screen centre */
-export function cover(camera: Camera, opts: CoverOptions): TileCoord[] {
-  const z = opts.zoom;
-  const n = 1 << z;
-  const b = camera.visibleBounds(opts.padPx ?? 0);
+export function cover(camera: Camera, options: CoverOptions): TileCoord[] {
+  const zoom = options.zoom;
+  const tileCount = 1 << zoom;
+  const bounds = camera.visibleBounds(options.padPx ?? 0);
 
-  const minX = Math.max(0, Math.floor(b.minX * n));
-  const maxX = Math.min(n - 1, Math.floor(b.maxX * n));
-  const minY = Math.max(0, Math.floor(b.minY * n));
-  const maxY = Math.min(n - 1, Math.floor(b.maxY * n));
+  const minTileX = Math.max(0, Math.floor(bounds.minX * tileCount));
+  const maxTileX = Math.min(tileCount - 1, Math.floor(bounds.maxX * tileCount));
+  const minTileY = Math.max(0, Math.floor(bounds.minY * tileCount));
+  const maxTileY = Math.min(tileCount - 1, Math.floor(bounds.maxY * tileCount));
 
   // data-box test in tile space (avoids requesting out-of-box tiles at all)
   let boxMinX = -Infinity;
   let boxMaxX = Infinity;
   let boxMinY = -Infinity;
   let boxMaxY = Infinity;
-  if (opts.box) {
-    boxMinX = Math.floor(opts.box.minX * n);
-    boxMaxX = Math.ceil(opts.box.maxX * n) - 1;
-    boxMinY = Math.floor(opts.box.minY * n);
-    boxMaxY = Math.ceil(opts.box.maxY * n) - 1;
+  if (options.box) {
+    boxMinX = Math.floor(options.box.minX * tileCount);
+    boxMaxX = Math.ceil(options.box.maxX * tileCount) - 1;
+    boxMinY = Math.floor(options.box.minY * tileCount);
+    boxMaxY = Math.ceil(options.box.maxY * tileCount) - 1;
   }
 
-  const cx = camera.x * n - 0.5;
-  const cy = camera.y * n - 0.5;
-  const out: TileCoord[] = [];
-  for (let y = minY; y <= maxY; y++) {
+  // fractional centre tile, used to sort nearest-first
+  const centerTileX = camera.x * tileCount - 0.5;
+  const centerTileY = camera.y * tileCount - 0.5;
+  const coords: TileCoord[] = [];
+  for (let y = minTileY; y <= maxTileY; y++) {
     if (y < boxMinY || y > boxMaxY) continue;
-    for (let x = minX; x <= maxX; x++) {
+    for (let x = minTileX; x <= maxTileX; x++) {
       if (x < boxMinX || x > boxMaxX) continue;
-      out.push({ z, x, y });
+      coords.push({ z: zoom, x, y });
     }
   }
-  out.sort((a, b2) => (a.x - cx) ** 2 + (a.y - cy) ** 2 - ((b2.x - cx) ** 2 + (b2.y - cy) ** 2));
-  return out;
+  coords.sort(
+    (first, second) =>
+      (first.x - centerTileX) ** 2 +
+      (first.y - centerTileY) ** 2 -
+      ((second.x - centerTileX) ** 2 + (second.y - centerTileY) ** 2)
+  );
+  return coords;
 }
 
 /** screen rect of a tile under the camera's affine transform */
 export function tileScreenRect(camera: Camera, coord: TileCoord): { left: number; top: number; right: number; bottom: number } {
-  const n = 1 << coord.z;
+  const tileCount = 1 << coord.z;
   return {
-    left: camera.projectX(coord.x / n),
-    top: camera.projectY(coord.y / n),
-    right: camera.projectX((coord.x + 1) / n),
-    bottom: camera.projectY((coord.y + 1) / n)
+    left: camera.projectX(coord.x / tileCount),
+    top: camera.projectY(coord.y / tileCount),
+    right: camera.projectX((coord.x + 1) / tileCount),
+    bottom: camera.projectY((coord.y + 1) / tileCount)
   };
 }
 
 /* --------------------------------------------------------- worker client */
 
 interface QueuedJob {
-  msg: Record<string, unknown> & { id: number };
-  resolve: (res: WorkerResponse) => void;
+  message: Record<string, unknown> & { id: number };
+  resolve: (response: WorkerResponse) => void;
 }
 
 /**
@@ -128,7 +151,7 @@ interface QueuedJob {
  */
 class WorkerClient {
   private worker: Worker;
-  private inflight = new Map<number, (r: WorkerResponse) => void>();
+  private inflight = new Map<number, (response: WorkerResponse) => void>();
   private queue: QueuedJob[] = [];
   private nextId = 1;
 
@@ -137,14 +160,14 @@ class WorkerClient {
     private maxConcurrent: number
   ) {
     this.worker = worker;
-    this.worker.onmessage = (e: MessageEvent) => this.onMessage(e.data as WorkerResponse);
+    this.worker.onmessage = (event: MessageEvent) => this.handleMessage(event.data as WorkerResponse);
   }
 
-  private onMessage(res: WorkerResponse): void {
-    const resolve = this.inflight.get(res.id);
+  private handleMessage(response: WorkerResponse): void {
+    const resolve = this.inflight.get(response.id);
     if (resolve) {
-      this.inflight.delete(res.id);
-      resolve(res);
+      this.inflight.delete(response.id);
+      resolve(response);
     }
     // a late reply for an aborted job lands here too: no resolver, just refill
     this.pump();
@@ -153,23 +176,23 @@ class WorkerClient {
   private pump(): void {
     while (this.queue.length && this.inflight.size < this.maxConcurrent) {
       const job = this.queue.shift()!;
-      this.inflight.set(job.msg.id, job.resolve);
-      this.worker.postMessage(job.msg);
+      this.inflight.set(job.message.id, job.resolve);
+      this.worker.postMessage(job.message);
     }
   }
 
   /** enqueue a job; returns its id so it can be aborted */
-  submit(msg: Record<string, unknown>, resolve: (res: WorkerResponse) => void): number {
+  submit(message: Record<string, unknown>, resolve: (response: WorkerResponse) => void): number {
     const id = this.nextId++;
-    this.queue.push({ msg: { ...msg, id }, resolve });
+    this.queue.push({ message: { ...message, id }, resolve });
     this.pump();
     return id;
   }
 
   abort(id: number): void {
-    const queuedAt = this.queue.findIndex((j) => j.msg.id === id);
-    if (queuedAt >= 0) {
-      this.queue.splice(queuedAt, 1);
+    const queuedIndex = this.queue.findIndex((job) => job.message.id === id);
+    if (queuedIndex >= 0) {
+      this.queue.splice(queuedIndex, 1);
       return;
     }
     if (this.inflight.delete(id)) {
@@ -216,8 +239,6 @@ export interface FrameTiles {
   missing: number;
 }
 
-const MAX_PARENT_LEVELS = 5;
-
 export class TileManager {
   private io: WorkerClient;
   private rasters: LRU<RasterEntry>;
@@ -227,21 +248,21 @@ export class TileManager {
   private box: { minX: number; minY: number; maxX: number; maxY: number } | null;
 
   constructor(
-    private cfg: MapConfig,
+    private config: MapConfig,
     private onLoad: () => void,
     worker: Worker
   ) {
-    this.io = new WorkerClient(worker, cfg.concurrency);
-    this.rasters = new LRU<RasterEntry>(cfg.rasterCacheSize, (v) => {
-      if (v !== MISSING) v.close();
+    this.io = new WorkerClient(worker, config.concurrency);
+    this.rasters = new LRU<RasterEntry>(config.rasterCacheSize, (value) => {
+      if (value !== MISSING) value.close();
     });
-    this.labels = new LRU<LabelEntry>(cfg.labelCacheSize);
-    this.box = cfg.bounds
+    this.labels = new LRU<LabelEntry>(config.labelCacheSize);
+    this.box = config.bounds
       ? {
-          minX: lngToMercX(cfg.bounds[0]),
-          minY: latToMercY(cfg.bounds[3]),
-          maxX: lngToMercX(cfg.bounds[2]),
-          maxY: latToMercY(cfg.bounds[1])
+          minX: lngToMercX(config.bounds[0]),
+          minY: latToMercY(config.bounds[3]),
+          maxX: lngToMercX(config.bounds[2]),
+          maxY: latToMercY(config.bounds[1])
         }
       : null;
   }
@@ -255,85 +276,90 @@ export class TileManager {
    * loops, and requests are deduped against the caches + in-flight maps.
    */
   update(camera: Camera): FrameTiles {
-    // tiles stop at cfg.maxZoom; beyond that the deepest level is scaled up (overzoom)
-    const z = tileZoom(camera, this.cfg.minZoom, this.cfg.maxZoom);
-    const wanted = cover(camera, { zoom: z, box: this.box, padPx: this.cfg.tileSize / 2 });
+    // tiles stop at config.maxZoom; beyond that the deepest level is scaled up (overzoom)
+    const zoom = tileZoom(camera, this.config.minZoom, this.config.maxZoom);
+    const wantedTiles = cover(camera, { zoom, box: this.box, padPx: this.config.tileSize / 2 });
 
     /* ---- raster requests (centre-first) + abort what left the viewport ---- */
     const wantedKeys = new Set<TileKey>();
-    for (const c of wanted) wantedKeys.add(tileKey(c.z, c.x, c.y));
+    for (const coord of wantedTiles) wantedKeys.add(buildTileKey(coord.z, coord.x, coord.y));
     for (const [key, id] of this.rasterJobs) {
       if (!wantedKeys.has(key)) {
         this.io.abort(id);
         this.rasterJobs.delete(key);
       }
     }
-    for (const c of wanted) {
-      const key = tileKey(c.z, c.x, c.y);
+    for (const coord of wantedTiles) {
+      const key = buildTileKey(coord.z, coord.x, coord.y);
       if (this.rasters.has(key) || this.rasterJobs.has(key)) continue;
-      this.requestRaster(key, c);
+      this.requestRaster(key, coord);
     }
 
     /* -------------------------------- draw list with parent/child fallback */
-    const rasters: DrawTile[] = [];
+    const rasterDrawList: DrawTile[] = [];
     let missing = 0;
-    for (const coord of wanted) {
-      const key = tileKey(coord.z, coord.x, coord.y);
+    for (const coord of wantedTiles) {
+      const key = buildTileKey(coord.z, coord.x, coord.y);
       const dst = tileScreenRect(camera, coord);
       const entry = this.rasters.get(key);
       if (entry && entry !== MISSING) {
-        rasters.push({ coord, bitmap: entry, src: null, dst, fallback: false });
+        rasterDrawList.push({ coord, bitmap: entry, src: null, dst, fallback: false });
         continue;
       }
       missing++;
       // note: a 404'd tile still gets a parent fallback — sparse pyramids are normal
-      if (!this.pushParent(coord, dst, rasters) && entry !== MISSING) {
-        this.pushChildren(camera, coord, rasters);
+      if (!this.pushParent(coord, dst, rasterDrawList) && entry !== MISSING) {
+        this.pushChildren(camera, coord, rasterDrawList);
       }
     }
     // fallbacks first so sharp tiles paint on top
-    rasters.sort((a, b) => Number(b.fallback) - Number(a.fallback));
+    rasterDrawList.sort((first, second) => Number(second.fallback) - Number(first.fallback));
 
     /* ------------------------------------------------------- label tiles */
-    const labels: PackedLabelTile[] = [];
-    const lz = Math.max(this.cfg.labelMinZoom, Math.min(this.cfg.labelMaxZoom, z));
-    const labelCover = cover(camera, { zoom: lz, box: this.box, padPx: 128 });
+    const labelTiles: PackedLabelTile[] = [];
+    const labelZoom = Math.max(this.config.labelMinZoom, Math.min(this.config.labelMaxZoom, zoom));
+    const labelCover = cover(camera, { zoom: labelZoom, box: this.box, padPx: LABEL_PREFETCH_PADDING });
     const labelWanted = new Set<TileKey>();
-    for (const c of labelCover) labelWanted.add(tileKey(c.z, c.x, c.y));
+    for (const coord of labelCover) labelWanted.add(buildTileKey(coord.z, coord.x, coord.y));
     for (const [key, id] of this.labelJobs) {
       if (!labelWanted.has(key)) {
         this.io.abort(id);
         this.labelJobs.delete(key);
       }
     }
-    for (const c of labelCover) {
-      const key = tileKey(c.z, c.x, c.y);
+    for (const coord of labelCover) {
+      const key = buildTileKey(coord.z, coord.x, coord.y);
       const entry = this.labels.get(key);
       if (entry === undefined) {
-        if (!this.labelJobs.has(key)) this.requestLabels(key, c);
+        if (!this.labelJobs.has(key)) this.requestLabels(key, coord);
         continue;
       }
-      if (entry !== MISSING) labels.push(entry);
+      if (entry !== MISSING) labelTiles.push(entry);
     }
 
-    return { zoom: z, rasters, labels, pending: this.io.pending, missing };
+    return { zoom, rasters: rasterDrawList, labels: labelTiles, pending: this.io.pending, missing };
   }
 
   /** walk up the pyramid for an already-decoded ancestor and crop it */
   private pushParent(coord: TileCoord, dst: DrawTile['dst'], out: DrawTile[]): boolean {
-    for (let up = 1; up <= MAX_PARENT_LEVELS && coord.z - up >= this.cfg.minZoom; up++) {
-      const pz = coord.z - up;
-      const step = 1 << up;
-      const px = coord.x >> up;
-      const py = coord.y >> up;
-      const entry = this.rasters.get(tileKey(pz, px, py));
+    for (let levelsUp = 1; levelsUp <= MAX_PARENT_LEVELS && coord.z - levelsUp >= this.config.minZoom; levelsUp++) {
+      const parentZoom = coord.z - levelsUp;
+      const step = 1 << levelsUp;
+      const parentX = coord.x >> levelsUp;
+      const parentY = coord.y >> levelsUp;
+      const entry = this.rasters.get(buildTileKey(parentZoom, parentX, parentY));
       if (!entry || entry === MISSING) continue;
-      const sw = entry.width / step;
-      const sh = entry.height / step;
+      const sourceWidth = entry.width / step;
+      const sourceHeight = entry.height / step;
       out.push({
         coord,
         bitmap: entry,
-        src: { x: (coord.x - px * step) * sw, y: (coord.y - py * step) * sh, w: sw, h: sh },
+        src: {
+          x: (coord.x - parentX * step) * sourceWidth,
+          y: (coord.y - parentY * step) * sourceHeight,
+          w: sourceWidth,
+          h: sourceHeight
+        },
         dst,
         fallback: true
       });
@@ -344,11 +370,11 @@ export class TileManager {
 
   /** zooming out: reuse the four children we already have */
   private pushChildren(camera: Camera, coord: TileCoord, out: DrawTile[]): void {
-    if (coord.z + 1 > this.cfg.maxZoom) return;
-    for (let dy = 0; dy < 2; dy++) {
-      for (let dx = 0; dx < 2; dx++) {
-        const child = { z: coord.z + 1, x: coord.x * 2 + dx, y: coord.y * 2 + dy };
-        const entry = this.rasters.get(tileKey(child.z, child.x, child.y));
+    if (coord.z + 1 > this.config.maxZoom) return;
+    for (let offsetY = 0; offsetY < 2; offsetY++) {
+      for (let offsetX = 0; offsetX < 2; offsetX++) {
+        const child = { z: coord.z + 1, x: coord.x * 2 + offsetX, y: coord.y * 2 + offsetY };
+        const entry = this.rasters.get(buildTileKey(child.z, child.x, child.y));
         if (!entry || entry === MISSING) continue;
         out.push({
           coord: child,
@@ -362,14 +388,14 @@ export class TileManager {
   }
 
   private requestRaster(key: TileKey, coord: TileCoord): void {
-    const url = `https://erichsia7.github.io/bus-map/tiles/${coord.z}/${coord.x}/${coord.y}.webp`;
-    const id = this.io.submit({ type: 'raster', key, url }, (res) => {
+    const id = this.io.submit({ type: 'raster', key, url: getTileUrl(coord) }, (response) => {
       this.rasterJobs.delete(key);
-      if (res.type === 'raster') {
-        this.rasters.set(key, res.bitmap);
+      if (response.type === 'raster') {
+        this.rasters.set(key, response.bitmap);
         this.onLoad();
-      } else if (res.type === 'error' && !res.aborted) {
-        if (res.status === 404 || res.status === 403 || res.status === 410) {
+      } else if (response.type === 'error' && !response.aborted) {
+        // a permanently-missing tile is cached as MISSING so we stop retrying it
+        if (response.status === 404 || response.status === 403 || response.status === 410) {
           this.rasters.set(key, MISSING);
         }
       }
@@ -378,13 +404,12 @@ export class TileManager {
   }
 
   private requestLabels(key: TileKey, coord: TileCoord): void {
-    const url = `https://erichsia7.github.io/bus-map/labels/${coord.z}/${coord.x}/${coord.y}.geojson.gz`;
-    const id = this.io.submit({ type: 'labels', key, url, z: coord.z, x: coord.x, y: coord.y }, (res) => {
+    const id = this.io.submit({ type: 'labels', key, url: getLabelUrl(coord), z: coord.z, x: coord.x, y: coord.y }, (response) => {
       this.labelJobs.delete(key);
-      if (res.type === 'labels') {
-        this.labels.set(key, res.tile);
+      if (response.type === 'labels') {
+        this.labels.set(key, response.tile);
         this.onLoad();
-      } else if (res.type === 'error' && !res.aborted) {
+      } else if (response.type === 'error' && !response.aborted) {
         this.labels.set(key, MISSING);
       }
     });

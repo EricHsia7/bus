@@ -38,8 +38,8 @@ interface LabelState {
   opacity: number;
   target: number;
   /** kept in mercator units so a fading-out label still tracks the map */
-  mx: number;
-  my: number;
+  mercatorX: number;
+  mercatorY: number;
   lines: string[];
   width: number;
   height: number;
@@ -72,7 +72,7 @@ export class LabelEngine {
   private tree = new RBush<Box>(9);
   private measureCache = new Map<string, number>();
   private textCache = new WeakMap<PackedLabelTile, Array<string | undefined>>();
-  private fade: number;
+  private fadeDuration: number;
   private padding: number;
   private viewportPadding: number;
   private maxLabels: number;
@@ -83,11 +83,11 @@ export class LabelEngine {
   lastPlaced = 0;
   lastCandidates = 0;
 
-  constructor(opts: LabelEngineOptions = {}) {
-    this.fade = opts.fadeDuration ?? 160;
-    this.padding = opts.padding ?? 2;
-    this.viewportPadding = opts.viewportPadding ?? 48;
-    this.maxLabels = opts.maxLabels ?? 2000;
+  constructor(options: LabelEngineOptions = {}) {
+    this.fadeDuration = options.fadeDuration ?? 160;
+    this.padding = options.padding ?? 2;
+    this.viewportPadding = options.viewportPadding ?? 48;
+    this.maxLabels = options.maxLabels ?? 2000;
   }
 
   reset(): void {
@@ -96,47 +96,47 @@ export class LabelEngine {
   }
 
   /** decode a label's UTF-8 slice once per tile */
-  private textOf(tile: PackedLabelTile, i: number): string {
+  private getText(tile: PackedLabelTile, index: number): string {
     let cache = this.textCache.get(tile);
     if (!cache) {
       cache = new Array(tile.count);
       this.textCache.set(tile, cache);
     }
-    const hit = cache[i];
-    if (hit !== undefined) return hit;
-    const text = decoder.decode(tile.text.subarray(tile.textStart[i], tile.textStart[i + 1]));
-    cache[i] = text;
+    const cached = cache[index];
+    if (cached !== undefined) return cached;
+    const text = decoder.decode(tile.text.subarray(tile.textStart[index], tile.textStart[index + 1]));
+    cache[index] = text;
     return text;
   }
 
-  private measure(ctx: CanvasRenderingContext2D, font: string, text: string): number {
+  private measure(context: CanvasRenderingContext2D, font: string, text: string): number {
     const key = `${font}\u0000${text}`;
-    const hit = this.measureCache.get(key);
-    if (hit !== undefined) return hit;
-    const width = ctx.measureText(text).width;
+    const cached = this.measureCache.get(key);
+    if (cached !== undefined) return cached;
+    const width = context.measureText(text).width;
     if (this.measureCache.size > 20000) this.measureCache.clear();
     this.measureCache.set(key, width);
     return width;
   }
 
   /** greedy wrap; CJK breaks per character, latin on spaces */
-  private wrap(ctx: CanvasRenderingContext2D, font: string, text: string, wrapWidth: number): { lines: string[]; width: number } {
-    const single = this.measure(ctx, font, text);
-    if (!wrapWidth || single <= wrapWidth || text.length < 2) {
-      return { lines: [text], width: single };
+  private wrap(context: CanvasRenderingContext2D, font: string, text: string, wrapWidth: number): { lines: string[]; width: number } {
+    const singleLineWidth = this.measure(context, font, text);
+    if (!wrapWidth || singleLineWidth <= wrapWidth || text.length < 2) {
+      return { lines: [text], width: singleLineWidth };
     }
     const tokens: string[] = [];
     let buffer = '';
-    for (const ch of text) {
-      if (ch === ' ' || ch === '\n') {
+    for (const character of text) {
+      if (character === ' ' || character === '\n') {
         if (buffer) tokens.push(buffer);
         buffer = '';
-      } else if (CJK.test(ch)) {
+      } else if (CJK.test(character)) {
         if (buffer) tokens.push(buffer);
         buffer = '';
-        tokens.push(ch);
+        tokens.push(character);
       } else {
-        buffer += ch;
+        buffer += character;
       }
     }
     if (buffer) tokens.push(buffer);
@@ -146,39 +146,40 @@ export class LabelEngine {
     let width = 0;
     for (const token of tokens) {
       const joiner = line && !CJK.test(token) && !CJK.test(line.slice(-1)) ? ' ' : '';
-      const next = line + joiner + token;
-      const w = this.measure(ctx, font, next);
-      if (line && w > wrapWidth) {
+      const candidateLine = line + joiner + token;
+      const candidateWidth = this.measure(context, font, candidateLine);
+      if (line && candidateWidth > wrapWidth) {
         lines.push(line);
-        width = Math.max(width, this.measure(ctx, font, line));
+        width = Math.max(width, this.measure(context, font, line));
         line = token;
       } else {
-        line = next;
+        line = candidateLine;
       }
     }
     if (line) {
       lines.push(line);
-      width = Math.max(width, this.measure(ctx, font, line));
+      width = Math.max(width, this.measure(context, font, line));
     }
     return { lines, width };
   }
 
+  /** build the CSS font shorthand for a style (prefix + size + family) */
   static fontOf(style: LabelStyle): string {
     return `${style.fontPrefix} ${style.size}px ${style.fontFamily}`;
   }
 
   /**
    * Place labels for this frame.
-   * @param dt milliseconds since the previous call (drives the fades)
+   * @param deltaTime milliseconds since the previous call (drives the fades)
    */
-  update(ctx: CanvasRenderingContext2D, camera: Camera, tiles: PackedLabelTile[], dt: number, frame: number): PlacedLabel[] {
-    const step = this.fade > 0 ? Math.min(1, dt / this.fade) : 1;
+  update(context: CanvasRenderingContext2D, camera: Camera, tiles: PackedLabelTile[], deltaTime: number, frame: number): PlacedLabel[] {
+    const step = this.fadeDuration > 0 ? Math.min(1, deltaTime / this.fadeDuration) : 1;
     for (const state of this.states.values()) state.target = 0;
 
-    if (this.enabled) this.place(ctx, camera, tiles, frame);
+    if (this.enabled) this.place(context, camera, tiles, frame);
 
     /* ---- advance fades and emit the draw list ---- */
-    const out: PlacedLabel[] = [];
+    const placedLabels: PlacedLabel[] = [];
     this.animating = false;
     for (const [id, state] of this.states) {
       const delta = state.target - state.opacity;
@@ -192,11 +193,11 @@ export class LabelEngine {
         this.states.delete(id);
         continue;
       }
-      out.push({
+      placedLabels.push({
         id,
         lines: state.lines,
-        x: camera.projectX(state.mx),
-        y: camera.projectY(state.my) + state.style.dy,
+        x: camera.projectX(state.mercatorX),
+        y: camera.projectY(state.mercatorY) + state.style.dy,
         width: state.width,
         height: state.height,
         lineHeight: state.lineHeight,
@@ -205,11 +206,11 @@ export class LabelEngine {
         style: state.style
       });
     }
-    this.lastPlaced = out.length;
-    return out;
+    this.lastPlaced = placedLabels.length;
+    return placedLabels;
   }
 
-  private place(ctx: CanvasRenderingContext2D, camera: Camera, tiles: PackedLabelTile[], frame: number): void {
+  private place(context: CanvasRenderingContext2D, camera: Camera, tiles: PackedLabelTile[], frame: number): void {
     const pad = this.viewportPadding;
     const minX = -pad;
     const minY = -pad;
@@ -220,9 +221,9 @@ export class LabelEngine {
     interface Candidate {
       id: string;
       tile: PackedLabelTile;
-      i: number;
-      sx: number;
-      sy: number;
+      index: number;
+      screenX: number;
+      screenY: number;
       priority: number;
       wasVisible: number;
     }
@@ -230,27 +231,27 @@ export class LabelEngine {
     const candidates: Candidate[] = [];
 
     for (const tile of tiles) {
-      for (let i = 0; i < tile.count; i++) {
-        const mx = tile.anchors[i * 2];
-        const my = tile.anchors[i * 2 + 1];
-        const sx = camera.projectX(mx);
-        if (sx < minX || sx > maxX) continue;
-        const sy = camera.projectY(my);
-        if (sy < minY || sy > maxY) continue;
+      for (let index = 0; index < tile.count; index++) {
+        const mercatorX = tile.anchors[index * 2];
+        const mercatorY = tile.anchors[index * 2 + 1];
+        const screenX = camera.projectX(mercatorX);
+        if (screenX < minX || screenX > maxX) continue;
+        const screenY = camera.projectY(mercatorY);
+        if (screenY < minY || screenY > maxY) continue;
 
-        const text = this.textOf(tile, i);
+        const text = this.getText(tile, index);
         // same feature can appear in neighbouring tiles: identity = text + position
-        const id = `${text}@${Math.round(mx * 256)},${Math.round(my * 256)}`;
+        const id = `${text}@${Math.round(mercatorX * 256)},${Math.round(mercatorY * 256)}`;
         if (seen.has(id)) continue;
         seen.add(id);
         const state = this.states.get(id);
         candidates.push({
           id,
           tile,
-          i,
-          sx,
-          sy,
-          priority: tile.priority[i],
+          index,
+          screenX,
+          screenY,
+          priority: tile.priority[index],
           wasVisible: state && state.opacity > 0 ? 0 : 1
         });
       }
@@ -258,47 +259,47 @@ export class LabelEngine {
     this.lastCandidates = candidates.length;
 
     /* ---- 2. priority sort (sticky: visible labels keep their slot) ---- */
-    candidates.sort((a, b) => a.wasVisible - b.wasVisible || a.priority - b.priority);
+    candidates.sort((first, second) => first.wasVisible - second.wasVisible || first.priority - second.priority);
 
     /* ---- 3. collision-test in priority order ---- */
     this.tree.clear();
     let placed = 0;
-    for (const c of candidates) {
-      const style = c.tile.styles[c.tile.styleIdx[c.i]];
+    for (const candidate of candidates) {
+      const style = candidate.tile.styles[candidate.tile.styleIdx[candidate.index]];
       const font = LabelEngine.fontOf(style);
-      ctx.font = font;
-      const text = this.textOf(c.tile, c.i);
-      const { lines, width } = this.wrap(ctx, font, text, style.wrapWidth);
+      context.font = font;
+      const text = this.getText(candidate.tile, candidate.index);
+      const { lines, width } = this.wrap(context, font, text, style.wrapWidth);
       const lineHeight = Math.round(style.size * 1.2);
       const height = lineHeight * lines.length;
 
       let angle = 0;
       if (style.placement === 'line') {
-        angle = this.lineAngle(camera, c.tile, c.i);
+        angle = this.getLineAngle(camera, candidate.tile, candidate.index);
       }
 
-      const cy = c.sy + style.dy;
+      const centerY = candidate.screenY + style.dy;
       // axis-aligned box; for rotated labels use the rotated extent
       const cos = Math.abs(Math.cos(angle));
       const sin = Math.abs(Math.sin(angle));
-      const halfW = (width * cos + height * sin) / 2 + this.padding;
-      const halfH = (width * sin + height * cos) / 2 + this.padding;
+      const halfWidth = (width * cos + height * sin) / 2 + this.padding;
+      const halfHeight = (width * sin + height * cos) / 2 + this.padding;
       const box: Box = {
-        id: c.id,
-        minX: c.sx - halfW,
-        minY: cy - halfH,
-        maxX: c.sx + halfW,
-        maxY: cy + halfH
+        id: candidate.id,
+        minX: candidate.screenX - halfWidth,
+        minY: centerY - halfHeight,
+        maxX: candidate.screenX + halfWidth,
+        maxY: centerY + halfHeight
       };
 
       const rejected = placed >= this.maxLabels || this.tree.collides(box);
-      let state = this.states.get(c.id);
+      let state = this.states.get(candidate.id);
       if (!state) {
         state = {
           opacity: 0,
           target: 0,
-          mx: c.tile.anchors[c.i * 2],
-          my: c.tile.anchors[c.i * 2 + 1],
+          mercatorX: candidate.tile.anchors[candidate.index * 2],
+          mercatorY: candidate.tile.anchors[candidate.index * 2 + 1],
           lines,
           width,
           height,
@@ -307,7 +308,7 @@ export class LabelEngine {
           style,
           seen: frame
         };
-        this.states.set(c.id, state);
+        this.states.set(candidate.id, state);
       }
       state.lines = lines;
       state.width = width;
@@ -326,26 +327,26 @@ export class LabelEngine {
   }
 
   /** upright angle of the longest projected segment of a line-placed label */
-  private lineAngle(camera: Camera, tile: PackedLabelTile, i: number): number {
-    const start = tile.lineStart[i];
-    const end = tile.lineStart[i + 1];
+  private getLineAngle(camera: Camera, tile: PackedLabelTile, index: number): number {
+    const start = tile.lineStart[index];
+    const end = tile.lineStart[index + 1];
     if (end - start < 2) return 0;
-    let best = 0;
-    let bestLen = -1;
-    for (let p = start + 1; p < end; p++) {
-      const x1 = camera.projectX(tile.lines[(p - 1) * 2]);
-      const y1 = camera.projectY(tile.lines[(p - 1) * 2 + 1]);
-      const x2 = camera.projectX(tile.lines[p * 2]);
-      const y2 = camera.projectY(tile.lines[p * 2 + 1]);
-      const len = (x2 - x1) ** 2 + (y2 - y1) ** 2;
-      if (len > bestLen) {
-        bestLen = len;
-        best = Math.atan2(y2 - y1, x2 - x1);
+    let bestAngle = 0;
+    let bestLength = -1;
+    for (let point = start + 1; point < end; point++) {
+      const x1 = camera.projectX(tile.lines[(point - 1) * 2]);
+      const y1 = camera.projectY(tile.lines[(point - 1) * 2 + 1]);
+      const x2 = camera.projectX(tile.lines[point * 2]);
+      const y2 = camera.projectY(tile.lines[point * 2 + 1]);
+      const length = (x2 - x1) ** 2 + (y2 - y1) ** 2;
+      if (length > bestLength) {
+        bestLength = length;
+        bestAngle = Math.atan2(y2 - y1, x2 - x1);
       }
     }
     // keep text readable: never upside down
-    if (best > Math.PI / 2) best -= Math.PI;
-    if (best < -Math.PI / 2) best += Math.PI;
-    return best;
+    if (bestAngle > Math.PI / 2) bestAngle -= Math.PI;
+    if (bestAngle < -Math.PI / 2) bestAngle += Math.PI;
+    return bestAngle;
   }
 }

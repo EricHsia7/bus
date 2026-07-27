@@ -6,8 +6,10 @@ export interface TileCoord {
 
 export type TileKey = string;
 
-export const tileKey = (z: number, x: number, y: number): TileKey => `${z}/${x}/${y}`;
+/** Build the canonical "z/x/y" cache key for a tile. */
+export const buildTileKey = (z: number, x: number, y: number): TileKey => `${z}/${x}/${y}`;
 
+/** Parse a "z/x/y" cache key back into its numeric coordinate. */
 export const parseTileKey = (key: TileKey): TileCoord => {
   const [z, x, y] = key.split('/');
   return { z: +z, x: +x, y: +y };
@@ -60,7 +62,10 @@ export interface PackedLabelTile {
 
 /* ---------------------------------------------------------------- worker IO */
 
-export type WorkerRequest = { type: 'raster'; id: number; key: TileKey; url: string } | { type: 'labels'; id: number; key: TileKey; url: string; z: number; x: number; y: number } | { type: 'abort'; id: number };
+export type WorkerRequest =
+  | { type: 'raster'; id: number; key: TileKey; url: string }
+  | { type: 'labels'; id: number; key: TileKey; url: string; z: number; x: number; y: number }
+  | { type: 'abort'; id: number };
 
 export type WorkerResponse =
   | { type: 'raster'; id: number; key: TileKey; bitmap: ImageBitmap }

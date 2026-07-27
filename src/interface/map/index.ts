@@ -2,21 +2,16 @@ import { querySize } from '..';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { Camera } from './camera';
 import { Gestures } from './gestures';
-import { LabelEngine, PlacedLabel } from './labels';
+import { LabelEngine } from './labels';
 import { clear, drawDebug, drawLabels, drawRasters, resizeCanvas } from './render';
-import { FrameTiles, TileManager } from './tiles';
+import { TileManager } from './tiles';
 
-const Field = documentQuerySelector('.css_map_field');
-const MapCanvas = elementQuerySelector(Field, '.css_map_canvas') as HTMLCanvasElement;
-const MapCanvasContext = MapCanvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
-
-const worker = new Worker(new URL('./worker.ts', import.meta.url));
-
-let initialized = false;
-let windowWidth = 0;
-let windowHeight = 0;
-
-const dpr = Math.min(2, window.devicePixelRatio || 1);
+/* ----------------------------------------------------------------- config */
+/*
+ * Every tunable value lives here as a single const object at the top of the
+ * script, so nothing downstream carries a magic number. Values are grouped by
+ * concern: zoom range, the data box, cache sizes and interaction.
+ */
 
 export interface MapConfig {
   tileSize: number;
@@ -34,15 +29,21 @@ export interface MapConfig {
   constrainToBounds: boolean;
   center: [number, number];
   zoom: number;
-  /** max concurrent in-flight requests across all workers */
+  /** max concurrent in-flight requests across the worker */
   concurrency: number;
-  /** LRU sizes (tile count) */
+  /** raster LRU cache size, in tile count */
   rasterCacheSize: number;
+  /** label LRU cache size, in tile count */
   labelCacheSize: number;
   /** label fade duration, ms */
   fadeDuration: number;
+  /** most labels the placement engine keeps on screen at once */
+  maxLabels: number;
+  /** cap the device pixel ratio so retina canvases stay affordable to redraw */
+  maxDevicePixelRatio: number;
   /** touchpad/wheel scroll: "auto" = touchpad pans + wheel zooms, or force "zoom"/"pan" */
   wheelBehavior: 'auto' | 'zoom' | 'pan';
+  /** start with the debug overlay (tile grid + label boxes) visible? */
   debug: boolean;
 }
 
@@ -63,18 +64,48 @@ const config: MapConfig = {
   rasterCacheSize: 400,
   concurrency: 8,
   fadeDuration: 160,
+  maxLabels: 256,
+  maxDevicePixelRatio: 2,
   wheelBehavior: 'auto',
   debug: false
 };
+
+/* --------------------------------------------------------------- elements */
+/*
+ * The field, canvas and drawing context are looked up once and kept constant
+ * for the whole lifetime of the page. Nothing here is ever created, removed or
+ * re-selected on the fly, so the map can be paused and resumed freely.
+ */
+
+const mapField = documentQuerySelector('.css_map_field');
+const mapCanvas = elementQuerySelector(mapField, '.css_map_canvas') as HTMLCanvasElement;
+const mapContext = mapCanvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
+
+// One module worker serves every tile request (see tiles.ts for why one is enough).
+const worker = new Worker(new URL('./worker.ts', import.meta.url));
+
+// Effective device pixel ratio, clamped so 3x/4x screens don't tank redraw cost.
+const pixelRatio = Math.min(config.maxDevicePixelRatio, window.devicePixelRatio || 1);
+
+// The single viewer instance. Created lazily on first open, then reused forever.
+let mapViewer: MapViewerHandle | null = null;
 
 export interface MapViewerHandle {
   camera: Camera;
   invalidate: () => void;
   flyTo: (lng: number, lat: number, zoom?: number) => void;
-  destroy: () => void;
+  /** stop the render loop while the map is hidden; all state is retained */
+  pause: () => void;
+  /** restart the render loop when the map is shown again */
+  resume: () => void;
 }
 
-export function initializeMapViewer(): MapViewerHandle {
+/**
+ * Build the one-and-only map viewer: wires up the camera, tile manager, label
+ * engine, gestures and the requestAnimationFrame render loop. Called a single
+ * time; afterwards the viewer is paused/resumed rather than rebuilt.
+ */
+function createMapViewer(): MapViewerHandle {
   const camera = new Camera({
     center: config.center,
     zoom: config.zoom,
@@ -84,73 +115,98 @@ export function initializeMapViewer(): MapViewerHandle {
     tileSize: config.tileSize,
     maxBounds: config.constrainToBounds ? config.bounds : null
   });
-  camera.resize(Field.clientWidth, Field.clientHeight);
+  camera.resize(mapField.clientWidth, mapField.clientHeight);
 
-  let dirty = true;
+  // `needsRedraw` forces at least one paint; invalidate() is the single entry
+  // point everything (gestures, tile loads, resizes) uses to ask for a frame.
+  let needsRedraw = true;
   const invalidate = (): void => {
-    dirty = true;
+    needsRedraw = true;
   };
 
   const tiles = new TileManager(config, invalidate, worker);
-  const labels = new LabelEngine({ fadeDuration: config.fadeDuration, maxLabels: 256 });
+  const labels = new LabelEngine({ fadeDuration: config.fadeDuration, maxLabels: config.maxLabels });
   const gestures = new Gestures({
     camera,
-    element: MapCanvas,
+    element: mapCanvas,
     onChange: invalidate,
     wheelBehavior: config.wheelBehavior
   });
-  // TODO: control bu   tton
+  // TODO: add zoom control buttons
 
-  let debug = config.debug;
-  let lastTime = 0;
-  let frame = 0;
-  let lastFrames: FrameTiles | null = null;
-  let lastLabels: PlacedLabel[] = [];
-  let fps = 0;
-  let raf = 0;
+  let debugOverlay = config.debug;
+  let lastFrameTime = 0;
+  let frameCount = 0;
+  let framesPerSecond = 0;
+  let animationFrameId = 0;
+  let paused = false;
 
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'd') {
-      debug = !debug;
+  // 'd' toggles the debug overlay, 'l' toggles labels
+  const handleKeyDown = (event: KeyboardEvent): void => {
+    if (event.key === 'd') {
+      debugOverlay = !debugOverlay;
       invalidate();
-    } else if (e.key === 'l') {
+    } else if (event.key === 'l') {
       labels.enabled = !labels.enabled;
       invalidate();
     }
-  });
+  };
+  window.addEventListener('keydown', handleKeyDown);
 
   /* --------------------------------------------------------------- resize */
-  const observer = new ResizeObserver(() => {
-    const size = querySize('window');
-    windowWidth = size.width;
-    windowHeight = size.height;
-    if (resizeCanvas(MapCanvas, camera)) invalidate();
+  const resizeObserver = new ResizeObserver(() => {
+    // keep the shared viewport metrics fresh, then re-fit the canvas backing store
+    querySize('window');
+    if (resizeCanvas(mapCanvas, camera, config.maxDevicePixelRatio)) invalidate();
   });
-  observer.observe(Field);
-  resizeCanvas(MapCanvas, camera);
+  resizeObserver.observe(mapField);
+  resizeCanvas(mapCanvas, camera, config.maxDevicePixelRatio);
 
   /* ----------------------------------------------------------- the loop */
-  const render = (now: number): void => {
-    raf = requestAnimationFrame(render);
-    const dt = lastTime ? now - lastTime : 16;
-    lastTime = now;
-    fps = fps ? fps * 0.9 + (1000 / Math.max(1, dt)) * 0.1 : 1000 / Math.max(1, dt);
+  const renderFrame = (now: number): void => {
+    animationFrameId = requestAnimationFrame(renderFrame);
+    const deltaTime = lastFrameTime ? now - lastFrameTime : 16;
+    lastFrameTime = now;
+    // exponential moving average of the frame rate (kept for debugging/HUD use)
+    framesPerSecond = framesPerSecond
+      ? framesPerSecond * 0.9 + (1000 / Math.max(1, deltaTime)) * 0.1
+      : 1000 / Math.max(1, deltaTime);
 
+    // skip the whole frame when nothing changed and nothing is animating
     const animating = gestures.update(now);
-    if (!dirty && !animating && !labels.animating) return;
-    dirty = false;
-    frame++;
+    if (!needsRedraw && !animating && !labels.animating) return;
+    needsRedraw = false;
+    frameCount++;
 
     const frameTiles = tiles.update(camera);
-    lastFrames = frameTiles;
-
-    clear(MapCanvasContext, camera, dpr);
-    drawRasters(MapCanvasContext, frameTiles.rasters, dpr);
-    lastLabels = labels.update(MapCanvasContext, camera, frameTiles.labels, dt, frame);
-    drawLabels(MapCanvasContext, lastLabels);
-    if (debug) drawDebug(MapCanvasContext, frameTiles.rasters, lastLabels);
+    clear(mapContext, camera, pixelRatio);
+    drawRasters(mapContext, frameTiles.rasters, pixelRatio);
+    const placedLabels = labels.update(mapContext, camera, frameTiles.labels, deltaTime, frameCount);
+    drawLabels(mapContext, placedLabels);
+    if (debugOverlay) drawDebug(mapContext, frameTiles.rasters, placedLabels);
   };
-  raf = requestAnimationFrame(render);
+  animationFrameId = requestAnimationFrame(renderFrame);
+
+  /*
+   * The viewer is created once and kept alive. Closing the map only *pauses*
+   * the render loop (and drops any momentum) so reopening is instant. The
+   * canvas, worker, gestures and observer are never torn down.
+   */
+  const pause = (): void => {
+    if (paused) return;
+    paused = true;
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = 0;
+    gestures.stop(); // drop inertia / zoom easing so it doesn't resume mid-fling
+  };
+
+  const resume = (): void => {
+    if (!paused) return;
+    paused = false;
+    lastFrameTime = 0;
+    invalidate();
+    animationFrameId = requestAnimationFrame(renderFrame);
+  };
 
   return {
     camera,
@@ -160,27 +216,20 @@ export function initializeMapViewer(): MapViewerHandle {
       if (zoom !== undefined) camera.zoomTo(zoom);
       invalidate();
     },
-    destroy() {
-      cancelAnimationFrame(raf);
-      observer.disconnect();
-      gestures.destroy();
-      tiles.destroy();
-      MapCanvas.remove();
-    }
+    pause,
+    resume
   };
 }
 
-function initializeMap(): void {
-  if (initialized) return;
-  initialized = true;
-  initializeMapViewer();
-}
-
+/** Show the map, creating the viewer on first open and resuming it thereafter. */
 export function openMap(): void {
-  Field.setAttribute('displayed', 'true');
-  initializeMap();
+  mapField.setAttribute('displayed', 'true');
+  if (mapViewer) mapViewer.resume();
+  else mapViewer = createMapViewer();
 }
 
+/** Hide the map and pause its render loop; the viewer instance is kept for reuse. */
 export function closeMap(): void {
-  Field.setAttribute('displayed', 'false');
+  mapField.setAttribute('displayed', 'false');
+  mapViewer?.pause();
 }

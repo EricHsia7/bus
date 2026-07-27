@@ -222,7 +222,7 @@ export class Viewport {
   zoomAt(screenX: number, screenY: number, factor: number): void {
     const currentWorldX = (screenX - this.offsetX) / this.scale;
     const currentWorldY = (screenY - this.offsetY) / this.scale;
-    const nextScale = clamp(this.scale * factor, 0.15, 8);
+    const nextScale = clamp(this.scale * factor, 0.15, 8); // TODO: minScale, maxScale
     this.offsetX = screenX - currentWorldX * nextScale;
     this.offsetY = screenY - currentWorldY * nextScale;
     this.scale = nextScale;

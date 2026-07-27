@@ -6,10 +6,11 @@
  *  world px       mercator * worldSize, worldSize = tileSize * 2^zoom
  *  screen px      CSS pixels, origin = canvas top-left
  *
- * screen = mercator * k + t with k = worldSize, t = size/2 - center*k
- * a pure scale+translate affine matrix [k, 0, 0, k, tx, ty] — which is
- * exactly what ctx.setTransform() wants, so raster drawing needs no per-tile math
- * beyond the tile's own mercator rect.
+ * screen = mercator * scale + translate with scale = worldSize,
+ * translate = size/2 - center*scale — a pure scale+translate affine matrix
+ * [scale, 0, 0, scale, translateX, translateY], which is exactly what
+ * ctx.setTransform() wants, so raster drawing needs no per-tile math beyond the
+ * tile's own mercator rect.
  *
  */
 
@@ -34,17 +35,19 @@ export interface MercBounds {
   maxY: number;
 }
 
+/* -------------------------------------------------- coordinate conversions */
+
 export const lngToMercX = (lng: number): number => (lng + 180) / 360;
 
 export function latToMercY(lat: number): number {
-  const l = Math.max(-MAX_MERCATOR_LAT, Math.min(MAX_MERCATOR_LAT, lat));
-  const s = Math.sin((l * Math.PI) / 180);
-  return 0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI);
+  const clampedLatitude = Math.max(-MAX_MERCATOR_LAT, Math.min(MAX_MERCATOR_LAT, lat));
+  const sine = Math.sin((clampedLatitude * Math.PI) / 180);
+  return 0.5 - Math.log((1 + sine) / (1 - sine)) / (4 * Math.PI);
 }
 
-export const mercXToLng = (x: number): number => x * 360 - 180;
+export const mercXToLng = (mercatorX: number): number => mercatorX * 360 - 180;
 
-export const mercYToLat = (y: number): number => (Math.atan(Math.sinh(Math.PI * (1 - 2 * y))) * 180) / Math.PI;
+export const mercYToLat = (mercatorY: number): number => (Math.atan(Math.sinh(Math.PI * (1 - 2 * mercatorY))) * 180) / Math.PI;
 
 /** metres per screen pixel at a given latitude/zoom (handy for scale bars) */
 export function metersPerPixel(lat: number, zoom: number, tileSize = 256): number {
@@ -74,22 +77,22 @@ export class Camera {
   height = 1;
   maxBounds: MercBounds | null = null;
 
-  constructor(opts: CameraOptions = {}) {
-    this.tileSize = opts.tileSize ?? 256;
-    this.minZoom = opts.minZoom ?? 0;
-    this.maxZoom = opts.maxZoom ?? 22;
-    this.zoom = opts.zoom ?? 0;
-    if (opts.center) this.setCenter(opts.center[0], opts.center[1]);
-    if (opts.maxBounds) this.setMaxBounds(opts.maxBounds);
+  constructor(options: CameraOptions = {}) {
+    this.tileSize = options.tileSize ?? 256;
+    this.minZoom = options.minZoom ?? 0;
+    this.maxZoom = options.maxZoom ?? 22;
+    this.zoom = options.zoom ?? 0;
+    if (options.center) this.setCenter(options.center[0], options.center[1]);
+    if (options.maxBounds) this.setMaxBounds(options.maxBounds);
   }
 
-  setMaxBounds(b: [number, number, number, number] | null): void {
-    this.maxBounds = b
+  setMaxBounds(bounds: [number, number, number, number] | null): void {
+    this.maxBounds = bounds
       ? {
-          minX: lngToMercX(b[0]),
-          minY: latToMercY(b[3]),
-          maxX: lngToMercX(b[2]),
-          maxY: latToMercY(b[1])
+          minX: lngToMercX(bounds[0]),
+          minY: latToMercY(bounds[3]),
+          maxX: lngToMercX(bounds[2]),
+          maxY: latToMercY(bounds[1])
         }
       : null;
   }
@@ -100,29 +103,29 @@ export class Camera {
 
   /** [a, b, c, d, e, f] mapping mercator units -> CSS px */
   get matrix(): [number, number, number, number, number, number] {
-    const k = this.worldSize;
-    return [k, 0, 0, k, this.width / 2 - this.x * k, this.height / 2 - this.y * k];
+    const scale = this.worldSize;
+    return [scale, 0, 0, scale, this.width / 2 - this.x * scale, this.height / 2 - this.y * scale];
   }
 
-  projectX(mx: number): number {
-    const k = this.worldSize;
-    return (mx - this.x) * k + this.width / 2;
+  projectX(mercatorX: number): number {
+    const scale = this.worldSize;
+    return (mercatorX - this.x) * scale + this.width / 2;
   }
 
-  projectY(my: number): number {
-    const k = this.worldSize;
-    return (my - this.y) * k + this.height / 2;
+  projectY(mercatorY: number): number {
+    const scale = this.worldSize;
+    return (mercatorY - this.y) * scale + this.height / 2;
   }
 
-  project(mx: number, my: number): ScreenPoint {
-    return { x: this.projectX(mx), y: this.projectY(my) };
+  project(mercatorX: number, mercatorY: number): ScreenPoint {
+    return { x: this.projectX(mercatorX), y: this.projectY(mercatorY) };
   }
 
-  unproject(px: number, py: number): MercPoint {
-    const k = this.worldSize;
+  unproject(screenX: number, screenY: number): MercPoint {
+    const scale = this.worldSize;
     return {
-      x: (px - this.width / 2) / k + this.x,
-      y: (py - this.height / 2) / k + this.y
+      x: (screenX - this.width / 2) / scale + this.x,
+      y: (screenY - this.height / 2) / scale + this.y
     };
   }
 
@@ -130,9 +133,9 @@ export class Camera {
     return this.project(lngToMercX(lng), latToMercY(lat));
   }
 
-  screenToLngLat(px: number, py: number): LngLat {
-    const m = this.unproject(px, py);
-    return { lng: mercXToLng(m.x), lat: mercYToLat(m.y) };
+  screenToLngLat(screenX: number, screenY: number): LngLat {
+    const mercator = this.unproject(screenX, screenY);
+    return { lng: mercXToLng(mercator.x), lat: mercYToLat(mercator.y) };
   }
 
   get center(): LngLat {
@@ -151,10 +154,10 @@ export class Camera {
     return this.constrain();
   }
 
-  panByPixels(dx: number, dy: number): this {
-    const k = this.worldSize;
-    this.x -= dx / k;
-    this.y -= dy / k;
+  panByPixels(deltaX: number, deltaY: number): this {
+    const scale = this.worldSize;
+    this.x -= deltaX / scale;
+    this.y -= deltaY / scale;
     return this.constrain();
   }
 
@@ -164,70 +167,70 @@ export class Camera {
    * keeps animated zooms drift-free.
    */
   zoomTo(zoom: number, anchorScreen?: ScreenPoint | null, anchorMerc?: MercPoint | null): this {
-    const next = Math.max(this.minZoom, Math.min(this.maxZoom, zoom));
+    const clampedZoom = Math.max(this.minZoom, Math.min(this.maxZoom, zoom));
     if (anchorScreen) {
-      const m = anchorMerc ?? this.unproject(anchorScreen.x, anchorScreen.y);
-      this.zoom = next;
-      const k = this.worldSize;
-      // solve for center so that m projects onto anchorScreen
-      this.x = m.x - (anchorScreen.x - this.width / 2) / k;
-      this.y = m.y - (anchorScreen.y - this.height / 2) / k;
+      const anchorMercator = anchorMerc ?? this.unproject(anchorScreen.x, anchorScreen.y);
+      this.zoom = clampedZoom;
+      const scale = this.worldSize;
+      // solve for center so that anchorMercator projects onto anchorScreen
+      this.x = anchorMercator.x - (anchorScreen.x - this.width / 2) / scale;
+      this.y = anchorMercator.y - (anchorScreen.y - this.height / 2) / scale;
     } else {
-      this.zoom = next;
+      this.zoom = clampedZoom;
     }
     return this.constrain();
   }
 
-  zoomBy(dz: number, anchorScreen?: ScreenPoint | null): this {
-    return this.zoomTo(this.zoom + dz, anchorScreen);
+  zoomBy(zoomDelta: number, anchorScreen?: ScreenPoint | null): this {
+    return this.zoomTo(this.zoom + zoomDelta, anchorScreen);
   }
 
   /** visible area in mercator units, optionally grown by `padPx` screen pixels */
   visibleBounds(padPx = 0): MercBounds {
-    const k = this.worldSize;
-    const halfW = (this.width / 2 + padPx) / k;
-    const halfH = (this.height / 2 + padPx) / k;
+    const scale = this.worldSize;
+    const halfWidth = (this.width / 2 + padPx) / scale;
+    const halfHeight = (this.height / 2 + padPx) / scale;
     return {
-      minX: this.x - halfW,
-      minY: this.y - halfH,
-      maxX: this.x + halfW,
-      maxY: this.y + halfH
+      minX: this.x - halfWidth,
+      minY: this.y - halfHeight,
+      maxX: this.x + halfWidth,
+      maxY: this.y + halfHeight
     };
   }
 
   /** smallest zoom at which `bounds` fits the viewport */
-  zoomForBounds(b: MercBounds, padPx = 24): number {
-    const w = Math.max(1e-12, b.maxX - b.minX);
-    const h = Math.max(1e-12, b.maxY - b.minY);
-    const kx = Math.max(1, this.width - padPx * 2) / w;
-    const ky = Math.max(1, this.height - padPx * 2) / h;
-    return Math.log2(Math.min(kx, ky) / this.tileSize);
+  zoomForBounds(bounds: MercBounds, padPx = 24): number {
+    const width = Math.max(1e-12, bounds.maxX - bounds.minX);
+    const height = Math.max(1e-12, bounds.maxY - bounds.minY);
+    const scaleX = Math.max(1, this.width - padPx * 2) / width;
+    const scaleY = Math.max(1, this.height - padPx * 2) / height;
+    return Math.log2(Math.min(scaleX, scaleY) / this.tileSize);
   }
 
-  fitBounds(b: MercBounds, padPx = 24): this {
-    this.zoom = Math.max(this.minZoom, Math.min(this.maxZoom, this.zoomForBounds(b, padPx)));
-    this.x = (b.minX + b.maxX) / 2;
-    this.y = (b.minY + b.maxY) / 2;
+  fitBounds(bounds: MercBounds, padPx = 24): this {
+    this.zoom = Math.max(this.minZoom, Math.min(this.maxZoom, this.zoomForBounds(bounds, padPx)));
+    this.x = (bounds.minX + bounds.maxX) / 2;
+    this.y = (bounds.minY + bounds.maxY) / 2;
     return this.constrain();
   }
 
   /** clamp zoom, keep the world (or maxBounds) from sliding out of view */
   constrain(): this {
     this.zoom = Math.max(this.minZoom, Math.min(this.maxZoom, this.zoom));
-    const k = this.worldSize;
-    const b = this.maxBounds ?? { minX: 0, minY: 0, maxX: 1, maxY: 1 };
-    const halfW = this.width / 2 / k;
-    const halfH = this.height / 2 / k;
+    const scale = this.worldSize;
+    const bounds = this.maxBounds ?? { minX: 0, minY: 0, maxX: 1, maxY: 1 };
+    const halfWidth = this.width / 2 / scale;
+    const halfHeight = this.height / 2 / scale;
 
-    if (b.maxX - b.minX <= halfW * 2) {
-      this.x = (b.minX + b.maxX) / 2;
+    if (bounds.maxX - bounds.minX <= halfWidth * 2) {
+      this.x = (bounds.minX + bounds.maxX) / 2;
     } else {
-      this.x = Math.max(b.minX + halfW, Math.min(b.maxX - halfW, this.x));
+      this.x = Math.max(bounds.minX + halfWidth, Math.min(bounds.maxX - halfWidth, this.x));
     }
-    if (b.maxY - b.minY <= halfH * 2) {
-      this.y = (b.minY + b.maxY) / 2;
+    if (bounds.maxY - bounds.minY <= halfHeight * 2) {
+      this.y = (bounds.minY + bounds.maxY) / 2;
     } else {
-      this.y = Math.max(b.minY + halfH, Math.min(b.maxY - halfH, this.y));
+      this.y = Math.max(bounds.minY + halfHeight, Math.min(bounds.maxY - halfHeight, this.y));
     }
     return this;
   }

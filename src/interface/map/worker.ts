@@ -11,71 +11,76 @@ const decoder = new TextDecoder();
 const encoder = new TextEncoder();
 
 self.onmessage = (event: MessageEvent) => {
-  const msg = event.data as WorkerRequest;
-  if (msg.type === 'abort') {
-    controllers.get(msg.id)?.abort();
-    controllers.delete(msg.id);
+  const message = event.data as WorkerRequest;
+  if (message.type === 'abort') {
+    controllers.get(message.id)?.abort();
+    controllers.delete(message.id);
     return;
   }
-  void handle(msg);
+  void handleRequest(message);
 };
 
-async function handle(msg: Exclude<WorkerRequest, { type: 'abort' }>): Promise<void> {
-  const ac = new AbortController();
-  controllers.set(msg.id, ac);
+async function handleRequest(message: Exclude<WorkerRequest, { type: 'abort' }>): Promise<void> {
+  const abortController = new AbortController();
+  controllers.set(message.id, abortController);
   try {
-    if (msg.type === 'raster') {
-      const res = await fetch(msg.url, { signal: ac.signal, credentials: 'same-origin' });
-      if (!res.ok) {
+    if (message.type === 'raster') {
+      const response = await fetch(message.url, {
+        signal: abortController.signal,
+        credentials: 'same-origin'
+      });
+      if (!response.ok) {
         self.postMessage({
           type: 'error',
-          id: msg.id,
-          key: msg.key,
-          status: res.status,
-          message: `HTTP ${res.status}`
+          id: message.id,
+          key: message.key,
+          status: response.status,
+          message: `HTTP ${response.status}`
         });
         return;
       }
-      const blob = await res.blob();
+      const blob = await response.blob();
       const bitmap = await createImageBitmap(blob);
-      self.postMessage({ type: 'raster', id: msg.id, key: msg.key, bitmap }, [bitmap]);
+      self.postMessage({ type: 'raster', id: message.id, key: message.key, bitmap }, [bitmap]);
       return;
     } else {
-      const data = await fetchInflate(msg.url, function () {});
-      const tile = pack(JSON.parse(decoder.decode(data)), msg.key, msg.z, msg.x, msg.y);
-      self.postMessage({ type: 'labels', id: msg.id, key: msg.key, tile }, [tile.anchors.buffer, tile.priority.buffer, tile.styleIdx.buffer, tile.lineStart.buffer, tile.lines.buffer, tile.textStart.buffer, tile.text.buffer]);
+      const data = await fetchInflate(message.url, function () {});
+      const tile = packLabelTile(JSON.parse(decoder.decode(data)), message.key, message.z, message.x, message.y);
+      self.postMessage({ type: 'labels', id: message.id, key: message.key, tile }, [tile.anchors.buffer, tile.priority.buffer, tile.styleIdx.buffer, tile.lineStart.buffer, tile.lines.buffer, tile.textStart.buffer, tile.text.buffer]);
     }
-  } catch (err) {
-    const aborted = (err as Error)?.name === 'AbortError';
+  } catch (error) {
+    const aborted = (error as Error)?.name === 'AbortError';
     self.postMessage({
       type: 'error',
-      id: msg.id,
-      key: msg.key,
+      id: message.id,
+      key: message.key,
       aborted,
-      message: aborted ? 'aborted' : String((err as Error)?.message ?? err)
+      message: aborted ? 'aborted' : String((error as Error)?.message ?? error)
     });
   } finally {
-    controllers.delete(msg.id);
+    controllers.delete(message.id);
   }
 }
 
-type AnyRec = Record<string, unknown>;
+type AnyRecord = Record<string, unknown>;
 
-const num = (v: unknown): number | undefined => {
-  if (v == null || v === '') return undefined;
-  const n = typeof v === 'number' ? v : parseFloat(String(v));
-  return Number.isFinite(n) ? n : undefined;
+/** parse an unknown value into a finite number, or undefined */
+const toNumber = (value: unknown): number | undefined => {
+  if (value == null || value === '') return undefined;
+  const parsed = typeof value === 'number' ? value : parseFloat(String(value));
+  return Number.isFinite(parsed) ? parsed : undefined;
 };
 
+/** split a Mapnik-style font-face name into a CSS weight/style prefix + family list */
 function parseFace(face: unknown): { prefix: string; family: string } {
   const raw = Array.isArray(face) ? String(face[0] ?? '') : String(face ?? '');
   let weight = 400;
   let italic = false;
   let name = raw;
-  const take = (re: RegExp, fn: () => void) => {
-    if (re.test(name)) {
-      name = name.replace(re, ' ');
-      fn();
+  const take = (pattern: RegExp, apply: () => void) => {
+    if (pattern.test(name)) {
+      name = name.replace(pattern, ' ');
+      apply();
     }
   };
   take(/\b(italic|oblique)\b/i, () => (italic = true));
@@ -91,22 +96,24 @@ function parseFace(face: unknown): { prefix: string; family: string } {
   return { prefix: `${italic ? 'italic ' : ''}${weight}`, family };
 }
 
-function styleFromProps(p: AnyRec): LabelStyle {
-  const { prefix, family } = parseFace(p['text-face-name']);
+/** turn a raw feature's properties into a render-ready LabelStyle */
+function parseStyleFromProps(props: AnyRecord): LabelStyle {
+  const { prefix, family } = parseFace(props['text-face-name']);
   return {
     fontPrefix: prefix,
     fontFamily: family,
-    size: num(p['text-size']) ?? 12,
-    fill: String(p['text-fill'] ?? '#333333'),
-    haloFill: p['text-halo-fill'] ? String(p['text-halo-fill']) : null,
-    haloRadius: num(p['text-halo-radius']) ?? 0,
-    placement: String(p['text-placement'] ?? 'point') === 'line' ? 'line' : 'point',
-    dy: num(p['text-dy']) ?? 0,
-    wrapWidth: num(p['text-wrap-width']) ?? 0,
-    letterSpacing: num(p['text-character-spacing']) ?? 0
+    size: toNumber(props['text-size']) ?? 12,
+    fill: String(props['text-fill'] ?? '#333333'),
+    haloFill: props['text-halo-fill'] ? String(props['text-halo-fill']) : null,
+    haloRadius: toNumber(props['text-halo-radius']) ?? 0,
+    placement: String(props['text-placement'] ?? 'point') === 'line' ? 'line' : 'point',
+    dy: toNumber(props['text-dy']) ?? 0,
+    wrapWidth: toNumber(props['text-wrap-width']) ?? 0,
+    letterSpacing: toNumber(props['text-character-spacing']) ?? 0
   };
 }
 
+/** apply a CSS-style text-transform to a label string */
 function applyTransform(text: string, transform: unknown): string {
   switch (String(transform ?? 'none').toLowerCase()) {
     case 'uppercase':
@@ -114,7 +121,7 @@ function applyTransform(text: string, transform: unknown): string {
     case 'lowercase':
       return text.toLowerCase();
     case 'capitalize':
-      return text.replace(/(^|\s)(\S)/g, (_, a, b) => a + b.toUpperCase());
+      return text.replace(/(^|\s)(\S)/g, (_, leading, first) => leading + first.toUpperCase());
     default:
       return text;
   }
@@ -130,63 +137,67 @@ interface Candidate {
 }
 
 /** pull the label array out of whatever container shape the backend wrote */
-function listOf(json: unknown): { items: AnyRec[]; extent: number | undefined } {
-  if (Array.isArray(json)) return { items: json as AnyRec[], extent: undefined };
-  const o = (json ?? {}) as AnyRec;
-  const extent = num(o.extent);
-  const items = (o.features ?? o.labels ?? o.data ?? []) as AnyRec[];
+function extractItemList(json: unknown): {
+  items: AnyRecord[];
+  extent: number | undefined;
+} {
+  if (Array.isArray(json)) return { items: json as AnyRecord[], extent: undefined };
+  const container = (json ?? {}) as AnyRecord;
+  const extent = toNumber(container.extent);
+  const items = (container.features ?? container.labels ?? container.data ?? []) as AnyRecord[];
   return { items: Array.isArray(items) ? items : [], extent };
 }
 
 /** ring area (shoelace) used to pick the biggest polygon ring */
-function ringArea(ring: number[][]): number {
-  let a = 0;
-  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-    a += ring[j][0] * ring[i][1] - ring[i][0] * ring[j][1];
+function computeRingArea(ring: number[][]): number {
+  let area = 0;
+  for (let index = 0, previous = ring.length - 1; index < ring.length; previous = index++) {
+    area += ring[previous][0] * ring[index][1] - ring[index][0] * ring[previous][1];
   }
-  return Math.abs(a / 2);
+  return Math.abs(area / 2);
 }
 
-function ringCentroid(ring: number[][]): [number, number] {
+function computeRingCentroid(ring: number[][]): [number, number] {
   let x = 0;
   let y = 0;
-  for (const p of ring) {
-    x += p[0];
-    y += p[1];
+  for (const point of ring) {
+    x += point[0];
+    y += point[1];
   }
   return [x / ring.length, y / ring.length];
 }
 
-function longest(lines: number[][][]): number[][] {
-  let best = lines[0] ?? [];
-  let bestLen = -1;
-  for (const l of lines) {
-    let len = 0;
-    for (let i = 1; i < l.length; i++) {
-      len += Math.hypot(l[i][0] - l[i - 1][0], l[i][1] - l[i - 1][1]);
+/** the geometrically longest polyline out of a set of them */
+function findLongestLine(lines: number[][][]): number[][] {
+  let longestLine = lines[0] ?? [];
+  let longestLength = -1;
+  for (const line of lines) {
+    let length = 0;
+    for (let index = 1; index < line.length; index++) {
+      length += Math.hypot(line[index][0] - line[index - 1][0], line[index][1] - line[index - 1][1]);
     }
-    if (len > bestLen) {
-      bestLen = len;
-      best = l;
+    if (length > longestLength) {
+      longestLength = length;
+      longestLine = line;
     }
   }
-  return best;
+  return longestLine;
 }
 
-function pack(json: unknown, key: string, z: number, x: number, y: number): PackedLabelTile {
-  const { items, extent } = listOf(json);
+function packLabelTile(json: unknown, key: string, z: number, x: number, y: number): PackedLabelTile {
+  const { items, extent } = extractItemList(json);
   const scale = Math.pow(2, z);
 
   // tile-local pixel coords -> mercator units (only used when `extent` is present)
-  const localToMerc = (px: number, py: number, ex: number): [number, number] => [(x + px / ex) / scale, (y + py / ex) / scale];
-  const toMerc = (pos: number[], ex: number | undefined): [number, number] => (ex ? localToMerc(pos[0], pos[1], ex) : [lngToMercX(pos[0]), latToMercY(pos[1])]);
+  const localToMerc = (localX: number, localY: number, tileExtent: number): [number, number] => [(x + localX / tileExtent) / scale, (y + localY / tileExtent) / scale];
+  const toMerc = (position: number[], tileExtent: number | undefined): [number, number] => (tileExtent ? localToMerc(position[0], position[1], tileExtent) : [lngToMercX(position[0]), latToMercY(position[1])]);
 
   const candidates: Candidate[] = [];
   const styles: LabelStyle[] = [];
   const styleIndex = new Map<string, number>();
 
   for (const item of items) {
-    const props = (item.properties ?? item) as AnyRec;
+    const props = (item.properties ?? item) as AnyRecord;
     const kind = props.kind == null ? 'text' : String(props.kind);
     // markers/points/circles are ignored for now; shields keep their own text
     if (kind !== 'text' && kind !== 'shield') continue;
@@ -195,58 +206,58 @@ function pack(json: unknown, key: string, z: number, x: number, y: number): Pack
     if (rawText == null || String(rawText).trim() === '') continue;
     const text = applyTransform(String(rawText), props['text-transform']);
 
-    const itemExtent = num(item.extent) ?? extent;
-    const geom = (item.geometry ?? item) as AnyRec;
-    const gtype = String(geom.type ?? (geom.coordinates ? 'Point' : ''));
-    const coords = geom.coordinates as unknown;
+    const itemExtent = toNumber(item.extent) ?? extent;
+    const geometry = (item.geometry ?? item) as AnyRecord;
+    const geometryType = String(geometry.type ?? (geometry.coordinates ? 'Point' : ''));
+    const coordinates = geometry.coordinates as unknown;
 
     let anchor: [number, number] | null = null;
     let line: number[][] | null = null;
 
-    if (gtype === 'Point' && Array.isArray(coords)) {
-      anchor = toMerc(coords as number[], itemExtent);
-    } else if (gtype === 'MultiPoint' && Array.isArray(coords)) {
-      anchor = toMerc((coords as number[][])[0], itemExtent);
-    } else if (gtype === 'LineString' && Array.isArray(coords)) {
-      line = coords as number[][];
-    } else if (gtype === 'MultiLineString' && Array.isArray(coords)) {
-      line = longest(coords as number[][][]);
-    } else if (gtype === 'Polygon' && Array.isArray(coords)) {
-      anchor = toMerc(ringCentroid((coords as number[][][])[0] ?? []), itemExtent);
-    } else if (gtype === 'MultiPolygon' && Array.isArray(coords)) {
-      const rings = (coords as number[][][][]).map((poly) => poly[0] ?? []);
-      rings.sort((a, b) => ringArea(b) - ringArea(a));
-      if (rings[0]?.length) anchor = toMerc(ringCentroid(rings[0]), itemExtent);
+    if (geometryType === 'Point' && Array.isArray(coordinates)) {
+      anchor = toMerc(coordinates as number[], itemExtent);
+    } else if (geometryType === 'MultiPoint' && Array.isArray(coordinates)) {
+      anchor = toMerc((coordinates as number[][])[0], itemExtent);
+    } else if (geometryType === 'LineString' && Array.isArray(coordinates)) {
+      line = coordinates as number[][];
+    } else if (geometryType === 'MultiLineString' && Array.isArray(coordinates)) {
+      line = findLongestLine(coordinates as number[][][]);
+    } else if (geometryType === 'Polygon' && Array.isArray(coordinates)) {
+      anchor = toMerc(computeRingCentroid((coordinates as number[][][])[0] ?? []), itemExtent);
+    } else if (geometryType === 'MultiPolygon' && Array.isArray(coordinates)) {
+      const rings = (coordinates as number[][][][]).map((polygon) => polygon[0] ?? []);
+      rings.sort((first, second) => computeRingArea(second) - computeRingArea(first));
+      if (rings[0]?.length) anchor = toMerc(computeRingCentroid(rings[0]), itemExtent);
     } else {
       // flat records: {lng,lat} / {lon,lat} / {x,y}
-      const lng = num(item.lng ?? item.lon ?? item.longitude ?? item.x);
-      const lat = num(item.lat ?? item.latitude ?? item.y);
+      const lng = toNumber(item.lng ?? item.lon ?? item.longitude ?? item.x);
+      const lat = toNumber(item.lat ?? item.latitude ?? item.y);
       if (lng !== undefined && lat !== undefined) anchor = toMerc([lng, lat], itemExtent);
     }
 
-    let mercLine: number[] = [];
+    let mercatorLine: number[] = [];
     if (line && line.length >= 2) {
-      mercLine = new Array(line.length * 2);
-      for (let i = 0; i < line.length; i++) {
-        const m = toMerc(line[i], itemExtent);
-        mercLine[i * 2] = m[0];
-        mercLine[i * 2 + 1] = m[1];
+      mercatorLine = new Array(line.length * 2);
+      for (let index = 0; index < line.length; index++) {
+        const mercator = toMerc(line[index], itemExtent);
+        mercatorLine[index * 2] = mercator[0];
+        mercatorLine[index * 2 + 1] = mercator[1];
       }
       // anchor = midpoint of the longest segment (render.ts rotates along it)
-      let bestLen = -1;
-      for (let i = 2; i < mercLine.length; i += 2) {
-        const dx = mercLine[i] - mercLine[i - 2];
-        const dy = mercLine[i + 1] - mercLine[i - 1];
-        const len = dx * dx + dy * dy;
-        if (len > bestLen) {
-          bestLen = len;
-          anchor = [(mercLine[i] + mercLine[i - 2]) / 2, (mercLine[i + 1] + mercLine[i - 1]) / 2];
+      let longestSegment = -1;
+      for (let index = 2; index < mercatorLine.length; index += 2) {
+        const deltaX = mercatorLine[index] - mercatorLine[index - 2];
+        const deltaY = mercatorLine[index + 1] - mercatorLine[index - 1];
+        const length = deltaX * deltaX + deltaY * deltaY;
+        if (length > longestSegment) {
+          longestSegment = length;
+          anchor = [(mercatorLine[index] + mercatorLine[index - 2]) / 2, (mercatorLine[index + 1] + mercatorLine[index - 1]) / 2];
         }
       }
     }
     if (!anchor || !Number.isFinite(anchor[0]) || !Number.isFinite(anchor[1])) continue;
 
-    const style = styleFromProps(props);
+    const style = parseStyleFromProps(props);
     const styleKey = JSON.stringify(style);
     if (!styleIndex.has(styleKey)) {
       styleIndex.set(styleKey, styles.length);
@@ -254,11 +265,11 @@ function pack(json: unknown, key: string, z: number, x: number, y: number): Pack
     }
 
     // lower = placed first. explicit rank wins, then bigger text.
-    const rank = num(props.rank) ?? num(props.priority) ?? num(props.zIndex) ?? 0;
+    const rank = toNumber(props.rank) ?? toNumber(props.priority) ?? toNumber(props.zIndex) ?? 0;
     candidates.push({
       text,
       anchor,
-      line: mercLine,
+      line: mercatorLine,
       priority: rank * 1000 - style.size,
       styleKey,
       style
@@ -266,7 +277,7 @@ function pack(json: unknown, key: string, z: number, x: number, y: number): Pack
   }
 
   // pre-sort by priority so the main thread can place in a single pass
-  candidates.sort((a, b) => a.priority - b.priority);
+  candidates.sort((first, second) => first.priority - second.priority);
 
   const count = candidates.length;
   const anchors = new Float64Array(count * 2);
@@ -280,22 +291,22 @@ function pack(json: unknown, key: string, z: number, x: number, y: number): Pack
   let textBytes = 0;
   let linePoints = 0;
 
-  for (let i = 0; i < count; i++) {
-    const c = candidates[i];
-    anchors[i * 2] = c.anchor[0];
-    anchors[i * 2 + 1] = c.anchor[1];
-    priority[i] = c.priority;
-    styleIdx[i] = styleIndex.get(c.styleKey) ?? 0;
+  for (let index = 0; index < count; index++) {
+    const candidate = candidates[index];
+    anchors[index * 2] = candidate.anchor[0];
+    anchors[index * 2 + 1] = candidate.anchor[1];
+    priority[index] = candidate.priority;
+    styleIdx[index] = styleIndex.get(candidate.styleKey) ?? 0;
 
-    const bytes = encoder.encode(c.text);
-    textStart[i] = textBytes;
+    const bytes = encoder.encode(candidate.text);
+    textStart[index] = textBytes;
     textBytes += bytes.length;
     textChunks.push(bytes);
 
-    lineStart[i] = linePoints;
-    if (c.line.length) {
-      lineChunks.push(c.line);
-      linePoints += c.line.length / 2;
+    lineStart[index] = linePoints;
+    if (candidate.line.length) {
+      lineChunks.push(candidate.line);
+      linePoints += candidate.line.length / 2;
     } else {
       lineChunks.push([]);
     }
@@ -304,12 +315,12 @@ function pack(json: unknown, key: string, z: number, x: number, y: number): Pack
   lineStart[count] = linePoints;
 
   const text = new Uint8Array(textBytes);
-  for (let i = 0; i < count; i++) text.set(textChunks[i], textStart[i]);
+  for (let index = 0; index < count; index++) text.set(textChunks[index], textStart[index]);
 
   const lines = new Float64Array(linePoints * 2);
-  for (let i = 0; i < count; i++) {
-    const chunk = lineChunks[i];
-    if (chunk.length) lines.set(chunk, lineStart[i] * 2);
+  for (let index = 0; index < count; index++) {
+    const chunk = lineChunks[index];
+    if (chunk.length) lines.set(chunk, lineStart[index] * 2);
   }
 
   return {

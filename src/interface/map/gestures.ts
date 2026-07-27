@@ -29,11 +29,12 @@ interface PointerState {
   y: number;
 }
 
-const easeOut = (t: number): number => 1 - Math.pow(1 - t, 3);
+/** cubic ease-out, maps linear progress 0..1 to an eased 0..1 */
+const easeOut = (progress: number): number => 1 - Math.pow(1 - progress, 3);
 
 export class Gestures {
   private camera: Camera;
-  private el: HTMLElement;
+  private element: HTMLElement;
   private onChange: () => void;
   private zoomDuration: number;
   private inertiaTau: number;
@@ -44,15 +45,15 @@ export class Gestures {
   private touchpadUntil = 0;
   private lastWheelTime = 0;
   /** Safari pinch state */
-  private gesture: { zoom: number; anchorScreen: ScreenPoint; anchorMerc: MercPoint } | null = null;
+  private safariGesture: { zoom: number; anchorScreen: ScreenPoint; anchorMerc: MercPoint } | null = null;
 
   private pointers = new Map<number, PointerState>();
   private lastPointerTime = 0;
   private pinchDistance = 0;
-  private vx = 0;
-  private vy = 0;
-  private inertia: { vx: number; vy: number } | null = null;
-  private zoomAnim: {
+  private velocityX = 0;
+  private velocityY = 0;
+  private inertia: { velocityX: number; velocityY: number } | null = null;
+  private zoomAnimation: {
     from: number;
     to: number;
     start: number;
@@ -60,112 +61,117 @@ export class Gestures {
     anchorScreen: ScreenPoint;
     anchorMerc: MercPoint;
   } | null = null;
-  private lastFrame = 0;
+  private lastFrameTime = 0;
 
-  constructor(opts: GestureOptions) {
-    this.camera = opts.camera;
-    this.el = opts.element;
-    this.onChange = opts.onChange;
-    this.zoomDuration = opts.zoomDuration ?? 180;
-    this.inertiaTau = opts.inertiaTau ?? 180;
-    this.maxInertiaSpeed = opts.maxInertiaSpeed ?? 4; // px/ms
-    this.wheelBehavior = opts.wheelBehavior ?? 'auto';
+  constructor(options: GestureOptions) {
+    this.camera = options.camera;
+    this.element = options.element;
+    this.onChange = options.onChange;
+    this.zoomDuration = options.zoomDuration ?? 180;
+    this.inertiaTau = options.inertiaTau ?? 180;
+    this.maxInertiaSpeed = options.maxInertiaSpeed ?? 4; // px/ms
+    this.wheelBehavior = options.wheelBehavior ?? 'auto';
 
-    const el = this.el;
-    el.style.touchAction = 'none';
-    if (!el.hasAttribute('tabindex')) el.tabIndex = 0;
+    const element = this.element;
+    element.style.touchAction = 'none';
+    if (!element.hasAttribute('tabindex')) element.tabIndex = 0;
 
-    el.addEventListener('pointerdown', this.onPointerDown);
-    el.addEventListener('pointermove', this.onPointerMove);
-    el.addEventListener('pointerup', this.onPointerUp);
-    el.addEventListener('pointercancel', this.onPointerUp);
-    el.addEventListener('wheel', this.onWheel, { passive: false });
-    el.addEventListener('dblclick', this.onDoubleClick);
-    el.addEventListener('keydown', this.onKeyDown);
-    el.addEventListener('contextmenu', this.onContextMenu);
+    element.addEventListener('pointerdown', this.handlePointerDown);
+    element.addEventListener('pointermove', this.handlePointerMove);
+    element.addEventListener('pointerup', this.handlePointerUp);
+    element.addEventListener('pointercancel', this.handlePointerUp);
+    element.addEventListener('pointerleave', this.handlePointerUp);
+    element.addEventListener('wheel', this.handleWheel, { passive: false });
+    element.addEventListener('dblclick', this.handleDoubleClick);
+    element.addEventListener('keydown', this.handleKeyDown);
+    element.addEventListener('contextmenu', this.handleContextMenu);
     // Safari trackpad pinch (also stops Safari's own page zoom)
-    el.addEventListener('gesturestart', this.onGestureStart as EventListener);
-    el.addEventListener('gesturechange', this.onGestureChange as EventListener);
-    el.addEventListener('gestureend', this.onGestureEnd as EventListener);
+    element.addEventListener('gesturestart', this.handleGestureStart as EventListener);
+    element.addEventListener('gesturechange', this.handleGestureChange as EventListener);
+    element.addEventListener('gestureend', this.handleGestureEnd as EventListener);
   }
 
   /* ------------------------------------------------------------ helpers */
 
-  private local(e: PointerEvent | WheelEvent | MouseEvent): ScreenPoint {
-    const r = this.el.getBoundingClientRect();
-    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  /** event position relative to the element's top-left corner, in CSS px */
+  private getLocalPoint(event: PointerEvent | WheelEvent | MouseEvent): ScreenPoint {
+    const rect = this.element.getBoundingClientRect();
+    return { x: event.clientX - rect.left, y: event.clientY - rect.top };
   }
 
-  private midpoint(): ScreenPoint {
-    let x = 0;
-    let y = 0;
-    for (const p of this.pointers.values()) {
-      x += p.x;
-      y += p.y;
+  /** average screen position of all active pointers */
+  private getPointerMidpoint(): ScreenPoint {
+    let sumX = 0;
+    let sumY = 0;
+    for (const pointer of this.pointers.values()) {
+      sumX += pointer.x;
+      sumY += pointer.y;
     }
-    return { x: x / this.pointers.size, y: y / this.pointers.size };
+    return { x: sumX / this.pointers.size, y: sumY / this.pointers.size };
   }
 
-  private spread(): number {
-    const pts = [...this.pointers.values()];
-    if (pts.length < 2) return 0;
-    return Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+  /** distance between the first two active pointers (0 if fewer than two) */
+  private getPointerSpread(): number {
+    const points = [...this.pointers.values()];
+    if (points.length < 2) return 0;
+    return Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
   }
 
   /** queue an eased zoom to `target`, pinned at `anchor` */
   zoomToAnimated(target: number, anchor?: ScreenPoint | null, duration = this.zoomDuration): void {
-    const a = anchor ?? { x: this.camera.width / 2, y: this.camera.height / 2 };
-    const clamped = Math.max(this.camera.minZoom, Math.min(this.camera.maxZoom, target));
+    const anchorScreen = anchor ?? { x: this.camera.width / 2, y: this.camera.height / 2 };
+    const clampedTarget = Math.max(this.camera.minZoom, Math.min(this.camera.maxZoom, target));
     this.inertia = null;
-    this.zoomAnim = {
+    this.zoomAnimation = {
       from: this.camera.zoom,
-      to: clamped,
+      to: clampedTarget,
       start: performance.now(),
       duration,
-      anchorScreen: a,
-      anchorMerc: this.camera.unproject(a.x, a.y)
+      anchorScreen,
+      anchorMerc: this.camera.unproject(anchorScreen.x, anchorScreen.y)
     };
     this.onChange();
   }
 
   get zoomTarget(): number {
-    return this.zoomAnim ? this.zoomAnim.to : this.camera.zoom;
+    return this.zoomAnimation ? this.zoomAnimation.to : this.camera.zoom;
   }
 
+  /** drop any inertia and in-flight zoom easing (used when pausing the map) */
   stop(): void {
     this.inertia = null;
-    this.zoomAnim = null;
+    this.zoomAnimation = null;
   }
 
   /* ------------------------------------------------------------ pointers */
 
-  private onPointerDown = (e: PointerEvent): void => {
-    if (e.button !== 0 && e.pointerType === 'mouse') return;
-    this.el.setPointerCapture(e.pointerId);
-    this.pointers.set(e.pointerId, this.local(e));
-    this.lastPointerTime = e.timeStamp;
-    this.vx = this.vy = 0;
+  private handlePointerDown = (event: PointerEvent): void => {
+    if (event.button !== 0 && event.pointerType === 'mouse') return;
+    this.element.setPointerCapture(event.pointerId);
+    this.pointers.set(event.pointerId, this.getLocalPoint(event));
+    this.lastPointerTime = event.timeStamp;
+    this.velocityX = this.velocityY = 0;
     this.stop();
-    if (this.pointers.size === 2) this.pinchDistance = this.spread();
-    this.el.focus({ preventScroll: true });
+    if (this.pointers.size === 2) this.pinchDistance = this.getPointerSpread();
+    this.element.focus({ preventScroll: true });
   };
 
-  private onPointerMove = (e: PointerEvent): void => {
-    const prev = this.pointers.get(e.pointerId);
-    if (!prev) return;
-    e.preventDefault();
+  private handlePointerMove = (event: PointerEvent): void => {
+    const previous = this.pointers.get(event.pointerId);
+    if (!previous) return;
+    event.preventDefault();
 
-    const before = this.pointers.size >= 2 ? this.midpoint() : { ...prev };
-    const next = this.local(e);
-    this.pointers.set(e.pointerId, next);
+    const before = this.pointers.size >= 2 ? this.getPointerMidpoint() : { ...previous };
+    const next = this.getLocalPoint(event);
+    this.pointers.set(event.pointerId, next);
 
     if (this.pointers.size >= 2) {
       // pinch: zoom by the distance ratio around the (moving) midpoint
-      const after = this.midpoint();
-      const distance = this.spread();
+      const after = this.getPointerMidpoint();
+      const distance = this.getPointerSpread();
       if (this.pinchDistance > 0 && distance > 0) {
-        const dz = Math.log2(distance / this.pinchDistance);
-        this.camera.zoomTo(this.camera.zoom + dz, after);
+        const zoomDelta = Math.log2(distance / this.pinchDistance);
+        this.camera.zoomTo(this.camera.zoom + zoomDelta, after);
       }
       this.pinchDistance = distance;
       this.camera.panByPixels(after.x - before.x, after.y - before.y);
@@ -173,42 +179,42 @@ export class Gestures {
       return;
     }
 
-    const dx = next.x - before.x;
-    const dy = next.y - before.y;
-    const dt = Math.max(1, e.timeStamp - this.lastPointerTime);
-    this.lastPointerTime = e.timeStamp;
+    const deltaX = next.x - before.x;
+    const deltaY = next.y - before.y;
+    const deltaTime = Math.max(1, event.timeStamp - this.lastPointerTime);
+    this.lastPointerTime = event.timeStamp;
     // low-pass filtered velocity, px/ms
-    const a = 0.7;
-    this.vx = this.vx * (1 - a) + (dx / dt) * a;
-    this.vy = this.vy * (1 - a) + (dy / dt) * a;
+    const smoothing = 0.7;
+    this.velocityX = this.velocityX * (1 - smoothing) + (deltaX / deltaTime) * smoothing;
+    this.velocityY = this.velocityY * (1 - smoothing) + (deltaY / deltaTime) * smoothing;
 
-    this.camera.panByPixels(dx, dy);
+    this.camera.panByPixels(deltaX, deltaY);
     this.onChange();
   };
 
-  private onPointerUp = (e: PointerEvent): void => {
-    if (!this.pointers.delete(e.pointerId)) return;
-    if (this.el.hasPointerCapture?.(e.pointerId)) this.el.releasePointerCapture(e.pointerId);
+  private handlePointerUp = (event: PointerEvent): void => {
+    if (!this.pointers.delete(event.pointerId)) return;
+    if (this.element.hasPointerCapture?.(event.pointerId)) this.element.releasePointerCapture(event.pointerId);
     if (this.pointers.size === 1) {
       this.pinchDistance = 0;
-      this.lastPointerTime = e.timeStamp;
+      this.lastPointerTime = event.timeStamp;
       return;
     }
     if (this.pointers.size > 0) return;
 
-    const speed = Math.hypot(this.vx, this.vy);
-    const stale = e.timeStamp - this.lastPointerTime > 80;
+    const speed = Math.hypot(this.velocityX, this.velocityY);
+    const stale = event.timeStamp - this.lastPointerTime > 80;
     if (speed > 0.05 && !stale) {
-      const clamp = Math.min(1, this.maxInertiaSpeed / speed);
-      this.inertia = { vx: this.vx * clamp, vy: this.vy * clamp };
-      this.lastFrame = 0;
+      const clampFactor = Math.min(1, this.maxInertiaSpeed / speed);
+      this.inertia = { velocityX: this.velocityX * clampFactor, velocityY: this.velocityY * clampFactor };
+      this.lastFrameTime = 0;
       this.onChange();
     }
-    this.vx = this.vy = 0;
+    this.velocityX = this.velocityY = 0;
   };
 
-  private onContextMenu = (e: Event): void => {
-    if (this.pointers.size) e.preventDefault();
+  private handleContextMenu = (event: Event): void => {
+    if (this.pointers.size) event.preventDefault();
   };
 
   /* --------------------------------------------------------------- wheel */
@@ -219,58 +225,58 @@ export class Gestures {
    * line/page deltaMode). The verdict is sticky for 800ms so the big deltas in
    * the middle of a fast two-finger flick don't get misread as a mouse wheel.
    */
-  private isTouchpad(e: WheelEvent): boolean {
-    if (e.deltaMode !== 0) {
+  private isTouchpad(event: WheelEvent): boolean {
+    if (event.deltaMode !== 0) {
       this.touchpadUntil = 0;
       return false;
     }
-    const absX = Math.abs(e.deltaX);
-    const absY = Math.abs(e.deltaY);
-    const fractional = !Number.isInteger(e.deltaY) || !Number.isInteger(e.deltaX);
-    const tiny = absY > 0 && absY < 8;
-    const diagonal = absX > 0 && absY > 0;
-    const horizontalOnly = absX > 0 && absY === 0;
-    const dt = e.timeStamp - this.lastWheelTime;
-    this.lastWheelTime = e.timeStamp;
+    const absDeltaX = Math.abs(event.deltaX);
+    const absDeltaY = Math.abs(event.deltaY);
+    const fractional = !Number.isInteger(event.deltaY) || !Number.isInteger(event.deltaX);
+    const tiny = absDeltaY > 0 && absDeltaY < 8;
+    const diagonal = absDeltaX > 0 && absDeltaY > 0;
+    const horizontalOnly = absDeltaX > 0 && absDeltaY === 0;
+    const sinceLastWheel = event.timeStamp - this.lastWheelTime;
+    this.lastWheelTime = event.timeStamp;
 
     if (fractional || tiny || diagonal || horizontalOnly) {
-      this.touchpadUntil = e.timeStamp + 800;
-    } else if (absY >= 50 && absX === 0 && dt > 100) {
+      this.touchpadUntil = event.timeStamp + 800;
+    } else if (absDeltaY >= 50 && absDeltaX === 0 && sinceLastWheel > 100) {
       // an isolated big integer step is a notched wheel click: drop the sticky
       // verdict immediately so plugging in a mouse works mid-session. Events
       // inside a flick arrive every ~10ms, so they can't trip this.
       this.touchpadUntil = 0;
     }
-    return e.timeStamp < this.touchpadUntil;
+    return event.timeStamp < this.touchpadUntil;
   }
 
-  private onWheel = (e: WheelEvent): void => {
-    e.preventDefault();
+  private handleWheel = (event: WheelEvent): void => {
+    event.preventDefault();
 
-    const touchpad = this.isTouchpad(e);
+    const touchpad = this.isTouchpad(event);
     // macOS/Chrome/Firefox report a trackpad pinch as ctrl+wheel
-    const pinch = e.ctrlKey;
-    const wantsZoom = pinch || e.metaKey || e.shiftKey;
+    const pinch = event.ctrlKey;
+    const wantsZoom = pinch || event.metaKey || event.shiftKey;
     const pans = !wantsZoom && (this.wheelBehavior === 'pan' || (this.wheelBehavior === 'auto' && touchpad));
 
     if (pans) {
       // 1:1 two-finger pan; the OS already supplies the momentum tail, so we
       // don't add our own inertia here (and we cancel any that's running).
       this.inertia = null;
-      this.camera.panByPixels(-e.deltaX, -e.deltaY);
+      this.camera.panByPixels(-event.deltaX, -event.deltaY);
       this.onChange();
       return;
     }
 
-    let delta = e.deltaY;
-    if (e.deltaMode === 1)
+    let delta = event.deltaY;
+    if (event.deltaMode === 1)
       delta *= 40; // lines
-    else if (e.deltaMode === 2) delta *= this.camera.height; // pages
+    else if (event.deltaMode === 2) delta *= this.camera.height; // pages
 
     if (pinch) {
       // track the fingers directly — easing a pinch feels laggy
       this.stop();
-      this.camera.zoomBy(-delta / 100, this.local(e));
+      this.camera.zoomBy(-delta / 100, this.getLocalPoint(event));
       this.onChange();
       return;
     }
@@ -278,44 +284,44 @@ export class Gestures {
     // touchpad scroll used as zoom needs a gentler rate than a notched wheel
     const rate = touchpad ? 1 / 220 : 1 / 450;
     const duration = touchpad ? 90 : this.zoomDuration;
-    this.zoomToAnimated(this.zoomTarget - delta * rate, this.local(e), duration);
+    this.zoomToAnimated(this.zoomTarget - delta * rate, this.getLocalPoint(event), duration);
   };
 
   /* ------------------------------------------------- Safari trackpad pinch */
 
-  private onGestureStart = (e: SafariGestureEvent): void => {
-    e.preventDefault();
+  private handleGestureStart = (event: SafariGestureEvent): void => {
+    event.preventDefault();
     this.stop();
-    const anchorScreen = this.local(e);
-    this.gesture = {
+    const anchorScreen = this.getLocalPoint(event);
+    this.safariGesture = {
       zoom: this.camera.zoom,
       anchorScreen,
       anchorMerc: this.camera.unproject(anchorScreen.x, anchorScreen.y)
     };
   };
 
-  private onGestureChange = (e: SafariGestureEvent): void => {
-    e.preventDefault();
-    if (!this.gesture) return;
-    const scale = Math.max(0.05, e.scale || 1);
-    this.camera.zoomTo(this.gesture.zoom + Math.log2(scale), this.gesture.anchorScreen, this.gesture.anchorMerc);
+  private handleGestureChange = (event: SafariGestureEvent): void => {
+    event.preventDefault();
+    if (!this.safariGesture) return;
+    const scale = Math.max(0.05, event.scale || 1);
+    this.camera.zoomTo(this.safariGesture.zoom + Math.log2(scale), this.safariGesture.anchorScreen, this.safariGesture.anchorMerc);
     this.onChange();
   };
 
-  private onGestureEnd = (e: SafariGestureEvent): void => {
-    e.preventDefault();
-    this.gesture = null;
+  private handleGestureEnd = (event: SafariGestureEvent): void => {
+    event.preventDefault();
+    this.safariGesture = null;
   };
 
-  private onDoubleClick = (e: MouseEvent): void => {
-    e.preventDefault();
-    const dz = e.shiftKey ? -1 : 1;
-    this.zoomToAnimated(Math.round(this.zoomTarget) + dz, this.local(e), 260);
+  private handleDoubleClick = (event: MouseEvent): void => {
+    event.preventDefault();
+    const zoomDelta = event.shiftKey ? -1 : 1;
+    this.zoomToAnimated(Math.round(this.zoomTarget) + zoomDelta, this.getLocalPoint(event), 260);
   };
 
-  private onKeyDown = (e: KeyboardEvent): void => {
-    const step = e.shiftKey ? 200 : 80;
-    switch (e.key) {
+  private handleKeyDown = (event: KeyboardEvent): void => {
+    const step = event.shiftKey ? 200 : 80;
+    switch (event.key) {
       case 'ArrowLeft':
         this.camera.panByPixels(step, 0);
         break;
@@ -339,7 +345,7 @@ export class Gestures {
       default:
         return;
     }
-    e.preventDefault();
+    event.preventDefault();
     this.onChange();
   };
 
@@ -348,25 +354,25 @@ export class Gestures {
   /** advance inertia + zoom easing; returns true while something is animating */
   update(now: number): boolean {
     let animating = false;
-    const dt = this.lastFrame ? Math.min(64, now - this.lastFrame) : 16;
-    this.lastFrame = now;
+    const deltaTime = this.lastFrameTime ? Math.min(64, now - this.lastFrameTime) : 16;
+    this.lastFrameTime = now;
 
-    if (this.zoomAnim) {
-      const a = this.zoomAnim;
-      const t = a.duration <= 0 ? 1 : Math.min(1, (now - a.start) / a.duration);
-      const zoom = a.from + (a.to - a.from) * easeOut(t);
-      this.camera.zoomTo(zoom, a.anchorScreen, a.anchorMerc);
-      if (t >= 1) this.zoomAnim = null;
+    if (this.zoomAnimation) {
+      const animation = this.zoomAnimation;
+      const progress = animation.duration <= 0 ? 1 : Math.min(1, (now - animation.start) / animation.duration);
+      const zoom = animation.from + (animation.to - animation.from) * easeOut(progress);
+      this.camera.zoomTo(zoom, animation.anchorScreen, animation.anchorMerc);
+      if (progress >= 1) this.zoomAnimation = null;
       else animating = true;
     }
 
     if (this.inertia) {
-      const i = this.inertia;
-      this.camera.panByPixels(i.vx * dt, i.vy * dt);
-      const decay = Math.exp(-dt / this.inertiaTau);
-      i.vx *= decay;
-      i.vy *= decay;
-      if (Math.hypot(i.vx, i.vy) < 0.01) this.inertia = null;
+      const inertia = this.inertia;
+      this.camera.panByPixels(inertia.velocityX * deltaTime, inertia.velocityY * deltaTime);
+      const decay = Math.exp(-deltaTime / this.inertiaTau);
+      inertia.velocityX *= decay;
+      inertia.velocityY *= decay;
+      if (Math.hypot(inertia.velocityX, inertia.velocityY) < 0.01) this.inertia = null;
       else animating = true;
     }
 
@@ -374,18 +380,23 @@ export class Gestures {
     return animating;
   }
 
+  /**
+   * Detach every listener. The map is created once and reused, so this is only
+   * needed if the whole element is being thrown away — pausing uses stop().
+   */
   destroy(): void {
-    const el = this.el;
-    el.removeEventListener('pointerdown', this.onPointerDown);
-    el.removeEventListener('pointermove', this.onPointerMove);
-    el.removeEventListener('pointerup', this.onPointerUp);
-    el.removeEventListener('pointercancel', this.onPointerUp);
-    el.removeEventListener('wheel', this.onWheel);
-    el.removeEventListener('dblclick', this.onDoubleClick);
-    el.removeEventListener('keydown', this.onKeyDown);
-    el.removeEventListener('contextmenu', this.onContextMenu);
-    el.removeEventListener('gesturestart', this.onGestureStart as EventListener);
-    el.removeEventListener('gesturechange', this.onGestureChange as EventListener);
-    el.removeEventListener('gestureend', this.onGestureEnd as EventListener);
+    const element = this.element;
+    element.removeEventListener('pointerdown', this.handlePointerDown);
+    element.removeEventListener('pointermove', this.handlePointerMove);
+    element.removeEventListener('pointerup', this.handlePointerUp);
+    element.removeEventListener('pointercancel', this.handlePointerUp);
+    element.removeEventListener('pointerleave', this.handlePointerUp);
+    element.removeEventListener('wheel', this.handleWheel);
+    element.removeEventListener('dblclick', this.handleDoubleClick);
+    element.removeEventListener('keydown', this.handleKeyDown);
+    element.removeEventListener('contextmenu', this.handleContextMenu);
+    element.removeEventListener('gesturestart', this.handleGestureStart as EventListener);
+    element.removeEventListener('gesturechange', this.handleGestureChange as EventListener);
+    element.removeEventListener('gestureend', this.handleGestureEnd as EventListener);
   }
 }
