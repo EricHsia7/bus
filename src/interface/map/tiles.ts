@@ -310,7 +310,11 @@ export class TileManager {
   // when each raster tile first became drawable, so it can fade in (keyed by
   // tile key; pruned when the tile leaves the cache)
   private tileFades = new Map<TileKey, number>();
-  // true while at least one tile is still fading in
+  // tiles drawn sharp last frame (key -> coord), to spot ones that just left
+  private lastDrawn = new Map<TileKey, TileCoord>();
+  // tiles that left the viewport and are fading out (key -> coord)
+  private retiring = new Map<TileKey, TileCoord>();
+  // true while at least one tile is still fading in or out
   private fadingActive = false;
   private box: {
     minX: number;
@@ -418,22 +422,31 @@ export class TileManager {
       this.requestRaster(key, coord);
     }
 
-    // draw list with parent/child fallback
+    // draw list: wanted tiles (fading in), their fallbacks, and any tiles that
+    // just left the view (fading out)
     const rasterDrawList: DrawTile[] = [];
     let missing = 0;
     let fading = false;
+    const drawnSharp = new Map<TileKey, TileCoord>();
     for (const coord of wantedTiles) {
       const key = buildTileKey(coord.z, coord.x, coord.y);
       const dst = tileScreenRect(camera, coord);
       const entry = this.rasters.get(key);
       if (entry && entry !== MISSING) {
-        const opacity = this.fadeOpacity(key, now);
+        // a tile that was fading out is wanted again: resume a fade-in from its
+        // current alpha instead of popping back to full
+        if (this.retiring.delete(key)) {
+          const current = this.fadeOpacity(key, now, false);
+          this.tileFades.set(key, now - current * this.config.fadeDuration);
+        }
+        const opacity = this.fadeOpacity(key, now, true);
         if (opacity < 1) {
           fading = true;
           // keep a blurry ancestor underneath so the sharp tile crossfades in
           // rather than popping over the freshly cleared background
           this.pushParent(coord, dst, rasterDrawList);
         }
+        drawnSharp.set(key, coord);
         rasterDrawList.push({
           coord,
           bitmap: entry,
@@ -450,6 +463,46 @@ export class TileManager {
         this.pushChildren(camera, coord, rasterDrawList);
       }
     }
+
+    // tiles drawn last frame but no longer wanted start fading out; seed the
+    // stamp so the fade-out begins at the tile's current alpha
+    for (const [key, coord] of this.lastDrawn) {
+      if (drawnSharp.has(key) || this.retiring.has(key)) continue;
+      // only fade out tiles at the current zoom: they leave to background at the
+      // viewport edge with nothing overlapping. tiles orphaned by a zoom change
+      // would sit over/under the incoming level's fades and flicker, so drop them.
+      if (coord.z !== zoom) continue;
+      const current = this.fadeOpacity(key, now, true);
+      this.tileFades.set(key, now - (1 - current) * this.config.fadeDuration);
+      this.retiring.set(key, coord);
+    }
+    // draw the fading-out tiles beneath the sharp ones until they reach zero
+    for (const [key, coord] of this.retiring) {
+      const entry = this.rasters.get(key);
+      // drop if evicted or orphaned by a zoom change (see fade-out note above)
+      if (!entry || entry === MISSING || coord.z !== zoom) {
+        this.retiring.delete(key);
+        this.tileFades.delete(key);
+        continue;
+      }
+      const opacity = this.fadeOpacity(key, now, false);
+      if (opacity <= 0) {
+        this.retiring.delete(key);
+        this.tileFades.delete(key);
+        continue;
+      }
+      fading = true;
+      rasterDrawList.push({
+        coord,
+        bitmap: entry,
+        src: null,
+        dst: tileScreenRect(camera, coord),
+        fallback: true,
+        opacity
+      });
+    }
+    this.lastDrawn = drawnSharp;
+
     this.fadingActive = fading;
     // drop fade stamps for tiles no longer cached so a refetch fades in again
     for (const key of this.tileFades.keys()) {

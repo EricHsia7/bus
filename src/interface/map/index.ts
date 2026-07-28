@@ -57,7 +57,7 @@ const config: MapConfig = {
   zoom: 13,
   constrainToBounds: true,
   labelCacheSize: 16,
-  rasterCacheSize: 16,
+  rasterCacheSize: 256,
   concurrency: 8,
   fadeDuration: 160,
   maxLabels: 64,
