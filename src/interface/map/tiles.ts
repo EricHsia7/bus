@@ -287,6 +287,8 @@ export interface DrawTile {
   dst: { left: number; top: number; right: number; bottom: number };
   /** true when this is not the requested level (drawn under, lower priority) */
   fallback: boolean;
+  /** fade-in alpha 0..1; fallbacks stay at 1 */
+  opacity: number;
 }
 
 export interface FrameTiles {
@@ -303,6 +305,11 @@ export class TileManager {
   private labels: LRU<LabelEntry>;
   private rasterJobs = new Map<TileKey, number>();
   private labelJobs = new Map<TileKey, number>();
+  // when each raster tile first became drawable, so it can fade in (keyed by
+  // tile key; pruned when the tile leaves the cache)
+  private tileFades = new Map<TileKey, number>();
+  // true while at least one tile is still fading in
+  private fadingActive = false;
   private box: {
     minX: number;
     minY: number;
@@ -338,6 +345,11 @@ export class TileManager {
     };
   }
 
+  /** true while any tile is still fading in; keeps the render loop awake */
+  get animating(): boolean {
+    return this.fadingActive;
+  }
+
   /**
    * Cache capacity for a working set of `count` tiles: a spare-screen buffer over
    * the visible-plus-prefetch set, floored at the configured size. Driven by the
@@ -353,10 +365,31 @@ export class TileManager {
   }
 
   /**
+   * Fade alpha (0..1) for a tile, ramping over config.fadeDuration from when the
+   * tile was first stamped. `direction` picks which way the ramp runs:
+   *   - 'forward': opacity = progress      (0 -> 1, fade in)
+   *   - 'reverse': opacity = 1 - progress  (1 -> 0, fade out)
+   * The first time a tile is drawn we stamp `now`; the stamp is cleared once the
+   * tile leaves the cache (see update) so a refetched tile fades in again rather
+   * than popping.
+   */
+  private fadeOpacity(key: TileKey, now: number, forward: boolean = true): number {
+    if (this.config.fadeDuration <= 0) return forward ? 1 : 0;
+    let start = this.tileFades.get(key);
+    if (start === undefined) {
+      start = now;
+      this.tileFades.set(key, now);
+    }
+    const raw = (now - start) / this.config.fadeDuration;
+    const progress = raw >= 1 ? 1 : raw <= 0 ? 0 : raw;
+    return forward ? progress : 1 - progress;
+  }
+
+  /**
    * Called every frame. Cheap when nothing changed: cover() is a couple of
    * loops, and requests are deduped against the caches + in-flight maps.
    */
-  update(camera: Camera): FrameTiles {
+  update(camera: Camera, now: number): FrameTiles {
     // tiles stop at config.maxZoom; beyond that the deepest level is scaled up (overzoom)
     const zoom = tileZoom(camera, this.config.minZoom, this.config.maxZoom);
     const wantedTiles = cover(camera, {
@@ -386,17 +419,26 @@ export class TileManager {
     // draw list with parent/child fallback
     const rasterDrawList: DrawTile[] = [];
     let missing = 0;
+    let fading = false;
     for (const coord of wantedTiles) {
       const key = buildTileKey(coord.z, coord.x, coord.y);
       const dst = tileScreenRect(camera, coord);
       const entry = this.rasters.get(key);
       if (entry && entry !== MISSING) {
+        const opacity = this.fadeOpacity(key, now);
+        if (opacity < 1) {
+          fading = true;
+          // keep a blurry ancestor underneath so the sharp tile crossfades in
+          // rather than popping over the freshly cleared background
+          this.pushParent(coord, dst, rasterDrawList);
+        }
         rasterDrawList.push({
           coord,
           bitmap: entry,
           src: null,
           dst,
-          fallback: false
+          fallback: false,
+          opacity
         });
         continue;
       }
@@ -405,6 +447,11 @@ export class TileManager {
       if (!this.pushParent(coord, dst, rasterDrawList) && entry !== MISSING) {
         this.pushChildren(camera, coord, rasterDrawList);
       }
+    }
+    this.fadingActive = fading;
+    // drop fade stamps for tiles no longer cached so a refetch fades in again
+    for (const key of this.tileFades.keys()) {
+      if (!this.rasters.has(key)) this.tileFades.delete(key);
     }
     // fallbacks first so sharp tiles paint on top
     rasterDrawList.sort((first, second) => Number(second.fallback) - Number(first.fallback));
@@ -437,7 +484,9 @@ export class TileManager {
       if (entry !== MISSING) labelTiles.push(entry);
     }
 
-    // all raster + label jobs for this frame are queued; start them together (round-robin) so labels stream in alongside rasters instead of waiting for the whole raster backlog to drain
+    // all raster + label jobs for this frame are queued; start them together
+    // (round-robin) so labels stream in alongside rasters instead of waiting for
+    // the whole raster backlog to drain
     this.io.flush();
 
     return {
@@ -470,7 +519,8 @@ export class TileManager {
           h: sourceHeight
         },
         dst,
-        fallback: true
+        fallback: true,
+        opacity: 1
       });
       return true;
     }
@@ -494,7 +544,8 @@ export class TileManager {
           bitmap: entry,
           src: null,
           dst: tileScreenRect(camera, child),
-          fallback: true
+          fallback: true,
+          opacity: 1
         });
       }
     }

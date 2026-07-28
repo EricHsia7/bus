@@ -56,8 +56,8 @@ const config: MapConfig = {
   center: [121.5435, 25.0308],
   zoom: 13,
   constrainToBounds: true,
-  labelCacheSize: 32,
-  rasterCacheSize: 32,
+  labelCacheSize: 16,
+  rasterCacheSize: 16,
   concurrency: 8,
   fadeDuration: 160,
   maxLabels: 64,
@@ -167,11 +167,11 @@ function createMapViewer(): MapViewerHandle {
     lastFrameTime = now;
     // skip the whole frame when nothing changed and nothing is animating
     const animating = gestures.update(now);
-    if (!needsRedraw && !animating && !labels.animating) return;
+    if (!needsRedraw && !animating && !labels.animating && !tiles.animating) return;
     needsRedraw = false;
     frameCount++;
 
-    const frameTiles = tiles.update(camera);
+    const frameTiles = tiles.update(camera, now);
     clear(mapContext, camera, pixelRatio);
     drawRasters(mapContext, frameTiles.rasters, pixelRatio);
     const placedLabels = labels.update(mapContext, camera, frameTiles.labels, deltaTime, frameCount);

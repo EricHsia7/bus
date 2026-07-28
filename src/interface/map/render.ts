@@ -1,5 +1,4 @@
 import { Camera } from '../../tools/camera';
-import { clamp } from '../../tools/math';
 import { LabelEngine, PlacedLabel } from './labels';
 import { DrawTile } from './tiles';
 
@@ -35,22 +34,25 @@ export function drawRasters(context: CanvasRenderingContext2D, tiles: DrawTile[]
     const width = right - left;
     const height = bottom - top;
     if (width <= 0 || height <= 0) continue;
+    if (tile.opacity <= 0) continue;
+    context.globalAlpha = tile.opacity;
     if (tile.src) {
       context.drawImage(tile.bitmap, tile.src.x, tile.src.y, tile.src.w, tile.src.h, left, top, width, height);
     } else {
       context.drawImage(tile.bitmap, left, top, width, height);
     }
   }
+  // reset so subsequent label drawing starts fully opaque
+  context.globalAlpha = 1;
 }
 
 export function drawLabels(context: CanvasRenderingContext2D, labels: PlacedLabel[]): void {
   for (const label of labels) {
     const { style, lines, lineHeight } = label;
-    const alpha = clamp(label.opacity, 0, 1);
-    if (alpha <= 0.01) continue;
+    if (label.opacity <= 0) continue;
 
     context.save();
-    context.globalAlpha = alpha;
+    context.globalAlpha = label.opacity;
     context.font = LabelEngine.fontOf(style);
     if (style.letterSpacing && 'letterSpacing' in context) {
       (context as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = `${style.letterSpacing}px`;
