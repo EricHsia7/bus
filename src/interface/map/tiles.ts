@@ -24,19 +24,6 @@ const getLabelUrl = (coord: TileCoord): string => `${TILE_SERVER_URL}/labels/${c
  */
 const CACHE_BUFFER_FACTOR = 2;
 
-/**
- * Upper bound on the number of tiles needed to cover a viewport plus its
- * prefetch ring. On-screen tiles are never smaller than tileSize * 2^-0.5 (the
- * tile zoom is the rounded camera zoom), so this slightly over-estimates; the
- * +1 per axis accounts for a partial tile at each edge.
- */
-function estimateVisibleTileCount(width: number, height: number, tileSize: number, padPx: number): number {
-  const minTilePx = tileSize * Math.SQRT1_2;
-  const tilesAcross = Math.ceil((width + 2 * padPx) / minTilePx) + 1;
-  const tilesDown = Math.ceil((height + 2 * padPx) / minTilePx) + 1;
-  return tilesAcross * tilesDown;
-}
-
 /** A small least-recently-used cache; the oldest entry is evicted past `max`. */
 export class LRU<V> {
   private map = new Map<string, V>();
@@ -189,7 +176,12 @@ interface QueuedJob {
 class WorkerClient {
   private worker: Worker;
   private inflight = new Map<number, (response: WorkerResponse) => void>();
-  private queue: QueuedJob[] = [];
+  // one queue per request class so labels can interleave with rasters instead of
+  // waiting behind the whole raster backlog (see nextJob)
+  private rasterQueue: QueuedJob[] = [];
+  private labelQueue: QueuedJob[] = [];
+  // round-robin bit: whether the next job should come from the label queue
+  private serveLabelsNext = false;
   private nextId = 1;
 
   constructor(
@@ -210,27 +202,57 @@ class WorkerClient {
     this.pump();
   }
 
+  /**
+   * Pick the next job, alternating between rasters and labels so both classes
+   * make progress together. Without this, a frame that queues ~150 raster tiles
+   * ahead of its labels would run every raster first and labels would only start
+   * once that backlog cleared — popping in visibly late.
+   */
+  private nextJob(): QueuedJob | undefined {
+    const preferred = this.serveLabelsNext ? this.labelQueue : this.rasterQueue;
+    const other = this.serveLabelsNext ? this.rasterQueue : this.labelQueue;
+    const job = preferred.shift() ?? other.shift();
+    // only flip when we actually took a job, so an empty preferred queue doesn't
+    // waste its turn while the other class still has a backlog
+    if (job) this.serveLabelsNext = !this.serveLabelsNext;
+    return job;
+  }
+
   private pump(): void {
-    while (this.queue.length && this.inflight.size < this.maxConcurrent) {
-      const job = this.queue.shift()!;
+    while (this.inflight.size < this.maxConcurrent) {
+      const job = this.nextJob();
+      if (!job) break;
       this.inflight.set(job.message.id, job.resolve);
       this.worker.postMessage(job.message);
     }
   }
 
-  /** enqueue a job; returns its id so it can be aborted */
+  /**
+   * Enqueue a job and return its id so it can be aborted. Enqueue does NOT pump:
+   * the caller submits a whole frame of raster + label jobs and then calls
+   * flush() once, so the first batch is already interleaved fairly rather than
+   * filled entirely from whichever class happened to be submitted first.
+   */
   submit(message: Record<string, unknown>, resolve: (response: WorkerResponse) => void): number {
     const id = this.nextId++;
-    this.queue.push({ message: { ...message, id }, resolve });
-    this.pump();
+    const job: QueuedJob = { message: { ...message, id }, resolve };
+    if (message.type === 'labels') this.labelQueue.push(job);
+    else this.rasterQueue.push(job);
     return id;
   }
 
+  /** Start as many queued jobs as the concurrency budget allows (round-robin across classes). */
+  flush(): void {
+    this.pump();
+  }
+
   abort(id: number): void {
-    const queuedIndex = this.queue.findIndex((job) => job.message.id === id);
-    if (queuedIndex >= 0) {
-      this.queue.splice(queuedIndex, 1);
-      return;
+    for (const queue of [this.rasterQueue, this.labelQueue]) {
+      const queuedIndex = queue.findIndex((job) => job.message.id === id);
+      if (queuedIndex >= 0) {
+        queue.splice(queuedIndex, 1);
+        return;
+      }
     }
     if (this.inflight.delete(id)) {
       // aborts jump the queue: they only touch the AbortController map
@@ -240,13 +262,14 @@ class WorkerClient {
   }
 
   get pending(): number {
-    return this.queue.length + this.inflight.size;
+    return this.rasterQueue.length + this.labelQueue.length + this.inflight.size;
   }
 
   destroy(): void {
     this.worker.onmessage = null;
     this.worker.terminate();
-    this.queue = [];
+    this.rasterQueue = [];
+    this.labelQueue = [];
     this.inflight.clear();
   }
 }
@@ -316,17 +339,17 @@ export class TileManager {
   }
 
   /**
-   * Size both LRU caches to the current viewport. Without this, a screen whose
-   * visible tiles outnumber a fixed cache would evict tiles that are still
-   * on-screen and re-fetch them every frame (LRU thrashing). The config cache
-   * sizes act as floors. Call whenever the viewport size changes.
+   * Cache capacity for a working set of `count` tiles: a spare-screen buffer over
+   * the visible-plus-prefetch set, floored at the configured size. Driven by the
+   * live cover() counts in update() (not a viewport/tileSize estimate) so it
+   * stays correct even though label tiles use an independently clamped zoom.
+   * Below labelMinZoom the label tiles are smaller on screen and far more
+   * numerous than a viewport estimate would guess, which previously under-sized
+   * the label cache and thrashed it (evict + refetch every frame while nothing
+   * moved).
    */
-  resizeCaches(camera: Camera): void {
-    const { tileSize } = this.config;
-    const rasterVisible = estimateVisibleTileCount(camera.width, camera.height, tileSize, tileSize / 2);
-    const labelVisible = estimateVisibleTileCount(camera.width, camera.height, tileSize, LABEL_PREFETCH_PADDING);
-    this.rasters.setMax(Math.max(this.config.rasterCacheSize, Math.ceil(rasterVisible * CACHE_BUFFER_FACTOR)));
-    this.labels.setMax(Math.max(this.config.labelCacheSize, Math.ceil(labelVisible * CACHE_BUFFER_FACTOR)));
+  private capFor(count: number, floor: number): number {
+    return Math.max(floor, Math.ceil(count * CACHE_BUFFER_FACTOR));
   }
 
   /**
@@ -341,6 +364,9 @@ export class TileManager {
       box: this.box,
       padPx: this.config.tileSize / 2
     });
+    // size the raster cache to this frame's working set before requesting, so a
+    // large viewport never evicts a still-visible tile and refetches it
+    this.rasters.setMax(this.capFor(wantedTiles.length, this.config.rasterCacheSize));
 
     // raster requests (centre-first) + abort what left the viewport
     const wantedKeys = new Set<TileKey>();
@@ -390,6 +416,9 @@ export class TileManager {
       box: this.box,
       padPx: LABEL_PREFETCH_PADDING
     });
+    // label tiles use labelZoom, clamped independently of the raster zoom; size
+    // their cache from the actual cover so it can't thrash below labelMinZoom
+    this.labels.setMax(this.capFor(labelCover.length, this.config.labelCacheSize));
     const labelWanted = new Set<TileKey>();
     for (const coord of labelCover) labelWanted.add(buildTileKey(coord.z, coord.x, coord.y));
     for (const [key, id] of this.labelJobs) {
@@ -407,6 +436,9 @@ export class TileManager {
       }
       if (entry !== MISSING) labelTiles.push(entry);
     }
+
+    // all raster + label jobs for this frame are queued; start them together (round-robin) so labels stream in alongside rasters instead of waiting for the whole raster backlog to drain
+    this.io.flush();
 
     return {
       zoom,

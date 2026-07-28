@@ -4,7 +4,7 @@ import { LabelEngine, PlacedLabel } from './labels';
 import { DrawTile } from './tiles';
 
 /** size the canvas for the current devicePixelRatio; returns true if it changed */
-export function resizeCanvas(canvas: HTMLCanvasElement, camera: Camera, maxDevicePixelRatio = 2): boolean {
+export function resizeMapCanvas(canvas: HTMLCanvasElement, camera: Camera, maxDevicePixelRatio = 2): boolean {
   const pixelRatio = Math.min(maxDevicePixelRatio, window.devicePixelRatio || 1);
   const rect = canvas.getBoundingClientRect();
   const width = Math.max(1, Math.round(rect.width));

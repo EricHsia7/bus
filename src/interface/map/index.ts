@@ -2,7 +2,7 @@ import { Camera } from '../../tools/camera';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { Gestures } from '../../tools/gestures';
 import { LabelEngine } from './labels';
-import { clear, drawLabels, drawRasters, resizeCanvas } from './render';
+import { clear, drawLabels, drawRasters, resizeMapCanvas } from './render';
 import { TileManager } from './tiles';
 
 /*
@@ -56,8 +56,8 @@ const config: MapConfig = {
   center: [121.5435, 25.0308],
   zoom: 13,
   constrainToBounds: true,
-  labelCacheSize: 16,
-  rasterCacheSize: 16,
+  labelCacheSize: 32,
+  rasterCacheSize: 32,
   concurrency: 8,
   fadeDuration: 160,
   maxLabels: 64,
@@ -147,16 +147,14 @@ function createMapViewer(): MapViewerHandle {
 
   const resizeObserver = new ResizeObserver(() => {
     // keep the shared viewport metrics fresh, then re-fit the canvas backing store
-    if (resizeCanvas(mapCanvas, camera, config.maxDevicePixelRatio)) {
-      // adapt the size of tile caches to the new viewport so a large screen never evicts still-visible tiles and re-fetches them every frame
-      tiles.resizeCaches(camera);
+    if (resizeMapCanvas(mapCanvas, camera, config.maxDevicePixelRatio)) {
+      // the tile manager re-fits its caches to the live working set every frame,
+      // so a resize only needs to request a repaint
       invalidate();
     }
   });
   resizeObserver.observe(mapField);
-  resizeCanvas(mapCanvas, camera, config.maxDevicePixelRatio);
-  // size the caches for the initial viewport before the first frame
-  tiles.resizeCaches(camera);
+  resizeMapCanvas(mapCanvas, camera, config.maxDevicePixelRatio);
 
   mapContext.textAlign = 'center';
   mapContext.textBaseline = 'middle';
