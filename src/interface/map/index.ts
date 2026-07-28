@@ -58,10 +58,10 @@ const config: MapConfig = {
   constrainToBounds: true,
   labelCacheSize: 16,
   rasterCacheSize: 16,
-  concurrency: 8,
+  concurrency: 4,
   fadeDuration: 160,
   maxLabels: 256,
-  maxDevicePixelRatio: 2,
+  maxDevicePixelRatio: 1.5,
   wheelBehavior: 'auto'
 };
 
