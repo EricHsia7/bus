@@ -1,5 +1,5 @@
-import { Camera, MercPoint, ScreenPoint } from '../../tools/camera';
-import { clamp } from '../../tools/math';
+import { Camera, MercPoint, ScreenPoint } from './camera';
+import { clamp } from './math';
 
 export interface GestureOptions {
   camera: Camera;

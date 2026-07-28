@@ -1,6 +1,6 @@
 import { Camera } from '../../tools/camera';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
-import { Gestures } from './gestures';
+import { Gestures } from '../../tools/gestures';
 import { LabelEngine } from './labels';
 import { clear, drawLabels, drawRasters, resizeCanvas } from './render';
 import { TileManager } from './tiles';
