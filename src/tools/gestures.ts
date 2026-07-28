@@ -69,7 +69,7 @@ export class Gestures {
     this.element = options.element;
     this.onChange = options.onChange;
     this.zoomDuration = options.zoomDuration ?? 180;
-    this.inertiaTau = options.inertiaTau ?? 120;
+    this.inertiaTau = options.inertiaTau ?? 60;
     this.maxInertiaSpeed = options.maxInertiaSpeed ?? 4; // px/ms
     this.wheelBehavior = options.wheelBehavior ?? 'auto';
 

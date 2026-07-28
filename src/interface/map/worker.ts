@@ -152,13 +152,10 @@ interface Candidate {
 }
 
 /** pull the label array out of whatever container shape the backend wrote */
-function extractItemList(json: unknown): {
-  items: AnyRecord[];
-  extent: number | undefined;
-} {
-  if (Array.isArray(json)) return { items: json as AnyRecord[], extent: undefined };
+function extractItemList(json: unknown): { items: AnyRecord[]; extent: number } {
+  if (Array.isArray(json)) return { items: json as AnyRecord[], extent: 1 };
   const container = (json ?? {}) as AnyRecord;
-  const extent = toNumber(container.extent);
+  const extent = (container.extent as number | null | undefined) || 1;
   const items = (container.features ?? container.labels ?? container.data ?? []) as AnyRecord[];
   return { items: Array.isArray(items) ? items : [], extent };
 }
