@@ -1,6 +1,5 @@
-import { querySize } from '..';
+import { Camera } from '../../tools/camera';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
-import { Camera } from './camera';
 import { Gestures } from './gestures';
 import { LabelEngine } from './labels';
 import { clear, drawDebug, drawLabels, drawRasters, resizeCanvas } from './render';
@@ -156,7 +155,6 @@ function createMapViewer(): MapViewerHandle {
 
   const resizeObserver = new ResizeObserver(() => {
     // keep the shared viewport metrics fresh, then re-fit the canvas backing store
-    querySize('window');
     if (resizeCanvas(mapCanvas, camera, config.maxDevicePixelRatio)) {
       // adapt the size of tile caches to the new viewport so a large screen never evicts still-visible tiles and re-fetches them every frame
       tiles.resizeCaches(camera);

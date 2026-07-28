@@ -1,6 +1,7 @@
 import { MapConfig } from '.';
-import { Camera, latToMercY, lngToMercX } from './camera';
-import { buildTileKey, PackedLabelTile, TileCoord, TileKey, WorkerResponse } from './types';
+import { Camera, latToMercY, lngToMercX } from '../../tools/camera';
+import { PackedLabelTile } from './labels';
+import { WorkerResponse } from './worker';
 
 /** Origin the raster + label tiles are served from. */
 const TILE_SERVER_URL = 'https://erichsia7.github.io/bus-map';
@@ -100,6 +101,23 @@ export interface CoverOptions {
   /** viewport padding in screen px (pre-load a ring around the viewport) */
   padPx?: number;
 }
+
+export interface TileCoord {
+  z: number;
+  x: number;
+  y: number;
+}
+
+export type TileKey = string;
+
+/** Build the canonical "z/x/y" cache key for a tile. */
+export const buildTileKey = (z: number, x: number, y: number): TileKey => `${z}/${x}/${y}`;
+
+/** Parse a "z/x/y" cache key back into its numeric coordinate. */
+export const parseTileKey = (key: TileKey): TileCoord => {
+  const [z, x, y] = key.split('/');
+  return { z: +z, x: +x, y: +y };
+};
 
 /** integer tile zoom for a fractional camera zoom */
 export function tileZoom(camera: Camera, minZoom: number, maxZoom: number): number {

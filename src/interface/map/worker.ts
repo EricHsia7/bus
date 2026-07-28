@@ -3,8 +3,23 @@ declare const self: DedicatedWorkerGlobalScope;
 // export {}; // make a script a module if no any export or import
 
 import { fetchInflate } from '../../data/apis/loader';
-import { latToMercY, lngToMercX } from './camera';
-import { LabelStyle, PackedLabelTile, WorkerRequest } from './types';
+import { latToMercY, lngToMercX } from '../../tools/camera';
+import { LabelStyle, PackedLabelTile } from './labels';
+import { TileKey } from './tiles';
+
+export type WorkerRequest = { type: 'raster'; id: number; key: TileKey; url: string } | { type: 'labels'; id: number; key: TileKey; url: string; z: number; x: number; y: number } | { type: 'abort'; id: number };
+
+export type WorkerResponse =
+  | { type: 'raster'; id: number; key: TileKey; bitmap: ImageBitmap }
+  | { type: 'labels'; id: number; key: TileKey; tile: PackedLabelTile }
+  | {
+      type: 'error';
+      id: number;
+      key: TileKey;
+      message: string;
+      status: number;
+      aborted: boolean;
+    };
 
 const controllers = new Map<number, AbortController>();
 const decoder = new TextDecoder();

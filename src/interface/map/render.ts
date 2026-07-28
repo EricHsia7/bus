@@ -1,4 +1,4 @@
-import type { Camera } from './camera';
+import type { Camera } from '../../tools/camera';
 import { LabelEngine, type PlacedLabel } from './labels';
 import type { DrawTile } from './tiles';
 

@@ -1,4 +1,4 @@
-import type { Camera, MercPoint, ScreenPoint } from './camera';
+import { Camera, MercPoint, ScreenPoint } from '../../tools/camera';
 
 export interface GestureOptions {
   camera: Camera;
@@ -10,10 +10,10 @@ export interface GestureOptions {
   inertiaTau?: number;
   maxInertiaSpeed?: number;
   /**
-   * What an unmodified two-finger / wheel scroll does.
-   *  "auto" (default): touchpad scroll pans, mouse wheel zooms
-   *  "zoom": everything zooms (classic web-map behaviour)
-   *  "pan": everything pans (pinch/ctrl/shift still zoom)
+   * - What an unmodified two-finger / wheel scroll does.
+   * - auto: touchpad scroll pans, mouse wheel zooms
+   * - zoom: everything zooms (classic web-map behaviour)
+   * - pan: everything pans (pinch/ctrl/shift still zoom)
    */
   wheelBehavior?: 'auto' | 'zoom' | 'pan';
 }
