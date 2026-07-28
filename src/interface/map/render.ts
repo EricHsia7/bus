@@ -1,11 +1,6 @@
-import type { Camera } from '../../tools/camera';
-import { LabelEngine, type PlacedLabel } from './labels';
-import type { DrawTile } from './tiles';
-
-export interface RenderOptions {
-  background?: string;
-  debug?: boolean;
-}
+import { Camera } from '../../tools/camera';
+import { LabelEngine, PlacedLabel } from './labels';
+import { DrawTile } from './tiles';
 
 /** size the canvas for the current devicePixelRatio; returns true if it changed */
 export function resizeCanvas(canvas: HTMLCanvasElement, camera: Camera, maxDevicePixelRatio = 2): boolean {
@@ -86,29 +81,4 @@ export function drawLabels(context: CanvasRenderingContext2D, labels: PlacedLabe
     }
     context.restore();
   }
-}
-
-/** tile grid + keys + label boxes, toggled with the `d` key */
-export function drawDebug(context: CanvasRenderingContext2D, tiles: DrawTile[], labels: PlacedLabel[]): void {
-  context.save();
-  context.font = '11px ui-monospace, "SFMono-Regular", Menlo, monospace';
-  context.textAlign = 'left';
-  context.textBaseline = 'top';
-  context.lineWidth = 1;
-  for (const tile of tiles) {
-    const { left, top, right, bottom } = tile.dst;
-    context.strokeStyle = tile.fallback ? 'rgba(220,80,40,.9)' : 'rgba(30,90,220,.6)';
-    context.strokeRect(left + 0.5, top + 0.5, right - left - 1, bottom - top - 1);
-    const key = `${tile.coord.z}/${tile.coord.x}/${tile.coord.y}${tile.fallback ? ' \u2191' : ''}`;
-    context.fillStyle = 'rgba(255,255,255,.85)';
-    context.fillRect(left + 3, top + 3, context.measureText(key).width + 6, 15);
-    context.fillStyle = '#222';
-    context.fillText(key, left + 6, top + 5);
-  }
-  context.strokeStyle = 'rgba(0,160,80,.7)';
-  for (const label of labels) {
-    if (label.opacity <= 0.01) continue;
-    context.strokeRect(label.x - label.width / 2, label.y - label.height / 2, label.width, label.height);
-  }
-  context.restore();
 }

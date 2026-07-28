@@ -2,7 +2,7 @@ import { Camera } from '../../tools/camera';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { Gestures } from './gestures';
 import { LabelEngine } from './labels';
-import { clear, drawDebug, drawLabels, drawRasters, resizeCanvas } from './render';
+import { clear, drawLabels, drawRasters, resizeCanvas } from './render';
 import { TileManager } from './tiles';
 
 /*
@@ -41,8 +41,6 @@ export interface MapConfig {
   maxDevicePixelRatio: number;
   /** touchpad/wheel scroll: "auto" = touchpad pans + wheel zooms, or force "zoom"/"pan" */
   wheelBehavior: 'auto' | 'zoom' | 'pan';
-  /** start with the debug overlay (tile grid + label boxes) visible? */
-  debug: boolean;
 }
 
 const config: MapConfig = {
@@ -64,8 +62,7 @@ const config: MapConfig = {
   fadeDuration: 160,
   maxLabels: 256,
   maxDevicePixelRatio: 1.5,
-  wheelBehavior: 'auto',
-  debug: false
+  wheelBehavior: 'auto'
 };
 
 /*
@@ -134,19 +131,14 @@ function createMapViewer(): MapViewerHandle {
   });
   // TODO: add zoom control buttons
 
-  let debugOverlay = config.debug;
   let lastFrameTime = 0;
   let frameCount = 0;
-  let framesPerSecond = 0;
   let animationFrameId = 0;
   let paused = false;
 
-  // 'd' toggles the debug overlay, 'l' toggles labels
+  // 'l' toggles labels
   const handleKeyDown = (event: KeyboardEvent): void => {
-    if (event.key === 'd') {
-      debugOverlay = !debugOverlay;
-      invalidate();
-    } else if (event.key === 'l') {
+    if (event.key === 'l') {
       labels.enabled = !labels.enabled;
       invalidate();
     }
@@ -170,9 +162,6 @@ function createMapViewer(): MapViewerHandle {
     animationFrameId = requestAnimationFrame(renderFrame);
     const deltaTime = lastFrameTime ? now - lastFrameTime : 16;
     lastFrameTime = now;
-    // exponential moving average of the frame rate (kept for debugging/HUD use)
-    framesPerSecond = framesPerSecond ? framesPerSecond * 0.9 + (1000 / Math.max(1, deltaTime)) * 0.1 : 1000 / Math.max(1, deltaTime);
-
     // skip the whole frame when nothing changed and nothing is animating
     const animating = gestures.update(now);
     if (!needsRedraw && !animating && !labels.animating) return;
@@ -184,7 +173,6 @@ function createMapViewer(): MapViewerHandle {
     drawRasters(mapContext, frameTiles.rasters, pixelRatio);
     const placedLabels = labels.update(mapContext, camera, frameTiles.labels, deltaTime, frameCount);
     drawLabels(mapContext, placedLabels);
-    if (debugOverlay) drawDebug(mapContext, frameTiles.rasters, placedLabels);
   };
   animationFrameId = requestAnimationFrame(renderFrame);
 
