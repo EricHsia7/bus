@@ -61,7 +61,7 @@ async function handleRequest(message: Exclude<WorkerRequest, { type: 'abort' }>)
     } else {
       const data = await fetchInflate(message.url, function () {});
       const tile = packLabelTile(JSON.parse(decoder.decode(data)), message.key, message.z, message.x, message.y);
-      self.postMessage({ type: 'labels', id: message.id, key: message.key, tile }, [tile.anchors.buffer, tile.priority.buffer, tile.styleIdx.buffer, tile.lineStart.buffer, tile.lines.buffer, tile.textStart.buffer, tile.text.buffer]);
+      self.postMessage({ type: 'labels', id: message.id, key: message.key, tile }, [tile.anchors.buffer, tile.priority.buffer, tile.styleIdx.buffer, tile.angles.buffer, tile.textStart.buffer, tile.text.buffer]);
     }
   } catch (error) {
     const aborted = (error as Error)?.name === 'AbortError';
@@ -145,7 +145,8 @@ function applyTransform(text: string, transform: unknown): string {
 interface Candidate {
   text: string;
   anchor: [number, number];
-  line: number[];
+  /** upright text angle in radians (precomputed server-side; 0 for point/area labels) */
+  angle: number;
   priority: number;
   styleKey: string;
   style: LabelStyle;
@@ -182,23 +183,6 @@ function computeRingCentroid(ring: number[][]): [number, number] {
   return [x / ring.length, y / ring.length];
 }
 
-/** the geometrically longest polyline out of a set of them */
-function findLongestLine(lines: number[][][]): number[][] {
-  let longestLine = lines[0] ?? [];
-  let longestLength = -1;
-  for (const line of lines) {
-    let length = 0;
-    for (let index = 1; index < line.length; index++) {
-      length += Math.hypot(line[index][0] - line[index - 1][0], line[index][1] - line[index - 1][1]);
-    }
-    if (length > longestLength) {
-      longestLength = length;
-      longestLine = line;
-    }
-  }
-  return longestLine;
-}
-
 function packLabelTile(json: unknown, key: string, z: number, x: number, y: number): PackedLabelTile {
   const { items, extent } = extractItemList(json);
   const scale = Math.pow(2, z);
@@ -226,17 +210,17 @@ function packLabelTile(json: unknown, key: string, z: number, x: number, y: numb
     const geometryType = String(geometry.type ?? (geometry.coordinates ? 'Point' : ''));
     const coordinates = geometry.coordinates as unknown;
 
+    // Anchor + angle are precomputed server-side (see plot.js plotLineLabel):
+    // every label geometry is a single Point, and line labels carry their
+    // upright text angle in `properties.angle`. Point/area labels are drawn
+    // horizontally (angle 0). The Polygon/MultiPolygon/flat fallbacks below
+    // just keep the client resilient to hand-authored or legacy tiles.
     let anchor: [number, number] | null = null;
-    let line: number[][] | null = null;
 
     if (geometryType === 'Point' && Array.isArray(coordinates)) {
       anchor = toMerc(coordinates as number[], itemExtent);
     } else if (geometryType === 'MultiPoint' && Array.isArray(coordinates)) {
       anchor = toMerc((coordinates as number[][])[0], itemExtent);
-    } else if (geometryType === 'LineString' && Array.isArray(coordinates)) {
-      line = coordinates as number[][];
-    } else if (geometryType === 'MultiLineString' && Array.isArray(coordinates)) {
-      line = findLongestLine(coordinates as number[][][]);
     } else if (geometryType === 'Polygon' && Array.isArray(coordinates)) {
       anchor = toMerc(computeRingCentroid((coordinates as number[][][])[0] ?? []), itemExtent);
     } else if (geometryType === 'MultiPolygon' && Array.isArray(coordinates)) {
@@ -250,27 +234,10 @@ function packLabelTile(json: unknown, key: string, z: number, x: number, y: numb
       if (lng !== undefined && lat !== undefined) anchor = toMerc([lng, lat], itemExtent);
     }
 
-    let mercatorLine: number[] = [];
-    if (line && line.length >= 2) {
-      mercatorLine = new Array(line.length * 2);
-      for (let index = 0; index < line.length; index++) {
-        const mercator = toMerc(line[index], itemExtent);
-        mercatorLine[index * 2] = mercator[0];
-        mercatorLine[index * 2 + 1] = mercator[1];
-      }
-      // anchor = midpoint of the longest segment (render.ts rotates along it)
-      let longestSegment = -1;
-      for (let index = 2; index < mercatorLine.length; index += 2) {
-        const deltaX = mercatorLine[index] - mercatorLine[index - 2];
-        const deltaY = mercatorLine[index + 1] - mercatorLine[index - 1];
-        const length = deltaX * deltaX + deltaY * deltaY;
-        if (length > longestSegment) {
-          longestSegment = length;
-          anchor = [(mercatorLine[index] + mercatorLine[index - 2]) / 2, (mercatorLine[index + 1] + mercatorLine[index - 1]) / 2];
-        }
-      }
-    }
     if (!anchor || !Number.isFinite(anchor[0]) || !Number.isFinite(anchor[1])) continue;
+
+    // upright text angle, baked in by the renderer (radians)
+    const angle = toNumber(props.angle) ?? 0;
 
     const style = parseStyleFromProps(props);
     const styleKey = JSON.stringify(style);
@@ -284,7 +251,7 @@ function packLabelTile(json: unknown, key: string, z: number, x: number, y: numb
     candidates.push({
       text,
       anchor,
-      line: mercatorLine,
+      angle,
       priority: rank * 1000 - style.size,
       styleKey,
       style
@@ -298,13 +265,11 @@ function packLabelTile(json: unknown, key: string, z: number, x: number, y: numb
   const anchors = new Float64Array(count * 2);
   const priority = new Float32Array(count);
   const styleIdx = new Uint16Array(count);
-  const lineStart = new Uint32Array(count + 1);
+  const angles = new Float32Array(count);
   const textStart = new Uint32Array(count + 1);
 
   const textChunks: Uint8Array[] = [];
-  const lineChunks: number[][] = [];
   let textBytes = 0;
-  let linePoints = 0;
 
   for (let index = 0; index < count; index++) {
     const candidate = candidates[index];
@@ -312,31 +277,17 @@ function packLabelTile(json: unknown, key: string, z: number, x: number, y: numb
     anchors[index * 2 + 1] = candidate.anchor[1];
     priority[index] = candidate.priority;
     styleIdx[index] = styleIndex.get(candidate.styleKey) ?? 0;
+    angles[index] = candidate.angle;
 
     const bytes = encoder.encode(candidate.text);
     textStart[index] = textBytes;
     textBytes += bytes.length;
     textChunks.push(bytes);
-
-    lineStart[index] = linePoints;
-    if (candidate.line.length) {
-      lineChunks.push(candidate.line);
-      linePoints += candidate.line.length / 2;
-    } else {
-      lineChunks.push([]);
-    }
   }
   textStart[count] = textBytes;
-  lineStart[count] = linePoints;
 
   const text = new Uint8Array(textBytes);
   for (let index = 0; index < count; index++) text.set(textChunks[index], textStart[index]);
-
-  const lines = new Float64Array(linePoints * 2);
-  for (let index = 0; index < count; index++) {
-    const chunk = lineChunks[index];
-    if (chunk.length) lines.set(chunk, lineStart[index] * 2);
-  }
 
   return {
     key,
@@ -347,8 +298,7 @@ function packLabelTile(json: unknown, key: string, z: number, x: number, y: numb
     anchors,
     priority,
     styleIdx,
-    lineStart,
-    lines,
+    angles,
     textStart,
     text,
     styles

@@ -83,14 +83,32 @@ module.exports = (env, argv) => {
             urlPattern: /\/tiles\/[0-9]+\/[0-9]+\/[0-9]+\.webp$/,
             handler: 'StaleWhileRevalidate',
             options: {
-              cacheName: 'map-tiles'
+              cacheName: 'map-tiles',
+              expiration: {
+                maxAgeSeconds: 7 * 60 * 60 * 24
+              },
+              matchOptions: {
+                ignoreSearch: false
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
             }
           },
           {
-            urlPattern: /\/labels\/[0-9]+\/[0-9]+\/[0-9]+\.geojson\.gz$/, // TODO: replace geojson
+            urlPattern: /\/labels\/[0-9]+\/[0-9]+\/[0-9]+\.gz$/,
             handler: 'StaleWhileRevalidate',
             options: {
-              cacheName: 'map-labels'
+              cacheName: 'map-labels',
+              expiration: {
+                maxAgeSeconds: 7 * 60 * 60 * 24
+              },
+              matchOptions: {
+                ignoreSearch: false
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
             }
           }
         ]

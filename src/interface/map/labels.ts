@@ -3,6 +3,7 @@ import { Camera } from '../../tools/camera';
 import { TileKey } from './tiles';
 
 export type TextPlacement = 'point' | 'line';
+export type TextTransform = 'none' | 'uppercase' | 'lowercase' | 'capitalize';
 
 /** A resolved, render-ready text style (one per distinct symbolizer per tile). */
 export interface LabelStyle {
@@ -35,10 +36,8 @@ export interface PackedLabelTile {
   priority: Float32Array;
   /** index into `styles` */
   styleIdx: Uint16Array;
-  /** count + 1 offsets into `lines` (in *points*, not floats) */
-  lineStart: Uint32Array;
-  /** flat polyline vertices (mercator units) for line-placed labels */
-  lines: Float64Array;
+  /** upright text angle in radians, precomputed server-side (0 for point/area labels) */
+  angles: Float32Array;
   /** count + 1 byte offsets into `text` */
   textStart: Uint32Array;
   /** UTF-8 label text, concatenated */
@@ -204,7 +203,7 @@ export class LabelEngine {
 
     if (this.enabled) this.place(context, camera, tiles, frame);
 
-    // advance fades and emit the draw list
+    /* ---- advance fades and emit the draw list ---- */
     const placedLabels: PlacedLabel[] = [];
     this.animating = false;
     for (const [id, state] of this.states) {
@@ -243,7 +242,7 @@ export class LabelEngine {
     const maxX = camera.width + pad;
     const maxY = camera.height + pad;
 
-    // gather + dedupe candidates
+    /* ---- 1. gather + dedupe candidates ---- */
     interface Candidate {
       id: string;
       tile: PackedLabelTile;
@@ -284,7 +283,7 @@ export class LabelEngine {
     }
     this.lastCandidates = candidates.length;
 
-    /// priority sort (sticky: visible labels keep their slot)
+    // priority sort (sticky: visible labels keep their slot)
     candidates.sort((first, second) => first.wasVisible - second.wasVisible || first.priority - second.priority);
 
     // collision-test in priority order
@@ -299,10 +298,8 @@ export class LabelEngine {
       const lineHeight = Math.round(style.size * 1.2);
       const height = lineHeight * lines.length;
 
-      let angle = 0;
-      if (style.placement === 'line') {
-        angle = this.getLineAngle(camera, candidate.tile, candidate.index);
-      }
+      // angle is precomputed server-side and packed per label (0 for point/area labels)
+      const angle = candidate.tile.angles[candidate.index];
 
       const centerY = candidate.screenY + style.dy;
       // axis-aligned box; for rotated labels use the rotated extent
@@ -350,29 +347,5 @@ export class LabelEngine {
         placed++;
       }
     }
-  }
-
-  /** upright angle of the longest projected segment of a line-placed label */
-  private getLineAngle(camera: Camera, tile: PackedLabelTile, index: number): number {
-    const start = tile.lineStart[index];
-    const end = tile.lineStart[index + 1];
-    if (end - start < 2) return 0;
-    let bestAngle = 0;
-    let bestLength = -1;
-    for (let point = start + 1; point < end; point++) {
-      const x1 = camera.projectX(tile.lines[(point - 1) * 2]);
-      const y1 = camera.projectY(tile.lines[(point - 1) * 2 + 1]);
-      const x2 = camera.projectX(tile.lines[point * 2]);
-      const y2 = camera.projectY(tile.lines[point * 2 + 1]);
-      const length = (x2 - x1) ** 2 + (y2 - y1) ** 2;
-      if (length > bestLength) {
-        bestLength = length;
-        bestAngle = Math.atan2(y2 - y1, x2 - x1);
-      }
-    }
-    // keep text readable: never upside down
-    if (bestAngle > Math.PI / 2) bestAngle -= Math.PI;
-    if (bestAngle < -Math.PI / 2) bestAngle += Math.PI;
-    return bestAngle;
   }
 }

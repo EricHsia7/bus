@@ -14,7 +14,7 @@ const MAX_PARENT_LEVELS = 5;
 const getTileUrl = (coord: TileCoord): string => `${TILE_SERVER_URL}/tiles/${coord.z}/${coord.x}/${coord.y}.webp`;
 
 /** URL of a single gzipped GeoJSON label tile. */
-const getLabelUrl = (coord: TileCoord): string => `${TILE_SERVER_URL}/labels/${coord.z}/${coord.x}/${coord.y}.geojson.gz`;
+const getLabelUrl = (coord: TileCoord): string => `${TILE_SERVER_URL}/labels/${coord.z}/${coord.x}/${coord.y}.gz`;
 
 /**
  * Extra headroom for the runtime-sized tile caches: keep this many screens'
