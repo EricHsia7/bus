@@ -241,7 +241,9 @@ export class MapTileController {
     this.element.addEventListener('pointermove', this.onPointerMove, { passive: false });
     this.element.addEventListener('pointerup', this.onPointerUp);
     this.element.addEventListener('pointercancel', this.onPointerUp);
+    this.element.addEventListener('pointerleave', this.onPointerUp);
     this.element.addEventListener('wheel', this.onWheel, { passive: false });
+    this.element.addEventListener('contextmenu', this.onPointerUp);
 
     const resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
@@ -258,7 +260,9 @@ export class MapTileController {
     this.element.removeEventListener('pointermove', this.onPointerMove);
     this.element.removeEventListener('pointerup', this.onPointerUp);
     this.element.removeEventListener('pointercancel', this.onPointerUp);
+    this.element.removeEventListener('pointerleave', this.onPointerUp);
     this.element.removeEventListener('wheel', this.onWheel);
+    this.element.removeEventListener('contextmenu', this.onPointerUp);
   }
 
   private getPinchDistance(p1: Point, p2: Point): number {
