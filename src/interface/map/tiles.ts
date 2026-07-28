@@ -3,18 +3,20 @@ import { Camera, latToMercY, lngToMercX } from '../../tools/camera';
 import { PackedLabelTile } from './labels';
 import { WorkerResponse } from './worker';
 
-/** Origin the raster + label tiles are served from. */
-const TILE_SERVER_URL = 'https://erichsia7.github.io/bus-map';
 /** How far outside the viewport label tiles are pre-fetched, in screen px. */
 const LABEL_PREFETCH_PADDING = 128;
 /** How many pyramid levels up we may borrow a parent tile as a fallback. */
 const MAX_PARENT_LEVELS = 5;
 
 /** URL of a single raster (basemap image) tile. */
-const getTileUrl = (coord: TileCoord): string => `${TILE_SERVER_URL}/tiles/${coord.z}/${coord.x}/${coord.y}.webp`;
+function getTileUrl(coord: TileCoord): string {
+  return `https://erichsia7.github.io/bus-map/tiles/${coord.z}/${coord.x}/${coord.y}.webp`;
+}
 
 /** URL of a single gzipped GeoJSON label tile. */
-const getLabelUrl = (coord: TileCoord): string => `${TILE_SERVER_URL}/labels/${coord.z}/${coord.x}/${coord.y}.gz`;
+function getLabelUrl(coord: TileCoord): string {
+  return `https://erichsia7.github.io/bus-map/labels/${coord.z}/${coord.x}/${coord.y}.gz`;
+}
 
 /**
  * Extra headroom for the runtime-sized tile caches: keep this many screens'
@@ -366,14 +368,14 @@ export class TileManager {
 
   /**
    * Fade alpha (0..1) for a tile, ramping over config.fadeDuration from when the
-   * tile was first stamped. `direction` picks which way the ramp runs:
-   *   - 'forward': opacity = progress      (0 -> 1, fade in)
-   *   - 'reverse': opacity = 1 - progress  (1 -> 0, fade out)
+   * tile was first stamped. `forward` picks which way the ramp runs:
+   *   - forward === true:  opacity = progress      (0 -> 1, fade in)
+   *   - forward === false: opacity = 1 - progress  (1 -> 0, fade out)
    * The first time a tile is drawn we stamp `now`; the stamp is cleared once the
    * tile leaves the cache (see update) so a refetched tile fades in again rather
    * than popping.
    */
-  private fadeOpacity(key: TileKey, now: number, forward: boolean = true): number {
+  private fadeOpacity(key: TileKey, now: number, forward = true): number {
     if (this.config.fadeDuration <= 0) return forward ? 1 : 0;
     let start = this.tileFades.get(key);
     if (start === undefined) {

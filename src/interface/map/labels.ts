@@ -198,7 +198,9 @@ export class LabelEngine {
    * @param deltaTime milliseconds since the previous call (drives the fades)
    */
   update(context: CanvasRenderingContext2D, camera: Camera, tiles: PackedLabelTile[], deltaTime: number, frame: number): PlacedLabel[] {
-    const step = this.fadeDuration > 0 ? Math.min(16, deltaTime / this.fadeDuration) : 16;
+    // fraction of a full fade to advance this frame; the clamped moves below
+    // keep opacity in [0, 1]. Fade disabled (duration 0) => snap in one frame.
+    const step = this.fadeDuration > 0 ? deltaTime / this.fadeDuration : 1;
     for (const state of this.states.values()) state.target = 0;
 
     if (this.enabled) this.place(context, camera, tiles, frame);
@@ -207,12 +209,11 @@ export class LabelEngine {
     const placedLabels: PlacedLabel[] = [];
     this.animating = false;
     for (const [id, state] of this.states) {
-      const delta = state.target - state.opacity;
-      if (Math.abs(delta) < 0.01) {
-        state.opacity = state.target;
-      } else {
-        state.opacity += delta * step;
-        this.animating = true;
+      // opacity rests at exactly 0 or 1; step linearly toward the 0/1 target
+      if (state.opacity !== state.target) {
+        const next = state.opacity + (state.target > state.opacity ? step : -step);
+        state.opacity = next < 0 ? 0 : next > 1 ? 1 : next;
+        if (state.opacity !== state.target) this.animating = true;
       }
       if (state.opacity <= 0 && state.target === 0) {
         this.states.delete(id);
