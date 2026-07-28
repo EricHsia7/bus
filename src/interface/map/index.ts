@@ -131,10 +131,8 @@ function createMapViewer(): MapViewerHandle {
   });
   // TODO: add zoom control buttons
 
-  let debugOverlay = config.debug;
   let lastFrameTime = 0;
   let frameCount = 0;
-  let framesPerSecond = 0;
   let animationFrameId = 0;
   let paused = false;
 
