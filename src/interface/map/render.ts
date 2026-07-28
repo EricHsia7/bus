@@ -25,8 +25,6 @@ export function clear(context: CanvasRenderingContext2D, camera: Camera, pixelRa
 }
 
 export function drawRasters(context: CanvasRenderingContext2D, tiles: DrawTile[], pixelRatio: number): void {
-  context.imageSmoothingEnabled = true;
-  context.imageSmoothingQuality = 'high';
   for (const tile of tiles) {
     // snap to whole device pixels: rounding both edges keeps tiles gap-free
     const left = Math.round(tile.dst.left * pixelRatio) / pixelRatio;

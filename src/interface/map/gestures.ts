@@ -1,4 +1,5 @@
 import { Camera, MercPoint, ScreenPoint } from '../../tools/camera';
+import { clamp } from '../../tools/math';
 
 export interface GestureOptions {
   camera: Camera;
@@ -118,7 +119,7 @@ export class Gestures {
   /** queue an eased zoom to `target`, pinned at `anchor` */
   zoomToAnimated(target: number, anchor?: ScreenPoint | null, duration = this.zoomDuration): void {
     const anchorScreen = anchor ?? { x: this.camera.width / 2, y: this.camera.height / 2 };
-    const clampedTarget = Math.max(this.camera.minZoom, Math.min(this.camera.maxZoom, target));
+    const clampedTarget = clamp(target, this.camera.minZoom, this.camera.maxZoom);
     this.inertia = null;
     this.zoomAnimation = {
       from: this.camera.zoom,
@@ -307,8 +308,8 @@ export class Gestures {
 
   private handleDoubleClick = (event: MouseEvent): void => {
     event.preventDefault();
-    const zoomDelta = event.shiftKey ? -1 : 1;
-    this.zoomToAnimated(Math.round(this.zoomTarget) + zoomDelta, this.getLocalPoint(event), 260);
+    const zoomDelta = event.shiftKey ? -1.5 : 1.5;
+    this.zoomToAnimated(this.zoomTarget + zoomDelta, this.getLocalPoint(event), 320);
   };
 
   private handleKeyDown = (event: KeyboardEvent): void => {
@@ -344,7 +345,7 @@ export class Gestures {
   /** advance inertia + zoom easing; returns true while something is animating */
   update(now: number): boolean {
     let animating = false;
-    const deltaTime = this.lastFrameTime ? Math.min(64, now - this.lastFrameTime) : 16;
+    const deltaTime = this.lastFrameTime ? Math.min(8, now - this.lastFrameTime) : 16;
     this.lastFrameTime = now;
 
     if (this.zoomAnimation) {

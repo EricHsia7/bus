@@ -49,8 +49,8 @@ const config: MapConfig = {
   // deepest level that exists; the camera can still zoom 2 more (overzoom)
   maxZoom: 16,
   overzoom: 2,
-  labelMinZoom: 11,
-  labelMaxZoom: 14,
+  labelMinZoom: 13,
+  labelMaxZoom: 16,
   // no requests are ever made outside this box
   bounds: [120.886, 24.8, 122.004, 25.3],
   center: [121.5435, 25.0308],
@@ -61,7 +61,7 @@ const config: MapConfig = {
   concurrency: 8,
   fadeDuration: 160,
   maxLabels: 256,
-  maxDevicePixelRatio: 1.5,
+  maxDevicePixelRatio: 2,
   wheelBehavior: 'auto'
 };
 
