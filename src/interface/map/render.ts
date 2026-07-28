@@ -1,4 +1,5 @@
 import { Camera } from '../../tools/camera';
+import { clamp } from '../../tools/math';
 import { LabelEngine, PlacedLabel } from './labels';
 import { DrawTile } from './tiles';
 
@@ -43,14 +44,9 @@ export function drawRasters(context: CanvasRenderingContext2D, tiles: DrawTile[]
 }
 
 export function drawLabels(context: CanvasRenderingContext2D, labels: PlacedLabel[]): void {
-  context.textAlign = 'center';
-  context.textBaseline = 'middle';
-  context.lineJoin = 'round';
-  context.miterLimit = 2;
-
   for (const label of labels) {
     const { style, lines, lineHeight } = label;
-    const alpha = Math.max(0, Math.min(1, label.opacity));
+    const alpha = clamp(label.opacity, 0, 1);
     if (alpha <= 0.01) continue;
 
     context.save();

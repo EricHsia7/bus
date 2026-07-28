@@ -198,7 +198,7 @@ export class LabelEngine {
    * @param deltaTime milliseconds since the previous call (drives the fades)
    */
   update(context: CanvasRenderingContext2D, camera: Camera, tiles: PackedLabelTile[], deltaTime: number, frame: number): PlacedLabel[] {
-    const step = this.fadeDuration > 0 ? Math.min(1, deltaTime / this.fadeDuration) : 1;
+    const step = this.fadeDuration > 0 ? Math.min(16, deltaTime / this.fadeDuration) : 16;
     for (const state of this.states.values()) state.target = 0;
 
     if (this.enabled) this.place(context, camera, tiles, frame);

@@ -69,7 +69,7 @@ export class Gestures {
     this.element = options.element;
     this.onChange = options.onChange;
     this.zoomDuration = options.zoomDuration ?? 180;
-    this.inertiaTau = options.inertiaTau ?? 180;
+    this.inertiaTau = options.inertiaTau ?? 120;
     this.maxInertiaSpeed = options.maxInertiaSpeed ?? 4; // px/ms
     this.wheelBehavior = options.wheelBehavior ?? 'auto';
 
@@ -201,7 +201,7 @@ export class Gestures {
 
     const speed = Math.hypot(this.velocityX, this.velocityY);
     const stale = event.timeStamp - this.lastPointerTime > 80;
-    if (speed > 0.05 && !stale) {
+    if (speed > 0.01 && !stale) {
       const clampFactor = Math.min(1, this.maxInertiaSpeed / speed);
       this.inertia = { velocityX: this.velocityX * clampFactor, velocityY: this.velocityY * clampFactor };
       this.lastFrameTime = 0;
@@ -345,7 +345,7 @@ export class Gestures {
   /** advance inertia + zoom easing; returns true while something is animating */
   update(now: number): boolean {
     let animating = false;
-    const deltaTime = this.lastFrameTime ? Math.min(8, now - this.lastFrameTime) : 16;
+    const deltaTime = this.lastFrameTime ? Math.min(8, now - this.lastFrameTime) : 1;
     this.lastFrameTime = now;
 
     if (this.zoomAnimation) {

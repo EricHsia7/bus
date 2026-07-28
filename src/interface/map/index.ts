@@ -49,8 +49,8 @@ const config: MapConfig = {
   // deepest level that exists; the camera can still zoom 2 more (overzoom)
   maxZoom: 16,
   overzoom: 2,
-  labelMinZoom: 13,
-  labelMaxZoom: 16,
+  labelMinZoom: 14,
+  labelMaxZoom: 15,
   // no requests are ever made outside this box
   bounds: [120.886, 24.8, 122.004, 25.3],
   center: [121.5435, 25.0308],
@@ -58,10 +58,10 @@ const config: MapConfig = {
   constrainToBounds: true,
   labelCacheSize: 16,
   rasterCacheSize: 16,
-  concurrency: 4,
+  concurrency: 8,
   fadeDuration: 160,
-  maxLabels: 256,
-  maxDevicePixelRatio: 1.5,
+  maxLabels: 64,
+  maxDevicePixelRatio: 2,
   wheelBehavior: 'auto'
 };
 
@@ -158,9 +158,14 @@ function createMapViewer(): MapViewerHandle {
   // size the caches for the initial viewport before the first frame
   tiles.resizeCaches(camera);
 
+  mapContext.textAlign = 'center';
+  mapContext.textBaseline = 'middle';
+  mapContext.lineJoin = 'round';
+  mapContext.miterLimit = 2;
+
   const renderFrame = (now: number): void => {
     animationFrameId = requestAnimationFrame(renderFrame);
-    const deltaTime = lastFrameTime ? now - lastFrameTime : 16;
+    const deltaTime = lastFrameTime ? now - lastFrameTime : 8;
     lastFrameTime = now;
     // skip the whole frame when nothing changed and nothing is animating
     const animating = gestures.update(now);
