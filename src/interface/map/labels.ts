@@ -31,7 +31,7 @@ export interface PackedLabelTile {
   y: number;
   count: number;
   /** 2 * count mercator-unit coordinates (anchor point of each label) */
-  anchors: Float64Array;
+  anchors: Float32Array;
   /** sort key, ascending = drawn/placed first */
   priority: Float32Array;
   /** index into `styles` */
@@ -242,7 +242,7 @@ export class LabelEngine {
     const maxX = camera.width + pad;
     const maxY = camera.height + pad;
 
-    /* ---- 1. gather + dedupe candidates ---- */
+    /* gather + dedupe candidates ---- */
     interface Candidate {
       id: string;
       tile: PackedLabelTile;

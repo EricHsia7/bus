@@ -147,8 +147,7 @@ interface Candidate {
   anchor: [number, number];
   /** upright text angle in radians (precomputed server-side; 0 for point/area labels) */
   angle: number;
-  priority: number;
-  styleKey: string;
+  rank: number;
   style: LabelStyle;
 }
 
@@ -191,78 +190,83 @@ function packLabelTile(json: unknown, key: string, z: number, x: number, y: numb
   const localToMerc = (localX: number, localY: number, tileExtent: number): [number, number] => [(x + localX / tileExtent) / scale, (y + localY / tileExtent) / scale];
   const toMerc = (position: number[], tileExtent: number | undefined): [number, number] => (tileExtent ? localToMerc(position[0], position[1], tileExtent) : [lngToMercX(position[0]), latToMercY(position[1])]);
 
-  const candidates: Candidate[] = [];
-  const styles: LabelStyle[] = [];
-  const styleIndex = new Map<string, number>();
+  const candidates: Array<Candidate> = [];
+  const styles: Array<LabelStyle> = [];
+  const styleIndex = new WeakMap<LabelStyle, number>();
 
   for (const item of items) {
     const props = (item.properties ?? item) as AnyRecord;
     const kind = props.kind == null ? 'text' : String(props.kind);
-    // markers/points/circles are ignored for now; shields keep their own text
     if (kind !== 'text' && kind !== 'shield') continue;
 
-    const rawText = props.label ?? props.text ?? props.name;
-    if (rawText == null || String(rawText).trim() === '') continue;
+    const rawText = props.label || props.text || props.name;
+    if (!rawText) continue;
     const text = applyTransform(String(rawText), props['text-transform']);
-
-    const itemExtent = toNumber(item.extent) ?? extent;
     const geometry = (item.geometry ?? item) as AnyRecord;
     const geometryType = String(geometry.type ?? (geometry.coordinates ? 'Point' : ''));
     const coordinates = geometry.coordinates as unknown;
 
-    // Anchor + angle are precomputed server-side (see plot.js plotLineLabel):
-    // every label geometry is a single Point, and line labels carry their
-    // upright text angle in `properties.angle`. Point/area labels are drawn
-    // horizontally (angle 0). The Polygon/MultiPolygon/flat fallbacks below
-    // just keep the client resilient to hand-authored or legacy tiles.
+    // every label geometry is a single Point, and line labels carry their upright text angle in `properties.angle`.
+    // Point/area labels are drawn horizontally (angle 0). The Polygon/MultiPolygon/flat fallbacks below just keep the client resilient to hand-authored or legacy tiles.
     let anchor: [number, number] | null = null;
 
-    if (geometryType === 'Point' && Array.isArray(coordinates)) {
-      anchor = toMerc(coordinates as number[], itemExtent);
-    } else if (geometryType === 'MultiPoint' && Array.isArray(coordinates)) {
-      anchor = toMerc((coordinates as number[][])[0], itemExtent);
-    } else if (geometryType === 'Polygon' && Array.isArray(coordinates)) {
-      anchor = toMerc(computeRingCentroid((coordinates as number[][][])[0] ?? []), itemExtent);
-    } else if (geometryType === 'MultiPolygon' && Array.isArray(coordinates)) {
-      const rings = (coordinates as number[][][][]).map((polygon) => polygon[0] ?? []);
-      rings.sort((first, second) => computeRingArea(second) - computeRingArea(first));
-      if (rings[0]?.length) anchor = toMerc(computeRingCentroid(rings[0]), itemExtent);
+    if (Array.isArray(coordinates)) {
+      switch (geometryType) {
+        case 'Point': {
+          anchor = toMerc(coordinates as number[], extent);
+          break;
+        }
+        case 'MultiPoint': {
+          anchor = toMerc((coordinates as number[][])[0], extent);
+          break;
+        }
+        case 'Polygon': {
+          anchor = toMerc(computeRingCentroid((coordinates as number[][][])[0] ?? []), extent);
+          break;
+        }
+        case 'MultiPolygon': {
+          const rings = (coordinates as number[][][][]).map((polygon) => polygon[0] ?? []);
+          rings.sort((first, second) => computeRingArea(second) - computeRingArea(first));
+          if (rings[0]?.length) anchor = toMerc(computeRingCentroid(rings[0]), extent);
+          break;
+        }
+        default:
+          break;
+      }
     } else {
-      // flat records: {lng,lat} / {lon,lat} / {x,y}
-      const lng = toNumber(item.lng ?? item.lon ?? item.longitude ?? item.x);
-      const lat = toNumber(item.lat ?? item.latitude ?? item.y);
-      if (lng !== undefined && lat !== undefined) anchor = toMerc([lng, lat], itemExtent);
+      continue;
     }
 
     if (!anchor || !Number.isFinite(anchor[0]) || !Number.isFinite(anchor[1])) continue;
 
     // upright text angle, baked in by the renderer (radians)
-    const angle = toNumber(props.angle) ?? 0;
+    const angle = (props.angle as number | undefined | null) || 0;
 
     const style = parseStyleFromProps(props);
-    const styleKey = JSON.stringify(style);
-    if (!styleIndex.has(styleKey)) {
-      styleIndex.set(styleKey, styles.length);
+    if (!styleIndex.has(style)) {
+      styleIndex.set(style, styles.length);
       styles.push(style);
     }
 
     // lower = placed first. explicit rank wins, then bigger text.
-    const rank = toNumber(props.rank) ?? toNumber(props.priority) ?? toNumber(props.zIndex) ?? 0;
+    const rank = (props.rank as number | undefined | null) || (props.priority as number | undefined | null) || (props.zIndex as number | undefined | null) || 0;
     candidates.push({
       text,
       anchor,
       angle,
-      priority: rank * 1000 - style.size,
-      styleKey,
+      rank,
       style
     });
   }
 
   // pre-sort by priority so the main thread can place in a single pass
-  candidates.sort((first, second) => first.priority - second.priority);
+  candidates.sort(function (a, b) {
+    if (a.rank !== b.rank) return a.rank - b.rank;
+    return b.style.size - a.style.size;
+  });
 
   const count = candidates.length;
-  const anchors = new Float64Array(count * 2);
+  const anchors = new Float32Array(count * 2);
   const priority = new Float32Array(count);
   const styleIdx = new Uint16Array(count);
   const angles = new Float32Array(count);
@@ -275,8 +279,8 @@ function packLabelTile(json: unknown, key: string, z: number, x: number, y: numb
     const candidate = candidates[index];
     anchors[index * 2] = candidate.anchor[0];
     anchors[index * 2 + 1] = candidate.anchor[1];
-    priority[index] = candidate.priority;
-    styleIdx[index] = styleIndex.get(candidate.styleKey) ?? 0;
+    priority[index] = candidate.rank * 1000 - candidate.style.size;
+    styleIdx[index] = styleIndex.get(candidate.style) ?? 0;
     angles[index] = candidate.angle;
 
     const bytes = encoder.encode(candidate.text);
