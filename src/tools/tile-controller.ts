@@ -288,6 +288,9 @@ export class MapTileController {
     this.element.addEventListener('pointerleave', this.onPointerUp);
     this.element.addEventListener('wheel', this.onWheel, { passive: false });
     this.element.addEventListener('contextmenu', this.onPointerUp);
+    this.element.addEventListener('gesturestart', this.suppressEvent);
+    this.element.addEventListener('gesturechange', this.suppressEvent);
+    this.element.addEventListener('gestureend', this.suppressEvent);
 
     const resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
@@ -307,6 +310,9 @@ export class MapTileController {
     this.element.removeEventListener('pointerleave', this.onPointerUp);
     this.element.removeEventListener('wheel', this.onWheel);
     this.element.removeEventListener('contextmenu', this.onPointerUp);
+    this.element.removeEventListener('gesturestart', this.suppressEvent);
+    this.element.removeEventListener('gesturechange', this.suppressEvent);
+    this.element.removeEventListener('gestureend', this.suppressEvent);
   }
 
   private getPinchDistance(p1: Point, p2: Point): number {
@@ -397,6 +403,10 @@ export class MapTileController {
 
     this.onMovementEnd?.();
   };
+
+  private suppressEvent(e: Event): void {
+    e.preventDefault();
+  }
 
   private startInertia = () => {
     const friction = 0.92; // Decay rate
