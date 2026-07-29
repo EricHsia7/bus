@@ -97,8 +97,8 @@ export class MapLoader {
     this.tiles.delete(key);
   }
 
-  consume(): void {
-    const batch = this.queue.splice(0, this.batchSize);
+  consume(amount: number = this.batchSize): void {
+    const batch = this.queue.splice(0, amount);
     const list: Array<MapLoaderTile> = [];
     if (batch.length === 0) return;
     for (let i = 0, l = batch.length; i < l; i++) {
@@ -133,7 +133,7 @@ export class MapLoader {
       default:
         break;
     }
-    if (this.queue.length > 0) this.consume();
+    if (this.queue.length > 0) this.consume(1);
   }
 
   get(x: number, y: number, z: number): MapLoaderResponse | undefined {

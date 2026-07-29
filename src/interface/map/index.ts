@@ -1,3 +1,4 @@
+import { querySize } from '..';
 import { MapLoader, MapLoaderResponse } from '../../data/map';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { MapTileController } from '../../tools/tile-controller';
@@ -45,8 +46,7 @@ const mapTileController = new MapTileController({
 
 export function openMap(): void {
   mapField.setAttribute('displayed', 'true');
-  mapCanvas.width = width * devicePixelRatio;
-  mapCanvas.height = height * devicePixelRatio;
+  resizeMapCanvas();
   mapContext.scale(devicePixelRatio, devicePixelRatio);
 }
 
@@ -54,8 +54,17 @@ export function closeMap(): void {
   mapField.setAttribute('displayed', 'false');
 }
 
+export function resizeMapCanvas(): void {
+  const size = querySize('window');
+  width = size.width;
+  height = size.height;
+  mapCanvas.width = width * devicePixelRatio;
+  mapCanvas.height = height * devicePixelRatio;
+}
+
 function placeTile(response: MapLoaderResponse): void {
   const { x, y, z } = response;
   const boundingBox = mapTileController.getTileBoundingBox(x, y, z);
+  if (Math.floor(mapTileController.zoom) !== z) return;
   mapContext.drawImage(response.bitmap, Math.floor(boundingBox.screenBBox.minX * devicePixelRatio) / devicePixelRatio, Math.floor(boundingBox.screenBBox.minY * devicePixelRatio) / devicePixelRatio, Math.floor((boundingBox.screenBBox.maxX - boundingBox.screenBBox.minX) * devicePixelRatio) / devicePixelRatio, Math.floor((boundingBox.screenBBox.maxY - boundingBox.screenBBox.minY) * devicePixelRatio) / devicePixelRatio);
 }
