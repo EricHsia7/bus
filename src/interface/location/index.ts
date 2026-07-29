@@ -1,6 +1,6 @@
 import { getUpdateRate } from '../../data/analytics/update-rate/index';
 import { isFolderContentSaved } from '../../data/folder/index';
-import { IntegratedLocation, IntegratedLocationItem, integrateLocation, LocationGroupProperty } from '../../data/location/index';
+import { IntegratedLocation, IntegratedLocationItem, integrateLocation, LocationGroup, LocationGroupProperty } from '../../data/location/index';
 import { stopHasNotifcationSchedules } from '../../data/notification/index';
 import { logRecentView } from '../../data/recent-views/index';
 import { getSettingOptionValue } from '../../data/settings/index';
@@ -43,7 +43,7 @@ const groupElements: Array<HTMLElement> = [];
 const tabElements: Array<HTMLElement> = [];
 
 /**
- * div.css_location_group_details_property(m) in div.css_location_group_details_body(1) in div.css_location_group_details(1) in div.css_location_group(n)
+ * div.css_location_group_details_property(m) in div.css_location_group_details_properties(1) in div.css_location_group_details_body(1) in div.css_location_group_details(1) in div.css_location_group(n)
  */
 const propertyElements: Array<Array<HTMLElement>> = [];
 
@@ -328,13 +328,23 @@ function generateElementOfGroup(): HTMLElement {
   // Details body
   const detailsBodyElement = documentCreateDivElement();
   detailsBodyElement.classList.add('css_location_group_details_body');
-  detailsElement.appendChild(detailsBodyElement);
+
+  // Map Preview
+  const mapPreviewElement = documentCreateDivElement();
+  mapPreviewElement.classList.add('css_location_group_details_map_preview');
+
+  // Properties
+  const propertiesElement = documentCreateDivElement();
+  propertiesElement.classList.add('css_location_group_details_properties');
 
   // Items
   const itemsElement = documentCreateDivElement();
   itemsElement.classList.add('css_location_group_items');
 
   // Assemble group
+  detailsBodyElement.appendChild(mapPreviewElement);
+  detailsBodyElement.appendChild(propertiesElement);
+  detailsElement.appendChild(detailsBodyElement);
   groupElement.appendChild(detailsElement);
   groupElement.appendChild(itemsElement);
 
@@ -774,6 +784,10 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     }
   }
 
+  function updateMapPreview(thisElement: HTMLElement, thisGroup: LocationGroup): void {
+    thisElement.style.setProperty('--b-cssvar-location-group-details-map-preview-image', `url('${thisGroup.mapPreview}')`);
+  }
+
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
   const FieldHeight = WindowSize.height;
@@ -875,7 +889,10 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 
     const thisLocationGroupDetailsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_details');
     const thisLocationGroupDetailsBodyElement = elementQuerySelector(thisLocationGroupDetailsElement, '.css_location_group_details_body');
+    const thisLocationGroupDetailsMapPreviewElement = elementQuerySelector(thisLocationGroupDetailsBodyElement, '.css_location_group_details_map_preview');
+    const thisLocationGroupDetailsPropertiesElement = elementQuerySelector(thisLocationGroupDetailsBodyElement, '.css_location_group_details_properties');
 
+    updateMapPreview(thisLocationGroupDetailsMapPreviewElement, groups[groupKey]);
     const thisGroupPropertyElementsLength = propertyElements[i].length;
     const groupPropertyQuantity = groups[groupKey].properties.length; // TODO: groupPropertiesQuantity
     if (groupPropertyQuantity !== thisGroupPropertyElementsLength) {
@@ -887,7 +904,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
           fragment.appendChild(newPropertyElement);
           propertyElements[i].push(newPropertyElement);
         }
-        thisLocationGroupDetailsBodyElement.append(fragment);
+        thisLocationGroupDetailsPropertiesElement.append(fragment);
       } else if (difference > 0) {
         for (let p = thisGroupPropertyElementsLength - 1, q = thisGroupPropertyElementsLength - difference - 1; p > q; p--) {
           propertyElements[i][p].remove();
