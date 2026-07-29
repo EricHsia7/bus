@@ -93,7 +93,6 @@ async function loadTile(tile: MapLoaderTile) {
     switch (feature.properties.kind) {
       case 'text': {
         if (!feature.properties['text-size']) continue;
-        console.log(feature.properties['text-size']);
         context.font = `${fontWeight} ${feature.properties['text-size'] * scale}px ${fontFamily}`;
 
         if (feature.properties['text-halo-fill'] && feature.properties['text-halo-radius']) {

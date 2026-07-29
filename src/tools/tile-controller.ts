@@ -145,8 +145,8 @@ export class MapTileController {
 
   // Tile Visibility and Intersections
 
-  public getVisibleTiles(): TileInfo[] {
-    const baseZ = Math.floor(this.zoom); // Request discrete integer tile layer
+  public getVisibleTiles(zoomLevel: number = Math.floor(this.zoom)): TileInfo[] {
+    const baseZ = Math.floor(zoomLevel); // Request discrete integer tile layer
 
     const topLeftWGS = this.screenToWGS84(0, 0);
     const bottomRightWGS = this.screenToWGS84(this.width, this.height);
