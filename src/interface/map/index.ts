@@ -1,227 +1,307 @@
-import { Camera } from '../../tools/camera';
+import { querySize } from '../index';
+import { MapLoader, MapLoaderResponse } from '../../data/map';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
-import { Gestures } from '../../tools/gestures';
-import { LabelEngine } from './labels';
-import { clear, drawLabels, drawRasters, resizeMapCanvas } from './render';
-import { TileManager } from './tiles';
-
-/*
- * Every tunable value lives here as a single const object at the top of the
- * script, so nothing downstream carries a magic number. Values are grouped by
- * concern: zoom range, the data box, cache sizes and interaction.
- */
-
-export interface MapConfig {
-  tileSize: number;
-  minZoom: number;
-  /** deepest zoom that actually has tiles */
-  maxZoom: number;
-  /** how far the camera may zoom past maxZoom, scaling the deepest tiles up */
-  overzoom: number;
-  /** zoom range for which label tiles exist; outside it the nearest level is reused */
-  labelMinZoom: number;
-  labelMaxZoom: number;
-  /** data box [west, south, east, north]; tiles outside are never requested */
-  bounds: [number, number, number, number] | null;
-  /** clamp the camera to `bounds` */
-  constrainToBounds: boolean;
-  center: [number, number];
-  zoom: number;
-  /** max concurrent in-flight requests across the worker */
-  concurrency: number;
-  /** minimum raster LRU cache size in tiles; grown at runtime to fit the viewport */
-  rasterCacheSize: number;
-  /** minimum label LRU cache size in tiles; grown at runtime to fit the viewport */
-  labelCacheSize: number;
-  /** label fade duration, ms */
-  fadeDuration: number;
-  /** most labels the placement engine keeps on screen at once */
-  maxLabels: number;
-  /** cap the device pixel ratio so retina canvases stay affordable to redraw */
-  maxDevicePixelRatio: number;
-  /** touchpad/wheel scroll: "auto" = touchpad pans + wheel zooms, or force "zoom"/"pan" */
-  wheelBehavior: 'auto' | 'zoom' | 'pan';
-}
-
-const config: MapConfig = {
-  tileSize: 128,
-  minZoom: 13,
-  // deepest level that exists; the camera can still zoom 2 more (overzoom)
-  maxZoom: 16,
-  overzoom: 2,
-  labelMinZoom: 14,
-  labelMaxZoom: 15,
-  // no requests are ever made outside this box
-  bounds: [120.886, 24.8, 122.004, 25.3],
-  center: [121.5435, 25.0308],
-  zoom: 13,
-  constrainToBounds: true,
-  labelCacheSize: 16,
-  rasterCacheSize: 256,
-  concurrency: 8,
-  fadeDuration: 160,
-  maxLabels: 64,
-  maxDevicePixelRatio: 2,
-  wheelBehavior: 'auto'
-};
-
-/*
- * The field, canvas and drawing context are looked up once and kept constant
- * for the whole lifetime of the page. Nothing here is ever created, removed or
- * re-selected on the fly, so the map can be paused and resumed freely.
- */
+import { MapTileController, TileInfo } from '../../tools/tile-controller';
 
 const mapField = documentQuerySelector('.css_map_field');
 const mapCanvas = elementQuerySelector(mapField, '.css_map_canvas') as HTMLCanvasElement;
 const mapContext = mapCanvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
 
-// One module worker serves every tile request (see tiles.ts for why one is enough).
-const worker = new Worker(new URL('./worker.ts', import.meta.url));
+type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
-// Effective device pixel ratio, clamped so 3x/4x screens don't tank redraw cost.
-const pixelRatio = Math.min(config.maxDevicePixelRatio, window.devicePixelRatio || 1);
+function createLayerBuffer(): { canvas: OffscreenCanvas | HTMLCanvasElement; context: Context2D } {
+  if (typeof OffscreenCanvas === 'function') {
+    const canvas = new OffscreenCanvas(1, 1);
+    const context = canvas.getContext('2d');
+    if (context) return { canvas, context };
+  }
+  const canvas = document.createElement('canvas');
+  return { canvas, context: canvas.getContext('2d') as CanvasRenderingContext2D };
+}
 
-// The single viewer instance. Created lazily on first open, then reused forever.
-let mapViewer: MapViewerHandle | null = null;
+const { canvas: layerCanvas, context: layerContext } = createLayerBuffer();
 
-export interface MapViewerHandle {
-  camera: Camera;
-  invalidate: () => void;
-  flyTo: (lng: number, lat: number, zoom?: number) => void;
-  /** stop the render loop while the map is hidden; all state is retained */
-  pause: () => void;
-  /** restart the render loop when the map is shown again */
-  resume: () => void;
+const overzoom = 2;
+const bounds = [120.886, 24.8, 122.004, 25.3];
+
+let width: number = window.innerWidth;
+let height: number = window.innerHeight;
+let displayed: boolean = false;
+const devicePixelRatio = window.devicePixelRatio;
+
+/** Duration of the per-tile fade-in while panning, in milliseconds */
+const fadeDuration = 200;
+/** Duration of the zoom layer cross-fade, in milliseconds */
+const crossfadeDuration = 250;
+/** How long the outgoing layer may stay on screen if the incoming layer never completes */
+const layerBackdropTimeout = 1200;
+/** Upper bound of retained fade states before pruning */
+const maxFadeStates = 1024;
+/** Largest frame delta honoured, so returning from an idle tab does not jump a fade to the end */
+const maxFrameDelta = 64;
+/** Painted underneath the tiles so fade-ins read as map background rather than a black flash */
+const backgroundFill = '#e9e6e1';
+
+const mapLoader = new MapLoader(2, handleTileResponse);
+
+interface TileFadeState {
+  opacity: number;
+  timestamp: number;
+}
+
+/** Fade progress per tile key, used when tiles stream in at a stable zoom level */
+const tileFadeStates = new Map<string, TileFadeState>();
+/** Tile keys already handed to the loader, used to diff visible sets between movements */
+const requestedTileKeys = new Set<string>();
+/** Zoom level of the outgoing layer while a cross-fade is running */
+let backdropZ: number | null = null;
+let backdropTimestamp = 0;
+/** Linear cross-fade progress of the incoming layer, 0 to 1 */
+let crossfadeProgress = 1;
+let activeLayerZ: number | null = null;
+let lastFrameTime = 0;
+let frameId: number | null = null;
+
+const mapTileController = new MapTileController({
+  element: mapCanvas,
+  centerLon: (120.886 + 122.004) / 2,
+  centerLat: (24.8 + 25.3) / 2,
+  zoom: 16,
+  minZoom: 13,
+  maxZoom: 16.99,
+  tileSize: 256,
+  onMovementStart: function () {
+    requestFrame();
+  },
+  onMovement: function () {
+    // Only repaint while moving. Requests are issued once movement settles.
+    requestFrame();
+  },
+  onMovementEnd: function () {
+    synchronizeQueue();
+    requestFrame();
+  },
+  onResize: function () {
+    resizeMapCanvas();
+    synchronizeQueue();
+    requestFrame();
+  }
+});
+
+export function openMap(lon: number = (120.886 + 122.004) / 2, lat: number = (24.8 + 25.3) / 2, zoom = 16, duration: number = 500): void {
+  displayed = true;
+  mapField.setAttribute('displayed', 'true');
+  resizeMapCanvas();
+  synchronizeQueue();
+  requestFrame();
+  mapTileController.focusOn(lon, lat, zoom, duration);
+}
+
+export function closeMap(): void {
+  displayed = false;
+  mapField.setAttribute('displayed', 'false');
+  if (frameId !== null) {
+    cancelAnimationFrame(frameId);
+    frameId = null;
+  }
+  lastFrameTime = 0;
+}
+
+export function resizeMapCanvas(): void {
+  const size = querySize('window');
+  width = size.width;
+  height = size.height;
+
+  mapCanvas.width = width * devicePixelRatio;
+  mapCanvas.height = height * devicePixelRatio;
+  layerCanvas.width = mapCanvas.width;
+  layerCanvas.height = mapCanvas.height;
+
+  // Resetting the backing store drops the transform, so re-apply it to both contexts here.
+  mapContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  layerContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+}
+
+function getTileKey(x: number, y: number, z: number): string {
+  return `${x}.${y}.${z}`;
+}
+
+function handleTileResponse(response: MapLoaderResponse): void {
+  // Decoded tiles are painted by the render loop so they can fade in.
+  requestFrame();
+}
+
+function requestFrame(): void {
+  if (frameId !== null) return;
+  frameId = requestAnimationFrame(renderFrame);
 }
 
 /**
- * Build the one-and-only map viewer: wires up the camera, tile manager, label
- * engine, gestures and the requestAnimationFrame render loop. Called a single
- * time; afterwards the viewer is paused/resumed rather than rebuilt.
+ * Compares the tiles needed for the settled viewport against the tiles already
+ * requested. Only the difference is queued, and pending requests for tiles that
+ * scrolled away are dropped. In-flight requests are left to finish so the
+ * service worker can cache them for later.
  */
-function createMapViewer(): MapViewerHandle {
-  const camera = new Camera({
-    center: config.center,
-    zoom: config.zoom,
-    minZoom: config.minZoom,
-    // the camera may go past the deepest tile level; tiles.ts scales those up
-    maxZoom: config.maxZoom + config.overzoom,
-    tileSize: config.tileSize,
-    maxBounds: config.constrainToBounds ? config.bounds : null
-  });
-  camera.resize(mapField.clientWidth, mapField.clientHeight);
+function synchronizeQueue(): void {
+  if (!displayed) return;
 
-  // `needsRedraw` forces at least one paint; invalidate() is the single entry
-  // point everything (gestures, tile loads, resizes) uses to ask for a frame.
-  let needsRedraw = true;
-  const invalidate = (): void => {
-    needsRedraw = true;
-  };
+  const z = Math.floor(mapTileController.zoom);
+  const visibleTiles = mapTileController.getVisibleTiles(z);
 
-  const tiles = new TileManager(config, invalidate, worker);
-  const labels = new LabelEngine({
-    fadeDuration: config.fadeDuration,
-    maxLabels: config.maxLabels
-  });
-  const gestures = new Gestures({
-    camera,
-    element: mapCanvas,
-    onChange: invalidate,
-    wheelBehavior: config.wheelBehavior
-  });
-  // TODO: add zoom control buttons
+  const visibleKeys = new Set<string>();
+  for (const tile of visibleTiles) {
+    visibleKeys.add(getTileKey(tile.x, tile.y, tile.z));
+  }
 
-  let lastFrameTime = 0;
-  let frameCount = 0;
-  let animationFrameId = 0;
-  let paused = false;
+  for (const key of Array.from(requestedTileKeys)) {
+    if (visibleKeys.has(key)) continue;
+    const [x, y, tileZ] = key.split('.').map(Number);
+    // dequeue is a no-op once a tile is loading or loaded, so active requests complete naturally.
+    mapLoader.dequeue(x, y, tileZ);
+    requestedTileKeys.delete(key);
+  }
 
-  // 'l' toggles labels
-  const handleKeyDown = (event: KeyboardEvent): void => {
-    if (event.key === 'l') {
-      labels.enabled = !labels.enabled;
-      invalidate();
+  let enqueued = 0;
+  for (const tile of visibleTiles) {
+    const key = getTileKey(tile.x, tile.y, tile.z);
+    if (requestedTileKeys.has(key)) continue;
+    requestedTileKeys.add(key);
+    if (mapLoader.get(tile.x, tile.y, tile.z)) continue;
+    mapLoader.enqueue(tile.x, tile.y, tile.z);
+    enqueued++;
+  }
+
+  if (enqueued > 0) mapLoader.consume();
+}
+
+/**
+ * Snaps a tile to whole device pixels on every edge. Neighbouring tiles share
+ * their geographic edge, so both round to the same device pixel and no seam is
+ * left between them.
+ */
+function drawTile(context: Context2D, response: MapLoaderResponse, z: number, alpha: number): void {
+  const { screenBBox } = mapTileController.getTileBoundingBox(response.x, response.y, z);
+
+  const left = Math.round(screenBBox.minX * devicePixelRatio) / devicePixelRatio;
+  const top = Math.round(screenBBox.minY * devicePixelRatio) / devicePixelRatio;
+  const right = Math.round(screenBBox.maxX * devicePixelRatio) / devicePixelRatio;
+  const bottom = Math.round(screenBBox.maxY * devicePixelRatio) / devicePixelRatio;
+
+  const tileWidth = right - left;
+  const tileHeight = bottom - top;
+  if (tileWidth <= 0 || tileHeight <= 0) return;
+
+  context.globalAlpha = alpha;
+  context.drawImage(response.bitmap, left, top, tileWidth, tileHeight);
+  context.globalAlpha = 1;
+}
+
+function easeInOut(progress: number): number {
+  return progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+}
+
+function pruneFadeStates(): void {
+  if (tileFadeStates.size <= maxFadeStates) return;
+  for (const key of Array.from(tileFadeStates.keys())) {
+    if (tileFadeStates.size <= maxFadeStates / 2) break;
+    if (requestedTileKeys.has(key)) continue;
+    tileFadeStates.delete(key);
+  }
+}
+
+function renderFrame(now: number): void {
+  frameId = null;
+
+  const delta = lastFrameTime === 0 ? 0 : Math.min(maxFrameDelta, Math.max(0, now - lastFrameTime));
+  lastFrameTime = now;
+
+  const z = Math.floor(mapTileController.zoom);
+
+  if (activeLayerZ === null) {
+    activeLayerZ = z;
+  } else if (activeLayerZ !== z) {
+    // Zoom layer swapped: cross-fade from the outgoing layer to the incoming one.
+    backdropZ = activeLayerZ;
+    backdropTimestamp = now;
+    crossfadeProgress = 0;
+    activeLayerZ = z;
+  }
+
+  mapContext.globalAlpha = 1;
+  mapContext.fillStyle = backgroundFill;
+  mapContext.fillRect(0, 0, width, height);
+
+  const visibleTiles: TileInfo[] = mapTileController.getVisibleTiles(z);
+  let layerComplete = visibleTiles.length > 0;
+  let animating = false;
+
+  if (backdropZ !== null) {
+    // Outgoing layer is laid down opaque, then the incoming layer is composited over it
+    // at the cross-fade alpha. Compositing `old * (1 - t) + new * t` this way is an exact
+    // cross-fade while keeping full coverage, so the background never shows through and
+    // tiles missing from the incoming layer keep showing the old imagery underneath.
+    for (const tile of mapTileController.getVisibleTiles(backdropZ)) {
+      const cache = mapLoader.get(tile.x, tile.y, backdropZ);
+      if (cache) drawTile(mapContext, cache, backdropZ, 1);
     }
-  };
-  window.addEventListener('keydown', handleKeyDown);
 
-  const resizeObserver = new ResizeObserver(() => {
-    // keep the shared viewport metrics fresh, then re-fit the canvas backing store
-    if (resizeMapCanvas(mapCanvas, camera, config.maxDevicePixelRatio)) {
-      // the tile manager re-fits its caches to the live working set every frame,
-      // so a resize only needs to request a repaint
-      invalidate();
+    crossfadeProgress = Math.min(1, crossfadeProgress + (crossfadeDuration > 0 ? delta / crossfadeDuration : 1));
+
+    layerContext.clearRect(0, 0, width, height);
+    for (const tile of visibleTiles) {
+      const cache = mapLoader.get(tile.x, tile.y, z);
+      if (!cache) {
+        layerComplete = false;
+        continue;
+      }
+      // The layer carries the alpha, so tiles are opaque inside the buffer. Their
+      // individual fades are marked done to avoid a second fade after the swap.
+      tileFadeStates.set(getTileKey(tile.x, tile.y, z), { opacity: 1, timestamp: now });
+      drawTile(layerContext, cache, z, 1);
     }
-  });
-  resizeObserver.observe(mapField);
-  resizeMapCanvas(mapCanvas, camera, config.maxDevicePixelRatio);
 
-  mapContext.textAlign = 'center';
-  mapContext.textBaseline = 'middle';
-  mapContext.lineJoin = 'round';
-  mapContext.miterLimit = 2;
+    mapContext.globalAlpha = easeInOut(crossfadeProgress);
+    mapContext.drawImage(layerCanvas, 0, 0, width, height);
+    mapContext.globalAlpha = 1;
 
-  const renderFrame = (now: number): void => {
-    animationFrameId = requestAnimationFrame(renderFrame);
-    const deltaTime = lastFrameTime ? now - lastFrameTime : 8;
-    lastFrameTime = now;
-    // skip the whole frame when nothing changed and nothing is animating
-    const animating = gestures.update(now);
-    if (!needsRedraw && !animating && !labels.animating && !tiles.animating) return;
-    needsRedraw = false;
-    frameCount++;
+    if (crossfadeProgress < 1) animating = true;
 
-    const frameTiles = tiles.update(camera, now);
-    clear(mapContext, camera, pixelRatio);
-    drawRasters(mapContext, frameTiles.rasters, pixelRatio);
-    const placedLabels = labels.update(mapContext, camera, frameTiles.labels, deltaTime, frameCount);
-    drawLabels(mapContext, placedLabels);
-  };
-  animationFrameId = requestAnimationFrame(renderFrame);
+    if ((crossfadeProgress >= 1 && layerComplete) || now - backdropTimestamp > layerBackdropTimeout) {
+      backdropZ = null;
+      crossfadeProgress = 1;
+    }
+  } else {
+    // Stable zoom level: tiles streaming in from panning fade in individually.
+    for (const tile of visibleTiles) {
+      const cache = mapLoader.get(tile.x, tile.y, z);
+      if (!cache) {
+        layerComplete = false;
+        continue;
+      }
 
-  /*
-   * The viewer is created once and kept alive. Closing the map only *pauses*
-   * the render loop (and drops any momentum) so reopening is instant. The
-   * canvas, worker, gestures and observer are never torn down.
-   */
-  const pause = (): void => {
-    if (paused) return;
-    paused = true;
-    cancelAnimationFrame(animationFrameId);
-    animationFrameId = 0;
-    gestures.stop(); // drop inertia / zoom easing so it doesn't resume mid-fling
-  };
+      const key = getTileKey(tile.x, tile.y, z);
+      let fade = tileFadeStates.get(key);
+      if (!fade) {
+        fade = { opacity: 0, timestamp: now };
+        tileFadeStates.set(key, fade);
+      }
 
-  const resume = (): void => {
-    if (!paused) return;
-    paused = false;
+      if (fade.opacity < 1) {
+        const elapsed = Math.min(maxFrameDelta, Math.max(0, now - fade.timestamp));
+        fade.opacity = Math.min(1, fade.opacity + (fadeDuration > 0 ? elapsed / fadeDuration : 1));
+        animating = true;
+      }
+      fade.timestamp = now;
+
+      drawTile(mapContext, cache, z, fade.opacity);
+    }
+  }
+
+  pruneFadeStates();
+
+  if (animating || backdropZ !== null) {
+    requestFrame();
+  } else {
     lastFrameTime = 0;
-    invalidate();
-    animationFrameId = requestAnimationFrame(renderFrame);
-  };
-
-  return {
-    camera,
-    invalidate,
-    flyTo(lng, lat, zoom) {
-      camera.setCenter(lng, lat);
-      if (zoom !== undefined) camera.zoomTo(zoom);
-      invalidate();
-    },
-    pause,
-    resume
-  };
-}
-
-/** Show the map, creating the viewer on first open and resuming it thereafter. */
-export function openMap(): void {
-  mapField.setAttribute('displayed', 'true');
-  if (mapViewer) mapViewer.resume();
-  else mapViewer = createMapViewer();
-}
-
-/** Hide the map and pause its render loop; the viewer instance is kept for reuse. */
-export function closeMap(): void {
-  mapField.setAttribute('displayed', 'false');
-  mapViewer?.pause();
+  }
 }

@@ -47,9 +47,11 @@ export interface MapTileControllerOptions {
   minZoom?: number;
   maxZoom?: number;
   tileSize?: number;
-  onMovementStart?: () => void;
-  onMovement?: () => void;
-  onMovementEnd?: () => void;
+  /** Milliseconds of wheel silence before onMovementEnd fires. Defaults to 150. */
+  wheelDebounceDuration?: number;
+  onMovementStart?: (this: MapTileController) => void;
+  onMovement?: (this: MapTileController) => void;
+  onMovementEnd?: (this: MapTileController) => void;
   onResize?: (width: number, height: number) => void;
 }
 
@@ -60,14 +62,15 @@ export class MapTileController {
   public tileSize: number;
   public minZoom: number;
   public maxZoom: number;
+  public wheelDebounceDuration: number;
 
   private width: number;
   private height: number;
 
   // Callbacks
-  private onMovementStart?: () => void;
-  private onMovement?: () => void;
-  private onMovementEnd?: () => void;
+  private onMovementStart?: (this: MapTileController) => void;
+  private onMovement?: (this: MapTileController) => void;
+  private onMovementEnd?: (this: MapTileController) => void;
   private onResize?: (width: number, height: number) => void;
 
   // Interaction state
@@ -79,6 +82,10 @@ export class MapTileController {
   private initialPinchDistance: number | null = null;
   private initialPinchZoom: number | null = null;
 
+  // Wheel gesture state. A wheel "gesture" is a burst of events treated as one movement.
+  private wheelTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  private isWheeling = false;
+
   constructor(options: MapTileControllerOptions) {
     this.element = options.element;
     this.center = { lon: options.centerLon ?? 0, lat: options.centerLat ?? 0 };
@@ -86,6 +93,7 @@ export class MapTileController {
     this.tileSize = options.tileSize ?? 256;
     this.minZoom = options.minZoom ?? 0;
     this.maxZoom = options.maxZoom ?? 22;
+    this.wheelDebounceDuration = options.wheelDebounceDuration ?? 150;
 
     this.onMovementStart = options.onMovementStart?.bind(this);
     this.onMovement = options.onMovement?.bind(this);
@@ -104,6 +112,16 @@ export class MapTileController {
     if (this.animationFrameId !== null) {
       cancelAnimationFrame(this.animationFrameId);
     }
+    this.cancelWheelDebounce();
+  }
+
+  /** Drops a pending wheel end without firing onMovementEnd. */
+  private cancelWheelDebounce() {
+    if (this.wheelTimeoutId !== null) {
+      clearTimeout(this.wheelTimeoutId);
+      this.wheelTimeoutId = null;
+    }
+    this.isWheeling = false;
   }
 
   // Coordinate System Conversions
@@ -145,8 +163,8 @@ export class MapTileController {
 
   // Tile Visibility and Intersections
 
-  public getVisibleTiles(): TileInfo[] {
-    const baseZ = Math.floor(this.zoom); // Request discrete integer tile layer
+  public getVisibleTiles(zoomLevel: number = Math.floor(this.zoom)): TileInfo[] {
+    const baseZ = Math.floor(zoomLevel); // Request discrete integer tile layer
 
     const topLeftWGS = this.screenToWGS84(0, 0);
     const bottomRightWGS = this.screenToWGS84(this.width, this.height);
@@ -205,6 +223,50 @@ export class MapTileController {
     return tiles;
   }
 
+  public getTileBoundingBox(x: number, y: number, z: number, viewportZoom: number = this.zoom): TileInfo {
+    // 1. Get exact geographic boundaries of this specific tile
+    const nwWGS84 = this.xyzToWGS84(x, y, z);
+    const seWGS84 = this.xyzToWGS84(x + 1, y + 1, z);
+
+    // 2. Helper to project with a specific zoom (defaults to current fractional zoom)
+    const toScreen = (wgs84: WGS84) => {
+      const targetXYZ = this.wgs84ToXYZ(wgs84, viewportZoom);
+      const centerXYZ = this.wgs84ToXYZ(this.center, viewportZoom);
+      return {
+        x: this.width / 2 + (targetXYZ.x - centerXYZ.x) * this.tileSize,
+        y: this.height / 2 + (targetXYZ.y - centerXYZ.y) * this.tileSize
+      };
+    };
+
+    const nwScreen = toScreen(nwWGS84);
+    const seScreen = toScreen(seWGS84);
+
+    return {
+      x,
+      y,
+      z,
+      xyzBBox: {
+        minX: x,
+        minY: y,
+        maxX: x + 1,
+        maxY: y + 1,
+        z: z
+      },
+      wgs84BBox: {
+        minLon: nwWGS84.lon,
+        maxLon: seWGS84.lon,
+        minLat: seWGS84.lat, // Latitudes decrease as tile Y increases
+        maxLat: nwWGS84.lat
+      },
+      screenBBox: {
+        minX: nwScreen.x,
+        maxX: seScreen.x,
+        minY: nwScreen.y,
+        maxY: seScreen.y
+      }
+    };
+  }
+
   public isTileVisible(screenBBox: BoundingBoxScreen): boolean {
     // Intersect bounding box of tile with screen viewport bounding box
     return !(screenBBox.maxX < 0 || screenBBox.minX > this.width || screenBBox.maxY < 0 || screenBBox.minY > this.height);
@@ -244,6 +306,9 @@ export class MapTileController {
     this.element.addEventListener('pointerleave', this.onPointerUp);
     this.element.addEventListener('wheel', this.onWheel, { passive: false });
     this.element.addEventListener('contextmenu', this.onPointerUp);
+    this.element.addEventListener('gesturestart', this.suppressEvent);
+    this.element.addEventListener('gesturechange', this.suppressEvent);
+    this.element.addEventListener('gestureend', this.suppressEvent);
 
     const resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
@@ -263,6 +328,9 @@ export class MapTileController {
     this.element.removeEventListener('pointerleave', this.onPointerUp);
     this.element.removeEventListener('wheel', this.onWheel);
     this.element.removeEventListener('contextmenu', this.onPointerUp);
+    this.element.removeEventListener('gesturestart', this.suppressEvent);
+    this.element.removeEventListener('gesturechange', this.suppressEvent);
+    this.element.removeEventListener('gestureend', this.suppressEvent);
   }
 
   private getPinchDistance(p1: Point, p2: Point): number {
@@ -278,11 +346,16 @@ export class MapTileController {
     this.element.setPointerCapture(e.pointerId);
     this.lastPointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
+    // A pointer gesture taking over from a wheel burst is still one continuous movement,
+    // so the pending wheel end is dropped and no second onMovementStart is emitted.
+    const continuesWheelGesture = this.isWheeling;
+    this.cancelWheelDebounce();
+
     if (!this.isInteracting) {
       this.isInteracting = true;
       this.velocity = { x: 0, y: 0 };
       if (this.animationFrameId !== null) cancelAnimationFrame(this.animationFrameId);
-      this.onMovementStart?.();
+      if (!continuesWheelGesture) this.onMovementStart?.();
     }
 
     if (this.lastPointers.size === 2) {
@@ -341,9 +414,25 @@ export class MapTileController {
 
   private onWheel = (e: WheelEvent) => {
     e.preventDefault();
-    if (this.animationFrameId !== null) cancelAnimationFrame(this.animationFrameId);
 
-    this.onMovementStart?.();
+    if (this.animationFrameId !== null) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+      this.velocity = { x: 0, y: 0 };
+    }
+
+    // Trackpads and smooth-scroll wheels emit a burst of events. Only the first one opens
+    // the movement; the end is deferred until the burst goes quiet, so onMovementEnd fires
+    // once per gesture instead of once per event.
+    if (this.wheelTimeoutId !== null) {
+      clearTimeout(this.wheelTimeoutId);
+      this.wheelTimeoutId = null;
+    }
+
+    if (!this.isWheeling && !this.isInteracting) {
+      this.isWheeling = true;
+      this.onMovementStart?.();
+    }
 
     // Typical wheel delta mappings for zoom speeds
     const zoomDelta = -e.deltaY * 0.01;
@@ -351,8 +440,23 @@ export class MapTileController {
 
     this.setZoom(this.zoom + zoomDelta, origin);
 
+    this.wheelTimeoutId = setTimeout(this.endWheelGesture, this.wheelDebounceDuration);
+  };
+
+  private endWheelGesture = () => {
+    this.wheelTimeoutId = null;
+    if (!this.isWheeling) return;
+    this.isWheeling = false;
+
+    // A pointer gesture started mid-burst and owns the movement now; it will emit the end.
+    if (this.isInteracting) return;
+
     this.onMovementEnd?.();
   };
+
+  private suppressEvent(e: Event): void {
+    e.preventDefault();
+  }
 
   private startInertia = () => {
     const friction = 0.92; // Decay rate
@@ -382,6 +486,8 @@ export class MapTileController {
       cancelAnimationFrame(this.animationFrameId);
       this.animationFrameId = null;
     }
+    // This call owns the movement from here, so a queued wheel end must not fire into it.
+    this.cancelWheelDebounce();
 
     const targetCenter = { lon, lat };
     const targetZoom = Math.max(this.minZoom, Math.min(this.maxZoom, zoom));

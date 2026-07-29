@@ -52,18 +52,14 @@ export interface MapLoaderWorkerMessageError {
 export type MapLoaderWorkerMessage = MapLoaderWorkerMessageData | MapLoaderWorkerMessageError;
 
 export class MapLoader {
-  layers: Array<MapLoaderLayer>;
-  layersLength: number;
   tiles: Map<string, MapLoaderTile>;
-  cache: Map<string, ImageBitmap>;
+  cache: Map<string, MapLoaderResponse>;
   queue: Array<string>;
   worker: Worker;
   batchSize: number;
   callback: (response: MapLoaderResponse) => void;
 
-  constructor(layers: Array<MapLoaderLayer>, batchSize: number, callback: MapLoader['callback']) {
-    this.layers = layers;
-    this.layersLength = layers.length;
+  constructor(batchSize: number, callback: MapLoader['callback']) {
     this.tiles = new Map();
     this.cache = new Map();
     this.queue = [];
@@ -101,8 +97,8 @@ export class MapLoader {
     this.tiles.delete(key);
   }
 
-  consume(): void {
-    const batch = this.queue.splice(0, this.batchSize);
+  consume(amount: number = this.batchSize): void {
+    const batch = this.queue.splice(0, amount);
     const list: Array<MapLoaderTile> = [];
     if (batch.length === 0) return;
     for (let i = 0, l = batch.length; i < l; i++) {
@@ -121,7 +117,7 @@ export class MapLoader {
       case 'data': {
         const { x, y, z } = message.response;
         const key = this.getTileKey(x, y, z);
-        if (!this.cache.has(key)) this.cache.set(key, message.response.bitmap);
+        if (!this.cache.has(key)) this.cache.set(key, message.response);
         const tile = this.tiles.get(key);
         if (tile) tile.state = [2, 2];
         this.callback(message.response);
@@ -137,5 +133,11 @@ export class MapLoader {
       default:
         break;
     }
+    if (this.queue.length > 0) this.consume(1);
+  }
+
+  get(x: number, y: number, z: number): MapLoaderResponse | undefined {
+    const key = this.getTileKey(x, y, z);
+    return this.cache.get(key);
   }
 }
