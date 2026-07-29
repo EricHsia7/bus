@@ -15,6 +15,7 @@ import { VisibilityMonitor } from '../../tools/visibility-monitor';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { GroupStyles, hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { openLocationDetails } from '../location-details/index';
+import { openMap } from '../map';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
@@ -784,8 +785,37 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     }
   }
 
-  function updateMapPreview(thisElement: HTMLElement, thisGroup: LocationGroup): void {
-    thisElement.style.setProperty('--b-cssvar-location-group-details-map-preview-image', `url('${thisGroup.mapPreview}')`);
+  function updateMapPreview(thisElement: HTMLElement, thisGroup: LocationGroup, skeletonScreen: boolean, animation: boolean): void {
+    function updateURL(thisElement: HTMLElement, thisGroup: LocationGroup, skeletonScreen: boolean): void {
+      if (!skeletonScreen) {
+        thisElement.style.setProperty('--b-cssvar-location-group-details-map-preview-image', `url('${thisGroup.mapPreview}')`);
+        thisElement.onclick = function () {
+          openMap(thisGroup.longitude, thisGroup.latitude, 16);
+        };
+      }
+    }
+
+    function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
+      thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+      if (skeletonScreen) {
+        thisElement.style.setProperty('--b-cssvar-location-group-details-map-preview-image', 'none');
+        thisElement.onclick = null;
+      }
+    }
+
+    function updateAnimation(thisElement: HTMLElement, animation: boolean): void {
+      thisElement.setAttribute('skeleton-screen', booleanToString(animation));
+    }
+
+    updateURL(thisElement, thisGroup, skeletonScreen);
+
+    if (previousSkeletonScreen !== skeletonScreen) {
+      updateSkeletonScreen(thisElement, skeletonScreen);
+    }
+
+    if (previousAnimation !== animation) {
+      updateAnimation(thisElement, animation);
+    }
   }
 
   const WindowSize = querySize('window');
@@ -892,7 +922,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     const thisLocationGroupDetailsMapPreviewElement = elementQuerySelector(thisLocationGroupDetailsBodyElement, '.css_location_group_details_map_preview');
     const thisLocationGroupDetailsPropertiesElement = elementQuerySelector(thisLocationGroupDetailsBodyElement, '.css_location_group_details_properties');
 
-    updateMapPreview(thisLocationGroupDetailsMapPreviewElement, groups[groupKey]);
+    updateMapPreview(thisLocationGroupDetailsMapPreviewElement, groups[groupKey], skeletonScreen, animation);
     const thisGroupPropertyElementsLength = propertyElements[i].length;
     const groupPropertyQuantity = groups[groupKey].properties.length; // TODO: groupPropertiesQuantity
     if (groupPropertyQuantity !== thisGroupPropertyElementsLength) {
