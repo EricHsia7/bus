@@ -1,4 +1,4 @@
-import { querySize } from '..';
+import { querySize } from '../index';
 import { MapLoader, MapLoaderResponse } from '../../data/map';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { MapTileController, TileInfo } from '../../tools/tile-controller';
