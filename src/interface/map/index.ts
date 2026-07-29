@@ -7,13 +7,19 @@ const mapField = documentQuerySelector('.css_map_field');
 const mapCanvas = elementQuerySelector(mapField, '.css_map_canvas') as HTMLCanvasElement;
 const mapContext = mapCanvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
 
-/**
- * Offscreen buffer holding the incoming zoom layer during a cross-fade. Compositing
- * the layer as a single unit keeps every tile at the same opacity, so the swap does
- * not look like a patchwork of tiles fading at different rates.
- */
-const layerCanvas = document.createElement('canvas');
-const layerContext = layerCanvas.getContext('2d') as CanvasRenderingContext2D;
+type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+
+function createLayerBuffer(): { canvas: OffscreenCanvas | HTMLCanvasElement; context: Context2D } {
+  if (typeof OffscreenCanvas === 'function') {
+    const canvas = new OffscreenCanvas(1, 1);
+    const context = canvas.getContext('2d');
+    if (context) return { canvas, context };
+  }
+  const canvas = document.createElement('canvas');
+  return { canvas, context: canvas.getContext('2d') as CanvasRenderingContext2D };
+}
+
+const { canvas: layerCanvas, context: layerContext } = createLayerBuffer();
 
 const overzoom = 2;
 const bounds = [120.886, 24.8, 122.004, 25.3];
@@ -167,7 +173,7 @@ function synchroniseQueue(): void {
  * their geographic edge, so both round to the same device pixel and no seam is
  * left between them.
  */
-function drawTile(context: CanvasRenderingContext2D, response: MapLoaderResponse, z: number, alpha: number): void {
+function drawTile(context: Context2D, response: MapLoaderResponse, z: number, alpha: number): void {
   const { screenBBox } = mapTileController.getTileBoundingBox(response.x, response.y, z);
 
   const left = Math.round(screenBBox.minX * devicePixelRatio) / devicePixelRatio;
