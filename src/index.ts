@@ -34,7 +34,7 @@ import { closeSettingsOptions } from './interface/settings/options';
 import { openPermalink } from './tools/permalink';
 import { closeIconSelectorSearch, initializeIconSelectorSearchInput } from './interface/icon-selector-search';
 import { promptMessage } from './interface/prompt';
-import { openMap, resizeMapCanvas } from './interface/map';
+import { closeMap, resizeMapCanvas } from './interface/map';
 
 import './interface/theme.css';
 
@@ -203,6 +203,7 @@ import './interface/qrcode/body.css';
 import './interface/qrcode/qrcode.css';
 
 import './interface/map/field.css';
+import './interface/map/head.css';
 import './interface/map/map.css';
 import './interface/map/attribution.css';
 
@@ -229,7 +230,7 @@ interface BusWindow extends Window {
     bus: pageFunctions;
     notification: pageFunctions;
     qrcode: pageFunctions;
-    test: pageFunctions;
+    map: pageFunctions;
   };
 }
 
@@ -274,6 +275,7 @@ interface BusWindow extends Window {
 
     // handle window resize
     resizeSearchInputSVG();
+    resizeMapCanvas();
 
     window.addEventListener('resize', () => {
       resizeSearchInputSVG();
@@ -392,8 +394,8 @@ interface BusWindow extends Window {
   qrcode: {
     closeQRCode
   },
-  test: {
-    openMap
+  map: {
+    closeMap
   }
 };
 

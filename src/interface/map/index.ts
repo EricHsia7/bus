@@ -24,8 +24,9 @@ const { canvas: layerCanvas, context: layerContext } = createLayerBuffer();
 const overzoom = 2;
 const bounds = [120.886, 24.8, 122.004, 25.3];
 
-let width = window.innerWidth;
-let height = window.innerHeight;
+let width: number = window.innerWidth;
+let height: number = window.innerHeight;
+let displayed: boolean = false;
 const devicePixelRatio = window.devicePixelRatio;
 
 /** Duration of the per-tile fade-in while panning, in milliseconds */
@@ -63,9 +64,9 @@ let frameId: number | null = null;
 
 const mapTileController = new MapTileController({
   element: mapCanvas,
-  centerLon: 121.5435,
-  centerLat: 25.0308,
-  zoom: 13,
+  centerLon: (120.886 + 122.004) / 2,
+  centerLat: (24.8 + 25.3) / 2,
+  zoom: 16,
   minZoom: 13,
   maxZoom: 16.99,
   tileSize: 256,
@@ -87,15 +88,17 @@ const mapTileController = new MapTileController({
   }
 });
 
-export function openMap(lon: number = 121.5435, lat: number = 25.0308, zoom = 15, duration: number = 5000): void {
+export function openMap(lon: number = (120.886 + 122.004) / 2, lat: number = (24.8 + 25.3) / 2, zoom = 16, duration: number = 500): void {
+  displayed = true;
   mapField.setAttribute('displayed', 'true');
   resizeMapCanvas();
   synchronizeQueue();
   requestFrame();
-  mapTileController.focusOn(lon, lat, zoom, 5000);
+  mapTileController.focusOn(lon, lat, zoom, duration);
 }
 
 export function closeMap(): void {
+  displayed = false;
   mapField.setAttribute('displayed', 'false');
   if (frameId !== null) {
     cancelAnimationFrame(frameId);
@@ -140,6 +143,8 @@ function requestFrame(): void {
  * service worker can cache them for later.
  */
 function synchronizeQueue(): void {
+  if (!displayed) return;
+
   const z = Math.floor(mapTileController.zoom);
   const visibleTiles = mapTileController.getVisibleTiles(z);
 
