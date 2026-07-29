@@ -67,7 +67,7 @@ const mapTileController = new MapTileController({
   centerLat: 25.0308,
   zoom: 13,
   minZoom: 13,
-  maxZoom: 16,
+  maxZoom: 16.99,
   tileSize: 256,
   onMovementStart: function () {
     requestFrame();
@@ -77,21 +77,22 @@ const mapTileController = new MapTileController({
     requestFrame();
   },
   onMovementEnd: function () {
-    synchroniseQueue();
+    synchronizeQueue();
     requestFrame();
   },
   onResize: function () {
     resizeMapCanvas();
-    synchroniseQueue();
+    synchronizeQueue();
     requestFrame();
   }
 });
 
-export function openMap(): void {
+export function openMap(lon: number = 121.5435, lat: number = 25.0308, zoom = 15, duration: number = 5000): void {
   mapField.setAttribute('displayed', 'true');
   resizeMapCanvas();
-  synchroniseQueue();
+  synchronizeQueue();
   requestFrame();
+  mapTileController.focusOn(lon, lat, zoom, 5000);
 }
 
 export function closeMap(): void {
@@ -138,7 +139,7 @@ function requestFrame(): void {
  * scrolled away are dropped. In-flight requests are left to finish so the
  * service worker can cache them for later.
  */
-function synchroniseQueue(): void {
+function synchronizeQueue(): void {
   const z = Math.floor(mapTileController.zoom);
   const visibleTiles = mapTileController.getVisibleTiles(z);
 
