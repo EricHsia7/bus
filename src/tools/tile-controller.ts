@@ -399,6 +399,7 @@ export class MapTileController {
   };
 
   private onPointerUp = (e: PointerEvent) => {
+    e.preventDefault();
     this.lastPointers.delete(e.pointerId);
 
     if (this.lastPointers.size < 2) {
