@@ -1,0 +1,17 @@
+.css_map_field .css_map_button_left {
+  position: absolute;
+  left: 10px;
+  top: calc(var(--b-cssvar-safe-area-top) + 10px);
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  touch-action: manipulation;
+  background-color: var(--b-cssvar-ffffff-normal-50);
+  border-radius: var(--b-cssvar-border-radius-normal);
+}
+
+.css_map_field .css_map_button_left span.css_material_symbols_rounded {
+  color: var(--b-cssvar-333333);
+}
