@@ -13,8 +13,13 @@ self.onmessage = function (event: MessageEvent): void {
   }
 };
 
-const tileSize = 512;
+const nativeSize = 1024;
+const renderSize = 1024;
+const scale = nativeSize / 256;
 const decoder = new TextDecoder();
+
+const fontWeight = 400;
+const fontFamily: string = "'Noto Sans TC', sans-serif";
 
 async function getRaster(url: string): Promise<ImageBitmap> {
   const response = await fetch(url);
@@ -57,11 +62,11 @@ async function getLabels(url: string): Promise<LabelFeatureCollection> {
 }
 
 async function loadTile(tile: MapLoaderTile) {
-  const rasterURL = `https://github.com/EricHsia7/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp`;
-  const labelsURL = `https://github.com/EricHsia7/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz`;
+  const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp`;
+  const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz`;
 
   const [bitmap, labels] = await Promise.all([getRaster(rasterURL), getLabels(labelsURL)]);
-  const canvas = new OffscreenCanvas(tileSize, tileSize);
+  const canvas = new OffscreenCanvas(renderSize, renderSize);
   const context = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
 
   context.textAlign = 'center';
@@ -69,13 +74,13 @@ async function loadTile(tile: MapLoaderTile) {
   context.lineJoin = 'round';
   context.miterLimit = 2;
 
-  context.drawImage(bitmap, 0, 0, tileSize, tileSize);
+  context.drawImage(bitmap, 0, 0, renderSize, renderSize);
 
   const extent = labels.extent || 1;
   for (const feature of labels.features) {
     let [labelX, labelY] = feature.geometry.coordinates;
-    labelX *= tileSize / extent;
-    labelY *= tileSize / extent;
+    labelX *= renderSize / extent;
+    labelY *= renderSize / extent;
 
     context.save();
 
@@ -88,11 +93,12 @@ async function loadTile(tile: MapLoaderTile) {
     switch (feature.properties.kind) {
       case 'text': {
         if (!feature.properties['text-size']) continue;
-        context.font = `${feature.properties['text-size']}px`; // TODO: font family
+        console.log(feature.properties['text-size']);
+        context.font = `${fontWeight} ${feature.properties['text-size'] * scale}px ${fontFamily}`;
 
         if (feature.properties['text-halo-fill'] && feature.properties['text-halo-radius']) {
           context.strokeStyle = feature.properties['text-halo-fill'];
-          context.lineWidth = feature.properties['text-halo-radius'] * 2;
+          context.lineWidth = feature.properties['text-halo-radius'] * 2 * scale;
           context.strokeText(feature.properties.label, labelX, labelY);
         }
 

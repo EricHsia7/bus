@@ -47,9 +47,9 @@ export interface MapTileControllerOptions {
   minZoom?: number;
   maxZoom?: number;
   tileSize?: number;
-  onMovementStart?: () => void;
-  onMovement?: () => void;
-  onMovementEnd?: () => void;
+  onMovementStart?: (this: MapTileController) => void;
+  onMovement?: (this: MapTileController) => void;
+  onMovementEnd?: (this: MapTileController) => void;
   onResize?: (width: number, height: number) => void;
 }
 
@@ -65,9 +65,9 @@ export class MapTileController {
   private height: number;
 
   // Callbacks
-  private onMovementStart?: () => void;
-  private onMovement?: () => void;
-  private onMovementEnd?: () => void;
+  private onMovementStart?: (this: MapTileController) => void;
+  private onMovement?: (this: MapTileController) => void;
+  private onMovementEnd?: (this: MapTileController) => void;
   private onResize?: (width: number, height: number) => void;
 
   // Interaction state
@@ -203,6 +203,50 @@ export class MapTileController {
     }
 
     return tiles;
+  }
+
+  public getTileBoundingBox(x: number, y: number, z: number, viewportZoom: number = this.zoom): TileInfo {
+    // 1. Get exact geographic boundaries of this specific tile
+    const nwWGS84 = this.xyzToWGS84(x, y, z);
+    const seWGS84 = this.xyzToWGS84(x + 1, y + 1, z);
+
+    // 2. Helper to project with a specific zoom (defaults to current fractional zoom)
+    const toScreen = (wgs84: WGS84) => {
+      const targetXYZ = this.wgs84ToXYZ(wgs84, viewportZoom);
+      const centerXYZ = this.wgs84ToXYZ(this.center, viewportZoom);
+      return {
+        x: this.width / 2 + (targetXYZ.x - centerXYZ.x) * this.tileSize,
+        y: this.height / 2 + (targetXYZ.y - centerXYZ.y) * this.tileSize
+      };
+    };
+
+    const nwScreen = toScreen(nwWGS84);
+    const seScreen = toScreen(seWGS84);
+
+    return {
+      x,
+      y,
+      z,
+      xyzBBox: {
+        minX: x,
+        minY: y,
+        maxX: x + 1,
+        maxY: y + 1,
+        z: z
+      },
+      wgs84BBox: {
+        minLon: nwWGS84.lon,
+        maxLon: seWGS84.lon,
+        minLat: seWGS84.lat, // Latitudes decrease as tile Y increases
+        maxLat: nwWGS84.lat
+      },
+      screenBBox: {
+        minX: nwScreen.x,
+        maxX: seScreen.x,
+        minY: nwScreen.y,
+        maxY: seScreen.y
+      }
+    };
   }
 
   public isTileVisible(screenBBox: BoundingBoxScreen): boolean {
