@@ -804,7 +804,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     }
 
     function updateAnimation(thisElement: HTMLElement, animation: boolean): void {
-      thisElement.setAttribute('skeleton-screen', booleanToString(animation));
+      thisElement.setAttribute('animation', booleanToString(animation));
     }
 
     updateURL(thisElement, thisGroup, skeletonScreen);

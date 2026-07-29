@@ -33,7 +33,7 @@
   width: calc(30px * 3);
   height: calc(30px * 3);
   border-radius: var(--b-cssvar-border-radius-medium);
-  background-color: var(--b-cssvar-f9f9fb-normal);
+  background-color: var(--b-cssvar-ededf2);
 }
 
 /* skeleton-screen: false */
