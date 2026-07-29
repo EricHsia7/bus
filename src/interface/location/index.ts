@@ -739,7 +739,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 
     function updateValue(thisElement: HTMLElement, thisProperty: LocationGroupProperty): void {
       const thisValueElement = elementQuerySelector(thisElement, '.css_location_details_property_value');
-      thisValueElement.innerHTML = thisProperty.value;
+      thisValueElement.textContent = thisProperty.value;
     }
 
     function updateAnimation(thisElement: HTMLElement, animation: boolean): void {
