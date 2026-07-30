@@ -25,32 +25,13 @@
   box-sizing: border-box;
 }
 
-/* details > body > map preview */
-.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_map_preview {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  width: calc(30px * 3);
-  height: calc(30px * 3);
-  border-radius: var(--b-cssvar-border-radius-medium);
-  background-color: var(--b-cssvar-ededf2);
-}
-
-/* skeleton-screen: false */
-.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_map_preview[skeleton-screen="false"] {
-  background-image: var(--b-cssvar-location-group-details-map-preview-image);
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-}
-
 /* details > body > properties */
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_properties {
   position: absolute;
   top: 10px;
-  left: calc(10px + 30px * 3);
-  /* padding: 10px + map preview: 30px * 3 + padding: 10px */
-  width: calc(100% - 10px - 30px * 3 - 10px);
+  left: 0px;
+  /* map preview: 30px * 3 + gap: 5px + padding: 10px */
+  width: calc(100% - 30px * 3 - 5px - 10px);
   height: calc(30px * 3);
 }
 
@@ -117,4 +98,23 @@
   top: 5px;
   height: 20px;
   border-radius: var(--b-cssvar-border-radius-normal);
+}
+
+/* details > body > map preview */
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_map_preview {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: calc(30px * 3);
+  height: calc(30px * 3);
+  border-radius: var(--b-cssvar-border-radius-medium);
+  background-color: var(--b-cssvar-ededf2);
+}
+
+/* skeleton-screen: false */
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_map_preview[skeleton-screen="false"] {
+  background-image: var(--b-cssvar-location-group-details-map-preview-image);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
