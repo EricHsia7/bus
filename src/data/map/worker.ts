@@ -287,7 +287,6 @@ function planTextAlongPath(context: OffscreenCanvasRenderingContext2D, propertie
   if (count === 0) return null;
 
   const haloRadius = properties['text-halo-fill'] && properties['text-halo-radius'] ? properties['text-halo-radius'] * scale : 0;
-  const toRenderSpace = renderSize / extent;
 
   const placements: Array<{ anchorX: number; anchorY: number; angle: number; character: string }> = [];
   let box: Box | null = null;
@@ -295,8 +294,8 @@ function planTextAlongPath(context: OffscreenCanvasRenderingContext2D, propertie
   for (let i = 0; i < count; i++) {
     const character = characters[i];
     const [rawX, rawY] = coordinates[i];
-    const anchorX = rawX * toRenderSpace;
-    const anchorY = rawY * toRenderSpace;
+    const anchorX = rawX / extent;
+    const anchorY = rawY / extent;
     const angle = angles[i] || 0;
 
     const metrics = context.measureText(character);
