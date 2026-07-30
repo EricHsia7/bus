@@ -4,8 +4,6 @@ export interface BaseLabelProperties {
   kind: LabelKind;
   layer: string;
   minzoom: number;
-  /** Angle for line labels (e.g., placed along a street) */
-  angle?: number;
 }
 
 export interface TextLabelProperties extends BaseLabelProperties {
@@ -42,7 +40,7 @@ export interface CircleLabelProperties extends BaseLabelProperties {
 
 export type LabelProperties = TextLabelProperties | IconLabelProperties | CircleLabelProperties;
 
-export interface LabelFeature {
+export interface PointLabelFeature {
   type: 'Feature';
   /** Format: 'w{id}' for ways, 'n{id}' for nodes, 'r{layer}:{lon}:{lat}' for areas */
   id: string;
@@ -53,9 +51,23 @@ export interface LabelFeature {
   properties: LabelProperties;
 }
 
+export interface LineStringLabelFeature {
+  type: 'Feature';
+  /** Format: 'w{id}' for ways, 'n{id}' for nodes, 'r{layer}:{lon}:{lat}' for areas */
+  id: string;
+  geometry: {
+    type: 'LineString';
+    coordinates: Array<[number, number]>;
+    angles: Array<number>;
+  };
+  properties: TextLabelProperties;
+}
+
+export type LabelFeature = LineStringLabelFeature | PointLabelFeature;
+
 export interface LabelFeatureCollection {
   type: 'FeatureCollection';
   /** The local tile extent (e.g., 1024 or 4096) based on labelQuantization */
   extent: number;
-  features: LabelFeature[];
+  features: Array<LabelFeature>;
 }

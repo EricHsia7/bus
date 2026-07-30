@@ -128,6 +128,15 @@ function padBox(box: Box, padding: number): Box {
   };
 }
 
+function mergeBoxes(a: Box, b: Box): Box {
+  return {
+    minX: Math.min(a.minX, b.minX),
+    minY: Math.min(a.minY, b.minY),
+    maxX: Math.max(a.maxX, b.maxX),
+    maxY: Math.max(a.maxY, b.maxY)
+  };
+}
+
 /**
  * Breaks a label onto multiple lines at `text-wrap-width`. Falls back to per-character
  * breaking for tokens that do not fit, which is what keeps Chinese labels (no spaces)
@@ -258,6 +267,85 @@ function planText(context: OffscreenCanvasRenderingContext2D, properties: TextLa
   };
 }
 
+/**
+ * Measures and plans a label whose characters are placed individually along a path.
+ * `coordinates` gives each character's anchor and `angles` gives each character's rotation
+ * (radians), both paired index-for-index with the (transformed) label string. Mismatched
+ * lengths are truncated to the shortest of the three defensively.
+ */
+function planTextAlongPath(context: OffscreenCanvasRenderingContext2D, properties: TextLabelProperties, coordinates: Array<[number, number]>, angles: Array<number>, extent: number): LabelPlan | null {
+  if (!properties['text-size']) return null;
+  if (!properties.label) return null;
+
+  const fontSize = properties['text-size'] * scale;
+  const font = `${fontWeight} ${fontSize}px ${fontFamily}`;
+  context.font = font;
+
+  const label = transformLabel(properties.label, properties['text-transform']);
+  const characters = Array.from(label);
+  const count = Math.min(characters.length, coordinates.length, angles.length);
+  if (count === 0) return null;
+
+  const haloRadius = properties['text-halo-fill'] && properties['text-halo-radius'] ? properties['text-halo-radius'] * scale : 0;
+  const toRenderSpace = renderSize / extent;
+
+  const placements: Array<{ anchorX: number; anchorY: number; angle: number; character: string }> = [];
+  let box: Box | null = null;
+
+  for (let i = 0; i < count; i++) {
+    const character = characters[i];
+    const [rawX, rawY] = coordinates[i];
+    const anchorX = rawX * toRenderSpace;
+    const anchorY = rawY * toRenderSpace;
+    const angle = angles[i] || 0;
+
+    const metrics = context.measureText(character);
+    const charWidth = metrics.actualBoundingBoxLeft !== undefined && metrics.actualBoundingBoxRight !== undefined ? metrics.actualBoundingBoxLeft + metrics.actualBoundingBoxRight : metrics.width;
+    const ascent = metrics.actualBoundingBoxAscent !== undefined ? metrics.actualBoundingBoxAscent : fontSize * 0.8;
+    const descent = metrics.actualBoundingBoxDescent !== undefined ? metrics.actualBoundingBoxDescent : fontSize * 0.2;
+
+    // textAlign is 'center' and textBaseline is 'middle', so the glyph box is centred on the anchor.
+    const characterBox: Box = {
+      minX: anchorX - charWidth / 2 - haloRadius,
+      maxX: anchorX + charWidth / 2 + haloRadius,
+      minY: anchorY - ascent - haloRadius,
+      maxY: anchorY + descent + haloRadius
+    };
+
+    const rotatedBox = angle ? rotateBox(characterBox, anchorX, anchorY, angle) : characterBox;
+    box = box ? mergeBoxes(box, rotatedBox) : rotatedBox;
+
+    placements.push({ anchorX, anchorY, angle, character });
+  }
+
+  if (!box) return null;
+
+  return {
+    box,
+    draw: () => {
+      context.font = font;
+      for (const placement of placements) {
+        context.save();
+        context.translate(placement.anchorX, placement.anchorY);
+        if (placement.angle) context.rotate(placement.angle);
+
+        if (haloRadius > 0 && properties['text-halo-fill']) {
+          context.strokeStyle = properties['text-halo-fill'];
+          context.lineWidth = haloRadius * 2;
+          context.strokeText(placement.character, 0, 0);
+        }
+
+        if (properties['text-fill']) {
+          context.fillStyle = properties['text-fill'];
+          context.fillText(placement.character, 0, 0);
+        }
+
+        context.restore();
+      }
+    }
+  };
+}
+
 function planCircle(context: OffscreenCanvasRenderingContext2D, properties: CircleLabelProperties, anchorX: number, anchorY: number): LabelPlan | null {
   if (!properties['marker-width']) return null;
   if (!properties['marker-fill']) return null;
@@ -290,21 +378,29 @@ function planCircle(context: OffscreenCanvasRenderingContext2D, properties: Circ
   };
 }
 
-function planFeature(context: OffscreenCanvasRenderingContext2D, feature: LabelFeature, anchorX: number, anchorY: number): LabelPlan | null {
-  switch (feature.properties.kind) {
-    case 'text':
-      return planText(context, feature.properties, anchorX, anchorY);
-    case 'circle':
-      return planCircle(context, feature.properties, anchorX, anchorY);
-    // TODO: 'marker' | 'point' | 'shield' need a sprite sheet. They are skipped entirely rather than reserving space from icon-width/icon-height, so an icon that cannot be drawn does not suppress a text label that can.
-    default:
-      return null;
+function planFeature(context: OffscreenCanvasRenderingContext2D, feature: LabelFeature, extent: number): LabelPlan | null {
+  if (feature.geometry.type === 'Point') {
+    const [rawX, rawY] = feature.geometry.coordinates;
+    const anchorX = rawX * (renderSize / extent);
+    const anchorY = rawY * (renderSize / extent);
+    switch (feature.properties.kind) {
+      case 'text':
+        return planText(context, feature.properties, anchorX, anchorY);
+      case 'circle':
+        return planCircle(context, feature.properties, anchorX, anchorY);
+      // TODO: 'marker' | 'point' | 'shield' need a sprite sheet. They are skipped entirely rather than reserving space from icon-width/icon-height, so an icon that cannot be drawn does not suppress a text label that can.
+      default:
+        return null;
+    }
+  } else {
+    if (feature.properties.kind !== 'text') return null;
+    return planTextAlongPath(context, feature.properties, feature.geometry.coordinates, feature.geometry.angles, extent);
   }
 }
 
 async function loadTile(tile: MapLoaderTile) {
-  const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp`;
-  const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz`;
+  const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp?v=1`;
+  const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?v=1`;
 
   const [bitmap, labels] = await Promise.all([getRaster(rasterURL), getLabels(labelsURL)]);
   const canvas = new OffscreenCanvas(renderSize, renderSize);
@@ -323,15 +419,10 @@ async function loadTile(tile: MapLoaderTile) {
   const placed: Array<Box> = [];
 
   for (const feature of labels.features) {
-    const [rawX, rawY] = feature.geometry.coordinates;
-    const anchorX = rawX * (renderSize / extent);
-    const anchorY = rawY * (renderSize / extent);
-
-    const plan = planFeature(context, feature, anchorX, anchorY);
+    const plan = planFeature(context, feature, extent);
     if (!plan) continue;
 
-    const angle = feature.properties.angle;
-    const box = padBox(angle ? rotateBox(plan.box, anchorX, anchorY, angle) : plan.box, padding);
+    const box = padBox(plan.box, padding);
 
     let collides = false;
     for (let i = 0, l = placed.length; i < l; i++) {
@@ -345,17 +436,7 @@ async function loadTile(tile: MapLoaderTile) {
     if (collides) continue;
 
     placed.push(box);
-
-    if (angle) {
-      context.save();
-      context.translate(anchorX, anchorY);
-      context.rotate(angle);
-      context.translate(-anchorX, -anchorY);
-      plan.draw();
-      context.restore();
-    } else {
-      plan.draw();
-    }
+    plan.draw();
   }
 
   const rendered = canvas.transferToImageBitmap();
