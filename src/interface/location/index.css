@@ -4,6 +4,7 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_route_direction,
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_route_name,
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_capsule,
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_map_preview[skeleton-screen="true"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[skeleton-screen="true"] .css_location_details_property_icon,
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[skeleton-screen="true"] .css_location_details_property_value {
   background-color: var(--b-cssvar-ededf2);
@@ -15,6 +16,7 @@
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_route_direction,
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_route_name,
 .css_location_field .css_location_groups .css_location_group .css_location_group_items .css_location_group_item[animation="true"][skeleton-screen="true"] .css_location_group_item_head .css_location_group_item_capsule,
+.css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_map_preview[animation="true"][skeleton-screen="true"],
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[animation="true"][skeleton-screen="true"] .css_location_details_property_icon,
 .css_location_field .css_location_groups .css_location_group .css_location_group_details .css_location_group_details_body .css_location_group_details_property[animation="true"][skeleton-screen="true"] .css_location_details_property_value {
   background-color: var(--b-cssvar-ededf2);

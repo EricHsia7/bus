@@ -1,6 +1,6 @@
 import { getUpdateRate } from '../../data/analytics/update-rate/index';
 import { isFolderContentSaved } from '../../data/folder/index';
-import { IntegratedLocation, IntegratedLocationItem, integrateLocation, LocationGroupProperty } from '../../data/location/index';
+import { IntegratedLocation, IntegratedLocationItem, integrateLocation, LocationGroup, LocationGroupProperty } from '../../data/location/index';
 import { stopHasNotifcationSchedules } from '../../data/notification/index';
 import { logRecentView } from '../../data/recent-views/index';
 import { getSettingOptionValue } from '../../data/settings/index';
@@ -15,6 +15,7 @@ import { VisibilityMonitor } from '../../tools/visibility-monitor';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { GroupStyles, hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { openLocationDetails } from '../location-details/index';
+import { openMap } from '../map';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
@@ -43,7 +44,7 @@ const groupElements: Array<HTMLElement> = [];
 const tabElements: Array<HTMLElement> = [];
 
 /**
- * div.css_location_group_details_property(m) in div.css_location_group_details_body(1) in div.css_location_group_details(1) in div.css_location_group(n)
+ * div.css_location_group_details_property(m) in div.css_location_group_details_properties(1) in div.css_location_group_details_body(1) in div.css_location_group_details(1) in div.css_location_group(n)
  */
 const propertyElements: Array<Array<HTMLElement>> = [];
 
@@ -328,13 +329,23 @@ function generateElementOfGroup(): HTMLElement {
   // Details body
   const detailsBodyElement = documentCreateDivElement();
   detailsBodyElement.classList.add('css_location_group_details_body');
-  detailsElement.appendChild(detailsBodyElement);
+
+  // Map Preview
+  const mapPreviewElement = documentCreateDivElement();
+  mapPreviewElement.classList.add('css_location_group_details_map_preview');
+
+  // Properties
+  const propertiesElement = documentCreateDivElement();
+  propertiesElement.classList.add('css_location_group_details_properties');
 
   // Items
   const itemsElement = documentCreateDivElement();
   itemsElement.classList.add('css_location_group_items');
 
   // Assemble group
+  detailsBodyElement.appendChild(mapPreviewElement);
+  detailsBodyElement.appendChild(propertiesElement);
+  detailsElement.appendChild(detailsBodyElement);
   groupElement.appendChild(detailsElement);
   groupElement.appendChild(itemsElement);
 
@@ -473,8 +484,8 @@ function setupLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): voi
       groupedItems: { g_0: items, g_1: items },
       groupQuantity: 2,
       groups: {
-        g_0: { name: '載入中', properties: properties },
-        g_1: { name: '載入中', properties: properties }
+        g_0: { name: '載入中', mapPreview: 'none', properties: properties },
+        g_1: { name: '載入中', mapPreview: 'none', properties: properties }
       },
       itemQuantity: { g_0: itemQuantity, g_1: itemQuantity },
       LocationName: '載入中',
@@ -774,6 +785,39 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
     }
   }
 
+  function updateMapPreview(thisElement: HTMLElement, thisGroup: LocationGroup, skeletonScreen: boolean, animation: boolean): void {
+    function updateURL(thisElement: HTMLElement, thisGroup: LocationGroup, skeletonScreen: boolean): void {
+      if (!skeletonScreen) {
+        thisElement.style.setProperty('--b-cssvar-location-group-details-map-preview-image', `url('${thisGroup.mapPreview}')`);
+        thisElement.onclick = function () {
+          openMap(thisGroup.longitude, thisGroup.latitude, 16);
+        };
+      }
+    }
+
+    function updateSkeletonScreen(thisElement: HTMLElement, skeletonScreen: boolean): void {
+      thisElement.setAttribute('skeleton-screen', booleanToString(skeletonScreen));
+      if (skeletonScreen) {
+        thisElement.style.setProperty('--b-cssvar-location-group-details-map-preview-image', 'none');
+        thisElement.onclick = null;
+      }
+    }
+
+    function updateAnimation(thisElement: HTMLElement, animation: boolean): void {
+      thisElement.setAttribute('animation', booleanToString(animation));
+    }
+
+    updateURL(thisElement, thisGroup, skeletonScreen);
+
+    if (previousSkeletonScreen !== skeletonScreen) {
+      updateSkeletonScreen(thisElement, skeletonScreen);
+    }
+
+    if (previousAnimation !== animation) {
+      updateAnimation(thisElement, animation);
+    }
+  }
+
   const WindowSize = querySize('window');
   const FieldWidth = WindowSize.width;
   const FieldHeight = WindowSize.height;
@@ -875,7 +919,10 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
 
     const thisLocationGroupDetailsElement = elementQuerySelector(thisLocationGroupElement, '.css_location_group_details');
     const thisLocationGroupDetailsBodyElement = elementQuerySelector(thisLocationGroupDetailsElement, '.css_location_group_details_body');
+    const thisLocationGroupDetailsMapPreviewElement = elementQuerySelector(thisLocationGroupDetailsBodyElement, '.css_location_group_details_map_preview');
+    const thisLocationGroupDetailsPropertiesElement = elementQuerySelector(thisLocationGroupDetailsBodyElement, '.css_location_group_details_properties');
 
+    updateMapPreview(thisLocationGroupDetailsMapPreviewElement, groups[groupKey], skeletonScreen, animation);
     const thisGroupPropertyElementsLength = propertyElements[i].length;
     const groupPropertyQuantity = groups[groupKey].properties.length; // TODO: groupPropertiesQuantity
     if (groupPropertyQuantity !== thisGroupPropertyElementsLength) {
@@ -887,7 +934,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
           fragment.appendChild(newPropertyElement);
           propertyElements[i].push(newPropertyElement);
         }
-        thisLocationGroupDetailsBodyElement.append(fragment);
+        thisLocationGroupDetailsPropertiesElement.append(fragment);
       } else if (difference > 0) {
         for (let p = thisGroupPropertyElementsLength - 1, q = thisGroupPropertyElementsLength - difference - 1; p > q; p--) {
           propertyElements[i][p].remove();

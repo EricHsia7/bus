@@ -69,3 +69,11 @@ export function nearestPowerOf2(x: number): number {
 export function getSubpixelPrecision(): number {
   return Math.ceil(Math.log2(window.devicePixelRatio || 1));
 }
+
+export function wgs84ToXYZ(lon: number, lat: number, z: number): [x: number, y: number, z: number] {
+  const latRad = (lat * Math.PI) / 180;
+  const n = Math.pow(2, z);
+  const x = Math.floor(((lon + 180) / 360) * n);
+  const y = Math.floor(((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2) * n);
+  return [x, y, z];
+}

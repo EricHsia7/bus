@@ -1,7 +1,7 @@
 import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 import { addressToString, generateLabelFromAddresses } from '../../tools/address';
 import { CardinalDirection, getCardinalDirectionFromVector } from '../../tools/cardinal-direction';
-import { hasOwnProperty } from '../../tools/index';
+import { hasOwnProperty, wgs84ToXYZ } from '../../tools/index';
 import { generateDirectionLabels, generateLetterLabels } from '../../tools/labels';
 import { normalizeVector } from '../../tools/math';
 import { Progress, ProgressCallback } from '../../tools/progress';
@@ -60,6 +60,9 @@ export interface LocationGroupProperty {
 
 export interface LocationGroup {
   name: string;
+  mapPreview: string;
+  longitude: number;
+  latitude: number;
   properties: Array<LocationGroupProperty>;
 }
 
@@ -161,11 +164,15 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
   }
 
   for (let i = 0; i < stopLocationQuantity; i++) {
+    const [x, y, z] = wgs84ToXYZ(thisLocation.lo[i], thisLocation.la[i], 16);
     const groupKey = `g_${i}`;
     groupedItems[groupKey] = [];
     itemQuantity[groupKey] = 0;
     groups[groupKey] = {
       name: labels[i],
+      mapPreview: `https://erichsia7.github.io/bus-map/tiles/${z}/${x}/${y}.webp`,
+      longitude: thisLocation.lo[i],
+      latitude: thisLocation.la[i],
       properties: [
         {
           icon: 'personal_places',

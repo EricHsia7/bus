@@ -10,4 +10,7 @@
   height: 10px;
   line-height: 10px;
   pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

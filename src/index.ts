@@ -203,7 +203,7 @@ import './interface/qrcode/body.css';
 import './interface/qrcode/qrcode.css';
 
 import './interface/map/field.css';
-import './interface/map/head.css';
+import './interface/map/button.css';
 import './interface/map/map.css';
 import './interface/map/attribution.css';
 
