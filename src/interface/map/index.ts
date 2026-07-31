@@ -120,8 +120,8 @@ export function resizeMapCanvas(): void {
   // Resetting the backing store drops the transform, so re-apply it to both contexts here.
   mapContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
   layerContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
-  mapContext.imageSmoothingEnabled = true;
-  mapContext.imageSmoothingQuality = 'high';
+  // mapContext.imageSmoothingEnabled = true;
+  // mapContext.imageSmoothingQuality = 'high';
 }
 
 function getTileKey(x: number, y: number, z: number): string {
