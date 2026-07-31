@@ -117,7 +117,7 @@
   align-items: center;
 }
 
-@property --b-checkbox-path-stroke-dashoffset {
+@property --b-cssvar-checkbox-path-stroke-dashoffset {
   syntax: '<length>';
   inherits: false;
   initial-value: 22px;
@@ -152,17 +152,17 @@
   stroke: var(--b-cssvar-main-color);
   stroke-width: 2.1;
   stroke-dasharray: 22px;
-  stroke-dashoffset: var(--b-checkbox-path-stroke-dashoffset);
+  stroke-dashoffset: var(--b-cssvar-checkbox-path-stroke-dashoffset);
   stroke-linecap: round;
   stroke-linejoin: round;
-  --b-checkbox-path-stroke-dashoffset: 22px;
-  transition: --b-checkbox-path-stroke-dashoffset var(--b-cssvar-transition-duration) ease;
+  --b-cssvar-checkbox-path-stroke-dashoffset: 22px;
+  transition: --b-cssvar-checkbox-path-stroke-dashoffset var(--b-cssvar-transition-duration) ease;
   /* 22px -> 0px */
 }
 
 /* :checked */
 .css_settings_options_field .css_settings_options_body .css_settings_options .css_option .css_option_checkbox:has(input[type='checkbox']:checked) svg path {
-  --b-checkbox-path-stroke-dashoffset: 0px;
+  --b-cssvar-checkbox-path-stroke-dashoffset: 0px;
 }
 
 .css_settings_options_field .css_settings_options_body .css_options_description {
