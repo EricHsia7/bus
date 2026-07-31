@@ -65,7 +65,8 @@ export function typeTextIntoInput(value: string): void {
   scrollDocumentToTop();
 }
 
-export function deleteCharFromInput(): void {
+export function deleteCharFromInput(event: PointerEvent): void {
+  event.preventDefault();
   const currentValue = SearchInputElement.value;
   const newValue = currentValue.substring(0, currentValue.length - 1);
   SearchInputElement.value = newValue;
@@ -75,7 +76,8 @@ export function deleteCharFromInput(): void {
   scrollDocumentToTop();
 }
 
-export function emptyInput(): void {
+export function emptyInput(event: PointerEvent): void {
+  event.preventDefault();
   SearchInputElement.value = '';
   updateSearchResult();
   bringToEnd();
@@ -83,7 +85,7 @@ export function emptyInput(): void {
   scrollDocumentToTop();
 }
 
-export function openSystemKeyboard(event: Event): void {
+export function openSystemKeyboard(event: PointerEvent): void {
   event.preventDefault();
   SearchInputElement.focus();
   scrollDocumentToTop();
@@ -107,7 +109,7 @@ function initializeKeyboard(): void {
             newButtonElement.textContent = item;
             break;
           case '鍵盤':
-            newButtonElement.addEventListener('pointerdown', openSystemKeyboard);
+            newButtonElement.addEventListener('pointerup', openSystemKeyboard);
             newButtonElement.appendChild(getIconElement('keyboard'));
             break;
           default:
