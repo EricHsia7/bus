@@ -109,7 +109,7 @@ function initializeKeyboard(): void {
             newButtonElement.textContent = item;
             break;
           case '鍵盤':
-            newButtonElement.addEventListener('pointerup', openSystemKeyboard);
+            newButtonElement.addEventListener('click', openSystemKeyboard);
             newButtonElement.appendChild(getIconElement('keyboard'));
             break;
           default:
