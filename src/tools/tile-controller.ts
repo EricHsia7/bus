@@ -305,6 +305,7 @@ export class MapTileController {
     this.element.addEventListener('pointercancel', this.onPointerUp);
     this.element.addEventListener('pointerleave', this.onPointerUp);
     this.element.addEventListener('wheel', this.onWheel, { passive: false });
+    this.element.addEventListener('dblclick', this.onDoubleClick);
     this.element.addEventListener('contextmenu', this.onPointerUp);
     this.element.addEventListener('gesturestart', this.suppressEvent);
     this.element.addEventListener('gesturechange', this.suppressEvent);
@@ -327,6 +328,7 @@ export class MapTileController {
     this.element.removeEventListener('pointercancel', this.onPointerUp);
     this.element.removeEventListener('pointerleave', this.onPointerUp);
     this.element.removeEventListener('wheel', this.onWheel);
+    this.element.removeEventListener('dblclick', this.onDoubleClick);
     this.element.removeEventListener('contextmenu', this.onPointerUp);
     this.element.removeEventListener('gesturestart', this.suppressEvent);
     this.element.removeEventListener('gesturechange', this.suppressEvent);
@@ -454,6 +456,70 @@ export class MapTileController {
 
     this.onMovementEnd?.();
   };
+
+  private onDoubleClick = (e: MouseEvent) => {
+    e.preventDefault();
+    const zoomOut = e.shiftKey || e.altKey;
+    const delta = zoomOut ? -1 : 1;
+    const origin = { x: e.clientX, y: e.clientY };
+    this.zoomAround(origin, this.zoom + delta, 320);
+  };
+
+  /**
+   * Zooms toward `targetZoom` while pinning the geographic coordinate currently
+   * under `originScreenPoint` to that same screen position.
+   */
+  public zoomAround(originScreenPoint: Point, targetZoom: number, duration: number = 0) {
+    const startZoom = this.zoom;
+    const endZoom = Math.max(this.minZoom, Math.min(this.maxZoom, targetZoom));
+    if (endZoom === startZoom) return;
+
+    // The anchor is resolved once, before anything changes, so repeated frames
+    // can't accumulate round-trip drift.
+    const anchor = this.screenToWGS84(originScreenPoint.x, originScreenPoint.y);
+
+    // Inertia, a wheel burst, or a previous zoom animation may be in flight.
+    // This gesture takes over the movement rather than opening a second one.
+    const continuesMovement = this.isInteracting || this.isWheeling || this.animationFrameId !== null;
+    if (this.animationFrameId !== null) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+    }
+    this.velocity = { x: 0, y: 0 };
+    this.cancelWheelDebounce();
+
+    const applyZoom = (zoomLevel: number) => {
+      this.zoom = zoomLevel;
+      const anchorScreen = this.wgs84ToScreen(anchor);
+      // panBy emits onMovement, so every frame notifies exactly once.
+      this.panBy(anchorScreen.x - originScreenPoint.x, anchorScreen.y - originScreenPoint.y);
+    };
+
+    if (duration <= 0) {
+      if (!continuesMovement) this.onMovementStart?.();
+      applyZoom(endZoom);
+      this.onMovementEnd?.();
+      return;
+    }
+
+    if (!continuesMovement) this.onMovementStart?.();
+
+    const startTime = performance.now();
+    const animate = (currentTime: number) => {
+      const progress = Math.min(1, (currentTime - startTime) / duration);
+      const ease = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+      applyZoom(startZoom + (endZoom - startZoom) * ease);
+
+      if (progress < 1) {
+        this.animationFrameId = requestAnimationFrame(animate);
+      } else {
+        this.animationFrameId = null;
+        this.onMovementEnd?.();
+      }
+    };
+    this.animationFrameId = requestAnimationFrame(animate);
+  }
 
   private suppressEvent(e: Event): void {
     e.preventDefault();
