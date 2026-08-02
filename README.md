@@ -1,6 +1,6 @@
 # Bundle Statistics
 
-[3.17 MB] **\*.\***
+[3.18 MB] **\*.\***
 <details>
 <summary>[23.65 KB] <b>*.json</b></summary>
 
@@ -12,10 +12,10 @@
 - [32.85 KB] **index.html**
 </details>
 <details>
-<summary>[368.44 KB] <b>*.js</b></summary>
+<summary>[370.37 KB] <b>*.js</b></summary>
 
 - [28.19 KB] **2527f030464daa07e3e4.js**
-- [25.04 KB] **e055bdb5897091b1e23c.js**
+- [24.55 KB] **384412ab01a625d55922.js**
 - [22 KB] **workbox-eae5a661.js**
 - [19.67 KB] **a496e4aa55a78f2ec650.js**
 - [17.8 KB] **a802e5e94784b0b7f66a.js**
@@ -23,8 +23,8 @@
 - [15.67 KB] **e7a6481d9b1be9e8799b.js**
 - [15.39 KB] **4ef60a97e3c246e20562.js**
 - [15.33 KB] **a3966d864f3c1cceb289.js**
+- [14.85 KB] **5735bea57636b023de6d.js**
 - [13.05 KB] **b6ef3ca8dada7d3b4cad.js**
-- [12.42 KB] **428c556c9192eb651e5d.js**
 - [11 KB] **f5577c2e15d82f2b4f4e.js**
 - [10.99 KB] **90040efbd5cd11f36a8c.js**
 - [10.78 KB] **2665dae8699f23cf9b32.js**
@@ -71,7 +71,7 @@
 
 - [2.16 KB] **2527f030464daa07e3e4.js.erm**
 - [2.16 KB] **8e291a336ae98f768e1c.js.erm**
-- [2.16 KB] **e055bdb5897091b1e23c.js.erm**
+- [2.16 KB] **384412ab01a625d55922.js.erm**
 - [1.52 KB] **fc1649a6a1b7e897977d.js.erm**
 - [1.25 KB] **0f608a9ef288e6e8bf50.js.erm**
 - [1.24 KB] **b6ef3ca8dada7d3b4cad.js.erm**
@@ -83,7 +83,7 @@
 - [1.24 KB] **a496e4aa55a78f2ec650.js.erm**
 - [1.24 KB] **2665dae8699f23cf9b32.js.erm**
 - [1.24 KB] **e7a6481d9b1be9e8799b.js.erm**
-- [1.21 KB] **428c556c9192eb651e5d.js.erm**
+- [1.21 KB] **5735bea57636b023de6d.js.erm**
 - [1.21 KB] **88d913002a9870554ea8.js.erm**
 - [1.13 KB] **4ef60a97e3c246e20562.js.erm**
 - [1.13 KB] **3268c56b26c19748a61b.js.erm**
@@ -118,7 +118,7 @@
 
 - [210.5 KB] **workbox-eae5a661.js.map**
 - [141.54 KB] **2527f030464daa07e3e4.js.map**
-- [132.66 KB] **e055bdb5897091b1e23c.js.map**
+- [128.91 KB] **384412ab01a625d55922.js.map**
 - [105.78 KB] **5808a2472d7e0a6723f8.js.map**
 - [98.16 KB] **a496e4aa55a78f2ec650.js.map**
 - [91.59 KB] **88c5256c0cdd92d4de6f.js.map**
@@ -126,7 +126,7 @@
 - [86.23 KB] **4ef60a97e3c246e20562.js.map**
 - [83.93 KB] **b31e9a15bc561b36931d.css.map**
 - [81.2 KB] **2be24e220a7349fb3434.css.map**
-- [68.8 KB] **428c556c9192eb651e5d.js.map**
+- [80.36 KB] **5735bea57636b023de6d.js.map**
 - [67.35 KB] **8026030272f6ea82e142.css.map**
 - [63.22 KB] **b4fe8bb1ab8304ad15da.css.map**
 - [62.21 KB] **a802e5e94784b0b7f66a.js.map**
