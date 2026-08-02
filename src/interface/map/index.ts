@@ -2,6 +2,7 @@ import { querySize } from '../index';
 import { MapLoader, MapLoaderResponse } from '../../data/map';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { MapTileController, TileInfo } from '../../tools/tile-controller';
+import { clamp } from '../../tools/math';
 
 const mapField = documentQuerySelector('.css_map_field');
 const mapCanvas = elementQuerySelector(mapField, '.css_map_canvas') as HTMLCanvasElement;
@@ -21,7 +22,13 @@ function createLayerBuffer(): { canvas: OffscreenCanvas | HTMLCanvasElement; con
 
 const { canvas: layerCanvas, context: layerContext } = createLayerBuffer();
 
-const overzoom = 2;
+/** Integer zoom levels for which raster tiles actually exist on the server */
+const minNativeZoom = 13;
+const maxNativeZoom = 16;
+// [minZoom, maxZoom] therefore covers under zoom + native zoom + over zoom.
+// 0.99 keeps the top of the range inside the last integer layer.
+const minZoom = minNativeZoom - 1;
+const maxZoom = maxNativeZoom + 2;
 const bounds = [120.886, 24.8, 122.004, 25.3];
 
 let width: number = window.innerWidth;
@@ -37,6 +44,14 @@ const crossfadeDuration = 250;
 const layerBackdropTimeout = 1200;
 /** Upper bound of retained fade states before pruning */
 const maxFadeStates = 1024;
+/** Hard ceiling of decoded tiles kept by the LRU cache */
+const maxCachedTiles = 512;
+/** Floor of the LRU budget, so small viewports still keep a useful history */
+const minCachedTiles = 64;
+/** The cache is never trimmed below this multiple of the tiles currently on screen */
+const cacheHeadroomFactor = 3;
+/** Delay before an eviction pass is attempted once the map goes quiet, in milliseconds */
+const evictionIdleDelay = 200;
 /** Largest frame delta honoured, so returning from an idle tab does not jump a fade to the end */
 const maxFrameDelta = 64;
 /** Painted underneath the tiles so fade-ins read as map background rather than a black flash */
@@ -51,6 +66,14 @@ interface TileFadeState {
 
 /** Fade progress per tile key, used when tiles stream in at a stable zoom level */
 const tileFadeStates = new Map<string, TileFadeState>();
+/**
+ * Decoded tiles in least-recently-used order. A Map preserves insertion order, so
+ * re-inserting on every read keeps the oldest entry at the front of the iteration.
+ */
+const tileCache = new Map<string, MapLoaderResponse>();
+/** Tile keys painted in the most recent frame. These are never evicted. */
+const protectedTileKeys = new Set<string>();
+let evictionTimeoutId: ReturnType<typeof setTimeout> | null = null;
 /** Tile keys already handed to the loader, used to diff visible sets between movements */
 const requestedTileKeys = new Set<string>();
 /** Zoom level of the outgoing layer while a cross-fade is running */
@@ -67,8 +90,10 @@ const mapTileController = new MapTileController({
   centerLon: (120.886 + 122.004) / 2,
   centerLat: (24.8 + 25.3) / 2,
   zoom: 16,
-  minZoom: 13,
-  maxZoom: 16.99,
+  minZoom: minZoom,
+  maxZoom: maxZoom,
+  minNativeZoom: minNativeZoom,
+  maxNativeZoom: maxNativeZoom,
   tileSize: 256,
   onMovementStart: function () {
     requestFrame();
@@ -105,6 +130,14 @@ export function closeMap(): void {
     frameId = null;
   }
   lastFrameTime = 0;
+
+  // Nothing is on screen any more, so the whole cache is evictable down to the budget.
+  protectedTileKeys.clear();
+  if (evictionTimeoutId !== null) {
+    clearTimeout(evictionTimeoutId);
+    evictionTimeoutId = null;
+  }
+  runEviction();
 }
 
 export function resizeMapCanvas(): void {
@@ -129,8 +162,91 @@ function getTileKey(x: number, y: number, z: number): string {
 }
 
 function handleTileResponse(response: MapLoaderResponse): void {
-  // Decoded tiles are painted by the render loop so they can fade in.
+  // Decoded tiles enter the LRU cache as the most recently used entry and are
+  // painted by the render loop so they can fade in.
+  touchTile(getTileKey(response.x, response.y, response.z), response);
   requestFrame();
+}
+
+/** Marks a tile as most recently used by reinserting it at the tail of the map. */
+function touchTile(key: string, response: MapLoaderResponse): void {
+  tileCache.delete(key);
+  tileCache.set(key, response);
+}
+
+/**
+ * Reads a tile through the LRU cache. A miss falls back to the loader's own cache
+ * (for example a tile the service worker replayed) and adopts it into the LRU.
+ */
+function getTile(x: number, y: number, z: number): MapLoaderResponse | null {
+  const key = getTileKey(x, y, z);
+  const cached = tileCache.get(key);
+  if (cached) {
+    touchTile(key, cached);
+    return cached;
+  }
+
+  const response = mapLoader.get(x, y, z);
+  if (!response) return null;
+  touchTile(key, response);
+  return response;
+}
+
+/**
+ * Number of tiles the cache may hold: enough for the visible layer plus a few
+ * screens of history, bounded by a hard ceiling.
+ */
+function getCacheBudget(): number {
+  const visibleBudget = protectedTileKeys.size * cacheHeadroomFactor;
+  return clamp(visibleBudget, minCachedTiles, maxCachedTiles);
+}
+
+/**
+ * Eviction is deferred rather than run inline: rendering always wins the frame, and
+ * trimming only happens once the map goes quiet.
+ */
+function scheduleEviction(): void {
+  if (evictionTimeoutId !== null) return;
+  evictionTimeoutId = setTimeout(runEviction, evictionIdleDelay);
+}
+
+function runEviction(): void {
+  evictionTimeoutId = null;
+
+  // A frame is queued, so the main thread belongs to rendering. Try again later.
+  if (frameId !== null) {
+    scheduleEviction();
+    return;
+  }
+
+  const budget = getCacheBudget();
+  if (tileCache.size <= budget) return;
+
+  // Iterating the map yields least-recently-used first.
+  for (const [key, response] of Array.from(tileCache)) {
+    if (tileCache.size <= budget) break;
+    // Never drop a tile that is on screen or that the settled viewport still wants.
+    if (protectedTileKeys.has(key) || requestedTileKeys.has(key)) continue;
+
+    tileCache.delete(key);
+    tileFadeStates.delete(key);
+    releaseTile(response);
+  }
+}
+
+type ReleasableLoader = { release?: (x: number, y: number, z: number) => boolean | void };
+
+/**
+ * Hands the decoded bitmap back. The bitmap is only closed when the loader confirms
+ * it dropped its own reference, otherwise a later `mapLoader.get` could return a
+ * detached bitmap that can no longer be drawn.
+ */
+function releaseTile(response: MapLoaderResponse): void {
+  const loader = mapLoader as unknown as ReleasableLoader;
+  const released = typeof loader.release === 'function' ? loader.release(response.x, response.y, response.z) !== false : false;
+  if (!released) return;
+  const bitmap = response.bitmap as ImageBitmap;
+  if (typeof bitmap?.close === 'function') bitmap.close();
 }
 
 function requestFrame(): void {
@@ -147,7 +263,9 @@ function requestFrame(): void {
 function synchronizeQueue(): void {
   if (!displayed) return;
 
-  const z = Math.floor(mapTileController.zoom);
+  // Clamped into the native range, so over/under zoom never requests a layer that
+  // has no raster tiles behind it.
+  const z = mapTileController.getNativeZoom();
   const visibleTiles = mapTileController.getVisibleTiles(z);
 
   const visibleKeys = new Set<string>();
@@ -168,12 +286,15 @@ function synchronizeQueue(): void {
     const key = getTileKey(tile.x, tile.y, tile.z);
     if (requestedTileKeys.has(key)) continue;
     requestedTileKeys.add(key);
-    if (mapLoader.get(tile.x, tile.y, tile.z)) continue;
+    if (getTile(tile.x, tile.y, tile.z)) continue;
     mapLoader.enqueue(tile.x, tile.y, tile.z);
     enqueued++;
   }
 
   if (enqueued > 0) mapLoader.consume();
+
+  // The visible set just changed, so previously cached tiles may now be evictable.
+  scheduleEviction();
 }
 
 /**
@@ -217,7 +338,9 @@ function renderFrame(now: number): void {
   const delta = lastFrameTime === 0 ? 0 : Math.min(maxFrameDelta, Math.max(0, now - lastFrameTime));
   lastFrameTime = now;
 
-  const z = Math.floor(mapTileController.zoom);
+  const z = mapTileController.getNativeZoom();
+  // Rebuilt every frame: the tiles painted below are exactly the ones eviction must keep.
+  protectedTileKeys.clear();
 
   if (activeLayerZ === null) {
     activeLayerZ = z;
@@ -243,7 +366,8 @@ function renderFrame(now: number): void {
     // cross-fade while keeping full coverage, so the background never shows through and
     // tiles missing from the incoming layer keep showing the old imagery underneath.
     for (const tile of mapTileController.getVisibleTiles(backdropZ)) {
-      const cache = mapLoader.get(tile.x, tile.y, backdropZ);
+      protectedTileKeys.add(getTileKey(tile.x, tile.y, backdropZ));
+      const cache = getTile(tile.x, tile.y, backdropZ);
       if (cache) drawTile(mapContext, cache, backdropZ, 1);
     }
 
@@ -251,7 +375,8 @@ function renderFrame(now: number): void {
 
     layerContext.clearRect(0, 0, width, height);
     for (const tile of visibleTiles) {
-      const cache = mapLoader.get(tile.x, tile.y, z);
+      protectedTileKeys.add(getTileKey(tile.x, tile.y, z));
+      const cache = getTile(tile.x, tile.y, z);
       if (!cache) {
         layerComplete = false;
         continue;
@@ -275,13 +400,15 @@ function renderFrame(now: number): void {
   } else {
     // Stable zoom level: tiles streaming in from panning fade in individually.
     for (const tile of visibleTiles) {
-      const cache = mapLoader.get(tile.x, tile.y, z);
+      const key = getTileKey(tile.x, tile.y, z);
+      protectedTileKeys.add(key);
+
+      const cache = getTile(tile.x, tile.y, z);
       if (!cache) {
         layerComplete = false;
         continue;
       }
 
-      const key = getTileKey(tile.x, tile.y, z);
       let fade = tileFadeStates.get(key);
       if (!fade) {
         fade = { opacity: 0, timestamp: now };
@@ -302,8 +429,10 @@ function renderFrame(now: number): void {
   pruneFadeStates();
 
   if (animating || backdropZ !== null) {
+    // Still animating: rendering keeps priority and eviction waits for the map to settle.
     requestFrame();
   } else {
     lastFrameTime = 0;
+    scheduleEviction();
   }
 }

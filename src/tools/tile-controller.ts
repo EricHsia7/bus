@@ -44,8 +44,20 @@ export interface MapTileControllerOptions {
   centerLon?: number;
   centerLat?: number;
   zoom?: number;
+  /**
+   * Lowest zoom the viewport may reach. Below `minNativeZoom` the map is
+   * under-zoomed: native tiles are drawn shrunk because no coarser raster exists.
+   */
   minZoom?: number;
+  /**
+   * Highest zoom the viewport may reach. Above `maxNativeZoom` the map is
+   * over-zoomed: native tiles are drawn stretched because no finer raster exists.
+   */
   maxZoom?: number;
+  /** Lowest integer zoom for which raster tiles actually exist. Defaults to ceil(minZoom). */
+  minNativeZoom?: number;
+  /** Highest integer zoom for which raster tiles actually exist. Defaults to floor(maxZoom). */
+  maxNativeZoom?: number;
   tileSize?: number;
   /** Milliseconds of wheel silence before onMovementEnd fires. Defaults to 150. */
   wheelDebounceDuration?: number;
@@ -62,6 +74,8 @@ export class MapTileController {
   public tileSize: number;
   public minZoom: number;
   public maxZoom: number;
+  public minNativeZoom: number;
+  public maxNativeZoom: number;
   public wheelDebounceDuration: number;
 
   private width: number;
@@ -93,6 +107,13 @@ export class MapTileController {
     this.tileSize = options.tileSize ?? 256;
     this.minZoom = options.minZoom ?? 0;
     this.maxZoom = options.maxZoom ?? 22;
+
+    // The native range is the raster that exists on the server. The [minZoom, maxZoom]
+    // interval is deliberately wider: it spans under zoom, native zoom and over zoom.
+    this.minNativeZoom = Math.round(options.minNativeZoom ?? Math.ceil(this.minZoom));
+    this.maxNativeZoom = Math.round(options.maxNativeZoom ?? Math.floor(this.maxZoom));
+    if (this.maxNativeZoom < this.minNativeZoom) this.maxNativeZoom = this.minNativeZoom;
+
     this.wheelDebounceDuration = options.wheelDebounceDuration ?? 150;
 
     this.onMovementStart = options.onMovementStart?.bind(this);
@@ -161,10 +182,47 @@ export class MapTileController {
     return this.xyzToWGS84(targetX, targetY, this.zoom);
   }
 
+  // Native Zoom Helpers
+
+  /**
+   * Maps a (possibly fractional) viewport zoom onto the integer raster layer that
+   * actually exists. Inside the native range this is just `Math.floor(zoom)`; outside
+   * it saturates, which is what produces over zoom and under zoom.
+   */
+  public getNativeZoom(zoomLevel: number = this.zoom): number {
+    return Math.max(this.minNativeZoom, Math.min(this.maxNativeZoom, Math.floor(zoomLevel)));
+  }
+
+  /**
+   * Scale factor applied to native tiles at this viewport zoom.
+   * `> 1` while over-zoomed (stretched), `< 1` while under-zoomed (shrunk).
+   */
+  public getTileScale(zoomLevel: number = this.zoom): number {
+    return Math.pow(2, zoomLevel - this.getNativeZoom(zoomLevel));
+  }
+
+  public isOverZoomed(zoomLevel: number = this.zoom): boolean {
+    return Math.floor(zoomLevel) > this.maxNativeZoom;
+  }
+
+  public isUnderZoomed(zoomLevel: number = this.zoom): boolean {
+    return Math.floor(zoomLevel) < this.minNativeZoom;
+  }
+
+  public clampZoom(zoomLevel: number): number {
+    return Math.max(this.minZoom, Math.min(this.maxZoom, zoomLevel));
+  }
+
   // Tile Visibility and Intersections
 
-  public getVisibleTiles(zoomLevel: number = Math.floor(this.zoom)): TileInfo[] {
-    const baseZ = Math.floor(zoomLevel); // Request discrete integer tile layer
+  /**
+   * Returns the tiles covering the viewport. The requested layer is clamped into the
+   * native range, so callers can never ask for a raster level that does not exist:
+   * while over/under zoomed the nearest native layer is returned instead, and the
+   * screen boxes are already sized for the current fractional zoom.
+   */
+  public getVisibleTiles(zoomLevel: number = this.getNativeZoom()): TileInfo[] {
+    const baseZ = this.getNativeZoom(zoomLevel); // Request an existing discrete tile layer
 
     const topLeftWGS = this.screenToWGS84(0, 0);
     const bottomRightWGS = this.screenToWGS84(this.width, this.height);
@@ -273,7 +331,7 @@ export class MapTileController {
   }
 
   private setZoom(newZoom: number, originScreenPoint: Point = { x: this.width / 2, y: this.height / 2 }) {
-    const clampedZoom = Math.max(this.minZoom, Math.min(this.maxZoom, newZoom));
+    const clampedZoom = this.clampZoom(newZoom);
     if (clampedZoom === this.zoom) return;
 
     // Keep the origin point in the same geographic spot
@@ -471,7 +529,7 @@ export class MapTileController {
    */
   public zoomAround(originScreenPoint: Point, targetZoom: number, duration: number = 0) {
     const startZoom = this.zoom;
-    const endZoom = Math.max(this.minZoom, Math.min(this.maxZoom, targetZoom));
+    const endZoom = this.clampZoom(targetZoom);
     if (endZoom === startZoom) return;
 
     // The anchor is resolved once, before anything changes, so repeated frames
@@ -557,7 +615,7 @@ export class MapTileController {
     this.cancelWheelDebounce();
 
     const targetCenter = { lon, lat };
-    const targetZoom = Math.max(this.minZoom, Math.min(this.maxZoom, zoom));
+    const targetZoom = this.clampZoom(zoom);
 
     if (duration <= 0) {
       this.center = targetCenter;
