@@ -210,7 +210,6 @@ export class MapLoader {
         const key = this.getTileKey(x, y, z);
         const tile = this.tiles.get(key);
         if (tile) tile.state = [3, 3];
-        console.log(message.tile, message.error);
         break;
       }
       default:
