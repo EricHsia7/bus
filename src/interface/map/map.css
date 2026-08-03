@@ -8,4 +8,5 @@
   -webkit-user-select: none;
   touch-action: none;
   -webkit-touch-callout: none;
+  -webkit-user-drag: none;
 }
