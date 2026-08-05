@@ -167,7 +167,7 @@ export class MapLoader {
   }
 
   consume(amount: number = this.batchSize): void {
-    const batch = this.queue.splice(0, amount);
+    const batch = this.queue.splice(-amount);
     const list: Array<MapLoaderTile> = [];
     if (batch.length === 0) return;
     for (let i = 0, l = batch.length; i < l; i++) {
