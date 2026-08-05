@@ -2,6 +2,7 @@ import { querySize } from '../index';
 import { MapLoader, MapLoaderResponse } from '../../data/map';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { MapTileController, TileInfo } from '../../tools/tile-controller';
+import { clamp } from '../../tools/math';
 
 const mapField = documentQuerySelector('.css_map_field');
 const mapCanvas = elementQuerySelector(mapField, '.css_map_canvas') as HTMLCanvasElement;
@@ -56,7 +57,7 @@ const maxFrameDelta = 64;
 /** Painted underneath the tiles so fade-ins read as map background rather than a black flash */
 const backgroundFill = '#e9e6e1';
 
-const mapLoader = new MapLoader(Math.floor(Math.log(window.navigator.hardwareConcurrency) / Math.log(2)), handleTileResponse, {
+const mapLoader = new MapLoader(clamp(Math.floor(Math.log(window.navigator.hardwareConcurrency) / Math.log(2)), 1, 6), handleTileResponse, {
   maxCacheBytes,
   minCachedTiles,
   headroomFactor: cacheHeadroomFactor,
