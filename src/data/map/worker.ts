@@ -411,6 +411,7 @@ async function loadTile(tile: MapLoaderTile) {
   context.miterLimit = 2;
 
   context.drawImage(bitmap, 0, 0, renderSize, renderSize);
+  bitmap.close();
 
   const extent = labels.extent || 1;
   const padding = collisionPadding * scale;
