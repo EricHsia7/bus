@@ -56,7 +56,7 @@ const maxFrameDelta = 64;
 /** Painted underneath the tiles so fade-ins read as map background rather than a black flash */
 const backgroundFill = '#e9e6e1';
 
-const mapLoader = new MapLoader(3, handleTileResponse, {
+const mapLoader = new MapLoader(Math.floor(Math.log(window.navigator.hardwareConcurrency) / Math.log(2)), handleTileResponse, {
   maxCacheBytes,
   minCachedTiles,
   headroomFactor: cacheHeadroomFactor,
