@@ -296,7 +296,7 @@ function planTextAlongPath(context: OffscreenCanvasRenderingContext2D, propertie
     const [rawX, rawY] = coordinates[i];
     const anchorX = (rawX / extent) * renderSize;
     const anchorY = (rawY / extent) * renderSize;
-    const angle = angles[i] || 0;
+    const angle = (angles[i] / extent) * 2 * Math.PI || 0;
 
     const metrics = context.measureText(character);
     const charWidth = metrics.actualBoundingBoxLeft !== undefined && metrics.actualBoundingBoxRight !== undefined ? metrics.actualBoundingBoxLeft + metrics.actualBoundingBoxRight : metrics.width;
@@ -398,8 +398,8 @@ function planFeature(context: OffscreenCanvasRenderingContext2D, feature: LabelF
 }
 
 async function loadTile(tile: MapLoaderTile) {
-  const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp?v=6`;
-  const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?v=6`;
+  const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp?v=7`;
+  const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?v=7`;
 
   const [bitmap, labels] = await Promise.all([getRaster(rasterURL), getLabels(labelsURL)]);
   const canvas = new OffscreenCanvas(renderSize, renderSize);
