@@ -119,7 +119,7 @@ let canvas: OffscreenCanvas;
 let ctx: OffscreenCanvasRenderingContext2D;
 
 if (supportOffscreenCanvas) {
-  canvas = new OffscreenCanvas(64, 64);
+  canvas = new OffscreenCanvas(1, 1);
   ctx = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
   ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
   ctx.textBaseline = 'top';

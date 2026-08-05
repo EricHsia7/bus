@@ -3,7 +3,7 @@ let canvas: OffscreenCanvas | HTMLCanvasElement;
 let context: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D;
 
 if (supportOffscreenCanvas) {
-  canvas = new OffscreenCanvas(64, 64);
+  canvas = new OffscreenCanvas(1, 1);
   context = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
 } else {
   canvas = document.createElement('canvas');
