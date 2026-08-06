@@ -45,7 +45,7 @@ function processWorkerTask(data: data): void {
     if (dataUsageStatsChunk.stats.sum === 0) {
       const x1 = padding + (i / (DataUsagePeriod + 1)) * width;
       const x2 = padding + ((i + (minutesPerDay - 1) / minutesPerDay) / (DataUsagePeriod + 1)) * width;
-      const y = padding + height;
+      const y = padding + (1 - cumulative / sum) * height;
       points.push([x1, y]);
       points.push([x2, y]);
       lastX = x2;
