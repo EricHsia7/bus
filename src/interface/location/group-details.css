@@ -108,7 +108,7 @@
   width: calc(30px * 3);
   height: calc(30px * 3);
   border-radius: var(--b-cssvar-border-radius-medium);
-  background-color: var(--b-cssvar-ededf2);
+  background-color: transparent;
 }
 
 /* skeleton-screen: false */
@@ -117,4 +117,6 @@
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
+  filter: var(--b-cssvar-map-filter);
+  -webkit-filter: var(--b-cssvar-map-filter);
 }
