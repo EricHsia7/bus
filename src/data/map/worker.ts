@@ -398,8 +398,8 @@ function planFeature(context: OffscreenCanvasRenderingContext2D, feature: LabelF
 }
 
 async function loadTile(tile: MapLoaderTile) {
-  const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp?v=7`;
-  const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?v=7`;
+  const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp?v=8`;
+  const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?v=8`;
 
   const [bitmap, labels] = await Promise.all([getRaster(rasterURL), getLabels(labelsURL)]);
   const canvas = new OffscreenCanvas(renderSize, renderSize);
