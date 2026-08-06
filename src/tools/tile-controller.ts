@@ -271,10 +271,7 @@ export class MapTileController {
           }
         };
 
-        // Double check screen intersection
-        if (this.isTileVisible(tileInfo.screenBBox)) {
-          tiles.push(tileInfo);
-        }
+        tiles.push(tileInfo);
       }
     }
 
