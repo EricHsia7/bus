@@ -91,7 +91,7 @@
   --b-cssvar-transition-duration: 0.32s;
 
   --b-cssvar-backdrop-filter: saturate(180%) blur(7px);
-  --b-cssvar-map-filter: invert(0%) hue-rotate(0deg) contrast(0%);
+  --b-cssvar-map-filter: invert(0%) hue-rotate(0deg) contrast(100%);
 
   --b-cssvar-head-background: linear-gradient(180deg, var(--b-cssvar-ffffff-normal) 0%, var(--b-cssvar-ffffff-normal-50) 80%, var(--b-cssvar-ffffff-normal-50) 100%);
   --b-cssvar-large-head-background: linear-gradient(180deg, var(--b-cssvar-ffffff-normal) 0%, var(--b-cssvar-ffffff-normal-50) 70%, var(--b-cssvar-ffffff-normal-50) 100%);
