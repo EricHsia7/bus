@@ -46,7 +46,7 @@ function rankBatchFoundEstimateTime(batchFoundEstimateTime: BatchFoundEstimateTi
     result[thisStopKey] = {
       number: index,
       text: index.toString(),
-      code: rankingCode
+      code: rankingCode as IntegratedLocationItemRanking['code']
     };
     index += 1;
   }
