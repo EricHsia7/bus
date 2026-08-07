@@ -174,7 +174,7 @@
     --b-cssvar-ranking-color-3-6-flattened: color-mix(in srgb, rgb(0, 0, 0), rgb(15, 145, 104) 12%);
 
     --b-cssvar-backdrop-filter: brightness(95%) blur(7px);
-    --b-cssvar-map-filter: invert(100%) sepia(40%) hue-rotate(190deg);
+    --b-cssvar-map-filter: invert(90%) sepia(40%) hue-rotate(190deg);
   }
 }
 
