@@ -170,7 +170,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
     itemQuantity[groupKey] = 0;
     groups[groupKey] = {
       name: labels[i],
-      mapPreview: `https://erichsia7.github.io/bus-map/tiles/${z}/${x}/${y}.webp?v=9`,
+      mapPreview: `https://erichsia7.github.io/bus-map/tiles/${z}/${x}/${y}.webp?v=10`,
       longitude: thisLocation.lo[i],
       latitude: thisLocation.la[i],
       properties: [
