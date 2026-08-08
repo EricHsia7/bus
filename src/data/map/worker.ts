@@ -397,21 +397,14 @@ function planFeature(context: OffscreenCanvasRenderingContext2D, feature: LabelF
   }
 }
 
-async function loadTile(tile: MapLoaderTile) {
-  const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp?v=11`;
-  const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?v=11`;
-
-  const [bitmap, labels] = await Promise.all([getRaster(rasterURL), getLabels(labelsURL)]);
+async function getLabelsBitmap(labelsURL: string): Promise<ImageBitmap> {
+  const labels = await getLabels(labelsURL);
   const canvas = new OffscreenCanvas(renderSize, renderSize);
   const context = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
-
   context.textAlign = 'center';
   context.textBaseline = 'middle';
   context.lineJoin = 'round';
   context.miterLimit = 2;
-
-  context.drawImage(bitmap, 0, 0, renderSize, renderSize);
-  bitmap.close();
 
   const extent = labels.extent || 1;
   const padding = collisionPadding * scale;
@@ -438,7 +431,21 @@ async function loadTile(tile: MapLoaderTile) {
     placed.push(box);
     plan.draw();
   }
+  const bitmap = canvas.transferToImageBitmap();
+  return bitmap;
+}
 
+async function loadTile(tile: MapLoaderTile) {
+  const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp?v=11`;
+  const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?v=11`;
+
+  const [bitmap, labelsBitmap] = await Promise.all([getRaster(rasterURL), getLabelsBitmap(labelsURL)]);
+  const canvas = new OffscreenCanvas(renderSize, renderSize);
+  const context = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
+  context.drawImage(bitmap, 0, 0, renderSize, renderSize);
+  bitmap.close();
+  context.drawImage(labelsBitmap, 0, 0, renderSize, renderSize);
+  labelsBitmap.close();
   const rendered = canvas.transferToImageBitmap();
   self.postMessage(
     {
