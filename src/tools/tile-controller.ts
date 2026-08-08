@@ -236,10 +236,10 @@ export class MapTileController {
     const startY = Math.max(0, Math.floor(topLeftXYZ.y));
     const endY = Math.min(Math.pow(2, baseZ) - 1, Math.floor(bottomRightXYZ.y));
 
-    const tiles: TileInfo[] = [];
+    const tiles: Array<TileInfo> = [];
 
-    for (let x = startX; x <= endX; x++) {
-      for (let y = startY; y <= endY; y++) {
+    for (let y = startY; y <= endY; y++) {
+      for (let x = startX; x <= endX; x++) {
         const nwWGS84 = this.xyzToWGS84(x, y, baseZ);
         const seWGS84 = this.xyzToWGS84(x + 1, y + 1, baseZ);
 
