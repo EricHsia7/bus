@@ -84,9 +84,6 @@ module.exports = (env, argv) => {
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'map-tiles',
-              expiration: {
-                maxAgeSeconds: 30 * 60 * 60 * 24
-              },
               matchOptions: {
                 ignoreSearch: false
               },
@@ -100,9 +97,6 @@ module.exports = (env, argv) => {
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'map-labels',
-              expiration: {
-                maxAgeSeconds: 30 * 60 * 60 * 24
-              },
               matchOptions: {
                 ignoreSearch: false
               },
