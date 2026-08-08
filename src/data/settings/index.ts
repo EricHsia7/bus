@@ -300,7 +300,7 @@ const Settings: SettingsObject = {
         powerSavingAlternative: -1
       }
     ],
-    description: '是否在路線頁面上標註目前所在位置。若設為開啟，本應用程式將要求位置存取權限。'
+    description: '是否在路線頁面或地圖上標註目前所在位置。若設為開啟，本應用程式將要求位置存取權限。'
   },
   display_user_orientation: {
     key: 'display_user_orientation',
