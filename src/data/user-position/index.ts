@@ -1,19 +1,17 @@
 import { convertPositionsToDistance } from '../../tools/convert';
 import { getSettingOptionValue } from '../settings/index';
 
-interface position {
-  latitude: number;
-  longitude: number;
-}
-
-interface positionWithID extends position {
-  id: number;
+export interface Position {
+  lon: number;
+  lat: number;
+  accuracy: number;
 }
 
 const userPosition = {
   current: {
-    latitude: 0,
-    longitude: 0
+    lon: 0,
+    lat: 0,
+    accuracy: 0
   },
   permission: {
     gained: false,
@@ -25,8 +23,9 @@ const userPosition = {
 export function askForPositioningPermission(): void {
   function successHandler(position: any): void {
     userPosition.permission.gained = true;
-    userPosition.current.latitude = position.coords.latitude;
-    userPosition.current.longitude = position.coords.longitude;
+    userPosition.current.lat = position.coords.latitude;
+    userPosition.current.lon = position.coords.longitude;
+    userPosition.current.accuracy = position.coords.accuracy;
   }
   function errorHandler(error: any): void {
     /*
@@ -60,22 +59,16 @@ export function askForPositioningPermission(): void {
   }
 }
 
-export function getUserPosition(): position {
-  if (userPosition.permission.asked && userPosition.permission.gained) {
-    return userPosition.current;
-  }
+export function getUserPosition(): Position {
   if (!userPosition.permission.asked && !userPosition.permission.gained) {
     askForPositioningPermission();
-    return userPosition.current;
   }
-  if (userPosition.permission.asked && !userPosition.permission.gained) {
-    return userPosition.current;
-  }
+  return userPosition.current;
 }
 
 export function isNearUserPosition(latitude: number, longitude: number, radius: number = 450): boolean {
   const currentUserPosition = getUserPosition();
-  const distance = convertPositionsToDistance(latitude, longitude, currentUserPosition.latitude, currentUserPosition.longitude);
+  const distance = convertPositionsToDistance(latitude, longitude, currentUserPosition.lat, currentUserPosition.lon);
   if (distance <= radius) {
     return true;
   } else {
@@ -83,13 +76,19 @@ export function isNearUserPosition(latitude: number, longitude: number, radius: 
   }
 }
 
-export function getNearestPosition(positions: Array<positionWithID>, radius: number = 450): positionWithID | null {
+export interface PositionWithID {
+  lon: number;
+  lat: number;
+  id: number;
+}
+
+export function getNearestPosition(positions: Array<PositionWithID>, radius: number = 450): PositionWithID | null {
   const currentUserPosition = getUserPosition();
   let shortestDistance = Infinity;
   let nearestIndex = -1;
   for (let i = positions.length - 1; i > 0; i--) {
     const position = positions[i];
-    const distance = convertPositionsToDistance(currentUserPosition.latitude, currentUserPosition.longitude, position.latitude, position.longitude);
+    const distance = convertPositionsToDistance(currentUserPosition.lat, currentUserPosition.lon, position.lat, position.lon);
     if (distance <= radius) {
       if (distance < shortestDistance) {
         nearestIndex = i;

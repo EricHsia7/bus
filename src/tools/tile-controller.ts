@@ -182,6 +182,10 @@ export class MapTileController {
     return this.xyzToWGS84(targetX, targetY, this.zoom);
   }
 
+  public metersToPixels(meters: number, zoomLevel: number = this.zoom): number {
+    return (meters * (this.tileSize * Math.pow(2, zoomLevel))) / (2 * Math.PI * 6378137);
+  }
+
   // Native Zoom Helpers
 
   /**

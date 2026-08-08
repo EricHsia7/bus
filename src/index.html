@@ -679,6 +679,16 @@
 
     <div class="css_map_field" displayed="false">
       <canvas class="css_map_canvas"></canvas>
+      <svg class="css_map_user_position_overlay" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 0 0" shape-rendering="geometricPrecision">
+        <g class="css_map_user_position">
+          <circle class="css_map_user_position_proximity" cx="0" cy="0" r="30"></circle>
+          <circle class="css_map_user_position_background" cx="0" cy="0" r="9"></circle>
+          <circle class="css_map_user_position_dot" cx="0" cy="0" r="6">
+            <animate attributeName="r" begin="0s" dur="3s" values="8.0000;7.9985;7.9778;7.8974;7.7154;7.4140;7.0176;6.5934;6.2338;6.0272;6.0272;6.2338;6.5934;7.0176;7.4140;7.7154;7.8974;7.9778;7.9985;8.0000" repeatCount="indefinite" />
+            <!-- r(t) = (1 - sin(π / 960 * t)^4) * (8 - 6) + 6 -->
+          </circle>
+        </g>
+      </svg>
       <div class="css_map_attribution">Map Data ©OpenStreetMap Contributors</div>
       <div class="css_map_button_left" onclick="bus.map.closeMap()">
         <span class="css_material_symbols_rounded">arrow_back</span>

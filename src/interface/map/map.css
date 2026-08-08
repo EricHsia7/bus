@@ -1,3 +1,4 @@
+/* canvas */
 .css_map_field .css_map_canvas {
   position: absolute;
   top: 0px;
@@ -11,4 +12,38 @@
   -webkit-user-drag: none;
   filter: var(--b-cssvar-map-filter);
   -webkit-filter: var(--b-cssvar-map-filter);
+}
+
+/* user position overlay */
+.css_map_field .css_map_user_position_overlay {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* user position overlay > user position > dot */
+.css_map_field .css_map_user_position_overlay .css_map_user_position .css_map_user_position_dot {
+  fill: var(--b-cssvar-main-color-inflected-to-user-position);
+}
+
+/* user position overlay > user position > background */
+.css_map_field .css_map_user_position_overlay .css_map_user_position .css_map_user_position_background {
+  fill: var(--b-cssvar-ffffff-normal);
+}
+
+
+/* user position overlay > user position > proximity */
+.css_map_field .css_map_user_position_overlay .css_map_user_position .css_map_user_position_proximity {
+  fill: var(--b-cssvar-main-color-inflected-to-user-position);
+  fill-opacity: 0.2;
+  stroke: var(--b-cssvar-main-color-inflected-to-user-position);
+  stroke-width: 1;
 }

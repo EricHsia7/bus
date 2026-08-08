@@ -1,12 +1,18 @@
 import { MapLoader, MapLoaderResponse } from '../../data/map';
+import { getSettingOptionValue } from '../../data/settings';
+import { getUserPosition, Position } from '../../data/user-position';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { clamp } from '../../tools/math';
+import { Tick } from '../../tools/tick';
 import { MapTileController, TileInfo } from '../../tools/tile-controller';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
-const mapField = documentQuerySelector('.css_map_field');
-const mapCanvas = elementQuerySelector(mapField, '.css_map_canvas') as HTMLCanvasElement;
-const mapContext = mapCanvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
+const Field = documentQuerySelector('.css_map_field');
+const CanvasElement = elementQuerySelector(Field, '.css_map_canvas') as HTMLCanvasElement;
+const Context = CanvasElement.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
+const UserPositionOverlayElement = elementQuerySelector(Field, '.css_map_user_position_overlay') as any as SVGElement;
+const UserPositionElement = elementQuerySelector(UserPositionOverlayElement as any as HTMLElement, '.css_map_user_position') as any as SVGGElement;
+const UserPositionProximityElement = elementQuerySelector(UserPositionElement as any as HTMLElement, '.css_map_user_position_proximity') as any as SVGCircleElement;
 
 type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
@@ -22,6 +28,8 @@ const bounds = [120.886, 24.8, 122.004, 25.3];
 let width: number = window.innerWidth;
 let height: number = window.innerHeight;
 let displayed: boolean = false;
+let userPosition: Position = { lon: 0, lat: 0, accuracy: 0 };
+const userPositionTick = new Tick(updateUserPosition, 10000);
 const devicePixelRatio = window.devicePixelRatio;
 
 /** Duration of the per-tile fade-in, in milliseconds, used as tiles stream in at a stable layer */
@@ -107,7 +115,7 @@ let activeLayerZ: number | null = null;
 let frameId: number | null = null;
 
 const mapTileController = new MapTileController({
-  element: mapCanvas,
+  element: CanvasElement,
   centerLon: (120.886 + 122.004) / 2,
   centerLat: (24.8 + 25.3) / 2,
   zoom: 16,
@@ -135,12 +143,12 @@ const mapTileController = new MapTileController({
 });
 
 export function showMap(): void {
-  mapField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
   displayed = true;
 }
 
 export function hideMap(): void {
-  mapField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
   displayed = false;
 }
 
@@ -151,6 +159,11 @@ export function openMap(lon: number = (120.886 + 122.004) / 2, lat: number = (24
   synchronizeQueue();
   requestFrame();
   mapTileController.focusOn(lon, lat, zoom, duration);
+  if (userPositionTick.isPaused) {
+    userPositionTick.resume(true);
+  } else {
+    userPositionTick.tick();
+  }
   hidePreviousPage();
 }
 
@@ -173,6 +186,7 @@ export function closeMap(): void {
   protectedTileKeys.clear();
   mapLoader.protect(protectedTileKeys);
   mapLoader.trim();
+  userPositionTick.pause();
 }
 
 export function resizeMapCanvas(): void {
@@ -180,11 +194,13 @@ export function resizeMapCanvas(): void {
   width = size.width;
   height = size.height;
 
-  mapCanvas.width = width * devicePixelRatio;
-  mapCanvas.height = height * devicePixelRatio;
+  CanvasElement.width = width * devicePixelRatio;
+  CanvasElement.height = height * devicePixelRatio;
 
   // Resetting the backing store drops the transform, so re-apply it here.
-  mapContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  Context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+
+  UserPositionOverlayElement.setAttribute('viewBox', `${0} ${0} ${width} ${height}`);
   // mapContext.imageSmoothingEnabled = true;
   // mapContext.imageSmoothingQuality = 'high';
 }
@@ -458,7 +474,7 @@ function drawLayer(layer: ZoomLayer, isBottom: boolean, now: number): { complete
     for (const tile of tiles) {
       const fade = tileFadeStates.get(getTileKey(tile.x, tile.y, layer.z));
       if (mapLoader.get(tile.x, tile.y, layer.z) && fade && fade.opacity >= 1) continue;
-      drawFallbackTile(mapContext, tile.x, tile.y, layer.z);
+      drawFallbackTile(Context, tile.x, tile.y, layer.z);
     }
   }
 
@@ -489,7 +505,7 @@ function drawLayer(layer: ZoomLayer, isBottom: boolean, now: number): { complete
 
     // The two fades multiply, so a tile that lands in the middle of a zoom transition still
     // cannot appear at full strength ahead of the layer it belongs to.
-    drawTile(mapContext, cache, layer.z, easeInOut(fade.opacity) * layerAlpha);
+    drawTile(Context, cache, layer.z, easeInOut(fade.opacity) * layerAlpha);
   }
 
   return { complete, animating };
@@ -511,9 +527,9 @@ function renderFrame(now: number): void {
   if (activeLayerZ !== null && activeLayerZ !== z) synchronizeQueue();
   activeLayerZ = z;
 
-  mapContext.globalAlpha = 1;
-  mapContext.fillStyle = backgroundFill;
-  mapContext.fillRect(0, 0, width, height);
+  Context.globalAlpha = 1;
+  Context.fillStyle = backgroundFill;
+  Context.fillRect(0, 0, width, height);
 
   let topComplete = false;
   for (let index = 0; index < layerStack.length; index++) {
@@ -535,5 +551,23 @@ function renderFrame(now: number): void {
   // it defers its own trimming while a frame is still queued.
   mapLoader.protect(protectedTileKeys);
 
+  // Render user position
+  renderUserPosition();
+
   if (animating) requestFrame();
+}
+
+function renderUserPosition(): void {
+  const { lon, lat, accuracy } = userPosition;
+  const { x, y } = mapTileController.wgs84ToScreen({ lon, lat });
+  UserPositionElement.setAttribute('transform', `translate(${x} ${y})`);
+  const r = mapTileController.metersToPixels(accuracy);
+  UserPositionProximityElement.setAttribute('r', `${r < 5 ? '5' : r.toString()}`);
+}
+
+async function updateUserPosition(): Promise<number> {
+  if (!getSettingOptionValue('display_user_location')) return 30000;
+  userPosition = getUserPosition();
+  renderUserPosition();
+  return 10000;
 }

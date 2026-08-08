@@ -157,8 +157,8 @@ export async function integrateRoute(RouteID: SimplifiedRouteItem['id'], chartWi
         latitude: thisSimplifiedLocation.la
       };
       positions.push({
-        latitude: thisSimplifiedLocation.la,
-        longitude: thisSimplifiedLocation.lo,
+        lon: thisSimplifiedLocation.lo,
+        lat: thisSimplifiedLocation.la,
         id: item.StopID
       });
 
