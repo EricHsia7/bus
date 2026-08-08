@@ -80,7 +80,7 @@ module.exports = (env, argv) => {
             }
           },
           {
-            urlPattern: /\/tiles\/[0-9]+\/[0-9]+\/[0-9]+\.webp$/,
+            urlPattern: /^https:\/\/erichsia7.github.io\/bus-map\/tiles\/[0-9]+\/[0-9]+\/[0-9]+\.webp$/,
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'map-tiles',
@@ -96,7 +96,7 @@ module.exports = (env, argv) => {
             }
           },
           {
-            urlPattern: /\/labels\/[0-9]+\/[0-9]+\/[0-9]+\.gz$/,
+            urlPattern: /^https:\/\/erichsia7.github.io\/bus-map\/labels\/[0-9]+\/[0-9]+\/[0-9]+\.gz$/,
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'map-labels',
