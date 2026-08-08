@@ -1,27 +1,14 @@
-import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { MapLoader, MapLoaderResponse } from '../../data/map';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
-import { MapTileController, TileInfo, WGS84 } from '../../tools/tile-controller';
 import { clamp } from '../../tools/math';
+import { MapTileController, TileInfo } from '../../tools/tile-controller';
+import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 const mapField = documentQuerySelector('.css_map_field');
 const mapCanvas = elementQuerySelector(mapField, '.css_map_canvas') as HTMLCanvasElement;
 const mapContext = mapCanvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
 
 type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
-
-function createSnapshotBuffer(): { canvas: OffscreenCanvas | HTMLCanvasElement; context: Context2D } {
-  if (typeof OffscreenCanvas === 'function') {
-    const canvas = new OffscreenCanvas(1, 1);
-    const context = canvas.getContext('2d');
-    if (context) return { canvas, context };
-  }
-  const canvas = document.createElement('canvas');
-  return { canvas, context: canvas.getContext('2d') as CanvasRenderingContext2D };
-}
-
-/** Holds the last frame painted before a zoom layer swap, so it can be faded out afterwards */
-const { canvas: snapshotCanvas, context: snapshotContext } = createSnapshotBuffer();
 
 /** Integer zoom levels for which raster tiles actually exist on the server */
 const minNativeZoom = 12;
@@ -38,13 +25,19 @@ let displayed: boolean = false;
 const devicePixelRatio = window.devicePixelRatio;
 
 /** Duration of the per-tile fade-in, in milliseconds, used as tiles stream in at a stable layer */
-const fadeDuration = 250;
+const fadeDuration = 200;
 /**
  * Duration of the cross-fade between two zoom layers, in milliseconds. Crossing an integer
  * zoom doubles the raster resolution in one step, so this runs longer than a tile fade to
  * keep that jump from reading as a pop.
  */
-const layerFadeDuration = 250;
+const layerFadeDuration = 320;
+/**
+ * How many zoom layers may be kept alive at once. Zooming through several layers faster than
+ * they can fade only ever costs this many passes, and the oldest layer is dropped rather than
+ * accumulating history that nobody can see.
+ */
+const maxLayerStack = 3;
 /** How many coarser zoom levels may be searched for stand-in imagery while a tile is missing */
 const maxParentFallbackDepth = 5;
 /** How many finer zoom levels may be searched for stand-in imagery while a tile is missing */
@@ -91,19 +84,26 @@ const tileFadeStates = new Map<string, TileFadeState>();
 const protectedTileKeys = new Set<string>();
 /** Tile keys already handed to the loader, used to diff visible sets between movements */
 const requestedTileKeys = new Set<string>();
-/** Native layer painted in the previous frame, used to detect a zoom layer swap */
-let activeLayerZ: number | null = null;
+interface ZoomLayer {
+  /** Native zoom level this layer draws its tiles from */
+  z: number;
+  /** Current fade progress, 0 to 1 */
+  opacity: number;
+  /** 1 while this layer is the one being shown, 0 while it is being abandoned */
+  target: number;
+  timestamp: number;
+}
+
 /**
- * Viewport the snapshot was painted with. The snapshot is a flat image, so it has to be
- * re-projected every frame to stay locked to the ground while the gesture continues.
- * `null` means no layer cross-fade is running.
+ * Zoom layers currently on screen, ordered bottom to top. Every layer below the top is fully
+ * opaque and only the topmost one animates, so the composite is always
+ * `lower * (1 - alpha) + top * alpha`: a real cross-fade that cannot let the background leak
+ * through, and one that is re-derived from live tiles every frame rather than from a frozen
+ * copy of an earlier frame.
  */
-let snapshotCenter: WGS84 | null = null;
-let snapshotZoom = 0;
-let snapshotStartTime = 0;
-/** Viewport of the frame currently on the canvas, captured alongside a future snapshot */
-let paintedCenter: WGS84 | null = null;
-let paintedZoom = 0;
+const layerStack: ZoomLayer[] = [];
+/** Native layer requested in the previous frame, used to detect a zoom layer swap */
+let activeLayerZ: number | null = null;
 let frameId: number | null = null;
 
 const mapTileController = new MapTileController({
@@ -166,8 +166,7 @@ export function closeMap(): void {
   // Reopening should show the current viewport straight away rather than replay a
   // cross-fade against a layer that left the screen long ago.
   activeLayerZ = null;
-  snapshotCenter = null;
-  paintedCenter = null;
+  layerStack.length = 0;
 
   // Nothing is on screen any more, so nothing needs protecting and the loader can
   // trim straight down to its budget.
@@ -183,13 +182,6 @@ export function resizeMapCanvas(): void {
 
   mapCanvas.width = width * devicePixelRatio;
   mapCanvas.height = height * devicePixelRatio;
-  snapshotCanvas.width = mapCanvas.width;
-  snapshotCanvas.height = mapCanvas.height;
-
-  // Resizing wiped the snapshot, and a frame painted at the old size could not be
-  // re-projected onto the new one anyway, so any running layer cross-fade is dropped.
-  snapshotCenter = null;
-  paintedCenter = null;
 
   // Resetting the backing store drops the transform, so re-apply it here.
   mapContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
@@ -370,100 +362,115 @@ function pruneFadeStates(): void {
 }
 
 /**
- * Freezes the frame that is still on the canvas so it can be faded out after a zoom layer
- * swap. Copying the composited frame, rather than remembering which layer was on screen,
- * captures exactly what the user is looking at: half-finished tile fades, stand-ins and all.
- * Swapping layers again mid-fade therefore stays continuous, because the new snapshot
- * already contains the previous cross-fade.
+ * Points the stack at the layer that should be on screen, without ever leaving a
+ * half-transparent layer buried in the middle of it.
+ *
+ * Three things can happen. The requested layer is already on top, so it just keeps fading in.
+ * The requested layer is the one directly underneath, which is the case when the user zooms
+ * back across the same boundary, so the transition is reversed rather than stacked on top of
+ * itself. Or it is a genuinely new layer, in which case the transition in flight is committed
+ * to full opacity before the new layer is pushed, so the stack below the top is always opaque
+ * imagery instead of a blend that has been frozen mid-way.
  */
-function captureSnapshot(now: number): void {
-  if (paintedCenter === null) return;
+function updateLayerStack(z: number, now: number): void {
+  const top = layerStack[layerStack.length - 1];
 
-  // The copy is a raw device-pixel blit, so the device pixel ratio transform is dropped
-  // for the duration and then restored for the projected draws.
-  snapshotContext.setTransform(1, 0, 0, 1, 0, 0);
-  snapshotContext.clearRect(0, 0, snapshotCanvas.width, snapshotCanvas.height);
-  snapshotContext.drawImage(mapCanvas, 0, 0);
-  snapshotContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  // First frame after opening: there is nothing to cross-fade against.
+  if (!top) {
+    layerStack.push({ z, opacity: 1, target: 1, timestamp: now });
+    return;
+  }
 
-  snapshotCenter = paintedCenter;
-  snapshotZoom = paintedZoom;
-  snapshotStartTime = now;
+  if (top.z === z) {
+    top.target = 1;
+    return;
+  }
+
+  const below = layerStack[layerStack.length - 2];
+  if (below && below.z === z) {
+    // Zooming back across a boundary mid-fade rewinds the fade it interrupted. The layer
+    // underneath is already opaque, so fading the top back out lands exactly where the map
+    // started, and flicking back and forth stays continuous instead of piling up ghosts.
+    top.target = 0;
+    return;
+  }
+
+  top.opacity = 1;
+  top.target = 1;
+  layerStack.push({ z, opacity: 0, target: 1, timestamp: now });
+
+  // Zooming faster than the fades can finish drops the oldest layer. The new bottom layer
+  // fills its own gaps from cache, so coverage is preserved.
+  while (layerStack.length > maxLayerStack) layerStack.shift();
+}
+
+/** Advances the topmost layer's fade and retires layers that can no longer be seen. */
+function advanceLayerStack(now: number): boolean {
+  let animating = false;
+
+  for (let index = 0; index < layerStack.length; index++) {
+    const layer = layerStack[index];
+    // Only the topmost layer animates; everything below it is held opaque so the cross-fade
+    // has full coverage to blend against.
+    if (index < layerStack.length - 1) {
+      layer.opacity = 1;
+      layer.timestamp = now;
+      continue;
+    }
+
+    if (layer.opacity !== layer.target) {
+      const elapsed = Math.min(maxFrameDelta, Math.max(0, now - layer.timestamp));
+      const step = layerFadeDuration > 0 ? elapsed / layerFadeDuration : 1;
+      layer.opacity = layer.target > layer.opacity ? Math.min(layer.target, layer.opacity + step) : Math.max(layer.target, layer.opacity - step);
+      animating = true;
+    }
+    layer.timestamp = now;
+  }
+
+  // An abandoned layer that has faded out completely is gone from the screen already.
+  while (layerStack.length > 1) {
+    const top = layerStack[layerStack.length - 1];
+    if (top.target !== 0 || top.opacity > 0) break;
+    layerStack.pop();
+  }
+
+  return animating;
 }
 
 /**
- * Draws the frozen frame locked to the ground rather than to the screen. Web Mercator screen
- * space only scales and translates when the viewport changes, so re-projecting the snapshot
- * is a single scaled `drawImage`: the ground point that sat at the snapshot's centre is
- * placed where it lives now, and the image is scaled by the zoom travelled since. The
- * outgoing imagery therefore keeps tracking the gesture instead of sitting frozen on screen.
+ * Draws one layer of the stack and reports whether it covered the viewport on its own.
+ *
+ * Only the bottom layer fills its gaps with stand-in imagery from other zoom levels. Gaps in
+ * the layers above it are left alone on purpose: what shows through is the layer below, which
+ * is the nearest imagery there is and is already on screen. That is what makes a zoom out
+ * fill in immediately, since the finer layer the user just left stays visible underneath
+ * until the coarser tiles have actually arrived.
  */
-function drawSnapshot(): void {
-  if (snapshotCenter === null) return;
+function drawLayer(layer: ZoomLayer, isBottom: boolean, now: number): { complete: boolean; animating: boolean } {
+  const tiles: TileInfo[] = mapTileController.getVisibleTiles(layer.z);
+  const layerAlpha = easeInOut(layer.opacity);
+  let complete = true;
+  let animating = false;
 
-  const scale = Math.pow(2, mapTileController.zoom - snapshotZoom);
-  const center = mapTileController.wgs84ToScreen(snapshotCenter);
-
-  mapContext.drawImage(snapshotCanvas as CanvasImageSource, center.x - (width / 2) * scale, center.y - (height / 2) * scale, width * scale, height * scale);
-}
-
-function renderFrame(now: number): void {
-  frameId = null;
-
-  const z = mapTileController.getNativeZoom();
-  // Rebuilt every frame: the tiles painted below are exactly the ones eviction must keep.
-  protectedTileKeys.clear();
-
-  // Crossing an integer zoom replaces every tile on screen at once, and the incoming tiles
-  // are usually already cached, so without this the whole layer would swap in a single
-  // frame. The frame being replaced is grabbed before anything else is drawn over it.
-  if (activeLayerZ !== null && activeLayerZ !== z) captureSnapshot(now);
-  activeLayerZ = z;
-
-  // Progress is measured against the clock rather than accumulated per frame, so a stalled
-  // or backgrounded tab resumes at the right point instead of somewhere mid-fade.
-  const layerFadeProgress = snapshotCenter === null || layerFadeDuration <= 0 ? 1 : Math.min(1, (now - snapshotStartTime) / layerFadeDuration);
-  if (layerFadeProgress >= 1) snapshotCenter = null;
-  const layerAlpha = easeInOut(layerFadeProgress);
-
-  mapContext.globalAlpha = 1;
-  mapContext.fillStyle = backgroundFill;
-  mapContext.fillRect(0, 0, width, height);
-
-  const visibleTiles: TileInfo[] = mapTileController.getVisibleTiles(z);
-  let animating = snapshotCenter !== null;
-
-  // Pass 1: stand-in imagery from the nearest zoom levels, painted underneath the requested
-  // layer. A tile that has not arrived shows the closest zoom level already in cache instead
-  // of the background, and a tile that is still fading has something meaningful beneath it,
-  // which turns the fade into a real cross-fade between two pieces of imagery rather than a
-  // fade up from a flat colour.
-  //
-  // While the snapshot is up it already covers the viewport, so stand-ins are only needed
-  // for ground the snapshot never contained, such as edges revealed by panning mid-fade.
-  // Skipping the rest also avoids blending the same imagery twice under a fading tile.
-  for (const tile of visibleTiles) {
-    const fade = tileFadeStates.get(getTileKey(tile.x, tile.y, z));
-    const cached = mapLoader.get(tile.x, tile.y, z);
-    // A tile that is present and fully faded in is opaque, so a stand-in under it is
-    // invisible and only costs draw calls.
-    if (cached && (snapshotCenter !== null || (fade && fade.opacity >= 1))) continue;
-    drawFallbackTile(mapContext, tile.x, tile.y, z);
+  if (isBottom) {
+    // Stand-ins go down first so the layer's own tiles fade over imagery rather than over
+    // the flat background.
+    for (const tile of tiles) {
+      const fade = tileFadeStates.get(getTileKey(tile.x, tile.y, layer.z));
+      if (mapLoader.get(tile.x, tile.y, layer.z) && fade && fade.opacity >= 1) continue;
+      drawFallbackTile(mapContext, tile.x, tile.y, layer.z);
+    }
   }
 
-  // Pass 2: the outgoing frame, laid down opaque so the incoming layer always has full
-  // coverage to blend against.
-  drawSnapshot();
-
-  // Pass 3: the requested layer. Each tile owns its fade for tiles streaming in at a stable
-  // zoom, and the layer alpha carries the zoom transition on top of it, so a late arrival
-  // during a layer swap still cannot pop in at full strength.
-  for (const tile of visibleTiles) {
-    const key = getTileKey(tile.x, tile.y, z);
+  for (const tile of tiles) {
+    const key = getTileKey(tile.x, tile.y, layer.z);
     protectedTileKeys.add(key);
 
-    const cache = mapLoader.get(tile.x, tile.y, z);
-    if (!cache) continue;
+    const cache = mapLoader.get(tile.x, tile.y, layer.z);
+    if (!cache) {
+      complete = false;
+      continue;
+    }
 
     let fade = tileFadeStates.get(key);
     if (!fade) {
@@ -475,11 +482,51 @@ function renderFrame(now: number): void {
     if (fade.opacity < 1) {
       const elapsed = Math.min(maxFrameDelta, Math.max(0, now - fade.timestamp));
       fade.opacity = Math.min(1, fade.opacity + (fadeDuration > 0 ? elapsed / fadeDuration : 1));
+      complete = false;
       animating = true;
     }
     fade.timestamp = now;
 
-    drawTile(mapContext, cache, z, easeInOut(fade.opacity) * layerAlpha);
+    // The two fades multiply, so a tile that lands in the middle of a zoom transition still
+    // cannot appear at full strength ahead of the layer it belongs to.
+    drawTile(mapContext, cache, layer.z, easeInOut(fade.opacity) * layerAlpha);
+  }
+
+  return { complete, animating };
+}
+
+function renderFrame(now: number): void {
+  frameId = null;
+
+  const z = mapTileController.getNativeZoom();
+  // Rebuilt every frame: the tiles painted below are exactly the ones eviction must keep.
+  protectedTileKeys.clear();
+
+  updateLayerStack(z, now);
+  let animating = advanceLayerStack(now);
+
+  // Requests are normally issued once movement settles, but a zoom that crosses an integer
+  // boundary needs its tiles during the gesture, not after it. Without this a zoom out has
+  // nothing to fill the newly exposed ground with until the user lets go.
+  if (activeLayerZ !== null && activeLayerZ !== z) synchronizeQueue();
+  activeLayerZ = z;
+
+  mapContext.globalAlpha = 1;
+  mapContext.fillStyle = backgroundFill;
+  mapContext.fillRect(0, 0, width, height);
+
+  let topComplete = false;
+  for (let index = 0; index < layerStack.length; index++) {
+    const result = drawLayer(layerStack[index], index === 0, now);
+    if (result.animating) animating = true;
+    topComplete = result.complete;
+  }
+
+  // Once the top layer is opaque and has every tile it needs, the layers underneath cannot
+  // contribute a single pixel, so they stop costing draw calls and stop protecting tiles.
+  const top = layerStack[layerStack.length - 1];
+  if (layerStack.length > 1 && top.target === 1 && top.opacity >= 1 && topComplete) {
+    layerStack.splice(0, layerStack.length - 1);
   }
 
   pruneFadeStates();
@@ -487,11 +534,6 @@ function renderFrame(now: number): void {
   // Publish what was just painted, stand-ins included. The loader will not evict these, and
   // it defers its own trimming while a frame is still queued.
   mapLoader.protect(protectedTileKeys);
-
-  // Remember the viewport this frame was painted with, so it can be re-projected correctly
-  // if it turns out to be the last frame before a layer swap.
-  paintedCenter = { lon: mapTileController.center.lon, lat: mapTileController.center.lat };
-  paintedZoom = mapTileController.zoom;
 
   if (animating) requestFrame();
 }
