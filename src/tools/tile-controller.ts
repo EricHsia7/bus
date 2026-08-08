@@ -238,8 +238,8 @@ export class MapTileController {
 
     const tiles: Array<TileInfo> = [];
 
-    for (let y = startY; y <= endY; y++) {
-      for (let x = startX; x <= endX; x++) {
+    for (let y = endY; y >= startY; y--) {
+      for (let x = endX; x >= startX; x--) {
         const nwWGS84 = this.xyzToWGS84(x, y, baseZ);
         const seWGS84 = this.xyzToWGS84(x + 1, y + 1, baseZ);
 
