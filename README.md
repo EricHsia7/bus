@@ -1,6 +1,6 @@
 # Bundle Statistics
 
-[3.2 MB] **\*.\***
+[3.14 MB] **\*.\***
 <details>
 <summary>[23.69 KB] <b>*.json</b></summary>
 
@@ -12,14 +12,14 @@
 - [32.85 KB] **index.html**
 </details>
 <details>
-<summary>[371.79 KB] <b>*.js</b></summary>
+<summary>[365.57 KB] <b>*.js</b></summary>
 
 - [28.19 KB] **2527f030464daa07e3e4.js**
 - [25.77 KB] **926f695f986103a22cda.js**
-- [22 KB] **workbox-eae5a661.js**
 - [19.67 KB] **7ffdf7206a37ab52833d.js**
 - [17.8 KB] **a802e5e94784b0b7f66a.js**
 - [16.26 KB] **6e07de54faf6860e1825.js**
+- [15.87 KB] **workbox-31725f1a.js**
 - [15.67 KB] **d15db9d74112750eb26c.js**
 - [15.39 KB] **4ef60a97e3c246e20562.js**
 - [15.29 KB] **95dcedb681db248a6ea5.js**
@@ -43,7 +43,7 @@
 - [5.62 KB] **afb57c87e6bcbfbc29be.js**
 - [4.66 KB] **d5a4f0d139eccd3860b5.js**
 - [4.45 KB] **7204ac0c1a854a58faa4.js**
-- [4.14 KB] **service-worker.js**
+- [4.04 KB] **service-worker.js**
 - [2.79 KB] **5171b87573e525327468.js**
 - [2.37 KB] **dc87aa3d12cb5f9efa7f.js**
 - [2.33 KB] **55160206607baf248fd7.js**
@@ -114,9 +114,9 @@
 - [163 Bytes] **2527f030464daa07e3e4.js.LICENSE.txt**
 </details>
 <details>
-<summary>[2.6 MB] <b>*.map</b></summary>
+<summary>[2.55 MB] <b>*.map</b></summary>
 
-- [210.5 KB] **workbox-eae5a661.js.map**
+- [162.54 KB] **workbox-31725f1a.js.map**
 - [141.54 KB] **2527f030464daa07e3e4.js.map**
 - [139.31 KB] **926f695f986103a22cda.js.map**
 - [105.78 KB] **5808a2472d7e0a6723f8.js.map**
@@ -160,7 +160,7 @@
 - [12.7 KB] **883d33f812e7267574a4.js.map**
 - [12.67 KB] **5c2fbaf71ff9d46585b5.js.map**
 - [12.4 KB] **dc87aa3d12cb5f9efa7f.js.map**
-- [9.93 KB] **service-worker.js.map**
+- [9.52 KB] **service-worker.js.map**
 - [3.46 KB] **e90e21a22aa29ece3f4e.js.map**
 - [2.07 KB] **632b162a4cee34e7ebe4.js.map**
 </details>
