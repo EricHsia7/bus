@@ -85,7 +85,7 @@ module.exports = (env, argv) => {
             options: {
               cacheName: 'map-tiles',
               expiration: {
-                maxAgeSeconds: 7 * 60 * 60 * 24
+                maxAgeSeconds: 30 * 60 * 60 * 24
               },
               matchOptions: {
                 ignoreSearch: false
@@ -101,7 +101,7 @@ module.exports = (env, argv) => {
             options: {
               cacheName: 'map-labels',
               expiration: {
-                maxAgeSeconds: 7 * 60 * 60 * 24
+                maxAgeSeconds: 30 * 60 * 60 * 24
               },
               matchOptions: {
                 ignoreSearch: false
