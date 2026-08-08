@@ -25,7 +25,7 @@ let displayed: boolean = false;
 const devicePixelRatio = window.devicePixelRatio;
 
 /** Duration of the per-tile fade-in, in milliseconds, used as tiles stream in at a stable layer */
-const fadeDuration = 200;
+const fadeDuration = 250;
 /**
  * Duration of the cross-fade between two zoom layers, in milliseconds. Crossing an integer
  * zoom doubles the raster resolution in one step, so this runs longer than a tile fade to
