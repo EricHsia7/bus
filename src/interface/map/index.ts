@@ -1,4 +1,4 @@
-import { querySize } from '../index';
+import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { MapLoader, MapLoaderResponse } from '../../data/map';
 import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { MapTileController, TileInfo, WGS84 } from '../../tools/tile-controller';
@@ -134,18 +134,30 @@ const mapTileController = new MapTileController({
   }
 });
 
-export function openMap(lon: number = (120.886 + 122.004) / 2, lat: number = (24.8 + 25.3) / 2, zoom = 16, duration: number = 500): void {
-  displayed = true;
+export function showMap(): void {
   mapField.setAttribute('displayed', 'true');
+  displayed = true;
+}
+
+export function hideMap(): void {
+  mapField.setAttribute('displayed', 'false');
+  displayed = false;
+}
+
+export function openMap(lon: number = (120.886 + 122.004) / 2, lat: number = (24.8 + 25.3) / 2, zoom = 16, duration: number = 500): void {
+  pushPageHistory('Map');
+  showMap();
   resizeMapCanvas();
   synchronizeQueue();
   requestFrame();
   mapTileController.focusOn(lon, lat, zoom, duration);
+  hidePreviousPage();
 }
 
 export function closeMap(): void {
-  displayed = false;
-  mapField.setAttribute('displayed', 'false');
+  hideMap();
+  showPreviousPage();
+  revokePageHistory('Map');
   if (frameId !== null) {
     cancelAnimationFrame(frameId);
     frameId = null;
