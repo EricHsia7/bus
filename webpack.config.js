@@ -87,6 +87,10 @@ module.exports = (env, argv) => {
               matchOptions: {
                 ignoreSearch: false
               },
+              expiration: {
+                maxEntries: 16384,
+                maxAgeSeconds: 30 * 60 * 60 * 24
+              },
               cacheableResponse: {
                 statuses: [0, 200]
               }
@@ -99,6 +103,10 @@ module.exports = (env, argv) => {
               cacheName: 'map-labels',
               matchOptions: {
                 ignoreSearch: false
+              },
+              expiration: {
+                maxEntries: 16384,
+                maxAgeSeconds: 30 * 60 * 60 * 24
               },
               cacheableResponse: {
                 statuses: [0, 200]
