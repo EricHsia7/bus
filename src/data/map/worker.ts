@@ -2,9 +2,8 @@
 declare const self: DedicatedWorkerGlobalScope;
 // export {}; // make a script a module if no any export or import
 
-import { Decompress } from 'fflate';
 import { MapLoaderTile, MapLoaderWorkerMessageData, MapLoaderWorkerMessageError } from '.';
-import { CircleLabelProperties, LabelFeature, LabelFeatureCollection, TextLabelProperties } from './labels';
+import { CircleLabelProperties, CircleStyleProperties, getLabels, LabelFeature, LabelFeatureCollection, resolveLabelStyleProperties, TextLabelProperties, TextStyleProperties } from './labels';
 
 self.onmessage = function (event: MessageEvent): void {
   const batch = event.data as Array<MapLoaderTile>;
@@ -17,7 +16,6 @@ const renderSize = 1024;
 /** Font sizes, halo radii, offsets and marker widths in the label data are authored against a 256x256 tile. */
 const designSize = 256;
 const scale = renderSize / designSize;
-const decoder = new TextDecoder();
 
 const fontWeight = 400;
 const fontFamily: string = "'Noto Sans TC', sans-serif";
@@ -44,39 +42,6 @@ async function getRaster(url: string): Promise<ImageBitmap> {
   const blob = await response.blob();
   const bitmap = await createImageBitmap(blob);
   return bitmap;
-}
-
-async function getLabels(url: string): Promise<LabelFeatureCollection> {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  if (!response.body) throw new Error('No response body to stream');
-
-  const inflater = new Decompress();
-
-  let size: number = 0;
-  const chunks: Array<Uint8Array> = [];
-  inflater.ondata = (chunk, final) => {
-    const out = chunk.slice();
-    chunks.push(out);
-    size += out.length;
-  };
-
-  const reader = response.body.getReader();
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    inflater.push(value, false); // feed compressed bytes incrementally
-  }
-
-  inflater.push(new Uint8Array(0), true); // final = true -> flush the tail
-
-  const buffer = new Uint8Array(size);
-  let pos = 0;
-  for (const chunk of chunks) {
-    buffer.set(chunk, pos);
-    pos += chunk.length;
-  }
-  return JSON.parse(decoder.decode(buffer)) as LabelFeatureCollection;
 }
 
 function intersects(a: Box, b: Box): boolean {
@@ -204,22 +169,22 @@ function transformLabel(label: string, transform?: string): string {
  * the same context and the same font string that the draw call uses, so the reserved box
  * matches the glyphs that land on the tile.
  */
-function planText(context: OffscreenCanvasRenderingContext2D, properties: TextLabelProperties, anchorX: number, anchorY: number): LabelPlan | null {
-  if (!properties['text-size']) return null;
+function planText(context: OffscreenCanvasRenderingContext2D, properties: TextLabelProperties, styleProperties: TextStyleProperties, anchorX: number, anchorY: number): LabelPlan | null {
+  if (!styleProperties['text-size']) return null;
   if (!properties.label) return null;
 
-  const textScale = properties['text-scale'] ? properties['text-scale'][0] : 1;
-  const fontSize = properties['text-size'] * textScale * scale;
+  const textScale = styleProperties['text-scale'] ? styleProperties['text-scale'][0] : 1;
+  const fontSize = styleProperties['text-size'] * textScale * scale;
   const font = `${fontWeight} ${fontSize}px ${fontFamily}`;
   context.font = font;
 
-  const label = transformLabel(properties.label, properties['text-transform']);
-  const wrapWidth = properties['text-wrap-width'] ? properties['text-wrap-width'] * scale : 0;
+  const label = transformLabel(properties.label, styleProperties['text-transform']);
+  const wrapWidth = styleProperties['text-wrap-width'] ? styleProperties['text-wrap-width'] * scale : 0;
   const lines = wrapText(context, label, wrapWidth);
 
   const lineHeight = fontSize * lineHeightRatio;
-  const haloRadius = properties['text-halo-fill'] && properties['text-halo-radius'] ? properties['text-halo-radius'] * scale : 0;
-  const offsetY = anchorY + (properties['text-dy'] ?? 0) * scale;
+  const haloRadius = styleProperties['text-halo-fill'] && styleProperties['text-halo-radius'] ? styleProperties['text-halo-radius'] * scale : 0;
+  const offsetY = anchorY + (styleProperties['text-dy'] ?? 0) * scale;
 
   let widest = 0;
   let ascent = fontSize * 0.8;
@@ -249,16 +214,16 @@ function planText(context: OffscreenCanvasRenderingContext2D, properties: TextLa
     draw: () => {
       context.font = font;
 
-      if (haloRadius > 0 && properties['text-halo-fill']) {
-        context.strokeStyle = properties['text-halo-fill'];
+      if (haloRadius > 0 && styleProperties['text-halo-fill']) {
+        context.strokeStyle = styleProperties['text-halo-fill'];
         context.lineWidth = haloRadius * 2;
         for (let i = 0; i < lines.length; i++) {
           context.strokeText(lines[i], anchorX, firstLineY + i * lineHeight);
         }
       }
 
-      if (properties['text-fill']) {
-        context.fillStyle = properties['text-fill'];
+      if (styleProperties['text-fill']) {
+        context.fillStyle = styleProperties['text-fill'];
         for (let i = 0; i < lines.length; i++) {
           context.fillText(lines[i], anchorX, firstLineY + i * lineHeight);
         }
@@ -273,21 +238,21 @@ function planText(context: OffscreenCanvasRenderingContext2D, properties: TextLa
  * (radians), both paired index-for-index with the (transformed) label string. Mismatched
  * lengths are truncated to the shortest of the three defensively.
  */
-function planTextAlongPath(context: OffscreenCanvasRenderingContext2D, properties: TextLabelProperties, coordinates: Array<[number, number]>, angles: Array<number>, extent: number): LabelPlan | null {
-  if (!properties['text-size']) return null;
+function planTextAlongPath(context: OffscreenCanvasRenderingContext2D, properties: TextLabelProperties, styleProperties: TextStyleProperties, coordinates: Array<[number, number]>, angles: Array<number>, extent: number): LabelPlan | null {
+  if (!styleProperties['text-size']) return null;
   if (!properties.label) return null;
 
-  const textScale = properties['text-scale'] ? properties['text-scale'][0] : 1;
-  const fontSize = properties['text-size'] * textScale * scale;
+  const textScale = styleProperties['text-scale'] ? styleProperties['text-scale'][0] : 1;
+  const fontSize = styleProperties['text-size'] * textScale * scale;
   const font = `${fontWeight} ${fontSize}px ${fontFamily}`;
   context.font = font;
 
-  const label = transformLabel(properties.label, properties['text-transform']);
+  const label = transformLabel(properties.label, styleProperties['text-transform']);
   const characters = Array.from(label);
   const count = Math.min(characters.length, coordinates.length, angles.length);
   if (count === 0) return null;
 
-  const haloRadius = properties['text-halo-fill'] && properties['text-halo-radius'] ? properties['text-halo-radius'] * scale : 0;
+  const haloRadius = styleProperties['text-halo-fill'] && styleProperties['text-halo-radius'] ? styleProperties['text-halo-radius'] * scale : 0;
 
   const placements: Array<{ anchorX: number; anchorY: number; angle: number; character: string }> = [];
   let box: Box | null = null;
@@ -329,14 +294,14 @@ function planTextAlongPath(context: OffscreenCanvasRenderingContext2D, propertie
         context.translate(placement.anchorX, placement.anchorY);
         if (placement.angle) context.rotate(placement.angle);
 
-        if (haloRadius > 0 && properties['text-halo-fill']) {
-          context.strokeStyle = properties['text-halo-fill'];
+        if (haloRadius > 0 && styleProperties['text-halo-fill']) {
+          context.strokeStyle = styleProperties['text-halo-fill'];
           context.lineWidth = haloRadius * 2;
           context.strokeText(placement.character, 0, 0);
         }
 
-        if (properties['text-fill']) {
-          context.fillStyle = properties['text-fill'];
+        if (styleProperties['text-fill']) {
+          context.fillStyle = styleProperties['text-fill'];
           context.fillText(placement.character, 0, 0);
         }
 
@@ -346,13 +311,13 @@ function planTextAlongPath(context: OffscreenCanvasRenderingContext2D, propertie
   };
 }
 
-function planCircle(context: OffscreenCanvasRenderingContext2D, properties: CircleLabelProperties, anchorX: number, anchorY: number): LabelPlan | null {
-  if (!properties['marker-width']) return null;
-  if (!properties['marker-fill']) return null;
+function planCircle(context: OffscreenCanvasRenderingContext2D, properties: CircleLabelProperties, styleProperties: CircleStyleProperties, anchorX: number, anchorY: number): LabelPlan | null {
+  if (!styleProperties['marker-width']) return null;
+  if (!styleProperties['marker-fill']) return null;
 
   // marker-width is a diameter in 256-space; the outline straddles the edge.
-  const radius = (properties['marker-width'] * scale) / 2;
-  const lineWidth = properties['marker-line-color'] ? Math.max(1, scale) : 0;
+  const radius = (styleProperties['marker-width'] * scale) / 2;
+  const lineWidth = styleProperties['marker-line-color'] ? Math.max(1, scale) : 0;
   const extent = radius + lineWidth / 2;
 
   const box: Box = {
@@ -367,10 +332,10 @@ function planCircle(context: OffscreenCanvasRenderingContext2D, properties: Circ
     draw: () => {
       context.beginPath();
       context.arc(anchorX, anchorY, radius, 0, Math.PI * 2);
-      context.fillStyle = properties['marker-fill'] as string;
+      context.fillStyle = styleProperties['marker-fill'] as string;
       context.fill();
-      if (properties['marker-line-color']) {
-        context.strokeStyle = properties['marker-line-color'];
+      if (styleProperties['marker-line-color']) {
+        context.strokeStyle = styleProperties['marker-line-color'];
         context.lineWidth = lineWidth;
         context.stroke();
       }
@@ -378,23 +343,24 @@ function planCircle(context: OffscreenCanvasRenderingContext2D, properties: Circ
   };
 }
 
-function planFeature(context: OffscreenCanvasRenderingContext2D, feature: LabelFeature, extent: number): LabelPlan | null {
+function planFeature(context: OffscreenCanvasRenderingContext2D, feature: LabelFeature, extent: number, labels: LabelFeatureCollection): LabelPlan | null {
   if (feature.geometry.type === 'Point') {
     const [rawX, rawY] = feature.geometry.coordinates;
     const anchorX = (rawX / extent) * renderSize;
     const anchorY = (rawY / extent) * renderSize;
+
     switch (feature.properties.kind) {
       case 'text':
-        return planText(context, feature.properties, anchorX, anchorY);
+        return planText(context, feature.properties, resolveLabelStyleProperties(labels, feature.properties), anchorX, anchorY);
       case 'circle':
-        return planCircle(context, feature.properties, anchorX, anchorY);
+        return planCircle(context, feature.properties, resolveLabelStyleProperties(labels, feature.properties), anchorX, anchorY);
       // TODO: 'marker' | 'point' | 'shield' need a sprite sheet. They are skipped entirely rather than reserving space from icon-width/icon-height, so an icon that cannot be drawn does not suppress a text label that can.
       default:
         return null;
     }
   } else {
     if (feature.properties.kind !== 'text') return null;
-    return planTextAlongPath(context, feature.properties, feature.geometry.coordinates, feature.geometry.angles, extent);
+    return planTextAlongPath(context, feature.properties, resolveLabelStyleProperties(labels, feature.properties), feature.geometry.coordinates, feature.geometry.angles, extent);
   }
 }
 
@@ -413,7 +379,7 @@ async function getLabelsBitmap(labelsURL: string): Promise<ImageBitmap> {
   const placed: Array<Box> = [];
 
   for (const feature of labels.features) {
-    const plan = planFeature(context, feature, extent);
+    const plan = planFeature(context, feature, extent, labels);
     if (!plan) continue;
 
     const box = padBox(plan.box, padding);
@@ -438,7 +404,7 @@ async function getLabelsBitmap(labelsURL: string): Promise<ImageBitmap> {
 
 async function loadTile(tile: MapLoaderTile) {
   const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp?v=15`;
-  const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?v=15`;
+  const labelsURL = `../../../bus-map-f/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?v=15`;
 
   const [bitmap, labelsBitmap] = await Promise.all([getRaster(rasterURL), getLabelsBitmap(labelsURL)]);
   const canvas = new OffscreenCanvas(renderSize, renderSize);
