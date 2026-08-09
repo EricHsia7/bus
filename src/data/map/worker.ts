@@ -208,7 +208,8 @@ function planText(context: OffscreenCanvasRenderingContext2D, properties: TextLa
   if (!properties['text-size']) return null;
   if (!properties.label) return null;
 
-  const fontSize = properties['text-size'] * scale;
+  const textScale = properties['text-scale'] ? properties['text-scale'][0] : 1;
+  const fontSize = properties['text-size'] * textScale * scale;
   const font = `${fontWeight} ${fontSize}px ${fontFamily}`;
   context.font = font;
 
@@ -276,7 +277,8 @@ function planTextAlongPath(context: OffscreenCanvasRenderingContext2D, propertie
   if (!properties['text-size']) return null;
   if (!properties.label) return null;
 
-  const fontSize = properties['text-size'] * scale;
+  const textScale = properties['text-scale'] ? properties['text-scale'][0] : 1;
+  const fontSize = properties['text-size'] * textScale * scale;
   const font = `${fontWeight} ${fontSize}px ${fontFamily}`;
   context.font = font;
 
@@ -435,8 +437,8 @@ async function getLabelsBitmap(labelsURL: string): Promise<ImageBitmap> {
 }
 
 async function loadTile(tile: MapLoaderTile) {
-  const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp?v=14`;
-  const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?v=14`;
+  const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp?v=15`;
+  const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?v=15`;
 
   const [bitmap, labelsBitmap] = await Promise.all([getRaster(rasterURL), getLabelsBitmap(labelsURL)]);
   const canvas = new OffscreenCanvas(renderSize, renderSize);
