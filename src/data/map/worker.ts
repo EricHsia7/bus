@@ -404,7 +404,7 @@ async function getLabelsBitmap(labelsURL: string): Promise<ImageBitmap> {
 
 async function loadTile(tile: MapLoaderTile) {
   const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp?v=15`;
-  const labelsURL = `../../../bus-map-f/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?v=15`;
+  const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?v=15`;
 
   const [bitmap, labelsBitmap] = await Promise.all([getRaster(rasterURL), getLabelsBitmap(labelsURL)]);
   const canvas = new OffscreenCanvas(renderSize, renderSize);
