@@ -13,11 +13,10 @@ self.onmessage = function (event: MessageEvent): void {
   }
 };
 
-const nativeSize = 1024;
 const renderSize = 1024;
 /** Font sizes, halo radii, offsets and marker widths in the label data are authored against a 256x256 tile. */
 const designSize = 256;
-const scale = nativeSize / designSize;
+const scale = renderSize / designSize;
 const decoder = new TextDecoder();
 
 const fontWeight = 400;
