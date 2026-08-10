@@ -30,7 +30,6 @@ export interface TextStyleProperties extends BaseStyleProperties {
   /** Placement offset, not a glyph metric: interpolate it, but do NOT multiply it by text-scale */
   'text-dy'?: number;
   'text-wrap-width'?: number;
-  'text-transform'?: string;
 }
 
 export interface IconStyleProperties extends BaseStyleProperties {
@@ -59,6 +58,7 @@ export interface TextLabelProperties extends BaseLabelProperties {
   /** Resolved text: text-name evaluated against the feature tags. Always non-empty. */
   label: string;
   style: StyleRef<'text'>;
+  chars: Array<number>;
 }
 
 export interface IconLabelProperties extends BaseLabelProperties {
@@ -68,6 +68,7 @@ export interface IconLabelProperties extends BaseLabelProperties {
   /** Only populated if kind === 'shield' (resolved from shield-name). */
   label?: string;
   style: StyleRef<IconKind>;
+  chars: Array<number>;
 }
 
 export interface CircleLabelProperties extends BaseLabelProperties {
@@ -110,6 +111,12 @@ export interface LineStringLabelFeature {
 
 export type LabelFeature = LineStringLabelFeature | PointLabelFeature;
 
+export interface LabelfeatureCollectionCharset {
+  table: 'textStyles' | 'iconStyles';
+  style: number;
+  charset: string;
+}
+
 export interface LabelFeatureCollection {
   type: 'FeatureCollection';
   extent: number;
@@ -119,11 +126,8 @@ export interface LabelFeatureCollection {
   textStyles: Array<TextStyleProperties>;
   iconStyles: Array<IconStyleProperties>;
   circleStyles: Array<CircleStyleProperties>;
+  charsets: Array<LabelfeatureCollectionCharset>;
 }
-
-export type StyleTable<K extends LabelKind, T extends StyleProperties> = Array<T> & {
-  readonly [STYLE_BRAND]?: K;
-};
 
 export interface LabelStylePropertiesMap {
   text: TextStyleProperties;
@@ -181,32 +185,3 @@ export async function getLabels(url: string): Promise<LabelFeatureCollection> {
   }
   return JSON.parse(decoder.decode(buffer)) as LabelFeatureCollection;
 }
-
-export interface LabelGlyphSpriteSheet {
-  /**
-   * style index
-   */
-  style: number;
-  /**
-   * encoded text
-   */
-  characters: Uint8Array;
-  /**
-   * an array of x components representing the left position of a glyph (in pxiels)
-   */
-  x0: Uint16Array;
-  /**
-   * an array of y components representing the top position of a glyph (in pixels)
-   */
-  y0: Uint16Array;
-  /**
-   * an array of x components representing the right position of a glyph (in pxiels)
-   */
-  x1: Uint16Array;
-  /**
-   * an array of y components representing the bottom position of a glyph (in pixels)
-   */
-  y1: Uint16Array;
-}
-
-export function buildGlyphSpriteSheet(collection: LabelFeatureCollection): void {}

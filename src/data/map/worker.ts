@@ -39,6 +39,7 @@ interface LabelPlan {
 
 async function getRaster(url: string): Promise<ImageBitmap> {
   const response = await fetch(url);
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const blob = await response.blob();
   const bitmap = await createImageBitmap(blob);
   return bitmap;
@@ -153,17 +154,6 @@ function wrapText(context: OffscreenCanvasRenderingContext2D, text: string, maxW
   return lines.length > 0 ? lines : [text];
 }
 
-function transformLabel(label: string, transform?: string): string {
-  switch (transform) {
-    case 'uppercase':
-      return label.toUpperCase();
-    case 'lowercase':
-      return label.toLowerCase();
-    default:
-      return label;
-  }
-}
-
 /**
  * Measures a text label and returns its box plus a deferred draw call. Measurement uses
  * the same context and the same font string that the draw call uses, so the reserved box
@@ -178,7 +168,7 @@ function planText(context: OffscreenCanvasRenderingContext2D, properties: TextLa
   const font = `${fontWeight} ${fontSize}px ${fontFamily}`;
   context.font = font;
 
-  const label = transformLabel(properties.label, styleProperties['text-transform']);
+  const label = properties.label;
   const wrapWidth = styleProperties['text-wrap-width'] ? styleProperties['text-wrap-width'] * scale : 0;
   const lines = wrapText(context, label, wrapWidth);
 
@@ -247,7 +237,7 @@ function planTextAlongPath(context: OffscreenCanvasRenderingContext2D, propertie
   const font = `${fontWeight} ${fontSize}px ${fontFamily}`;
   context.font = font;
 
-  const label = transformLabel(properties.label, styleProperties['text-transform']);
+  const label = properties.label;
   const characters = Array.from(label);
   const count = Math.min(characters.length, coordinates.length, angles.length);
   if (count === 0) return null;
