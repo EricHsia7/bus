@@ -107,7 +107,7 @@ export function resolveLabelScale(flags: number, tileZoom: number, viewZoom: num
   // fixed by the geometry and only follows the tile as it is scaled on screen.
   // Multiplying the glyph size by a scale the spacing does not share would make
   // the characters grow apart from (or pile into) their own baked positions.
-  if (flags & LABEL_FLAG_ALONG_LINE) return 1;
+  if (flags & LABEL_FLAG_ALONG_LINE) return scale0;
 
   // Point labels are DYNAMIC: nothing about their layout is baked into extent
   // space, so the whole label may be interpolated across the zoom interval.
