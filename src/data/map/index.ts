@@ -1,20 +1,4 @@
-export interface MapLoaderLayerRaster {
-  type: 0;
-  x: number;
-  y: number;
-  z: number;
-  url: (x: number, y: number, z: number) => string;
-}
-
-export interface MapLoaderLayerLabels {
-  type: 1;
-  x: number;
-  y: number;
-  z: number;
-  url: (x: number, y: number, z: number) => string;
-}
-
-export type MapLoaderLayer = MapLoaderLayerRaster | MapLoaderLayerLabels;
+import { LabelGlyphPlan } from './label-plan';
 
 /**
  * - 0: pending
@@ -36,6 +20,7 @@ export interface MapLoaderTile {
 
 export interface MapLoaderResponse extends MapLoaderTile {
   bitmap: ImageBitmap;
+  label: LabelGlyphPlan;
 }
 
 export interface MapLoaderWorkerMessageData {

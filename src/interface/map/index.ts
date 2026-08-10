@@ -3,10 +3,13 @@ import { documentQuerySelector, elementQuerySelector } from '../../tools/element
 import { clamp } from '../../tools/math';
 import { MapTileController, TileInfo } from '../../tools/tile-controller';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
+import { drawLabelTiles, LabelTileView } from '../../data/map/label-renderer';
 
 const mapField = documentQuerySelector('.css_map_field');
 const mapCanvas = elementQuerySelector(mapField, '.css_map_canvas') as HTMLCanvasElement;
 const mapContext = mapCanvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
+const mapLabelCanvas = elementQuerySelector(mapField, '.css_map_labels') as HTMLCanvasElement;
+const mapLabelContext = mapLabelCanvas.getContext('2d') as CanvasRenderingContext2D;
 
 type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
@@ -84,6 +87,10 @@ const tileFadeStates = new Map<string, TileFadeState>();
 const protectedTileKeys = new Set<string>();
 /** Tile keys already handed to the loader, used to diff visible sets between movements */
 const requestedTileKeys = new Set<string>();
+/** Plans handed over by the label workers, cached here for the lifetime of the tile. */
+/** Reused every frame so the draw pass allocates nothing. */
+const labelTileViews: Array<LabelTileView> = [];
+
 interface ZoomLayer {
   /** Native zoom level this layer draws its tiles from */
   z: number;
@@ -173,6 +180,7 @@ export function closeMap(): void {
   protectedTileKeys.clear();
   mapLoader.protect(protectedTileKeys);
   mapLoader.trim();
+  mapLabelContext.clearRect(0, 0, width, height);
 }
 
 export function resizeMapCanvas(): void {
@@ -182,11 +190,12 @@ export function resizeMapCanvas(): void {
 
   mapCanvas.width = width * devicePixelRatio;
   mapCanvas.height = height * devicePixelRatio;
+  mapLabelCanvas.width = width * devicePixelRatio;
+  mapLabelCanvas.height = height * devicePixelRatio;
 
   // Resetting the backing store drops the transform, so re-apply it here.
   mapContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
-  // mapContext.imageSmoothingEnabled = true;
-  // mapContext.imageSmoothingQuality = 'high';
+  mapLabelContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
 }
 
 function getTileKey(x: number, y: number, z: number): string {
@@ -529,6 +538,8 @@ function renderFrame(now: number): void {
     layerStack.splice(0, layerStack.length - 1);
   }
 
+  drawLabels();
+
   pruneFadeStates();
 
   // Publish what was just painted, stand-ins included. The loader will not evict these, and
@@ -536,4 +547,35 @@ function renderFrame(now: number): void {
   mapLoader.protect(protectedTileKeys);
 
   if (animating) requestFrame();
+}
+
+/**
+ * Repaints the label overlay for the layer currently on top.
+ *
+ * Deduping and collision run across every visible tile at once, in screen space, so a label
+ * crossing a seam is drawn once and two labels from neighbouring tiles cannot overlap. The
+ * whole overlay is rebuilt each frame because a pan changes which label wins, not just where
+ * it sits.
+ */
+function drawLabels(): void {
+  mapLabelContext.clearRect(0, 0, width, height);
+  labelTileViews.length = 0;
+
+  const z = mapTileController.getNativeZoom();
+  for (const tile of mapTileController.getVisibleTiles(z)) {
+    const { x, y, z } = tile;
+    const cached = mapLoader.get(x, y, z);
+    if (!cached) continue;
+    const plan = cached.label;
+    labelTileViews.push({ plan, screenBBox: tile.screenBBox });
+  }
+
+  if (labelTileViews.length === 0) return;
+
+  drawLabelTiles(mapLabelContext, labelTileViews, {
+    // The fractional zoom, not the native one: point labels interpolate across it.
+    zoom: mapTileController.zoom,
+    width,
+    height
+  });
 }

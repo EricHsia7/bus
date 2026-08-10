@@ -151,37 +151,3 @@ export function resolveLabelStyleProperties<P extends LabelProperties>(collectio
       throw new Error('unknown label kind');
   }
 }
-
-const decoder = new TextDecoder();
-export async function getLabels(url: string): Promise<LabelFeatureCollection> {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  if (!response.body) throw new Error('No response body to stream');
-
-  const inflater = new Decompress();
-
-  let size: number = 0;
-  const chunks: Array<Uint8Array> = [];
-  inflater.ondata = (chunk, final) => {
-    const out = chunk.slice();
-    chunks.push(out);
-    size += out.length;
-  };
-
-  const reader = response.body.getReader();
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    inflater.push(value, false); // feed compressed bytes incrementally
-  }
-
-  inflater.push(new Uint8Array(0), true); // final = true -> flush the tail
-
-  const buffer = new Uint8Array(size);
-  let pos = 0;
-  for (const chunk of chunks) {
-    buffer.set(chunk, pos);
-    pos += chunk.length;
-  }
-  return JSON.parse(decoder.decode(buffer)) as LabelFeatureCollection;
-}
