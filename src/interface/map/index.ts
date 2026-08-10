@@ -17,7 +17,6 @@ type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 const minNativeZoom = 12;
 const maxNativeZoom = 16;
 // [minZoom, maxZoom] therefore covers under zoom + native zoom + over zoom.
-// 0.99 keeps the top of the range inside the last integer layer.
 const minZoom = 12;
 const maxZoom = 18;
 const bounds = [120.886, 24.8, 122.004, 25.3];

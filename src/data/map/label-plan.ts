@@ -901,7 +901,6 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
       if (glyphs[index] > maxSpriteHeight) maxSpriteHeight = glyphs[index];
     }
     const font = cache.lastFont;
-    console.log(`[label-plan] ${tile.x}.${tile.y}.${tile.z} superSample=${cache.superSampleRatio} ` + `sheet=${sheet.width}x${sheet.height} maxSpriteHeight=${maxSpriteHeight.toFixed(1)}px ` + `font: requested=${font ? font.requested.toFixed(1) : '?'}px ` + `applied=${font ? font.applied.toFixed(1) : '?'}px ` + `(${font ? font.appliedFont : 'none'})`);
   }
 
   let placementCount = 0;

@@ -1,3 +1,4 @@
+import { clamp } from '../../tools/math';
 import { FEATURE_F32_STRIDE, FEATURE_U32_STRIDE, GLYPH_STRIDE, LABEL_COLLISION_PADDING, LABEL_FLAG_ALONG_LINE, LABEL_FLAG_HAS_GLYPHS, LABEL_FLAG_ZOOM_SCALED, LABEL_KIND_CODES, PLACEMENT_STRIDE, disposeLabelGlyphPlan } from './label-plan';
 import type { LabelGlyphPlan } from './label-plan';
 
@@ -111,8 +112,7 @@ export function resolveLabelScale(flags: number, tileZoom: number, viewZoom: num
   // Point labels are DYNAMIC: nothing about their layout is baked into extent
   // space, so the whole label may be interpolated across the zoom interval.
   if (!(flags & LABEL_FLAG_ZOOM_SCALED)) return 1;
-  const fraction = Math.min(1, Math.max(0, viewZoom - tileZoom));
-  return scale0 + (scale1 - scale0) * fraction;
+  return scale0 + (scale1 - scale0) ** (viewZoom - tileZoom);
 }
 
 function getPlanScales(plan: LabelGlyphPlan, index: number): [number, number] {
