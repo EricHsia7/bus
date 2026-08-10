@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      # - dev-labels-layer
+      - dev-labels-layer
 
 jobs:
   build:

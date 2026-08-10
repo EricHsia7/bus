@@ -3,7 +3,7 @@ declare const self: DedicatedWorkerGlobalScope;
 // export {}; // make a script a module if no any export or import
 
 import { Decompress } from 'fflate';
-import { MapLoaderTile, MapLoaderWorkerMessageData, MapLoaderWorkerMessageError } from '.';
+import { MapLoaderTile, MapLoaderWorkerMessageData, MapLoaderWorkerMessageError } from './index';
 import { LabelFeatureCollection } from './label';
 import { buildLabelGlyphPlan, LabelGlyphCache } from './label-plan';
 
