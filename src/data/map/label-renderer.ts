@@ -111,7 +111,7 @@ export function resolveLabelScale(flags: number, tileZoom: number, viewZoom: num
 
   // Point labels are DYNAMIC: nothing about their layout is baked into extent
   // space, so the whole label may be interpolated across the zoom interval.
-  if (!(flags & LABEL_FLAG_ZOOM_SCALED)) return 1;
+  if (!(flags & LABEL_FLAG_ZOOM_SCALED)) return scale0;
   return scale0 + (scale1 - scale0) ** (viewZoom - tileZoom);
 }
 
