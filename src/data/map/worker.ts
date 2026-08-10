@@ -57,8 +57,8 @@ async function getLabels(url: string): Promise<LabelFeatureCollection> {
 }
 
 const cache = new LabelGlyphCache({
-  pixelRatio: 2,
-  pageSize: 4096
+  superSample: 4,
+  pageSize: 1024
 });
 
 // /** Sprite sheets are fetched once and shared by every tile that references an icon. */
@@ -77,7 +77,7 @@ const cache = new LabelGlyphCache({
 
 async function loadTile(tile: MapLoaderTile) {
   const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp?v=15`;
-  const labelsURL = `../../../bus-map-f/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?v=15`;
+  const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?v=15`;
 
   const [bitmap, labels] = await Promise.all([getRaster(rasterURL), getLabels(labelsURL)]);
   const labelPlan = buildLabelGlyphPlan(labels, tile, cache);

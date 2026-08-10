@@ -1,123 +1,94 @@
-import { MapLoaderTile } from '.';
-import { CircleStyleProperties, IconStyleProperties, LabelFeature, LabelFeatureCollection, LabelKind, LineStringLabelFeature, PointLabelFeature, TextStyleProperties } from './label';
+import type { MapLoaderTile } from './index';
+import type { CircleStyleProperties, IconStyleProperties, LabelFeature, LabelFeatureCollection, LabelKind, LineStringLabelFeature, PointLabelFeature, TextStyleProperties } from './label';
 
 /**
- * Font sizes, halo radii, offsets and marker widths in the label data are authored
- * against a 256x256 tile. Everything the planner emits is expressed in that space,
- * so the plan is resolution independent and survives a device pixel ratio change.
+ * Width and height, in pixels, of the raster tile images produced by the tile
+ * server. This is the *native* resolution of a tile bitmap and is unrelated to
+ * how large the tile is drawn on screen.
+ */
+export const LABEL_NATIVE_TILE_SIZE = 1024;
+
+/**
+ * The design space that MapInk style values (`text-size`, `text-dy`,
+ * `marker-width`, `text-wrap-width`, ...) are authored in. Every value stored
+ * in a `LabelGlyphPlan` is expressed in these units.
  */
 export const LABEL_DESIGN_SIZE = 256;
 
-/** Multiplier applied to the font size to get the baseline-to-baseline distance of wrapped lines. */
+/**
+ * Logical (CSS) size of one tile in world units. A tile drawn 1:1 covers
+ * `LABEL_TILE_SIZE` logical pixels, so the raster tile image is downscaled by
+ * `LABEL_NATIVE_TILE_SIZE / LABEL_TILE_SIZE` when it is drawn 1:1.
+ */
+export const LABEL_TILE_SIZE = 256;
+
 export const LABEL_LINE_HEIGHT_RATIO = 1.2;
 
-/** Extra breathing room around every label box, in 256-space units. */
 export const LABEL_COLLISION_PADDING = 3;
 
 /**
- * `angles` are encoded as a fraction of `extent`, matching the coordinate encoding,
- * so a full turn is one extent. Kept as one constant because both threads decode it.
+ * Super-sampling factor used when rasterising glyphs into the atlas.
+ *
+ * Glyphs are rasterised at `logicalPixels * superSample` and then drawn back
+ * down at `logicalPixels`, so the factor only buys definition — it must never
+ * change the size a glyph occupies on the final canvas. Defaults to the device
+ * pixel ratio when one is observable (workers do not expose `window`).
  */
+export const DEFAULT_SUPER_SAMPLE_RATIO = ((): number => {
+  const scope = typeof self !== 'undefined' ? (self as unknown as { devicePixelRatio?: number }) : undefined;
+  const ratio = scope?.devicePixelRatio;
+  return typeof ratio === 'number' && ratio > 0 ? ratio : 1;
+})();
+
 export function decodeLabelAngle(angle: number, extent: number): number {
   return (angle / extent) * 2 * Math.PI || 0;
 }
 
-// Typed array strides
-
-/** `glyphs`: [sheetX, sheetY, sheetWidth, sheetHeight] in sprite sheet pixels. */
 export const GLYPH_STRIDE = 4;
-/**
- * `placements`: [glyphIndex, anchorX, anchorY, offsetX, offsetY, angle, width, height].
- *
- * - `anchorX/anchorY` are tile coordinates in `extent` units. Point labels repeat the
- *   feature anchor on every glyph; along-line labels carry their own per-character anchor.
- * - `offsetX/offsetY/width/height` are 256-space units **at text-scale 1**, so the main
- *   thread only has to multiply by the scale it resolves for the current fractional zoom.
- * - `angle` is radians, applied about the anchor. 0 for everything but along-line text.
- */
+
 export const PLACEMENT_STRIDE = 8;
-/** `features`: [kind, styleIndex, placementStart, placementCount, dedupeHash, flags]. */
 export const FEATURE_U32_STRIDE = 6;
-/** `bounds`: [anchorX, anchorY, minX, minY, maxX, maxY, offsetY]. See `LABEL_FLAG_ALONG_LINE`. */
 export const FEATURE_F32_STRIDE = 7;
 
 export const LABEL_KIND_CODES: Record<LabelKind, number> = { text: 0, marker: 1, point: 2, shield: 3, circle: 4 };
 export const LABEL_KINDS_BY_CODE: Array<LabelKind> = ['text', 'marker', 'point', 'shield', 'circle'];
 
-/**
- * The box in `bounds` is absolute, in `extent` units, instead of anchor relative and in
- * 256-space. Along-line labels are pinned to the geometry, so their box cannot be derived
- * by scaling a single anchor relative box.
- */
 export const LABEL_FLAG_ALONG_LINE = 1 << 0;
-/** Sizes interpolate across `text-scale` at fractional zoom. Only point-placed text sets this. */
 export const LABEL_FLAG_ZOOM_SCALED = 1 << 1;
-/** The feature draws at least one sprite. Circles are the only kind that does not. */
 export const LABEL_FLAG_HAS_GLYPHS = 1 << 2;
 
-/**
- * Everything the main thread needs to draw one tile's labels at any fractional zoom,
- * with no access to fonts, styles or the feature collection.
- *
- * The plan is built once per tile off the main thread and then cached there. Placements are
- * laid out at the **worst case** (largest) size the tile can reach, so line breaking and the
- * reserved boxes never have to be recomputed while zooming inside `[zoom, zoom + 1)`.
- *
- * All bulk data is in typed arrays whose buffers are transferred, so handing a plan across
- * the thread boundary copies nothing.
- */
 export interface LabelGlyphPlan {
-  /** `${x}.${y}.${z}`, matching the raster tile key. */
   key: string;
   x: number;
   y: number;
   z: number;
-  /** Tile coordinate extent the anchors are expressed in. */
   extent: number;
-  /** The tile's own zoom (`tZ`). Lower anchor of the `text-scale` interval. */
   zoom: number;
-  /** Units the 256-space metrics are authored against, carried so the consumer needs no constant. */
   designSize: number;
-  /** Every glyph and icon the tile draws, pre-composited with its fill and halo. */
   sheet: ImageBitmap | null;
-  /** Sprite rectangles into `sheet`, `GLYPH_STRIDE` floats each. */
   glyphs: Float32Array;
-  /** Worst-case placements, `PLACEMENT_STRIDE` floats each. */
   placements: Float32Array;
-  /** Feature records in server priority order, `FEATURE_U32_STRIDE` uints each. */
   features: Uint32Array;
-  /** Feature anchors and worst-case boxes, `FEATURE_F32_STRIDE` floats each. */
   bounds: Float32Array;
-  /**
-   * The `text-scale` interval `[s0, s1]` per feature, so the renderer can resolve a size at
-   * a fractional zoom without the style table. Icons and circles store `[1, 1]`.
-   */
   scales: Float32Array;
-  /** Circles are vectors, not sprites, so their paint stays as data. Indexed by `styleIndex`. */
   circleStyles: Array<CircleStyleProperties>;
-  /** Resolved text per feature, kept for debugging. Deduping uses the hash in `features`. */
   labels: Array<string>;
 }
 
-/** The buffers whose ownership moves with the plan. Pass as `postMessage`'s transfer list. */
 export function getLabelGlyphPlanTransferables(plan: LabelGlyphPlan): Array<Transferable> {
   const transferables: Array<Transferable> = [plan.glyphs.buffer, plan.placements.buffer, plan.features.buffer, plan.bounds.buffer, plan.scales.buffer];
   if (plan.sheet) transferables.push(plan.sheet);
   return transferables;
 }
 
-/** Frees a plan the main thread has evicted. Typed arrays are garbage collected, the bitmap is not. */
 export function disposeLabelGlyphPlan(plan: LabelGlyphPlan): void {
   plan.sheet?.close();
   plan.sheet = null;
 }
 
-// Glyph cache
-
 interface AtlasPage {
   canvas: OffscreenCanvas;
   context: OffscreenCanvasRenderingContext2D;
-  /** Shelf packer cursor. */
   shelfX: number;
   shelfY: number;
   shelfHeight: number;
@@ -129,65 +100,42 @@ interface GlyphSprite {
   sy: number;
   sw: number;
   sh: number;
-  /** Offset from the pen origin to the sprite's left edge, in 256-space units at text-scale 1. */
   bearingX: number;
-  /** Offset from the baseline to the sprite's top edge, in 256-space units at text-scale 1. */
   bearingY: number;
-  /** Pen advance, in 256-space units at text-scale 1. */
   advance: number;
-  /** Sprite size in 256-space units at text-scale 1. */
   width: number;
   height: number;
 }
 
-/**
- * A style's rasterisation parameters, resolved once and reused for every tile that
- * references an equivalent style.
- */
 interface StyleRaster {
   signature: string;
   font: string;
-  /** `text-size` in 256-space units. */
   size: number;
-  /** Largest multiplier the style can reach, i.e. `max(text-scale)`. Glyphs are baked at this size. */
   maxScale: number;
-  /** Divisor turning a raster pixel metric into a 256-space metric at text-scale 1. */
   designPerPixel: number;
   fill: string;
   haloFill: string | null;
-  /** Halo radius in raster pixels. */
   haloPixels: number;
-  /** Font ascent and descent in 256-space units at text-scale 1, used to centre lines. */
   ascent: number;
   descent: number;
 }
 
 export interface LabelGlyphCacheOptions {
-  /** Backing store size of one atlas page, in pixels. */
   pageSize?: number;
-  /**
-   * Oversampling applied on top of the style's own worst-case size. Glyphs are only ever
-   * scaled down from the atlas, so this is what keeps them sharp on a HiDPI display.
-   */
-  pixelRatio?: number;
-  /** Fallback font stack when `text-face-name` names nothing installed. */
   fontFamily?: string;
   fontWeight?: number;
+  /**
+   * Rasterisation over-sampling factor. Pass the main thread's
+   * `window.devicePixelRatio` when constructing the cache inside a worker.
+   */
+  superSample?: number;
 }
 
-/**
- * Rasterises each glyph once per style and keeps it for the lifetime of the worker.
- *
- * Fill and halo are baked into the sprite, which is why the cache is keyed per style rather
- * than per font: two styles sharing a font but not a colour cannot share a sprite, and a
- * style shared across tiles rasterises exactly once. Drawing a label is then a run of plain
- * `drawImage` calls with no paint state changes at all.
- */
 export class LabelGlyphCache {
   private readonly pageSize: number;
-  private readonly pixelRatio: number;
   private readonly fontFamily: string;
   private readonly fontWeight: number;
+  private readonly superSample: number;
 
   private readonly pages: Array<AtlasPage> = [];
   private readonly sprites = new Map<string, GlyphSprite | null>();
@@ -196,13 +144,24 @@ export class LabelGlyphCache {
 
   constructor(options: LabelGlyphCacheOptions = {}) {
     this.pageSize = options.pageSize ?? 1024;
-    this.pixelRatio = options.pixelRatio ?? 2;
     this.fontFamily = options.fontFamily ?? "'Noto Sans TC', sans-serif";
     this.fontWeight = options.fontWeight ?? 400;
+    this.superSample = Math.max(1, options.superSample ?? DEFAULT_SUPER_SAMPLE_RATIO);
     this.measureContext = new OffscreenCanvas(1, 1).getContext('2d') as OffscreenCanvasRenderingContext2D;
   }
 
-  /** Number of glyphs currently held, for cache reporting. */
+  /** The effective super-sampling factor, after the `>= 1` floor and any fallback. */
+  get superSampleRatio(): number {
+    return this.superSample;
+  }
+
+  /**
+   * Requested vs actually-applied font size for the most recently built raster.
+   * These must stay equal; a divergence means the canvas rejected the font string
+   * and is measuring/rasterising at some other size entirely.
+   */
+  public lastFont: { requested: number; applied: number; appliedFont: string } | null = null;
+
   public get size(): number {
     return this.sprites.size;
   }
@@ -215,32 +174,73 @@ export class LabelGlyphCache {
 
   private resolveFontFamily(faceName: string | undefined): string {
     if (!faceName) return this.fontFamily;
-    // `text-face-name` is a Mapnik style face name, not a CSS family. Anything unresolved
-    // falls through to the bundled stack rather than to the UA default.
-    return `'${faceName.replace(/\s+(Regular|Book|Normal)$/i, '')}', ${this.fontFamily}`;
+
+    // A face name can arrive already quoted ("'Noto Sans TC'") or as a whole
+    // comma-separated stack. Blindly wrapping either in another pair of quotes
+    // produces invalid CSS such as `''Noto Sans TC', 'X''`, and assigning an
+    // invalid string to `ctx.font` is a SILENT no-op -- the context keeps its
+    // previous size, so every glyph is rasterised at the wrong scale and no
+    // amount of super-sampling changes anything. Normalise to a clean stack.
+    const stack = faceName
+      .replace(/\s+(Regular|Book|Normal)$/i, '')
+      .split(',')
+      .map((part) =>
+        part
+          .trim()
+          .replace(/^['"]+|['"]+$/g, '')
+          .trim()
+      )
+      .filter((part) => part.length > 0)
+      // Only identifier-safe names may go unquoted; anything with a space or
+      // punctuation must be quoted exactly once.
+      .map((part) => (/^[A-Za-z][A-Za-z0-9-]*$/.test(part) ? part : `'${part}'`));
+
+    if (stack.length === 0) return this.fontFamily;
+    return `${stack.join(', ')}, ${this.fontFamily}`;
   }
 
-  /**
-   * Resolves and caches a style's rasterisation parameters. `size` and `maxScale` are passed
-   * in because a shield's text size comes from `shield-size`, not from `text-size`.
-   */
   public getStyleRaster(style: TextStyleProperties, size: number, maxScale: number): StyleRaster {
     const fill = style['text-fill'] ?? '#000000';
     const haloFill = style['text-halo-fill'] ?? null;
     const haloRadius = haloFill ? (style['text-halo-radius'] ?? 0) : 0;
     const family = this.resolveFontFamily(style['text-face-name']);
-    const signature = `${family}|${this.fontWeight}|${size}|${maxScale}|${fill}|${haloFill ?? ''}|${haloRadius}`;
+    const signature = `${family}|${this.fontWeight}|${size}|${maxScale}|${this.superSample}|${fill}|${haloFill ?? ''}|${haloRadius}`;
 
     const cached = this.styles.get(signature);
     if (cached) return cached;
 
-    // Baked at the largest size the style can reach, so a fractional zoom only ever
-    // downsamples the atlas.
-    const fontPixels = size * maxScale * this.pixelRatio;
-    const font = `${this.fontWeight} ${fontPixels}px ${family}`;
-    const designPerPixel = 1 / (maxScale * this.pixelRatio);
+    // Stage 1 — design unit to logical pixel: size / designSize * tileSize.
+    const logicalPixels = (size / LABEL_DESIGN_SIZE) * LABEL_TILE_SIZE;
+    // Stage 2 — logical pixel to super-sampled raster pixel. `maxScale` is folded
+    // in so a label that grows with zoom is still rasterised above its largest
+    // on-screen size rather than being magnified from an under-sampled sprite.
+    const maxFontPixels = 192; // Protect against GPU texture overflow and browser canvas limits
+    const requestedPixels = Math.min(maxFontPixels, logicalPixels * maxScale * this.superSample);
+    const font = `${this.fontWeight} ${requestedPixels}px ${family}`;
 
+    // Assigning an unparseable `font` is a SILENT no-op on a canvas context: the
+    // context keeps its previous value (`10px sans-serif` on a fresh one) and
+    // every subsequent measureText reports ink for THAT size instead. The sprite
+    // box would then stay fixed at ~10px while `designPerPixel` kept shrinking as
+    // `superSample` grew, making glyphs shrink as sampling got finer. So never
+    // trust the requested size -- read back what the context actually applied and
+    // derive the conversion from that, keeping the two exactly reciprocal.
     this.measureContext.font = font;
+    const appliedFont = this.measureContext.font;
+    const appliedMatch = /(\d+(?:\.\d+)?)px/.exec(appliedFont);
+    const fontPixels = appliedMatch ? parseFloat(appliedMatch[1]) : requestedPixels;
+
+    if (Math.abs(fontPixels - requestedPixels) > 0.01) {
+      console.warn(`[label-plan] font not applied: requested ${requestedPixels}px, got ${fontPixels}px ` + `(font="${font}", applied="${appliedFont}"). Glyphs will be rasterised at the ` + `applied size; check that the family is loaded in this context.`);
+    }
+
+    // Exact inverse of the two stages above, including the clamp. Because every
+    // sprite metric is multiplied by this factor, the design-unit geometry the
+    // renderer consumes is invariant to `superSample` and to `maxScale`.
+    this.lastFont = { requested: requestedPixels, applied: fontPixels, appliedFont };
+
+    const designPerPixel = size / fontPixels;
+
     const metrics = this.measureContext.measureText('Hg');
     const ascent = (metrics.fontBoundingBoxAscent ?? metrics.actualBoundingBoxAscent ?? fontPixels * 0.8) * designPerPixel;
     const descent = (metrics.fontBoundingBoxDescent ?? metrics.actualBoundingBoxDescent ?? fontPixels * 0.2) * designPerPixel;
@@ -253,7 +253,7 @@ export class LabelGlyphCache {
       designPerPixel,
       fill,
       haloFill,
-      haloPixels: haloRadius * maxScale * this.pixelRatio,
+      haloPixels: haloRadius * (fontPixels / size),
       ascent,
       descent
     };
@@ -262,7 +262,6 @@ export class LabelGlyphCache {
     return raster;
   }
 
-  /** Advance only, for line breaking decisions that do not need a sprite. */
   public measureAdvance(raster: StyleRaster, character: string): number {
     this.measureContext.font = raster.font;
     return this.measureContext.measureText(character).width * raster.designPerPixel;
@@ -280,7 +279,6 @@ export class LabelGlyphCache {
     return page;
   }
 
-  /** Shelf allocation. Glyphs of one style share a height, so shelves stay dense. */
   private allocate(width: number, height: number): { page: number; x: number; y: number } | null {
     if (width > this.pageSize || height > this.pageSize) return null;
 
@@ -308,10 +306,6 @@ export class LabelGlyphCache {
     return { page: this.pages.length - 1, x: 0, y: 0 };
   }
 
-  /**
-   * Returns the sprite for one character in one style, rasterising it on first use.
-   * Whitespace and unrenderable characters cache as `null` so they are not measured twice.
-   */
   public getGlyph(raster: StyleRaster, character: string): GlyphSprite | null {
     const key = `${raster.signature}\u0000${character}`;
     const cached = this.sprites.get(key);
@@ -329,17 +323,28 @@ export class LabelGlyphCache {
     const inkWidth = left + right;
     const inkHeight = ascent + descent;
     if (!(inkWidth > 0) || !(inkHeight > 0)) {
-      // A space still advances the pen, so it is cached as a metrics-only entry.
       const blank: GlyphSprite | null = advance > 0 ? { page: -1, sx: 0, sy: 0, sw: 0, sh: 0, bearingX: 0, bearingY: 0, advance, width: 0, height: 0 } : null;
       this.sprites.set(key, blank);
       return blank;
     }
 
-    // The halo is stroked centred on the outline, so half of it sits outside the ink box.
-    // One extra pixel keeps bilinear sampling from pulling in the neighbouring sprite.
-    const padding = Math.ceil(raster.haloPixels / 2) + 1;
-    const spriteWidth = Math.ceil(inkWidth) + padding * 2;
-    const spriteHeight = Math.ceil(inkHeight) + padding * 2;
+    // Padding is defined in DESIGN units and only then converted to raster
+    // pixels. Rounding it to whole raster pixels (as an integer sprite box would
+    // require) makes the padding a superSample-dependent fraction of the box,
+    // which is what made the drawn size drift with the sampling factor.
+    const paddingDesign = (raster.haloPixels * raster.designPerPixel) / 2 + 1;
+    const padding = paddingDesign / raster.designPerPixel;
+
+    // Exact, unquantised source box. `inkWidth` is proportional to the raster
+    // font size and `designPerPixel` is its exact inverse, so
+    //   boxWidth * designPerPixel === inkDesign + 2 * paddingDesign
+    // is invariant under superSample by construction.
+    const boxWidth = inkWidth + padding * 2;
+    const boxHeight = inkHeight + padding * 2;
+
+    // The atlas slot is still whole pixels; only the sampled sub-rect is exact.
+    const spriteWidth = Math.ceil(boxWidth);
+    const spriteHeight = Math.ceil(boxHeight);
 
     const slot = this.allocate(spriteWidth, spriteHeight);
     if (!slot) {
@@ -365,30 +370,24 @@ export class LabelGlyphCache {
       page: slot.page,
       sx: slot.x,
       sy: slot.y,
-      sw: spriteWidth,
-      sh: spriteHeight,
+      sw: boxWidth,
+      sh: boxHeight,
       bearingX: -(left + padding) * raster.designPerPixel,
       bearingY: -(ascent + padding) * raster.designPerPixel,
       advance,
-      width: spriteWidth * raster.designPerPixel,
-      height: spriteHeight * raster.designPerPixel
+      width: boxWidth * raster.designPerPixel,
+      height: boxHeight * raster.designPerPixel
     };
 
     this.sprites.set(key, sprite);
     return sprite;
   }
 
-  /**
-   * Copies a sprite out of its atlas page and into a tile sheet. The atlas stays owned by
-   * the worker; only the composed sheet crosses the thread boundary.
-   */
   public blit(sprite: GlyphSprite, context: OffscreenCanvasRenderingContext2D, x: number, y: number): void {
     if (sprite.page < 0) return;
     context.drawImage(this.pages[sprite.page].canvas, sprite.sx, sprite.sy, sprite.sw, sprite.sh, x, y, sprite.sw, sprite.sh);
   }
 }
-
-// Plan building
 
 export interface BuildLabelGlyphPlanOptions {
   x: number;
@@ -411,7 +410,6 @@ interface LocalPlacement {
   angle: number;
   width: number;
   height: number;
-  /** Sprite size in sheet pixels. Icons are packed at their natural size. */
   pixelWidth: number;
   pixelHeight: number;
 }
@@ -420,7 +418,6 @@ interface LocalFeature {
   kind: LabelKind;
   styleIndex: number;
   flags: number;
-  /** `text-scale`, carried through so the renderer can interpolate it per frame. */
   scale0: number;
   scale1: number;
   dedupeHash: number;
@@ -450,13 +447,6 @@ function getTextScale(style: TextStyleProperties): [number, number] {
   return [scale[0], scale[1]];
 }
 
-/**
- * Pre-rasterises every character the tile can possibly draw, one style at a time.
- *
- * The server has already grouped the charsets by style, so this walks each style's font
- * exactly once instead of thrashing the canvas font state per feature, and every tile that
- * reuses a style finds the whole charset already resident.
- */
 export function warmLabelGlyphCache(collection: LabelFeatureCollection, cache: LabelGlyphCache): void {
   for (const charset of collection.charsets) {
     if (charset.table === 'textStyles') {
@@ -468,7 +458,6 @@ export function warmLabelGlyphCache(collection: LabelFeatureCollection, cache: L
       continue;
     }
 
-    // Icon styles only carry glyphs for shields, whose text is sized by `shield-size`.
     const style = collection.iconStyles[charset.style];
     if (!style || !style['shield-size']) continue;
     const raster = cache.getStyleRaster({ layer: style.layer }, style['shield-size'], 1);
@@ -476,17 +465,12 @@ export function warmLabelGlyphCache(collection: LabelFeatureCollection, cache: L
   }
 }
 
-/**
- * Breaks a label at `text-wrap-width`, falling back to per-character breaking for tokens
- * that do not fit, which is what keeps Chinese labels (no spaces) off one very long line.
- *
- * Measured at the worst-case scale on purpose: that is the size at which the label needs the
- * most lines, so the layout the main thread caches is the one that reserves the most space.
- */
 function wrapLabel(cache: LabelGlyphCache, raster: StyleRaster, text: string, wrapWidth: number): Array<string> {
   if (!(wrapWidth > 0)) return [text];
 
-  const measure = (value: string) => cache.measureAdvance(raster, value) * raster.maxScale;
+  // `text-wrap-width` is authored in design units, and `measureAdvance` already
+  // returns design units, so no scale correction belongs here.
+  const measure = (value: string) => cache.measureAdvance(raster, value);
   if (measure(text) <= wrapWidth) return [text];
 
   const lines: Array<string> = [];
@@ -531,16 +515,10 @@ function wrapLabel(cache: LabelGlyphCache, raster: StyleRaster, text: string, wr
   return lines.length > 0 ? lines : [text];
 }
 
-/**
- * Lays a wrapped label out around (0, 0), centred horizontally and vertically, in 256-space
- * units at text-scale 1. `text-dy` is deliberately not folded in here: it is a placement
- * offset, so the main thread adds it after the scale multiply.
- */
 function layoutCentredText(cache: LabelGlyphCache, raster: StyleRaster, lines: Array<string>, anchorX: number, anchorY: number): Array<LocalPlacement> {
   const placements: Array<LocalPlacement> = [];
   const lineHeight = raster.size * LABEL_LINE_HEIGHT_RATIO;
   const firstLineY = -((lines.length - 1) * lineHeight) / 2;
-  // The block is centred on the anchor, so the baseline sits half an x-height below it.
   const baselineShift = (raster.ascent - raster.descent) / 2;
 
   for (let index = 0; index < lines.length; index++) {
@@ -577,10 +555,17 @@ function layoutCentredText(cache: LabelGlyphCache, raster: StyleRaster, lines: A
     }
   }
 
+  const box = measurePlacements(placements);
+  const cx = (box.minX + box.maxX) / 2;
+  const cy = (box.minY + box.maxY) / 2;
+  for (const placement of placements) {
+    placement.offsetX -= cx;
+    placement.offsetY -= cy;
+  }
+
   return placements;
 }
 
-/** Union of the placement boxes, in the same units the placements were laid out in. */
 function measurePlacements(placements: Array<LocalPlacement>): { minX: number; minY: number; maxX: number; maxY: number } {
   let minX = Infinity;
   let minY = Infinity;
@@ -598,15 +583,6 @@ function measurePlacements(placements: Array<LocalPlacement>): { minX: number; m
   return { minX, minY, maxX, maxY };
 }
 
-/**
- * Along-line text. Each character keeps the anchor and tangent the server solved for it, so
- * the label stays welded to the street: the placement is fixed at the tile's own zoom and
- * only `text-scale[0]` is ever applied to the sizes.
- *
- * The reserved box is therefore absolute, in `extent` units, and is the union of the rotated
- * per-character boxes. The AABB of a rotated box over-reserves, which errs towards dropping a
- * colliding label rather than overlapping one.
- */
 function planAlongLine(cache: LabelGlyphCache, feature: LineStringLabelFeature, style: TextStyleProperties, extent: number): LocalFeature | null {
   const size = style['text-size'];
   if (!size) return null;
@@ -649,7 +625,6 @@ function planAlongLine(cache: LabelGlyphCache, feature: LineStringLabelFeature, 
       bitmap: null,
       anchorX,
       anchorY,
-      // Centred on its own anchor, like the per-character placement the server solved for.
       offsetX: -sprite.width / 2,
       offsetY: -sprite.height / 2,
       angle,
@@ -659,7 +634,6 @@ function planAlongLine(cache: LabelGlyphCache, feature: LineStringLabelFeature, 
       pixelHeight: sprite.sh
     });
 
-    // Rotated corners, resolved here so the main thread never has to rotate a box.
     const halfWidth = (sprite.width * fixedScale * designToExtent) / 2;
     const halfHeight = (sprite.height * fixedScale * designToExtent) / 2;
     const sin = Math.sin(angle);
@@ -694,7 +668,6 @@ function planAlongLine(cache: LabelGlyphCache, feature: LineStringLabelFeature, 
   };
 }
 
-/** Point-placed text. Sizes interpolate across `text-scale`, so the box is stored at scale 1. */
 function planPointText(cache: LabelGlyphCache, feature: PointLabelFeature, style: TextStyleProperties, label: string, styleIndex: number): LocalFeature | null {
   const size = style['text-size'];
   if (!size) return null;
@@ -727,11 +700,6 @@ function planPointText(cache: LabelGlyphCache, feature: PointLabelFeature, style
   };
 }
 
-/**
- * Markers, points and shields. The icon is sized by `icon-width`/`icon-height`, which are
- * absolute 256-space sizes rather than glyph metrics, so icons do not take `text-scale`.
- * A shield additionally stamps its resolved text over the centre of the sprite.
- */
 function planIcon(cache: LabelGlyphCache, feature: PointLabelFeature, style: IconStyleProperties, styleIndex: number, kind: 'marker' | 'point' | 'shield', icons: BuildLabelGlyphPlanOptions['icons']): LocalFeature | null {
   const anchorX = feature.geometry.coordinates[0];
   const anchorY = feature.geometry.coordinates[1];
@@ -763,7 +731,6 @@ function planIcon(cache: LabelGlyphCache, feature: PointLabelFeature, style: Ico
     for (const placement of layoutCentredText(cache, raster, [label], anchorX, anchorY)) placements.push(placement);
   }
 
-  // An icon that cannot be drawn reserves nothing, so it does not suppress a text label that can.
   if (placements.length === 0) return null;
 
   const box = measurePlacements(placements);
@@ -784,13 +751,11 @@ function planIcon(cache: LabelGlyphCache, feature: PointLabelFeature, style: Ico
   };
 }
 
-/** Circles are vectors, so they carry a box and a style index and no sprite at all. */
 function planCircle(feature: PointLabelFeature, style: CircleStyleProperties, styleIndex: number): LocalFeature | null {
   const markerWidth = style['marker-width'];
   if (!markerWidth) return null;
   if (!style['marker-fill']) return null;
 
-  // `marker-width` is a diameter in 256-space; the outline straddles the edge.
   const radius = markerWidth / 2 + (style['marker-line-color'] ? 0.5 : 0);
 
   return {
@@ -812,11 +777,6 @@ function planCircle(feature: PointLabelFeature, style: CircleStyleProperties, st
   };
 }
 
-/**
- * Packs every distinct sprite the tile references into one sheet and returns the sheet
- * rectangles. Sprites are deduplicated first, so a label repeating a character pays for it
- * once, and the sheet is only as large as the tile actually needs.
- */
 function composeSheet(cache: LabelGlyphCache, features: Array<LocalFeature>, maxSheetSize: number): { sheet: ImageBitmap | null; glyphs: Float32Array; indices: Map<LocalPlacement, number> } {
   const order: Array<LocalPlacement> = [];
   const bySprite = new Map<unknown, number>();
@@ -840,7 +800,6 @@ function composeSheet(cache: LabelGlyphCache, features: Array<LocalFeature>, max
 
   if (order.length === 0) return { sheet: null, glyphs: new Float32Array(0), indices };
 
-  // Tallest first, so the shelves stay tight.
   const sorted = order.map((placement, index) => ({ placement, index })).sort((a, b) => b.placement.pixelHeight - a.placement.pixelHeight);
 
   let sheetWidth = 0;
@@ -868,7 +827,10 @@ function composeSheet(cache: LabelGlyphCache, features: Array<LocalFeature>, max
     if (pixelHeight > shelfHeight) shelfHeight = pixelHeight;
   }
 
-  const sheetHeight = Math.max(1, shelfY + shelfHeight);
+  // Sprite boxes are fractional (they carry exact design-unit sizes), so the
+  // packed height is fractional too. A canvas truncates a fractional dimension,
+  // which would silently clip the bottom row of the last shelf. Round up.
+  const sheetHeight = Math.max(1, Math.ceil(shelfY + shelfHeight));
   const canvas = new OffscreenCanvas(sheetWidth, sheetHeight);
   const context = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
 
@@ -885,17 +847,6 @@ function composeSheet(cache: LabelGlyphCache, features: Array<LocalFeature>, max
   return { sheet: canvas.transferToImageBitmap(), glyphs: rects, indices };
 }
 
-/**
- * Builds the drawable plan for one tile.
- *
- * Runs off the main thread: it rasterises glyphs, resolves styles, wraps and lays out every
- * label at its worst-case size, packs a sheet, and flattens the result into typed arrays.
- * The main thread then owns a self-contained tile that it can draw at any fractional zoom
- * without touching a font, a style table or the feature collection again.
- *
- * Features are kept in the order the server sent them, which is its priority order, so
- * collision resolution downstream is just "first one wins".
- */
 export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: MapLoaderTile, cache: LabelGlyphCache): LabelGlyphPlan {
   const { x, y, z } = tile;
   const extent = collection.extent || 1;
@@ -922,8 +873,8 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
         case 'marker':
         case 'point':
         case 'shield': {
-          const style = collection.iconStyles[properties.style];
-          if (style) local = planIcon(cache, point, style, properties.style, properties.kind, tile.icons);
+          // const style = collection.iconStyles[properties.style];
+          // if (style) local = planIcon(cache, point, style, properties.style, properties.kind, tile.icons);
           break;
         }
         case 'circle': {
@@ -937,7 +888,21 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
     if (local) locals.push(local);
   }
 
-  const { sheet, glyphs, indices } = composeSheet(cache, locals, tile.maxSheetSize ?? 2048);
+  const { sheet, glyphs, indices } = composeSheet(cache, locals, 2048);
+
+  // One line per tile describing the whole super-sampling chain, so the atlas
+  // resolution can be confirmed from the console instead of inferred from how
+  // sharp the result looks. If `sheet` does not grow with `superSample`, the
+  // problem is upstream of the renderer; if it does grow but the screen looks
+  // unchanged, the problem is the downscale filtering at draw time.
+  if (sheet) {
+    let maxSpriteHeight = 0;
+    for (let index = 3; index < glyphs.length; index += GLYPH_STRIDE) {
+      if (glyphs[index] > maxSpriteHeight) maxSpriteHeight = glyphs[index];
+    }
+    const font = cache.lastFont;
+    console.log(`[label-plan] ${tile.x}.${tile.y}.${tile.z} superSample=${cache.superSampleRatio} ` + `sheet=${sheet.width}x${sheet.height} maxSpriteHeight=${maxSpriteHeight.toFixed(1)}px ` + `font: requested=${font ? font.requested.toFixed(1) : '?'}px ` + `applied=${font ? font.applied.toFixed(1) : '?'}px ` + `(${font ? font.appliedFont : 'none'})`);
+  }
 
   let placementCount = 0;
   for (const local of locals) placementCount += local.placements.length;
