@@ -20,6 +20,7 @@ export interface DrawLabelTilesOptions {
   width: number;
   height: number;
   dedupe?: boolean;
+  devicePixelRatio: number;
 }
 
 const SEAM_CELL_SIZE = 64;
@@ -116,6 +117,15 @@ function getPlanScales(plan: LabelGlyphPlan, index: number): [number, number] {
   return [scales[index * 2], scales[index * 2 + 1]];
 }
 
+/**
+ * Draws one feature's glyphs.
+ *
+ * Every cell in the tile sheet is already baked at its final angle, so this is
+ * an axis-aligned `drawImage` per glyph and the canvas transform is left
+ * untouched. That is deliberate: WebKit falls off its blit fast path under a
+ * rotational CTM, and along-line glyphs are the overwhelming majority of what a
+ * dense tile draws.
+ */
 function drawGlyphs(context: Context2D, plan: LabelGlyphPlan, featureIndex: number, tileX: number, tileY: number, extentToPixel: number, designToPixel: number, scale: number): void {
   const featureOffset = featureIndex * FEATURE_U32_STRIDE;
   const flags = plan.features[featureOffset + 5];
@@ -141,18 +151,8 @@ function drawGlyphs(context: Context2D, plan: LabelGlyphPlan, featureIndex: numb
     const anchorY = tileY + plan.placements[offset + 2] * extentToPixel + dy;
     const offsetX = plan.placements[offset + 3] * unit;
     const offsetY = plan.placements[offset + 4] * unit;
-    const angle = plan.placements[offset + 5];
-    const width = plan.placements[offset + 6] * unit;
-    const height = plan.placements[offset + 7] * unit;
-
-    if (angle) {
-      context.save();
-      context.translate(anchorX, anchorY);
-      context.rotate(angle);
-      context.drawImage(plan.sheet, sx, sy, sw, sh, offsetX, offsetY, width, height);
-      context.restore();
-      continue;
-    }
+    const width = plan.placements[offset + 5] * unit;
+    const height = plan.placements[offset + 6] * unit;
 
     context.drawImage(plan.sheet, sx, sy, sw, sh, anchorX + offsetX, anchorY + offsetY, width, height);
   }
@@ -263,5 +263,4 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
       }
     }
   }
-
 }
