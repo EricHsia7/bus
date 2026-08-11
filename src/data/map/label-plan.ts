@@ -68,6 +68,14 @@ export const LABEL_KINDS_BY_CODE: Array<LabelKind> = ['text', 'marker', 'point',
 export const LABEL_FLAG_ALONG_LINE = 1 << 0;
 export const LABEL_FLAG_ZOOM_SCALED = 1 << 1;
 export const LABEL_FLAG_HAS_GLYPHS = 1 << 2;
+/**
+ * The feature's reserved box leaves its own tile.
+ *
+ * Plan-stage collision is tile-local and cannot see into the neighbouring tile
+ * a box lands in, so these -- and only these -- still need a screen-space test
+ * at draw time. Interior features are already guaranteed conflict-free.
+ */
+export const LABEL_FLAG_SEAM = 1 << 3;
 
 export interface LabelGlyphPlan {
   key: string;
@@ -862,46 +870,50 @@ function computeCollisionBox(local: LocalFeature, extent: number): CollisionBox 
   };
 }
 
-/** Uniform grid over the tile's extent, so collision stays roughly linear. */
+/**
+ * Uniform grid over the tile and its buffer, so collision stays roughly linear.
+ *
+ * The grid deliberately spans one whole tile width of margin on every side.
+ * Tiles are buffered, so a large share of features belong to geometry that
+ * spills past the tile edge, and their boxes live in negative or beyond-extent
+ * coordinates. Addressing that margin is what lets two out-of-tile boxes be
+ * compared against each other; anything further out clamps into the border
+ * cells, which is merely conservative because `boxesIntersect` still decides.
+ */
 class PlanCollisionIndex {
   private readonly cellSize: number;
+  private readonly origin: number;
   private readonly columns: number;
   private readonly rows: number;
   private readonly cells: Array<Array<CollisionBox> | undefined>;
-  /** Boxes that fall entirely outside the tile, which the grid cannot address. */
-  private readonly loose: Array<CollisionBox> = [];
 
-  constructor(extent: number, columns: number = 16) {
-    this.columns = Math.max(1, columns);
+  constructor(extent: number, columnsPerTile: number = 16) {
+    const perTile = Math.max(1, columnsPerTile);
+    this.cellSize = Math.max(1, extent / perTile);
+    this.origin = -extent;
+    this.columns = perTile * 3;
     this.rows = this.columns;
-    this.cellSize = Math.max(1, extent / this.columns);
     this.cells = new Array(this.columns * this.rows);
   }
 
-  private range(box: CollisionBox): { minColumn: number; minRow: number; maxColumn: number; maxRow: number } | null {
-    const minColumn = Math.floor(box.minX / this.cellSize);
-    const maxColumn = Math.floor(box.maxX / this.cellSize);
-    const minRow = Math.floor(box.minY / this.cellSize);
-    const maxRow = Math.floor(box.maxY / this.cellSize);
-    if (maxColumn < 0 || maxRow < 0 || minColumn >= this.columns || minRow >= this.rows) return null;
-    return {
-      minColumn: Math.max(0, minColumn),
-      minRow: Math.max(0, minRow),
-      maxColumn: Math.min(this.columns - 1, maxColumn),
-      maxRow: Math.min(this.rows - 1, maxRow)
-    };
+  private column(value: number): number {
+    const index = Math.floor((value - this.origin) / this.cellSize);
+    return Math.min(this.columns - 1, Math.max(0, index));
+  }
+
+  private row(value: number): number {
+    const index = Math.floor((value - this.origin) / this.cellSize);
+    return Math.min(this.rows - 1, Math.max(0, index));
   }
 
   public collides(box: CollisionBox): boolean {
-    for (const other of this.loose) {
-      if (boxesIntersect(box, other)) return true;
-    }
+    const minColumn = this.column(box.minX);
+    const maxColumn = this.column(box.maxX);
+    const minRow = this.row(box.minY);
+    const maxRow = this.row(box.maxY);
 
-    const range = this.range(box);
-    if (!range) return false;
-
-    for (let row = range.minRow; row <= range.maxRow; row++) {
-      for (let column = range.minColumn; column <= range.maxColumn; column++) {
+    for (let row = minRow; row <= maxRow; row++) {
+      for (let column = minColumn; column <= maxColumn; column++) {
         const cell = this.cells[row * this.columns + column];
         if (!cell) continue;
         for (const other of cell) {
@@ -914,14 +926,13 @@ class PlanCollisionIndex {
   }
 
   public insert(box: CollisionBox): void {
-    const range = this.range(box);
-    if (!range) {
-      this.loose.push(box);
-      return;
-    }
+    const minColumn = this.column(box.minX);
+    const maxColumn = this.column(box.maxX);
+    const minRow = this.row(box.minY);
+    const maxRow = this.row(box.maxY);
 
-    for (let row = range.minRow; row <= range.maxRow; row++) {
-      for (let column = range.minColumn; column <= range.maxColumn; column++) {
+    for (let row = minRow; row <= maxRow; row++) {
+      for (let column = minColumn; column <= maxColumn; column++) {
         const index = row * this.columns + column;
         const cell = this.cells[index];
         if (cell) cell.push(box);
@@ -1119,7 +1130,11 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
     features[featureOffset + 2] = start;
     features[featureOffset + 3] = placementIndex - start;
     features[featureOffset + 4] = local.dedupeHash;
-    features[featureOffset + 5] = local.flags;
+    // A box that leaves the tile was never tested against whatever occupies the
+    // neighbouring tile, so mark it for the renderer's seam pass.
+    const collision = placed[index].collision;
+    const crossesSeam = collision.minX < 0 || collision.minY < 0 || collision.maxX > extent || collision.maxY > extent;
+    features[featureOffset + 5] = local.flags | (crossesSeam ? LABEL_FLAG_SEAM : 0);
 
     const boundsOffset = index * FEATURE_F32_STRIDE;
     bounds[boundsOffset] = local.anchorX;
@@ -1130,7 +1145,6 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
     bounds[boundsOffset + 5] = local.maxY;
     bounds[boundsOffset + 6] = local.offsetY;
 
-    const collision = placed[index].collision;
     const collisionOffset = index * COLLISION_STRIDE;
     collisions[collisionOffset] = collision.minX;
     collisions[collisionOffset + 1] = collision.minY;

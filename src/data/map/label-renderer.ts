@@ -1,4 +1,4 @@
-import { COLLISION_STRIDE, FEATURE_F32_STRIDE, FEATURE_U32_STRIDE, GLYPH_STRIDE, LABEL_FLAG_ALONG_LINE, LABEL_FLAG_HAS_GLYPHS, LABEL_FLAG_ZOOM_SCALED, LABEL_KIND_CODES, LabelGlyphPlan, PLACEMENT_STRIDE } from './label-plan';
+import { COLLISION_STRIDE, FEATURE_F32_STRIDE, FEATURE_U32_STRIDE, GLYPH_STRIDE, LABEL_FLAG_ALONG_LINE, LABEL_FLAG_HAS_GLYPHS, LABEL_FLAG_SEAM, LABEL_FLAG_ZOOM_SCALED, LABEL_KIND_CODES, LabelGlyphPlan, PLACEMENT_STRIDE } from './label-plan';
 
 type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
@@ -26,6 +26,77 @@ export interface DrawLabelTilesResult {
   deduped: number;
   /** Features skipped because their reserved box is off screen. */
   culled: number;
+  /** Seam-crossing features dropped because a neighbouring tile got there first. */
+  collided: number;
+}
+
+const SEAM_CELL_SIZE = 64;
+
+function intersects(a: Box, b: Box): boolean {
+  return !(a.maxX <= b.minX || a.minX >= b.maxX || a.maxY <= b.minY || a.minY >= b.maxY);
+}
+
+/**
+ * Screen-space grid used ONLY to arbitrate across tile seams.
+ *
+ * Every drawn box is inserted, because a box poking out of tile A can land on a
+ * label sitting comfortably inside tile B. Only seam-flagged features are
+ * queried, so the per-frame cost is a handful of rectangle tests rather than a
+ * full screen-wide placement pass.
+ */
+class SeamCollisionIndex {
+  private readonly columns: number;
+  private readonly rows: number;
+  private readonly cells: Array<Array<Box> | undefined>;
+
+  constructor(width: number, height: number) {
+    this.columns = Math.max(1, Math.ceil(width / SEAM_CELL_SIZE));
+    this.rows = Math.max(1, Math.ceil(height / SEAM_CELL_SIZE));
+    this.cells = new Array(this.columns * this.rows);
+  }
+
+  private column(value: number): number {
+    return Math.min(this.columns - 1, Math.max(0, Math.floor(value / SEAM_CELL_SIZE)));
+  }
+
+  private row(value: number): number {
+    return Math.min(this.rows - 1, Math.max(0, Math.floor(value / SEAM_CELL_SIZE)));
+  }
+
+  public collides(box: Box): boolean {
+    const minColumn = this.column(box.minX);
+    const maxColumn = this.column(box.maxX);
+    const minRow = this.row(box.minY);
+    const maxRow = this.row(box.maxY);
+
+    for (let row = minRow; row <= maxRow; row++) {
+      for (let column = minColumn; column <= maxColumn; column++) {
+        const cell = this.cells[row * this.columns + column];
+        if (!cell) continue;
+        for (const other of cell) {
+          if (intersects(box, other)) return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  public insert(box: Box): void {
+    const minColumn = this.column(box.minX);
+    const maxColumn = this.column(box.maxX);
+    const minRow = this.row(box.minY);
+    const maxRow = this.row(box.maxY);
+
+    for (let row = minRow; row <= maxRow; row++) {
+      for (let column = minColumn; column <= maxColumn; column++) {
+        const index = row * this.columns + column;
+        const cell = this.cells[index];
+        if (cell) cell.push(box);
+        else this.cells[index] = [box];
+      }
+    }
+  }
 }
 
 export function resolveLabelScale(flags: number, tileZoom: number, viewZoom: number, scale0: number, scale1: number): number {
@@ -99,18 +170,21 @@ function drawGlyphs(context: Context2D, plan: LabelGlyphPlan, featureIndex: numb
  * plan is drawable, and this loop is reduced to three cheap per-frame concerns:
  * cross-tile dedupe, viewport culling, and the zoom-interpolated draw size.
  *
- * The consequence of hoisting the decision is that it is made per tile rather
- * than per screen: two labels on either side of a tile seam can no longer see
- * each other. Cross-tile suppression is handled by the dedupe hash for repeated
- * names; distinct labels that straddle a seam may overlap.
+ * Plan-stage collision is tile-local, so it cannot see across a tile seam. The
+ * plan flags every feature whose reserved box leaves its own tile, and only
+ * those are arbitrated here, against a screen-space grid. Interior features are
+ * already conflict-free and skip the test entirely. Repeated names across tiles
+ * are still suppressed by the dedupe hash.
  */
 export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, options: DrawLabelTilesOptions): DrawLabelTilesResult {
   const seen = new Set<number>();
   const dedupe = options.dedupe !== false;
+  const seams = new SeamCollisionIndex(options.width, options.height);
 
   let drawn = 0;
   let deduped = 0;
   let culled = 0;
+  let collided = 0;
 
   for (let tileIndex = 0; tileIndex < tiles.length; tileIndex++) {
     const { plan, screenBBox } = tiles[tileIndex];
@@ -157,6 +231,15 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
       const scale = resolveLabelScale(flags, plan.zoom, options.zoom, scales[0], scales[1]);
       if (scale <= 0) continue;
 
+      // Only boxes that leave their own tile can conflict with another tile's
+      // labels; everything else was already resolved at plan time.
+      const box: Box = { minX, minY, maxX, maxY };
+      if ((flags & LABEL_FLAG_SEAM) !== 0 && seams.collides(box)) {
+        collided++;
+        continue;
+      }
+      seams.insert(box);
+
       if (dedupeHash !== 0) seen.add(dedupeHash);
 
       if (plan.features[featureOffset] === LABEL_KIND_CODES.circle) {
@@ -193,5 +276,5 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
     }
   }
 
-  return { drawn, deduped, culled };
+  return { drawn, deduped, culled, collided };
 }
