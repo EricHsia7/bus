@@ -81,7 +81,7 @@ module.exports = (env, argv) => {
           },
           {
             urlPattern: /^https:\/\/erichsia7.github.io\/bus-map\/tiles\/[0-9]+\/[0-9]+\/[0-9]+\.webp/,
-            handler: 'StaleWhileRevalidate',
+            handler: 'CacheFirst',
             options: {
               cacheName: 'map-tiles',
               matchOptions: {
@@ -98,7 +98,7 @@ module.exports = (env, argv) => {
           },
           {
             urlPattern: /^https:\/\/erichsia7.github.io\/bus-map\/labels\/[0-9]+\/[0-9]+\/[0-9]+\.gz/,
-            handler: 'StaleWhileRevalidate',
+            handler: 'CacheFirst',
             options: {
               cacheName: 'map-labels',
               matchOptions: {
