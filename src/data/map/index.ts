@@ -1,20 +1,4 @@
-export interface MapLoaderLayerRaster {
-  type: 0;
-  x: number;
-  y: number;
-  z: number;
-  url: (x: number, y: number, z: number) => string;
-}
-
-export interface MapLoaderLayerLabels {
-  type: 1;
-  x: number;
-  y: number;
-  z: number;
-  url: (x: number, y: number, z: number) => string;
-}
-
-export type MapLoaderLayer = MapLoaderLayerRaster | MapLoaderLayerLabels;
+import { LabelGlyphPlan } from './label-plan';
 
 /**
  * - 0: pending
@@ -36,6 +20,7 @@ export interface MapLoaderTile {
 
 export interface MapLoaderResponse extends MapLoaderTile {
   bitmap: ImageBitmap;
+  label: LabelGlyphPlan;
 }
 
 export interface MapLoaderWorkerMessageData {
@@ -190,9 +175,9 @@ export class MapLoader {
         const existing = this.cache.get(key);
         let response = message.response;
         if (existing && existing !== response) {
-          // The tile was decoded twice (a re-request raced an in-flight load). The cached
-          // bitmap stays authoritative and the duplicate is closed rather than leaked.
+          // The tile was decoded twice (a re-request raced an in-flight load). The cached bitmap stays authoritative and the duplicate is closed rather than leaked.
           response.bitmap.close?.();
+          response.label.sheet.close?.();
           response = existing;
           this.touch(key);
         } else {
@@ -329,9 +314,9 @@ export class MapLoader {
     this.tileBytes.delete(key);
     if (this.cacheBytes < 0) this.cacheBytes = 0;
 
-    // Owning the bitmap means the texture can be released now rather than whenever a
-    // GC happens to notice a handle that looks cheap on the JS heap.
+    // Owning the bitmap means the texture can be released now rather than whenever a GC happens to notice a handle that looks cheap on the JS heap.
     response.bitmap.close?.();
+    response.label.sheet.close?.();
 
     const tile = this.tiles.get(key);
     if (tile) {

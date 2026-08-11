@@ -81,15 +81,14 @@ module.exports = (env, argv) => {
           },
           {
             urlPattern: /^https:\/\/erichsia7.github.io\/bus-map\/tiles\/[0-9]+\/[0-9]+\/[0-9]+\.webp/,
-            handler: 'StaleWhileRevalidate',
+            handler: 'CacheFirst',
             options: {
               cacheName: 'map-tiles',
               matchOptions: {
                 ignoreSearch: false
               },
               expiration: {
-                maxEntries: 16384,
-                maxAgeSeconds: 30 * 60 * 60 * 24
+                purgeOnQuotaError: true
               },
               cacheableResponse: {
                 statuses: [0, 200]
@@ -98,15 +97,14 @@ module.exports = (env, argv) => {
           },
           {
             urlPattern: /^https:\/\/erichsia7.github.io\/bus-map\/labels\/[0-9]+\/[0-9]+\/[0-9]+\.gz/,
-            handler: 'StaleWhileRevalidate',
+            handler: 'CacheFirst',
             options: {
               cacheName: 'map-labels',
               matchOptions: {
                 ignoreSearch: false
               },
               expiration: {
-                maxEntries: 16384,
-                maxAgeSeconds: 30 * 60 * 60 * 24
+                purgeOnQuotaError: true
               },
               cacheableResponse: {
                 statuses: [0, 200]

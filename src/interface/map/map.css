@@ -1,4 +1,5 @@
-.css_map_field .css_map_canvas {
+.css_map_field .css_map_canvas,
+.css_map_field .css_map_labels {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -11,4 +12,9 @@
   -webkit-user-drag: none;
   filter: var(--b-cssvar-map-filter);
   -webkit-filter: var(--b-cssvar-map-filter);
+  will-change: transform;
+}
+
+.css_map_field .css_map_labels {
+  pointer-events: none;
 }
