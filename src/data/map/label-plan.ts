@@ -827,10 +827,27 @@ function worstCaseScale(local: LocalFeature): number {
 
   if (!(local.flags & LABEL_FLAG_ZOOM_SCALED)) return local.scale0;
 
-  // Point labels are DYNAMIC: they are interpolated across [scale0, scale1] as
-  // the view zoom crosses the tile's interval, so the upper end is what has to
-  // be reserved. The endpoints are not ordered by contract, hence the max().
-  return Math.max(local.scale0, local.scale1);
+  // Point labels are DYNAMIC. The renderer draws them at
+  //
+  //   f(t) = (scale0 + (scale1 - scale0) * t) * 2^-t,   t in [0, 1]
+  //
+  // (a line divided by the tile's own 2^t stretch), so the box has to cover the
+  // maximum of f over the interval -- NOT max(scale0, scale1), which ignores
+  // the stretch and over-reserves by up to a factor of two.
+  //
+  // f is a line times a decaying exponential, so it has at most one interior
+  // turning point. Testing both ends plus that point is therefore exact.
+  const delta = local.scale1 - local.scale0;
+  let worst = Math.max(local.scale0, local.scale1 * 0.5);
+
+  if (delta !== 0) {
+    const turning = 1 / Math.LN2 - local.scale0 / delta;
+    if (turning > 0 && turning < 1) {
+      worst = Math.max(worst, (local.scale0 + delta * turning) * Math.pow(2, -turning));
+    }
+  }
+
+  return worst;
 }
 
 /**

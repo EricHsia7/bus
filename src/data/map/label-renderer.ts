@@ -1,3 +1,4 @@
+import { clamp } from '../../tools/math';
 import { COLLISION_STRIDE, FEATURE_F32_STRIDE, FEATURE_U32_STRIDE, GLYPH_STRIDE, LABEL_FLAG_ALONG_LINE, LABEL_FLAG_HAS_GLYPHS, LABEL_FLAG_SEAM, LABEL_FLAG_ZOOM_SCALED, LABEL_KIND_CODES, LabelGlyphPlan, PLACEMENT_STRIDE } from './label-plan';
 
 type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
@@ -110,7 +111,12 @@ export function resolveLabelScale(flags: number, tileZoom: number, viewZoom: num
   // Point labels are DYNAMIC: nothing about their layout is baked into extent
   // space, so the whole label may be interpolated across the zoom interval.
   if (!(flags & LABEL_FLAG_ZOOM_SCALED)) return scale0;
-  return scale0 + (scale1 - scale0) ** (viewZoom - tileZoom);
+  const t = clamp(viewZoom - tileZoom, 0, 1);
+
+  // 1. The tile is stretched by 2^t across its own interval and `designToPixel` already carries that stretch.
+  // 2. The interpolated design size therefore has to be divided by the same 2^t to survive the trip into pixels.
+  // px = scale(t) * designToPixel(t) = lerp(scale0, scale1, t) * designToPixel(0)
+  return (scale0 + (scale1 - scale0) * t) * Math.pow(2, -t);
 }
 
 function getPlanScales(plan: LabelGlyphPlan, index: number): [number, number] {

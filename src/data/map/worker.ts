@@ -57,7 +57,7 @@ async function getLabels(url: string): Promise<LabelFeatureCollection> {
 }
 
 const cache = new LabelGlyphCache({
-  superSample: 3,
+  superSample: 4,
   pageSize: 2048
 });
 
