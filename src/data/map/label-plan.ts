@@ -1,5 +1,5 @@
-import type { MapLoaderTile } from './index';
-import type { CircleStyleProperties, IconStyleProperties, LabelFeature, LabelFeatureCollection, LabelKind, LineStringLabelFeature, PointLabelFeature, TextStyleProperties } from './label';
+import { MapLoaderTile } from './index';
+import { CircleStyleProperties, IconStyleProperties, LabelFeature, LabelFeatureCollection, LabelKind, LineStringLabelFeature, PointLabelFeature, TextStyleProperties } from './label';
 
 /**
  * Width and height, in pixels, of the raster tile images produced by the tile

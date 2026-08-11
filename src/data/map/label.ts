@@ -1,5 +1,3 @@
-import { Decompress } from 'fflate';
-
 export type LabelKind = 'text' | 'marker' | 'point' | 'shield' | 'circle';
 export type IconKind = 'marker' | 'point' | 'shield';
 

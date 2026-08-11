@@ -1,7 +1,4 @@
-import { clamp } from '../../tools/math';
-import { CircleStyleProperties, LabelFeatureCollection } from './label';
-import { FEATURE_F32_STRIDE, FEATURE_U32_STRIDE, GLYPH_STRIDE, LABEL_COLLISION_PADDING, LABEL_FLAG_ALONG_LINE, LABEL_FLAG_HAS_GLYPHS, LABEL_FLAG_ZOOM_SCALED, LABEL_KIND_CODES, PLACEMENT_STRIDE, disposeLabelGlyphPlan } from './label-plan';
-import type { LabelGlyphPlan } from './label-plan';
+import { FEATURE_F32_STRIDE, FEATURE_U32_STRIDE, GLYPH_STRIDE, LABEL_COLLISION_PADDING, LABEL_FLAG_ALONG_LINE, LABEL_FLAG_HAS_GLYPHS, LABEL_FLAG_ZOOM_SCALED, LABEL_KIND_CODES, LabelGlyphPlan, PLACEMENT_STRIDE } from './label-plan';
 
 type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
