@@ -1118,8 +1118,6 @@ function composeSheet(cache: LabelGlyphCache, features: Array<LocalFeature>, max
     }
   }
 
-  // if (order.length === 0) return { sheet: null, glyphs: new Float32Array(0), indices };
-
   const sorted = order.map((placement, index) => ({ placement, index })).sort((a, b) => b.placement.pixelHeight - a.placement.pixelHeight);
 
   let sheetWidth = 0;

@@ -88,7 +88,6 @@ module.exports = (env, argv) => {
                 ignoreSearch: false
               },
               expiration: {
-                // maxEntries: 16384,
                 purgeOnQuotaError: true
               },
               cacheableResponse: {
@@ -105,7 +104,6 @@ module.exports = (env, argv) => {
                 ignoreSearch: false
               },
               expiration: {
-                // maxEntries: 16384,
                 purgeOnQuotaError: true
               },
               cacheableResponse: {
