@@ -89,7 +89,6 @@ const requestedTileKeys = new Set<string>();
 /** Plans handed over by the label workers, cached here for the lifetime of the tile. */
 /** Reused every frame so the draw pass allocates nothing. */
 const labelTileViews: Array<LabelTileView> = [];
-let redrawLabels: boolean = true;
 
 interface ZoomLayer {
   /** Native zoom level this layer draws its tiles from */
@@ -128,7 +127,6 @@ const mapTileController = new MapTileController({
   },
   onMovement: function () {
     // Only repaint while moving. Requests are issued once movement settles.
-    redrawLabels = true;
     requestFrame();
   },
   onMovementEnd: function () {
@@ -136,7 +134,6 @@ const mapTileController = new MapTileController({
     requestFrame();
   },
   onResize: function () {
-    redrawLabels = true;
     resizeMapCanvas();
     synchronizeQueue();
     requestFrame();
@@ -157,9 +154,9 @@ export function openMap(lon: number = (120.886 + 122.004) / 2, lat: number = (24
   pushPageHistory('Map');
   showMap();
   resizeMapCanvas();
+  mapTileController.focusOn(lon, lat, zoom, duration);
   synchronizeQueue();
   requestFrame();
-  mapTileController.focusOn(lon, lat, zoom, duration);
   hidePreviousPage();
 }
 
@@ -207,7 +204,6 @@ function getTileKey(x: number, y: number, z: number): string {
 function handleTileResponse(response: MapLoaderResponse): void {
   // The loader has already cached the decoded tile. The render loop picks it up on the
   // next frame so it can fade in.
-  redrawLabels = true;
   requestFrame();
 }
 
@@ -541,10 +537,7 @@ function renderFrame(now: number): void {
     layerStack.splice(0, layerStack.length - 1);
   }
 
-  if (redrawLabels) {
-    redrawLabels = false;
-    drawLabels();
-  }
+  drawLabels();
 
   pruneFadeStates();
 

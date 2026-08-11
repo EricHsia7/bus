@@ -8,6 +8,7 @@
   display: block;
   overflow: clip;
   visibility: hidden;
+  contain: paint;
 }
 
 .css_map_field[displayed="true"] {

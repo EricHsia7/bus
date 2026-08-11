@@ -263,5 +263,4 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
       }
     }
   }
-
 }
