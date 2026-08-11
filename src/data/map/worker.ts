@@ -57,8 +57,8 @@ async function getLabels(url: string): Promise<LabelFeatureCollection> {
 }
 
 const cache = new LabelGlyphCache({
-  superSample: 4,
-  pageSize: 1024
+  superSample: 3,
+  pageSize: 2048
 });
 
 // /** Sprite sheets are fetched once and shared by every tile that references an icon. */
@@ -90,6 +90,6 @@ async function loadTile(tile: MapLoaderTile) {
         label: labelPlan
       }
     } as MapLoaderWorkerMessageData,
-    [bitmap, labelPlan.sheet] 
+    [bitmap, labelPlan.sheet, labelPlan.bounds, labelPlan.features, labelPlan.glyphs, labelPlan.placements, labelPlan.scales] 
   );
 }
