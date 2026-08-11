@@ -170,7 +170,7 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
   const dedupe = options.dedupe !== false;
   const paddingUnits = options.padding ?? LABEL_COLLISION_PADDING;
 
-  const glyphQueue: Array<number> = [];
+  // const glyphQueue: Array<number> = [];
 
   let drawn = 0;
   let deduped = 0;
@@ -249,9 +249,8 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
         const centreY = screenBBox.minY + plan.bounds[boundsOffset + 1] * extentToPixel;
         circles.get(styleReference)?.push([centreX, centreY]);
       } else {
-        glyphQueue.push(tileIndex, featureIndex, scale);
+        drawGlyphs(context, plan, featureIndex, screenBBox.minX, screenBBox.minY, extentToPixel, designToPixel, scale);
       }
-
       drawn++;
     }
 
@@ -274,12 +273,6 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
         context.stroke();
       }
     }
-  }
-
-  for (let queueIndex = 0; queueIndex < glyphQueue.length; queueIndex += 3) {
-    const { plan, screenBBox } = tiles[glyphQueue[queueIndex]];
-    const tileWidth = screenBBox.maxX - screenBBox.minX;
-    drawGlyphs(context, plan, glyphQueue[queueIndex + 1], screenBBox.minX, screenBBox.minY, tileWidth / plan.extent, tileWidth / plan.designSize, glyphQueue[queueIndex + 2]);
   }
 
   return { drawn, deduped, collided };
