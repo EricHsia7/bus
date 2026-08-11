@@ -90,6 +90,6 @@ async function loadTile(tile: MapLoaderTile) {
         label: labelPlan
       }
     } as MapLoaderWorkerMessageData,
-    [bitmap]
+    [bitmap, labelPlan.sheet] 
   );
 }

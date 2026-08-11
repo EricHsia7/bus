@@ -65,7 +65,7 @@ export interface LabelGlyphPlan {
   extent: number;
   zoom: number;
   designSize: number;
-  sheet: ImageBitmap | null;
+  sheet: ImageBitmap;
   glyphs: Float32Array;
   placements: Float32Array;
   features: Uint32Array;
@@ -83,7 +83,7 @@ export function getLabelGlyphPlanTransferables(plan: LabelGlyphPlan): Array<Tran
 
 export function disposeLabelGlyphPlan(plan: LabelGlyphPlan): void {
   plan.sheet?.close();
-  plan.sheet = null;
+  // plan.sheet = null;
 }
 
 interface AtlasPage {
@@ -777,7 +777,7 @@ function planCircle(feature: PointLabelFeature, style: CircleStyleProperties, st
   };
 }
 
-function composeSheet(cache: LabelGlyphCache, features: Array<LocalFeature>, maxSheetSize: number): { sheet: ImageBitmap | null; glyphs: Float32Array; indices: Map<LocalPlacement, number> } {
+function composeSheet(cache: LabelGlyphCache, features: Array<LocalFeature>, maxSheetSize: number): { sheet: ImageBitmap; glyphs: Float32Array; indices: Map<LocalPlacement, number> } {
   const order: Array<LocalPlacement> = [];
   const bySprite = new Map<unknown, number>();
   const indices = new Map<LocalPlacement, number>();
@@ -798,7 +798,7 @@ function composeSheet(cache: LabelGlyphCache, features: Array<LocalFeature>, max
     }
   }
 
-  if (order.length === 0) return { sheet: null, glyphs: new Float32Array(0), indices };
+  // if (order.length === 0) return { sheet: null, glyphs: new Float32Array(0), indices };
 
   const sorted = order.map((placement, index) => ({ placement, index })).sort((a, b) => b.placement.pixelHeight - a.placement.pixelHeight);
 
