@@ -575,6 +575,7 @@ function drawLabels(): void {
     // The fractional zoom, not the native one: point labels interpolate across it.
     zoom: mapTileController.zoom,
     width,
-    height
+    height,
+    devicePixelRatio
   });
 }

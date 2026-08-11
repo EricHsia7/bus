@@ -20,6 +20,7 @@ export interface DrawLabelTilesOptions {
   width: number;
   height: number;
   dedupe?: boolean;
+  devicePixelRatio: number;
 }
 
 const SEAM_CELL_SIZE = 64;
@@ -116,7 +117,7 @@ function getPlanScales(plan: LabelGlyphPlan, index: number): [number, number] {
   return [scales[index * 2], scales[index * 2 + 1]];
 }
 
-function drawGlyphs(context: Context2D, plan: LabelGlyphPlan, featureIndex: number, tileX: number, tileY: number, extentToPixel: number, designToPixel: number, scale: number): void {
+function drawGlyphs(context: Context2D, plan: LabelGlyphPlan, featureIndex: number, tileX: number, tileY: number, extentToPixel: number, designToPixel: number, scale: number, devicePixelRatio: number): void {
   const featureOffset = featureIndex * FEATURE_U32_STRIDE;
   const flags = plan.features[featureOffset + 5];
 
@@ -127,6 +128,7 @@ function drawGlyphs(context: Context2D, plan: LabelGlyphPlan, featureIndex: numb
   const dy = plan.bounds[featureIndex * FEATURE_F32_STRIDE + 6] * designToPixel;
   const unit = scale * designToPixel;
 
+  let rotated: boolean = false;
   for (let index = start; index < start + count; index++) {
     const offset = index * PLACEMENT_STRIDE;
     const glyphOffset = plan.placements[offset] * GLYPH_STRIDE;
@@ -144,18 +146,18 @@ function drawGlyphs(context: Context2D, plan: LabelGlyphPlan, featureIndex: numb
     const angle = plan.placements[offset + 5];
     const width = plan.placements[offset + 6] * unit;
     const height = plan.placements[offset + 7] * unit;
-
     if (angle) {
-      context.save();
-      context.translate(anchorX, anchorY);
-      context.rotate(angle);
+      const cos = Math.cos(angle);
+      const sin = Math.sin(angle);
+      context.setTransform(cos * devicePixelRatio, sin * devicePixelRatio, -sin * devicePixelRatio, cos * devicePixelRatio, anchorX * devicePixelRatio, anchorY * devicePixelRatio);
       context.drawImage(plan.sheet, sx, sy, sw, sh, offsetX, offsetY, width, height);
-      context.restore();
-      continue;
+      rotated = true;
+    } else {
+      context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+      context.drawImage(plan.sheet, sx, sy, sw, sh, anchorX + offsetX, anchorY + offsetY, width, height);
     }
-
-    context.drawImage(plan.sheet, sx, sy, sw, sh, anchorX + offsetX, anchorY + offsetY, width, height);
   }
+  if (rotated) context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
 }
 
 /**
@@ -239,7 +241,7 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
         const centreY = screenBBox.minY + plan.bounds[boundsOffset + 1] * extentToPixel;
         circles.get(styleReference)?.push([centreX, centreY]);
       } else {
-        drawGlyphs(context, plan, featureIndex, screenBBox.minX, screenBBox.minY, extentToPixel, designToPixel, scale);
+        drawGlyphs(context, plan, featureIndex, screenBBox.minX, screenBBox.minY, extentToPixel, designToPixel, scale, options.devicePixelRatio);
       }
     }
 
