@@ -170,15 +170,6 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
   const dedupe = options.dedupe !== false;
   const paddingUnits = options.padding ?? LABEL_COLLISION_PADDING;
 
-  // Super-sampling only pays off if the downscale is filtered. The 2D context
-  // default is `low` quality, which for a 2-4x reduction samples too few source
-  // texels and throws away most of the extra detail the larger atlas contains,
-  // so raising `superSample` costs memory without visibly improving anything.
-  // `high` asks for a properly filtered (mip/trilinear-class) reduction, which
-  // is what turns the extra source pixels into actual definition.
-  context.imageSmoothingEnabled = true;
-  context.imageSmoothingQuality = 'high';
-
   const glyphQueue: Array<number> = [];
 
   let drawn = 0;
