@@ -1,4 +1,5 @@
 import { clamp } from '../../tools/math';
+import { CircleStyleProperties, LabelFeatureCollection } from './label';
 import { FEATURE_F32_STRIDE, FEATURE_U32_STRIDE, GLYPH_STRIDE, LABEL_COLLISION_PADDING, LABEL_FLAG_ALONG_LINE, LABEL_FLAG_HAS_GLYPHS, LABEL_FLAG_ZOOM_SCALED, LABEL_KIND_CODES, PLACEMENT_STRIDE, disposeLabelGlyphPlan } from './label-plan';
 import type { LabelGlyphPlan } from './label-plan';
 
@@ -121,15 +122,9 @@ function getPlanScales(plan: LabelGlyphPlan, index: number): [number, number] {
   return [scales[index * 2], scales[index * 2 + 1]];
 }
 
-function drawFeature(context: Context2D, plan: LabelGlyphPlan, featureIndex: number, tileX: number, tileY: number, extentToPixel: number, designToPixel: number, scale: number): void {
+function drawGlyphs(context: Context2D, plan: LabelGlyphPlan, featureIndex: number, tileX: number, tileY: number, extentToPixel: number, designToPixel: number, scale: number): void {
   const featureOffset = featureIndex * FEATURE_U32_STRIDE;
-  const kind = plan.features[featureOffset];
   const flags = plan.features[featureOffset + 5];
-
-  if (kind === LABEL_KIND_CODES.circle) {
-    drawCircle(context, plan, featureIndex, tileX, tileY, extentToPixel, designToPixel);
-    return;
-  }
 
   if (!(flags & LABEL_FLAG_HAS_GLYPHS) || !plan.sheet) return;
 
@@ -169,28 +164,6 @@ function drawFeature(context: Context2D, plan: LabelGlyphPlan, featureIndex: num
   }
 }
 
-function drawCircle(context: Context2D, plan: LabelGlyphPlan, featureIndex: number, tileX: number, tileY: number, extentToPixel: number, designToPixel: number): void {
-  const style = plan.circleStyles[plan.features[featureIndex * FEATURE_U32_STRIDE + 1]];
-  if (!style || !style['marker-fill'] || !style['marker-width']) return;
-
-  const boundsOffset = featureIndex * FEATURE_F32_STRIDE;
-  const centreX = tileX + plan.bounds[boundsOffset] * extentToPixel;
-  const centreY = tileY + plan.bounds[boundsOffset + 1] * extentToPixel;
-  const radius = (style['marker-width'] * designToPixel) / 2;
-  if (radius <= 0) return;
-
-  context.beginPath();
-  context.arc(centreX, centreY, radius, 0, Math.PI * 2);
-  context.fillStyle = style['marker-fill'];
-  context.fill();
-
-  if (style['marker-line-color']) {
-    context.strokeStyle = style['marker-line-color'];
-    context.lineWidth = Math.max(1, designToPixel);
-    context.stroke();
-  }
-}
-
 export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, options: DrawLabelTilesOptions): DrawLabelTilesResult {
   const index = new CollisionIndex(options.width, options.height);
   const seen = new Set<number>();
@@ -206,12 +179,14 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
   context.imageSmoothingEnabled = true;
   context.imageSmoothingQuality = 'high';
 
+  const glyphQueue: Array<number> = [];
+
   let drawn = 0;
   let deduped = 0;
   let collided = 0;
 
-  for (const tile of tiles) {
-    const { plan, screenBBox } = tile;
+  for (let tileIndex = 0; tileIndex < tiles.length; tileIndex++) {
+    const { plan, screenBBox } = tiles[tileIndex];
     const tileWidth = screenBBox.maxX - screenBBox.minX;
     const tileHeight = screenBBox.maxY - screenBBox.minY;
     if (tileWidth <= 0 || tileHeight <= 0) continue;
@@ -228,6 +203,7 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
     const padding = paddingUnits * designToPixel;
     const featureCount = plan.features.length / FEATURE_U32_STRIDE;
 
+    const circles = new Map<number, Array<[x: number, y: number]>>();
     for (let featureIndex = 0; featureIndex < featureCount; featureIndex++) {
       const featureOffset = featureIndex * FEATURE_U32_STRIDE;
       const flags = plan.features[featureOffset + 5];
@@ -274,9 +250,45 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
       index.insert(box);
       if (dedupeHash !== 0) seen.add(dedupeHash);
 
-      drawFeature(context, plan, featureIndex, screenBBox.minX, screenBBox.minY, extentToPixel, designToPixel, scale);
+      if (plan.features[featureOffset] === LABEL_KIND_CODES.circle) {
+        const styleReference = plan.features[featureIndex * FEATURE_U32_STRIDE + 1];
+        if (!circles.has(styleReference)) circles.set(styleReference, []);
+        const boundsOffset = featureIndex * FEATURE_F32_STRIDE;
+        const centreX = screenBBox.minX + plan.bounds[boundsOffset] * extentToPixel;
+        const centreY = screenBBox.minY + plan.bounds[boundsOffset + 1] * extentToPixel;
+        circles.get(styleReference)?.push([centreX, centreY]);
+      } else {
+        glyphQueue.push(tileIndex, featureIndex, scale);
+      }
+
       drawn++;
     }
+
+    for (const [styleReference, centerCoordinates] of circles) {
+      const style = plan.circleStyles[styleReference];
+      if (!style['marker-width']) continue;
+      const radius = (style['marker-width'] * designToPixel) / 2;
+      context.beginPath();
+      for (const [centerX, centerY] of centerCoordinates) {
+        context.moveTo(centerX + radius, centerY);
+        context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      }
+      if (!style['marker-fill']) continue;
+      context.fillStyle = style['marker-fill'];
+      context.fill();
+
+      if (style['marker-line-color']) {
+        context.strokeStyle = style['marker-line-color'];
+        context.lineWidth = Math.max(1, designToPixel);
+        context.stroke();
+      }
+    }
+  }
+
+  for (let queueIndex = 0; queueIndex < glyphQueue.length; queueIndex += 3) {
+    const { plan, screenBBox } = tiles[glyphQueue[queueIndex]];
+    const tileWidth = screenBBox.maxX - screenBBox.minX;
+    drawGlyphs(context, plan, glyphQueue[queueIndex + 1], screenBBox.minX, screenBBox.minY, tileWidth / plan.extent, tileWidth / plan.designSize, glyphQueue[queueIndex + 2]);
   }
 
   return { drawn, deduped, collided };

@@ -75,12 +75,6 @@ export interface LabelGlyphPlan {
   labels: Array<string>;
 }
 
-export function getLabelGlyphPlanTransferables(plan: LabelGlyphPlan): Array<Transferable> {
-  const transferables: Array<Transferable> = [plan.glyphs.buffer, plan.placements.buffer, plan.features.buffer, plan.bounds.buffer, plan.scales.buffer];
-  if (plan.sheet) transferables.push(plan.sheet);
-  return transferables;
-}
-
 export function disposeLabelGlyphPlan(plan: LabelGlyphPlan): void {
   plan.sheet?.close();
   // plan.sheet = null;
