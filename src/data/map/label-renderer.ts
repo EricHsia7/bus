@@ -22,15 +22,6 @@ export interface DrawLabelTilesOptions {
   dedupe?: boolean;
 }
 
-export interface DrawLabelTilesResult {
-  drawn: number;
-  deduped: number;
-  /** Features skipped because their reserved box is off screen. */
-  culled: number;
-  /** Seam-crossing features dropped because a neighbouring tile got there first. */
-  collided: number;
-}
-
 const SEAM_CELL_SIZE = 64;
 
 function intersects(a: Box, b: Box): boolean {
@@ -182,15 +173,10 @@ function drawGlyphs(context: Context2D, plan: LabelGlyphPlan, featureIndex: numb
  * already conflict-free and skip the test entirely. Repeated names across tiles
  * are still suppressed by the dedupe hash.
  */
-export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, options: DrawLabelTilesOptions): DrawLabelTilesResult {
+export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, options: DrawLabelTilesOptions): void {
   const seen = new Set<number>();
   const dedupe = options.dedupe !== false;
   const seams = new SeamCollisionIndex(options.width, options.height);
-
-  let drawn = 0;
-  let deduped = 0;
-  let culled = 0;
-  let collided = 0;
 
   for (let tileIndex = 0; tileIndex < tiles.length; tileIndex++) {
     const { plan, screenBBox } = tiles[tileIndex];
@@ -216,7 +202,6 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
       const dedupeHash = plan.features[featureOffset + 4];
 
       if (dedupe && dedupeHash !== 0 && seen.has(dedupeHash)) {
-        deduped++;
         continue;
       }
 
@@ -229,7 +214,6 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
       const maxY = screenBBox.minY + plan.collisions[collisionOffset + 3] * extentToPixel;
 
       if (maxX < 0 || maxY < 0 || minX > options.width || minY > options.height) {
-        culled++;
         continue;
       }
 
@@ -241,7 +225,6 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
       // labels; everything else was already resolved at plan time.
       const box: Box = { minX, minY, maxX, maxY };
       if ((flags & LABEL_FLAG_SEAM) !== 0 && seams.collides(box)) {
-        collided++;
         continue;
       }
       seams.insert(box);
@@ -258,7 +241,6 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
       } else {
         drawGlyphs(context, plan, featureIndex, screenBBox.minX, screenBBox.minY, extentToPixel, designToPixel, scale);
       }
-      drawn++;
     }
 
     for (const [styleReference, centerCoordinates] of circles) {
@@ -282,5 +264,4 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
     }
   }
 
-  return { drawn, deduped, culled, collided };
 }

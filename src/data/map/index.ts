@@ -314,8 +314,7 @@ export class MapLoader {
     this.tileBytes.delete(key);
     if (this.cacheBytes < 0) this.cacheBytes = 0;
 
-    // Owning the bitmap means the texture can be released now rather than whenever a
-    // GC happens to notice a handle that looks cheap on the JS heap.
+    // Owning the bitmap means the texture can be released now rather than whenever a GC happens to notice a handle that looks cheap on the JS heap.
     response.bitmap.close?.();
     response.label.sheet.close?.();
 
