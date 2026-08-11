@@ -90,6 +90,6 @@ async function loadTile(tile: MapLoaderTile) {
         label: labelPlan
       }
     } as MapLoaderWorkerMessageData,
-    [bitmap, labelPlan.sheet, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer] 
+    [bitmap, labelPlan.sheet, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer]
   );
 }

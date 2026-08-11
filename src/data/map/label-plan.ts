@@ -50,6 +50,18 @@ export const PLACEMENT_STRIDE = 8;
 export const FEATURE_U32_STRIDE = 6;
 export const FEATURE_F32_STRIDE = 7;
 
+/**
+ * `[minX, minY, maxX, maxY]` per surviving feature, in TILE-EXTENT space and
+ * already padded by `LABEL_COLLISION_PADDING`.
+ *
+ * Collision is resolved once, at plan time, against the worst case (largest)
+ * size the label can reach anywhere in its zoom interval, so the box is valid
+ * for every frame the tile is on screen and the renderer never has to rebuild
+ * it. Extent space is the only frame that is invariant to how large the tile
+ * happens to be drawn: multiply by `tileWidth / extent` to get pixels.
+ */
+export const COLLISION_STRIDE = 4;
+
 export const LABEL_KIND_CODES: Record<LabelKind, number> = { text: 0, marker: 1, point: 2, shield: 3, circle: 4 };
 export const LABEL_KINDS_BY_CODE: Array<LabelKind> = ['text', 'marker', 'point', 'shield', 'circle'];
 
@@ -70,6 +82,8 @@ export interface LabelGlyphPlan {
   placements: Float32Array;
   features: Uint32Array;
   bounds: Float32Array;
+  /** Worst-case, padded collision boxes in extent space. See `COLLISION_STRIDE`. */
+  collisions: Float32Array;
   scales: Float32Array;
   circleStyles: Array<CircleStyleProperties>;
   labels: Array<string>;
@@ -426,6 +440,23 @@ interface LocalFeature {
   placements: Array<LocalPlacement>;
 }
 
+interface CollisionBox {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+}
+
+/** A feature that won its collision test, together with the box it reserved. */
+interface PlacedFeature {
+  local: LocalFeature;
+  collision: CollisionBox;
+}
+
+function boxesIntersect(a: CollisionBox, b: CollisionBox): boolean {
+  return !(a.maxX <= b.minX || a.minX >= b.maxX || a.maxY <= b.minY || a.minY >= b.maxY);
+}
+
 function hashLabel(text: string): number {
   let hash = 0x811c9dc5;
   for (let index = 0; index < text.length; index++) {
@@ -771,6 +802,155 @@ function planCircle(feature: PointLabelFeature, style: CircleStyleProperties, st
   };
 }
 
+/**
+ * The largest scale a feature can ever be drawn at while its tile is on screen.
+ *
+ * This is the whole point of resolving collision at plan time: a plan outlives
+ * the frame that triggered it, so a box reserved at the CURRENT size would be
+ * wrong the moment the user zooms. Reserving the worst case instead makes the
+ * decision monotone -- a label that is placed stays placed, and one that is
+ * dropped never reappears halfway through a zoom and starts overlapping.
+ */
+function worstCaseScale(local: LocalFeature): number {
+  // Along-line labels are STATIC: their per-character anchors were baked into
+  // extent space, so the footprint only follows the tile and never grows on its
+  // own. `scale0` (the value the bbox was baked with) already IS the worst case.
+  if (local.flags & LABEL_FLAG_ALONG_LINE) return local.scale0;
+
+  if (!(local.flags & LABEL_FLAG_ZOOM_SCALED)) return local.scale0;
+
+  // Point labels are DYNAMIC: they are interpolated across [scale0, scale1] as
+  // the view zoom crosses the tile's interval, so the upper end is what has to
+  // be reserved. The endpoints are not ordered by contract, hence the max().
+  return Math.max(local.scale0, local.scale1);
+}
+
+/**
+ * Worst-case collision box in extent space, padded.
+ *
+ * Mirrors the renderer's former box maths exactly, one frame of reference
+ * earlier: `designToExtent * (tileWidth / extent) === tileWidth / designSize`,
+ * which is precisely the renderer's `designToPixel`, so the pixel box the
+ * renderer would have computed is recovered by a single multiplication.
+ */
+function computeCollisionBox(local: LocalFeature, extent: number): CollisionBox {
+  const designToExtent = extent / LABEL_DESIGN_SIZE;
+  const padding = LABEL_COLLISION_PADDING * designToExtent;
+
+  // Along-line bounds are already absolute extent coordinates.
+  if (local.flags & LABEL_FLAG_ALONG_LINE) {
+    return {
+      minX: local.minX - padding,
+      minY: local.minY - padding,
+      maxX: local.maxX + padding,
+      maxY: local.maxY + padding
+    };
+  }
+
+  // Point bounds are design units relative to the anchor.
+  const unit = worstCaseScale(local) * designToExtent;
+  const anchorX = local.anchorX;
+  // `text-dy` is a placement offset, not a glyph metric: convert it, but do NOT
+  // multiply it by the text scale.
+  const anchorY = local.anchorY + local.offsetY * designToExtent;
+
+  return {
+    minX: anchorX + local.minX * unit - padding,
+    minY: anchorY + local.minY * unit - padding,
+    maxX: anchorX + local.maxX * unit + padding,
+    maxY: anchorY + local.maxY * unit + padding
+  };
+}
+
+/** Uniform grid over the tile's extent, so collision stays roughly linear. */
+class PlanCollisionIndex {
+  private readonly cellSize: number;
+  private readonly columns: number;
+  private readonly rows: number;
+  private readonly cells: Array<Array<CollisionBox> | undefined>;
+  /** Boxes that fall entirely outside the tile, which the grid cannot address. */
+  private readonly loose: Array<CollisionBox> = [];
+
+  constructor(extent: number, columns: number = 16) {
+    this.columns = Math.max(1, columns);
+    this.rows = this.columns;
+    this.cellSize = Math.max(1, extent / this.columns);
+    this.cells = new Array(this.columns * this.rows);
+  }
+
+  private range(box: CollisionBox): { minColumn: number; minRow: number; maxColumn: number; maxRow: number } | null {
+    const minColumn = Math.floor(box.minX / this.cellSize);
+    const maxColumn = Math.floor(box.maxX / this.cellSize);
+    const minRow = Math.floor(box.minY / this.cellSize);
+    const maxRow = Math.floor(box.maxY / this.cellSize);
+    if (maxColumn < 0 || maxRow < 0 || minColumn >= this.columns || minRow >= this.rows) return null;
+    return {
+      minColumn: Math.max(0, minColumn),
+      minRow: Math.max(0, minRow),
+      maxColumn: Math.min(this.columns - 1, maxColumn),
+      maxRow: Math.min(this.rows - 1, maxRow)
+    };
+  }
+
+  public collides(box: CollisionBox): boolean {
+    for (const other of this.loose) {
+      if (boxesIntersect(box, other)) return true;
+    }
+
+    const range = this.range(box);
+    if (!range) return false;
+
+    for (let row = range.minRow; row <= range.maxRow; row++) {
+      for (let column = range.minColumn; column <= range.maxColumn; column++) {
+        const cell = this.cells[row * this.columns + column];
+        if (!cell) continue;
+        for (const other of cell) {
+          if (boxesIntersect(box, other)) return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  public insert(box: CollisionBox): void {
+    const range = this.range(box);
+    if (!range) {
+      this.loose.push(box);
+      return;
+    }
+
+    for (let row = range.minRow; row <= range.maxRow; row++) {
+      for (let column = range.minColumn; column <= range.maxColumn; column++) {
+        const index = row * this.columns + column;
+        const cell = this.cells[index];
+        if (cell) cell.push(box);
+        else this.cells[index] = [box];
+      }
+    }
+  }
+}
+
+/**
+ * Resolves collision for one tile, in feature order (earlier features win).
+ *
+ * Losers are dropped before the atlas is composed, so a label that can never be
+ * drawn also stops costing a sprite, a placement row and sheet area.
+ */
+function resolveTileCollisions(locals: Array<LocalFeature>, extent: number): Array<PlacedFeature> {
+  const index = new PlanCollisionIndex(extent);
+  const placed: Array<PlacedFeature> = [];
+
+  for (const local of locals) {
+    const collision = computeCollisionBox(local, extent);
+    if (index.collides(collision)) continue;
+    index.insert(collision);
+    placed.push({ local, collision });
+  }
+
+  return placed;
+}
+
 function composeSheet(cache: LabelGlyphCache, features: Array<LocalFeature>, maxSheetSize: number): { sheet: ImageBitmap; glyphs: Float32Array; indices: Map<LocalPlacement, number> } {
   const order: Array<LocalPlacement> = [];
   const bySprite = new Map<unknown, number>();
@@ -882,7 +1062,13 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
     if (local) locals.push(local);
   }
 
-  const { sheet, glyphs, indices } = composeSheet(cache, locals, 2048);
+  // Collision runs HERE -- once per tile, off the main thread -- rather than
+  // once per frame in the renderer, and against the worst-case size so the
+  // outcome is valid for the whole life of the plan.
+  const placed = resolveTileCollisions(locals, extent);
+  const survivors = placed.map((entry) => entry.local);
+
+  const { sheet, glyphs, indices } = composeSheet(cache, survivors, 2048);
 
   // One line per tile describing the whole super-sampling chain, so the atlas
   // resolution can be confirmed from the console instead of inferred from how
@@ -898,17 +1084,18 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
   }
 
   let placementCount = 0;
-  for (const local of locals) placementCount += local.placements.length;
+  for (const local of survivors) placementCount += local.placements.length;
 
   const placements = new Float32Array(placementCount * PLACEMENT_STRIDE);
-  const features = new Uint32Array(locals.length * FEATURE_U32_STRIDE);
-  const bounds = new Float32Array(locals.length * FEATURE_F32_STRIDE);
-  const scales = new Float32Array(locals.length * 2);
-  const labels: Array<string> = new Array(locals.length);
+  const features = new Uint32Array(survivors.length * FEATURE_U32_STRIDE);
+  const bounds = new Float32Array(survivors.length * FEATURE_F32_STRIDE);
+  const collisions = new Float32Array(survivors.length * COLLISION_STRIDE);
+  const scales = new Float32Array(survivors.length * 2);
+  const labels: Array<string> = new Array(survivors.length);
 
   let placementIndex = 0;
-  for (let index = 0; index < locals.length; index++) {
-    const local = locals[index];
+  for (let index = 0; index < survivors.length; index++) {
+    const local = survivors[index];
     const start = placementIndex;
 
     for (const placement of local.placements) {
@@ -943,6 +1130,13 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
     bounds[boundsOffset + 5] = local.maxY;
     bounds[boundsOffset + 6] = local.offsetY;
 
+    const collision = placed[index].collision;
+    const collisionOffset = index * COLLISION_STRIDE;
+    collisions[collisionOffset] = collision.minX;
+    collisions[collisionOffset + 1] = collision.minY;
+    collisions[collisionOffset + 2] = collision.maxX;
+    collisions[collisionOffset + 3] = collision.maxY;
+
     scales[index * 2] = local.scale0;
     scales[index * 2 + 1] = local.scale1;
 
@@ -962,6 +1156,7 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
     placements: placements.subarray(0, placementIndex * PLACEMENT_STRIDE).slice(),
     features,
     bounds,
+    collisions,
     scales,
     circleStyles: collection.circleStyles,
     labels

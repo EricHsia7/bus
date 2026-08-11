@@ -1,4 +1,4 @@
-import { FEATURE_F32_STRIDE, FEATURE_U32_STRIDE, GLYPH_STRIDE, LABEL_COLLISION_PADDING, LABEL_FLAG_ALONG_LINE, LABEL_FLAG_HAS_GLYPHS, LABEL_FLAG_ZOOM_SCALED, LABEL_KIND_CODES, LabelGlyphPlan, PLACEMENT_STRIDE } from './label-plan';
+import { COLLISION_STRIDE, FEATURE_F32_STRIDE, FEATURE_U32_STRIDE, GLYPH_STRIDE, LABEL_FLAG_ALONG_LINE, LABEL_FLAG_HAS_GLYPHS, LABEL_FLAG_ZOOM_SCALED, LABEL_KIND_CODES, LabelGlyphPlan, PLACEMENT_STRIDE } from './label-plan';
 
 type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
@@ -18,85 +18,14 @@ export interface DrawLabelTilesOptions {
   zoom: number;
   width: number;
   height: number;
-  padding?: number;
   dedupe?: boolean;
 }
 
 export interface DrawLabelTilesResult {
   drawn: number;
   deduped: number;
-  collided: number;
-}
-
-function intersects(a: Box, b: Box): boolean {
-  return !(a.maxX <= b.minX || a.minX >= b.maxX || a.maxY <= b.minY || a.minY >= b.maxY);
-}
-
-class CollisionIndex {
-  private readonly cellSize: number;
-  private readonly columns: number;
-  private readonly rows: number;
-  private readonly cells: Array<Array<Box>>;
-  private readonly loose: Array<Box> = [];
-
-  constructor(width: number, height: number, cellSize: number = 64) {
-    this.cellSize = cellSize;
-    this.columns = Math.max(1, Math.ceil(width / cellSize));
-    this.rows = Math.max(1, Math.ceil(height / cellSize));
-    this.cells = new Array(this.columns * this.rows);
-  }
-
-  private range(box: Box): { minColumn: number; minRow: number; maxColumn: number; maxRow: number } | null {
-    const minColumn = Math.floor(box.minX / this.cellSize);
-    const maxColumn = Math.floor(box.maxX / this.cellSize);
-    const minRow = Math.floor(box.minY / this.cellSize);
-    const maxRow = Math.floor(box.maxY / this.cellSize);
-    if (maxColumn < 0 || maxRow < 0 || minColumn >= this.columns || minRow >= this.rows) return null;
-    return {
-      minColumn: Math.max(0, minColumn),
-      minRow: Math.max(0, minRow),
-      maxColumn: Math.min(this.columns - 1, maxColumn),
-      maxRow: Math.min(this.rows - 1, maxRow)
-    };
-  }
-
-  public collides(box: Box): boolean {
-    for (const other of this.loose) {
-      if (intersects(box, other)) return true;
-    }
-
-    const range = this.range(box);
-    if (!range) return false;
-
-    for (let row = range.minRow; row <= range.maxRow; row++) {
-      for (let column = range.minColumn; column <= range.maxColumn; column++) {
-        const cell = this.cells[row * this.columns + column];
-        if (!cell) continue;
-        for (const other of cell) {
-          if (intersects(box, other)) return true;
-        }
-      }
-    }
-
-    return false;
-  }
-
-  public insert(box: Box): void {
-    const range = this.range(box);
-    if (!range) {
-      this.loose.push(box);
-      return;
-    }
-
-    for (let row = range.minRow; row <= range.maxRow; row++) {
-      for (let column = range.minColumn; column <= range.maxColumn; column++) {
-        const index = row * this.columns + column;
-        const cell = this.cells[index];
-        if (cell) cell.push(box);
-        else this.cells[index] = [box];
-      }
-    }
-  }
+  /** Features skipped because their reserved box is off screen. */
+  culled: number;
 }
 
 export function resolveLabelScale(flags: number, tileZoom: number, viewZoom: number, scale0: number, scale1: number): number {
@@ -161,17 +90,27 @@ function drawGlyphs(context: Context2D, plan: LabelGlyphPlan, featureIndex: numb
   }
 }
 
+/**
+ * Draws already-placed labels.
+ *
+ * Placement is NOT decided here. `buildLabelGlyphPlan` resolves collision once
+ * per tile, against the worst-case (largest) size each label can reach in its
+ * zoom interval, and only the survivors reach the plan. So every feature in a
+ * plan is drawable, and this loop is reduced to three cheap per-frame concerns:
+ * cross-tile dedupe, viewport culling, and the zoom-interpolated draw size.
+ *
+ * The consequence of hoisting the decision is that it is made per tile rather
+ * than per screen: two labels on either side of a tile seam can no longer see
+ * each other. Cross-tile suppression is handled by the dedupe hash for repeated
+ * names; distinct labels that straddle a seam may overlap.
+ */
 export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, options: DrawLabelTilesOptions): DrawLabelTilesResult {
-  const index = new CollisionIndex(options.width, options.height);
   const seen = new Set<number>();
   const dedupe = options.dedupe !== false;
-  const paddingUnits = options.padding ?? LABEL_COLLISION_PADDING;
-
-  // const glyphQueue: Array<number> = [];
 
   let drawn = 0;
   let deduped = 0;
-  let collided = 0;
+  let culled = 0;
 
   for (let tileIndex = 0; tileIndex < tiles.length; tileIndex++) {
     const { plan, screenBBox } = tiles[tileIndex];
@@ -188,7 +127,6 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
     // is the tile's current on-screen width. The glyph atlas is super-sampled
     // above this size, so drawImage always downscales, never magnifies.
     const designToPixel = tileWidth / plan.designSize;
-    const padding = paddingUnits * designToPixel;
     const featureCount = plan.features.length / FEATURE_U32_STRIDE;
 
     const circles = new Map<number, Array<[x: number, y: number]>>();
@@ -202,44 +140,27 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
         continue;
       }
 
+      // The reserved box is already padded and already sized for the worst case,
+      // so projecting it costs one multiply per edge and needs no scale at all.
+      const collisionOffset = featureIndex * COLLISION_STRIDE;
+      const minX = screenBBox.minX + plan.collisions[collisionOffset] * extentToPixel;
+      const minY = screenBBox.minY + plan.collisions[collisionOffset + 1] * extentToPixel;
+      const maxX = screenBBox.minX + plan.collisions[collisionOffset + 2] * extentToPixel;
+      const maxY = screenBBox.minY + plan.collisions[collisionOffset + 3] * extentToPixel;
+
+      if (maxX < 0 || maxY < 0 || minX > options.width || minY > options.height) {
+        culled++;
+        continue;
+      }
+
       const scales = getPlanScales(plan, featureIndex);
       const scale = resolveLabelScale(flags, plan.zoom, options.zoom, scales[0], scales[1]);
       if (scale <= 0) continue;
 
-      const boundsOffset = featureIndex * FEATURE_F32_STRIDE;
-      let box: Box;
-
-      if (flags & LABEL_FLAG_ALONG_LINE) {
-        box = {
-          minX: screenBBox.minX + plan.bounds[boundsOffset + 2] * extentToPixel - padding,
-          minY: screenBBox.minY + plan.bounds[boundsOffset + 3] * extentToPixel - padding,
-          maxX: screenBBox.minX + plan.bounds[boundsOffset + 4] * extentToPixel + padding,
-          maxY: screenBBox.minY + plan.bounds[boundsOffset + 5] * extentToPixel + padding
-        };
-      } else {
-        const anchorX = screenBBox.minX + plan.bounds[boundsOffset] * extentToPixel;
-        const anchorY = screenBBox.minY + plan.bounds[boundsOffset + 1] * extentToPixel + plan.bounds[boundsOffset + 6] * designToPixel;
-        const unit = scale * designToPixel;
-        box = {
-          minX: anchorX + plan.bounds[boundsOffset + 2] * unit - padding,
-          minY: anchorY + plan.bounds[boundsOffset + 3] * unit - padding,
-          maxX: anchorX + plan.bounds[boundsOffset + 4] * unit + padding,
-          maxY: anchorY + plan.bounds[boundsOffset + 5] * unit + padding
-        };
-      }
-
-      if (box.maxX < 0 || box.maxY < 0 || box.minX > options.width || box.minY > options.height) continue;
-
-      if (index.collides(box)) {
-        collided++;
-        continue;
-      }
-
-      index.insert(box);
       if (dedupeHash !== 0) seen.add(dedupeHash);
 
       if (plan.features[featureOffset] === LABEL_KIND_CODES.circle) {
-        const styleReference = plan.features[featureIndex * FEATURE_U32_STRIDE + 1];
+        const styleReference = plan.features[featureOffset + 1];
         if (!circles.has(styleReference)) circles.set(styleReference, []);
         const boundsOffset = featureIndex * FEATURE_F32_STRIDE;
         const centreX = screenBBox.minX + plan.bounds[boundsOffset] * extentToPixel;
@@ -272,5 +193,5 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
     }
   }
 
-  return { drawn, deduped, collided };
+  return { drawn, deduped, culled };
 }
