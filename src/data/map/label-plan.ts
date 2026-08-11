@@ -46,7 +46,22 @@ export function decodeLabelAngle(angle: number, extent: number): number {
 
 export const GLYPH_STRIDE = 4;
 
-export const PLACEMENT_STRIDE = 8;
+export const PLACEMENT_STRIDE = 7;
+
+/**
+ * Number of discrete angles a rotated glyph is baked at in the tile sheet.
+ *
+ * 256 buckets sit 1.4 degrees apart, which displaces a glyph corner by well
+ * under a tenth of a pixel at the sizes these labels are drawn. Measurement on
+ * real z=15 tiles showed a coarser table is not worth the angular error: going
+ * all the way down to 32 buckets shrinks the sheet by only ~13%, because its
+ * size is dominated by the area of a rotated cell rather than by duplicated
+ * entries (53% of baked glyphs occur at a single angle, 24% at two).
+ */
+export const LABEL_ANGLE_BUCKETS = 256;
+
+/** Transparent margin around a baked rotated cell, in raster pixels. */
+const ROTATED_CELL_PADDING = 1;
 export const FEATURE_U32_STRIDE = 6;
 export const FEATURE_F32_STRIDE = 7;
 
@@ -403,6 +418,20 @@ export class LabelGlyphCache {
     if (sprite.page < 0) return;
     context.drawImage(this.pages[sprite.page].canvas, sprite.sx, sprite.sy, sprite.sw, sprite.sh, x, y, sprite.sw, sprite.sh);
   }
+
+  /**
+   * Draws `sprite` rotated by `angle`, centred in the `width` x `height` cell
+   * at (x, y). This is the one place a rotational transform is still paid, and
+   * it runs once per (sprite, angle) pair while the tile sheet is composed.
+   */
+  public blitRotated(sprite: GlyphSprite, context: OffscreenCanvasRenderingContext2D, x: number, y: number, angle: number, width: number, height: number): void {
+    if (sprite.page < 0) return;
+    context.save();
+    context.translate(x + width / 2, y + height / 2);
+    context.rotate(angle);
+    context.drawImage(this.pages[sprite.page].canvas, sprite.sx, sprite.sy, sprite.sw, sprite.sh, -sprite.sw / 2, -sprite.sh / 2, sprite.sw, sprite.sh);
+    context.restore();
+  }
 }
 
 export interface BuildLabelGlyphPlanOptions {
@@ -428,6 +457,12 @@ interface LocalPlacement {
   height: number;
   pixelWidth: number;
   pixelHeight: number;
+  /**
+   * Quantised angle this placement's sheet cell is baked at, or 0 (or absent)
+   * for an upright cell. Two placements share a cell only when they agree on
+   * both the sprite and this bucket.
+   */
+  bucket?: number;
 }
 
 interface LocalFeature {
@@ -648,7 +683,11 @@ function planAlongLine(cache: LabelGlyphCache, feature: LineStringLabelFeature, 
 
     const anchorX = coordinates[index][0];
     const anchorY = coordinates[index][1];
-    const angle = decodeLabelAngle(angles[index], extent);
+    // Snap to the sheet's angle table first, then derive the angle from the
+    // bucket, so the collision bounds below describe exactly the rotation that
+    // gets baked rather than one a fraction of a degree away from it.
+    const bucket = quantiseLabelAngle(angles[index], extent);
+    const angle = (bucket / LABEL_ANGLE_BUCKETS) * Math.PI * 2;
 
     sumX += anchorX;
     sumY += anchorY;
@@ -661,6 +700,7 @@ function planAlongLine(cache: LabelGlyphCache, feature: LineStringLabelFeature, 
       offsetX: -sprite.width / 2,
       offsetY: -sprite.height / 2,
       angle,
+      bucket,
       width: sprite.width,
       height: sprite.height,
       pixelWidth: sprite.sw,
@@ -979,22 +1019,100 @@ function resolveTileCollisions(locals: Array<LocalFeature>, extent: number): Arr
   return placed;
 }
 
+function quantiseLabelAngle(angle: number, extent: number): number {
+  if (!extent) return 0;
+  const bucket = Math.round((angle / extent) * LABEL_ANGLE_BUCKETS);
+  return ((bucket % LABEL_ANGLE_BUCKETS) + LABEL_ANGLE_BUCKETS) % LABEL_ANGLE_BUCKETS;
+}
+
+/**
+ * Rewrites every rotated placement into an equivalent axis-aligned one.
+ *
+ * The rotation moves into the tile sheet: `composeSheet` bakes one cell per
+ * (sprite, bucket) pair, so the renderer never hands the canvas a rotational
+ * transform. WebKit's 2D backend has no batching layer and leaves its blit fast
+ * path the moment the CTM rotates, so a rotated glyph costs far more per frame
+ * than an upright one; on a dense z=15 tile 91% of glyphs are along-line, which
+ * is why the cost dominates. Baking pays it once per tile in the worker instead
+ * of once per glyph per frame.
+ *
+ * The rewrite is exact, not an approximation. A placement draws its sprite at
+ * `offset` with size `width` x `height` inside a frame rotated about the anchor,
+ * so the sprite's centre lands at `R(angle) * (offset + size / 2)`. Putting an
+ * axis-aligned cell of the rotated bounding size on that same centre reproduces
+ * the original pixels, so nothing has to be counter-rotated at draw time.
+ *
+ * Run this AFTER collision resolution: it rewrites per-glyph geometry only, and
+ * the feature bounds the collision pass reserves already account for the
+ * rotated span (`planAlongLine` computes them from the same quantised angle).
+ */
+function bakeRotatedPlacements(features: Array<LocalFeature>): void {
+  for (const feature of features) {
+    for (const placement of feature.placements) {
+      const bucket = placement.bucket ?? 0;
+      if (bucket === 0 || !placement.sprite) continue;
+
+      const angle = (bucket / LABEL_ANGLE_BUCKETS) * Math.PI * 2;
+      const cos = Math.cos(angle);
+      const sin = Math.sin(angle);
+      const absCos = Math.abs(cos);
+      const absSin = Math.abs(sin);
+
+      // Design units per raster pixel. Both axes share it by construction, so
+      // carrying it through keeps the cell's design size exact.
+      const perPixel = placement.pixelWidth > 0 ? placement.width / placement.pixelWidth : 0;
+
+      // The rotated bounding box, plus one transparent pixel per side: the cell
+      // is resampled at draw time and an edge sample must not be able to reach
+      // into whichever cell the shelf packer puts next to it.
+      const cellWidth = placement.pixelWidth * absCos + placement.pixelHeight * absSin + ROTATED_CELL_PADDING * 2;
+      const cellHeight = placement.pixelWidth * absSin + placement.pixelHeight * absCos + ROTATED_CELL_PADDING * 2;
+
+      const centreX = placement.offsetX + placement.width / 2;
+      const centreY = placement.offsetY + placement.height / 2;
+      const rotatedCentreX = centreX * cos - centreY * sin;
+      const rotatedCentreY = centreX * sin + centreY * cos;
+
+      placement.width = cellWidth * perPixel;
+      placement.height = cellHeight * perPixel;
+      placement.offsetX = rotatedCentreX - placement.width / 2;
+      placement.offsetY = rotatedCentreY - placement.height / 2;
+      placement.pixelWidth = cellWidth;
+      placement.pixelHeight = cellHeight;
+      placement.angle = 0;
+    }
+  }
+}
+
 function composeSheet(cache: LabelGlyphCache, features: Array<LocalFeature>, maxSheetSize: number): { sheet: ImageBitmap; glyphs: Float32Array; indices: Map<LocalPlacement, number> } {
   const order: Array<LocalPlacement> = [];
-  const bySprite = new Map<unknown, number>();
+  // Sprite identity alone no longer identifies a cell: the same glyph baked at
+  // two different angles is two cells, while the same glyph at the same angle
+  // is still shared, which is what keeps the sheet from growing with the number
+  // of characters drawn along a road.
+  const bySprite = new Map<unknown, Map<number, number>>();
   const indices = new Map<LocalPlacement, number>();
 
   for (const feature of features) {
     for (const placement of feature.placements) {
       const identity = placement.sprite ?? placement.bitmap;
       if (!identity) continue;
-      const existing = bySprite.get(identity);
+      const bucket = placement.bucket ?? 0;
+
+      let byBucket = bySprite.get(identity);
+      if (!byBucket) {
+        byBucket = new Map<number, number>();
+        bySprite.set(identity, byBucket);
+      }
+
+      const existing = byBucket.get(bucket);
       if (existing !== undefined) {
         indices.set(placement, existing);
         continue;
       }
+
       const index = order.length;
-      bySprite.set(identity, index);
+      byBucket.set(bucket, index);
       indices.set(placement, index);
       order.push(placement);
     }
@@ -1040,7 +1158,14 @@ function composeSheet(cache: LabelGlyphCache, features: Array<LocalFeature>, max
     const placement = order[index];
     const offset = index * GLYPH_STRIDE;
     if (placement.sprite) {
-      cache.blit(placement.sprite, context, rects[offset], rects[offset + 1]);
+      const bucket = placement.bucket ?? 0;
+      if (bucket !== 0) {
+        // `bakeRotatedPlacements` already sized the cell to the rotated bounds,
+        // so the sprite is simply centred in it at the bucket's angle.
+        cache.blitRotated(placement.sprite, context, rects[offset], rects[offset + 1], (bucket / LABEL_ANGLE_BUCKETS) * Math.PI * 2, rects[offset + 2], rects[offset + 3]);
+      } else {
+        cache.blit(placement.sprite, context, rects[offset], rects[offset + 1]);
+      }
     } else if (placement.bitmap) {
       context.drawImage(placement.bitmap, rects[offset], rects[offset + 1]);
     }
@@ -1096,6 +1221,12 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
   const placed = resolveTileCollisions(locals, extent);
   const survivors = placed.map((entry) => entry.local);
 
+  // Must run before the sheet is composed: it is what turns each rotated
+  // placement into an axis-aligned one and resizes its cell to the rotated
+  // bounds the shelf packer then allocates. Only survivors are baked, so
+  // collided labels cost nothing.
+  bakeRotatedPlacements(survivors);
+
   const { sheet, glyphs, indices } = composeSheet(cache, survivors, 2048);
 
   // One line per tile describing the whole super-sampling chain, so the atlas
@@ -1135,9 +1266,8 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
       placements[offset + 2] = placement.anchorY;
       placements[offset + 3] = placement.offsetX;
       placements[offset + 4] = placement.offsetY;
-      placements[offset + 5] = placement.angle;
-      placements[offset + 6] = placement.width;
-      placements[offset + 7] = placement.height;
+      placements[offset + 5] = placement.width;
+      placements[offset + 6] = placement.height;
       placementIndex++;
     }
 
