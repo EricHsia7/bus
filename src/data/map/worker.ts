@@ -78,6 +78,7 @@ const cache = new LabelGlyphCache({
 async function loadTile(tile: MapLoaderTile) {
   const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp?v=18`;
   const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?v=18`;
+  // TODO: version.json
 
   const [bitmap, labels] = await Promise.all([getRaster(rasterURL), getLabels(labelsURL)]);
   const labelPlan = buildLabelGlyphPlan(labels, tile, cache);
