@@ -525,21 +525,19 @@ export function warmLabelGlyphCache(collection: LabelFeatureCollection, cache: L
       const scale = getTextScale(style);
       const raster = cache.getStyleRaster(style, style['text-size'], Math.max(scale[0], scale[1]));
       for (const character of charset.charset) cache.getGlyph(raster, character);
-      continue;
+    } else if (charset.table === 'iconStyles') {
+      const style = collection.iconStyles[charset.style];
+      if (!style || !style['shield-size']) continue;
+      const raster = cache.getStyleRaster({ layer: style.layer }, style['shield-size'], 1);
+      for (const character of charset.charset) cache.getGlyph(raster, character);
     }
-
-    const style = collection.iconStyles[charset.style];
-    if (!style || !style['shield-size']) continue;
-    const raster = cache.getStyleRaster({ layer: style.layer }, style['shield-size'], 1);
-    for (const character of charset.charset) cache.getGlyph(raster, character);
   }
 }
 
 function wrapLabel(cache: LabelGlyphCache, raster: StyleRaster, text: string, wrapWidth: number): Array<string> {
   if (!(wrapWidth > 0)) return [text];
 
-  // `text-wrap-width` is authored in design units, and `measureAdvance` already
-  // returns design units, so no scale correction belongs here.
+  // `text-wrap-width` is authored in design units, and `measureAdvance` already returns design units, so no scale correction belongs here.
   const measure = (value: string) => cache.measureAdvance(raster, value);
   if (measure(text) <= wrapWidth) return [text];
 
