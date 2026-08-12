@@ -74,7 +74,7 @@ module.exports = (env, argv) => {
           },
           {
             urlPattern: /\/icons\/[a-z0-9\-]+\.png$/,
-            handler: 'StaleWhileRevalidate',
+            handler: 'CacheFirst',
             options: {
               cacheName: 'icons'
             }
