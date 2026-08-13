@@ -6,6 +6,8 @@ declare const STYLE_BRAND: unique symbol;
 /** An index into the style table for `K`. */
 export type StyleRef<K extends LabelKind> = number & { readonly [STYLE_BRAND]: K };
 
+export type LabelPropertyScale = [scale0: number, scale1: number];
+
 export interface BaseStyleProperties {
   layer: string;
 }
@@ -19,7 +21,7 @@ export interface TextStyleProperties extends BaseStyleProperties {
    * Scale interval [s0, s1] spanning [minzoom, minzoom + 1]
    * - size(zoom) = text-size * lerp(s0, s1, zoom - minzoom)
    */
-  'text-scale'?: [scale0: number, scale1: number];
+  'text-scale'?: LabelPropertyScale;
   'text-fill'?: string;
   'text-halo-fill'?: string;
   'text-halo-radius'?: number;
@@ -43,6 +45,7 @@ export interface CircleStyleProperties extends BaseStyleProperties {
   'marker-fill'?: string;
   'marker-line-color'?: string;
   'marker-width'?: number;
+  'marker-scale'?: LabelPropertyScale;
 }
 
 export type StyleProperties = TextStyleProperties | IconStyleProperties | CircleStyleProperties;

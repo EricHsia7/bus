@@ -1,6 +1,6 @@
 import { clamp } from '../../tools/math';
 import { MapLoaderTile } from './index';
-import { CircleStyleProperties, IconStyleProperties, LabelFeature, LabelFeatureCollection, LabelKind, LineStringLabelFeature, PointLabelFeature, TextStyleProperties } from './label';
+import { CircleStyleProperties, IconStyleProperties, LabelFeature, LabelFeatureCollection, LabelKind, LineStringLabelFeature, PointLabelFeature, LabelPropertyScale, TextStyleProperties } from './label';
 
 /**
  * Width and height, in pixels, of the raster tile images produced by the tile
@@ -523,8 +523,14 @@ function hashLabel(text: string): number {
   return hash >>> 0;
 }
 
-function getTextScale(style: TextStyleProperties): [number, number] {
+function getTextScale(style: TextStyleProperties): LabelPropertyScale {
   const scale = style['text-scale'];
+  if (!scale) return [1, 1];
+  return [scale[0], scale[1]];
+}
+
+function getCircleScale(style: CircleStyleProperties): LabelPropertyScale {
+  const scale = style['marker-scale'];
   if (!scale) return [1, 1];
   return [scale[0], scale[1]];
 }
@@ -839,15 +845,16 @@ function planCircle(feature: PointLabelFeature, style: CircleStyleProperties, st
   const markerWidth = style['marker-width'];
   if (!markerWidth) return null;
   if (!style['marker-fill']) return null;
+  const scale = getCircleScale(style);
 
   const radius = markerWidth / 2 + (style['marker-line-color'] ? 0.5 : 0);
 
   return {
     kind: 'circle',
     styleIndex,
-    flags: 0,
-    scale0: 1,
-    scale1: 1,
+    flags: LabelFlatZoomScaled,
+    scale0: scale[0],
+    scale1: scale[1],
     dedupeHash: 0,
     label: '',
     anchorX: feature.geometry.coordinates[0],
@@ -1181,7 +1188,6 @@ function composeSheet(cache: LabelGlyphCache, features: Array<LocalFeature>, max
 }
 
 export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: MapLoaderTile, cache: LabelGlyphCache): LabelGlyphPlan {
-  const { x, y, z } = tile;
   const extent = collection.extent || 1;
 
   warmLabelGlyphCache(collection, cache);
