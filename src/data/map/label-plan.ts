@@ -888,25 +888,22 @@ function planCircle(feature: PointLabelFeature, style: CircleStyleProperties, st
  * dropped never reappears halfway through a zoom and starts overlapping.
  */
 function worstCaseScale(local: LocalFeature): number {
-  // Along-line labels are STATIC: their per-character anchors were baked into
-  // extent space, so the footprint only follows the tile and never grows on its
-  // own. `scale0` (the value the bbox was baked with) already IS the worst case.
+  // Along-line labels are STATIC.
+  // The per-character anchors were baked into extent space, so the footprint only follows the tile and never grows on its own.
+  // scale0 (the value the bbox was baked with) already IS the worst case.
   if (local.flags & LABEL_FLAG_ALONG_LINE) return local.scale0;
 
   if (!(local.flags & LABEL_FLAG_ZOOM_SCALED)) return local.scale0;
 
-  // Point labels are DYNAMIC. The renderer draws them at
-  //
-  //   f(t) = (scale0 + (scale1 - scale0) * t) * 2^-t,   t in [0, 1]
-  //
-  // (a line divided by the tile's own 2^t stretch), so the box has to cover the
-  // maximum of f over the interval -- NOT max(scale0, scale1), which ignores
-  // the stretch and over-reserves by up to a factor of two.
-  //
-  // f is a line times a decaying exponential, so it has at most one interior
-  // turning point. Testing both ends plus that point is therefore exact.
+  // Point labels are DYNAMIC.
+  // The renderer draws them at f(t) = (a + bt) * 2^-t, where a = scale0, b = scale1 - scale0, t in [0, 1]
+  // f(0) = (a + 0) * 1 = scale0
+  // f(1) = (a + b) / 2 = scale1 / 2
+  // f'(t) = b * 2^-t + (a + bt) * 2^-t * ln(2) * -1 = 2^-t * (b - (a + bt) * ln(2))
+  // f'(t) = 0 -> b = (a + bt) * ln(2) -> t = 1 / ln(2) - a / b
+
   const delta = local.scale1 - local.scale0;
-  let worst = Math.max(local.scale0, local.scale1 * 0.5);
+  let worst = Math.max(local.scale0, local.scale1 / 2);
 
   if (delta !== 0) {
     const turning = 1 / Math.LN2 - local.scale0 / delta;
