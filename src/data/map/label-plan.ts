@@ -78,20 +78,63 @@ export const LABEL_FLAG_HAS_GLYPHS = 1 << 2;
  */
 export const LABEL_FLAG_SEAM = 1 << 3;
 
+export const SCALE_STRIDE = 2;
+
 export interface LabelGlyphPlan {
   extent: number;
   zoom: number;
   designSize: number;
   sheet: ImageBitmap;
+  /**
+   * - 4n+0: shelf x
+   * - 4n+1: shelf y
+   * - 4n+2: pixel width
+   * - 4n+3: pixel height
+   */
   glyphs: Float32Array;
+  /**
+   * - 7n+0: glyph index
+   * - 7n+1: anchor x
+   * - 7n+2: anchor y
+   * - 7n+3: offset x
+   * - 7n+4: offset y
+   * - 7n+5: width
+   * - 7n+6: height
+   */
   placements: Float32Array;
+  /**
+   * - 6n+0: kind
+   * - 6n+1: style index (style reference)
+   * - 6n+2: start
+   * - 6n+3: end
+   * - 6n+4: hash
+   * - 6n+5: flags
+   */
   features: Uint32Array;
+  /**
+   * - 7n+0: anchor x
+   * - 7n+1: anchor y
+   * - 7n+2: min x
+   * - 7n+3: min y
+   * - 7n+4: max x
+   * - 7n+5: max y
+   * - 7n+6: offset y
+   */
   bounds: Float32Array;
-  /** Worst-case, padded collision boxes in extent space. See `COLLISION_STRIDE`. */
+  /**
+   * Worst-case, padded collision boxes in extent space.
+   * - 4n+0: min x
+   * - 4n+1: min y
+   * - 4n+3: max x
+   * - 4n+4: max y
+   */
   collisions: Float32Array;
+  /**
+   * - 2n+0: min scale
+   * - 2n+1: max scale
+   */
   scales: Float32Array;
   circleStyles: Array<CircleStyleProperties>;
-  // labels: Array<string>;
 }
 
 export function disposeLabelGlyphPlan(plan: LabelGlyphPlan): void {
@@ -1281,8 +1324,9 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
     collisions[collisionOffset + 2] = collision.maxX;
     collisions[collisionOffset + 3] = collision.maxY;
 
-    scales[index * 2] = local.scale0;
-    scales[index * 2 + 1] = local.scale1;
+    const scaleOffset = index * SCALE_STRIDE;
+    scales[scaleOffset] = local.scale0;
+    scales[scaleOffset + 1] = local.scale1;
 
     labels[index] = local.label;
   }
