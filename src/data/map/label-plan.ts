@@ -79,10 +79,6 @@ export const LABEL_FLAG_HAS_GLYPHS = 1 << 2;
 export const LABEL_FLAG_SEAM = 1 << 3;
 
 export interface LabelGlyphPlan {
-  key: string;
-  x: number;
-  y: number;
-  z: number;
   extent: number;
   zoom: number;
   designSize: number;
@@ -95,7 +91,7 @@ export interface LabelGlyphPlan {
   collisions: Float32Array;
   scales: Float32Array;
   circleStyles: Array<CircleStyleProperties>;
-  labels: Array<string>;
+  // labels: Array<string>;
 }
 
 export function disposeLabelGlyphPlan(plan: LabelGlyphPlan): void {
@@ -141,7 +137,7 @@ export interface LabelGlyphCacheOptions {
   pageSize?: number;
   fontFamily?: string;
   fontWeight?: number;
-  
+
   superSample?: number;
 }
 
@@ -157,11 +153,11 @@ export class LabelGlyphCache {
   private readonly measureContext: OffscreenCanvasRenderingContext2D;
 
   /**
-   * 
+   *
    * @param pageSize size of a page
    * @param superSample rasterisation over-sampling factor
-   * @param defaultFontFamily 
-   * @param defaultFontWeight 
+   * @param defaultFontFamily
+   * @param defaultFontWeight
    */
   constructor(pageSize: number = 1024, superSample: number = 1, defaultFontFamily: string = "'Noto Sans TC', sans-serif", defaultFontWeight: number = 400) {
     this.pageSize = pageSize;
@@ -1292,10 +1288,6 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
   }
 
   return {
-    key: `${x}.${y}.${z}`,
-    x,
-    y,
-    z,
     extent,
     zoom: collection.zoom,
     designSize: LABEL_DESIGN_SIZE,
@@ -1306,7 +1298,6 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
     bounds,
     collisions,
     scales,
-    circleStyles: collection.circleStyles,
-    labels
+    circleStyles: collection.circleStyles
   };
 }
