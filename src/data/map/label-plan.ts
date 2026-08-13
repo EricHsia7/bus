@@ -7,33 +7,33 @@ import { CircleStyleProperties, IconStyleProperties, LabelFeature, LabelFeatureC
  * server. This is the *native* resolution of a tile bitmap and is unrelated to
  * how large the tile is drawn on screen.
  */
-export const LABEL_NATIVE_TILE_SIZE = 1024;
+export const LabelNativeTileSize = 1024;
 
 /**
  * The design space that MapInk style values (`text-size`, `text-dy`,
  * `marker-width`, `text-wrap-width`, ...) are authored in. Every value stored
  * in a `LabelGlyphPlan` is expressed in these units.
  */
-export const LABEL_DESIGN_SIZE = 256;
+export const LabelDesignSize = 256;
 
 /**
  * Logical (CSS) size of one tile in world units. A tile drawn 1:1 covers
  * `LABEL_TILE_SIZE` logical pixels, so the raster tile image is downscaled by
  * `LABEL_NATIVE_TILE_SIZE / LABEL_TILE_SIZE` when it is drawn 1:1.
  */
-export const LABEL_TILE_SIZE = 256;
+export const LabelTileSize = 256;
 
-export const LABEL_LINE_HEIGHT_RATIO = 1.2;
+export const LabelLineHeight = 1.2;
 
-export const LABEL_COLLISION_PADDING = 3;
+export const LabelCollisionPadding = 3;
 
 export function decodeLabelAngle(angle: number, extent: number): number {
   return (angle / extent) * 2 * Math.PI || 0;
 }
 
-export const GLYPH_STRIDE = 4;
+export const LabelGlyphStride = 4;
 
-export const PLACEMENT_STRIDE = 7;
+export const LabelPlacementStride = 7;
 
 /**
  * Number of discrete angles a rotated glyph is baked at in the tile sheet.
@@ -45,12 +45,13 @@ export const PLACEMENT_STRIDE = 7;
  * size is dominated by the area of a rotated cell rather than by duplicated
  * entries (53% of baked glyphs occur at a single angle, 24% at two).
  */
-export const LABEL_ANGLE_BUCKETS = 256;
+export const LabelAngleBuckets = 256;
 
 /** Transparent margin around a baked rotated cell, in raster pixels. */
-const ROTATED_CELL_PADDING = 1;
-export const FEATURE_U32_STRIDE = 6;
-export const FEATURE_F32_STRIDE = 7;
+const RotatedCellPadding = 1;
+
+export const LabelFeaturesStride = 6;
+export const LabelBoundsStride = 7;
 
 /**
  * `[minX, minY, maxX, maxY]` per surviving feature, in TILE-EXTENT space and
@@ -62,14 +63,14 @@ export const FEATURE_F32_STRIDE = 7;
  * it. Extent space is the only frame that is invariant to how large the tile
  * happens to be drawn: multiply by `tileWidth / extent` to get pixels.
  */
-export const COLLISION_STRIDE = 4;
+export const LabelCollisionStride = 4;
 
-export const LABEL_KIND_CODES: Record<LabelKind, number> = { text: 0, marker: 1, point: 2, shield: 3, circle: 4 };
-export const LABEL_KINDS_BY_CODE: Array<LabelKind> = ['text', 'marker', 'point', 'shield', 'circle'];
+export const LabelKindToCode: Record<LabelKind, number> = { text: 0, marker: 1, point: 2, shield: 3, circle: 4 };
+export const LabelCodeToKind: Array<LabelKind> = ['text', 'marker', 'point', 'shield', 'circle'];
 
-export const LABEL_FLAG_ALONG_LINE = 1 << 0;
-export const LABEL_FLAG_ZOOM_SCALED = 1 << 1;
-export const LABEL_FLAG_HAS_GLYPHS = 1 << 2;
+export const LabelFlagAlongLine = 1 << 0;
+export const LabelFlatZoomScaled = 1 << 1;
+export const LabelFlagHasGlyphs = 1 << 2;
 /**
  * The feature's reserved box leaves its own tile.
  *
@@ -77,9 +78,9 @@ export const LABEL_FLAG_HAS_GLYPHS = 1 << 2;
  * a box lands in, so these -- and only these -- still need a screen-space test
  * at draw time. Interior features are already guaranteed conflict-free.
  */
-export const LABEL_FLAG_SEAM = 1 << 3;
+export const LabelFlagSeam = 1 << 3;
 
-export const SCALE_STRIDE = 2;
+export const LabelScalesStride = 2;
 
 export interface LabelGlyphPlan {
   extent: number;
@@ -173,16 +174,6 @@ interface StyleRaster {
   fill: string;
   haloFill: string | null;
   haloPixels: number;
-  ascent: number;
-  descent: number;
-}
-
-export interface LabelGlyphCacheOptions {
-  pageSize?: number;
-  fontFamily?: string;
-  fontWeight?: number;
-
-  superSample?: number;
 }
 
 export class LabelGlyphCache {
@@ -209,6 +200,7 @@ export class LabelGlyphCache {
     this.fontFamily = defaultFontFamily;
     this.fontWeight = defaultFontWeight;
     this.measureContext = new OffscreenCanvas(1, 1).getContext('2d') as OffscreenCanvasRenderingContext2D;
+    this.measureContext.textBaseline = 'alphabetic';
   }
 
   /** The effective super-sampling factor, after the `>= 1` floor and any fallback. */
@@ -271,14 +263,13 @@ export class LabelGlyphCache {
     if (cached) return cached;
 
     // Stage 1 — design unit to logical pixel: size / designSize * tileSize.
-    const logicalPixels = (size / LABEL_DESIGN_SIZE) * LABEL_TILE_SIZE;
+    const logicalPixels = (size / LabelDesignSize) * LabelTileSize;
     // Stage 2 — logical pixel to super-sampled raster pixel. `maxScale` is folded
     // in so a label that grows with zoom is still rasterised above its largest
     // on-screen size rather than being magnified from an under-sampled sprite.
     const minFontPixels = 32; // Ensure visual quality
     const maxFontPixels = 192; // Protect against GPU texture overflow and browser canvas limits
     const requestedPixels = clamp(Math.ceil(logicalPixels * maxScale * this.superSample), minFontPixels, maxFontPixels);
-    console.log(requestedPixels);
     const font = `${this.fontWeight} ${requestedPixels}px ${family}`;
 
     // Assigning an unparseable `font` is a SILENT no-op on a canvas context: the
@@ -300,10 +291,6 @@ export class LabelGlyphCache {
     // Exact inverse of the two stages above, including the clamp. Because every sprite metric is multiplied by this factor, the design-unit geometry the renderer consumes is invariant to `superSample` and to `maxScale`.
     const designPerPixel = size / fontPixels;
 
-    const metrics = this.measureContext.measureText('Hg');
-    const ascent = (metrics.fontBoundingBoxAscent ?? metrics.actualBoundingBoxAscent ?? fontPixels * 0.8) * designPerPixel;
-    const descent = (metrics.fontBoundingBoxDescent ?? metrics.actualBoundingBoxDescent ?? fontPixels * 0.2) * designPerPixel;
-
     const raster: StyleRaster = {
       signature,
       font,
@@ -312,9 +299,7 @@ export class LabelGlyphCache {
       designPerPixel,
       fill,
       haloFill,
-      haloPixels: haloRadius * (fontPixels / size),
-      ascent,
-      descent
+      haloPixels: haloRadius * (fontPixels / size)
     };
 
     this.styles.set(signature, raster);
@@ -612,9 +597,8 @@ function wrapLabel(cache: LabelGlyphCache, raster: StyleRaster, text: string, wr
 
 function layoutCentredText(cache: LabelGlyphCache, raster: StyleRaster, lines: Array<string>, anchorX: number, anchorY: number): Array<LocalPlacement> {
   const placements: Array<LocalPlacement> = [];
-  const lineHeight = raster.size * LABEL_LINE_HEIGHT_RATIO;
+  const lineHeight = raster.size * LabelLineHeight;
   const firstLineY = -((lines.length - 1) * lineHeight) / 2;
-  const baselineShift = (raster.ascent - raster.descent) / 2;
 
   for (let index = 0; index < lines.length; index++) {
     const characters = Array.from(lines[index]);
@@ -626,7 +610,7 @@ function layoutCentredText(cache: LabelGlyphCache, raster: StyleRaster, lines: A
     }
 
     let penX = -lineWidth / 2;
-    const baselineY = firstLineY + index * lineHeight + baselineShift;
+    const baselineY = firstLineY + index * lineHeight;
 
     for (const character of characters) {
       const sprite = cache.getGlyph(raster, character);
@@ -694,7 +678,7 @@ function planAlongLine(cache: LabelGlyphCache, feature: LineStringLabelFeature, 
   // The interval is defined on [z, z + 1), so the discrete placement still takes the
   // interval's lower end rather than an unscaled size.
   const fixedScale = scale[0];
-  const designToExtent = extent / LABEL_DESIGN_SIZE;
+  const designToExtent = extent / LabelDesignSize;
 
   const placements: Array<LocalPlacement> = [];
   let minX = Infinity;
@@ -714,7 +698,7 @@ function planAlongLine(cache: LabelGlyphCache, feature: LineStringLabelFeature, 
     // bucket, so the collision bounds below describe exactly the rotation that
     // gets baked rather than one a fraction of a degree away from it.
     const bucket = quantiseLabelAngle(angles[index], extent);
-    const angle = (bucket / LABEL_ANGLE_BUCKETS) * Math.PI * 2;
+    const angle = (bucket / LabelAngleBuckets) * Math.PI * 2;
 
     sumX += anchorX;
     sumY += anchorY;
@@ -752,7 +736,7 @@ function planAlongLine(cache: LabelGlyphCache, feature: LineStringLabelFeature, 
   return {
     kind: 'text',
     styleIndex: feature.properties.style,
-    flags: LABEL_FLAG_ALONG_LINE | LABEL_FLAG_HAS_GLYPHS,
+    flags: LabelFlagAlongLine | LabelFlagHasGlyphs,
     scale0: fixedScale,
     scale1: scale[1],
     dedupeHash: hashLabel(`${style.layer}\u0000${feature.properties.label}`),
@@ -787,7 +771,7 @@ function planPointText(cache: LabelGlyphCache, feature: PointLabelFeature, style
   return {
     kind: 'text',
     styleIndex,
-    flags: LABEL_FLAG_ZOOM_SCALED | LABEL_FLAG_HAS_GLYPHS,
+    flags: LabelFlatZoomScaled | LabelFlagHasGlyphs,
     scale0: scale[0],
     scale1: scale[1],
     dedupeHash: hashLabel(`${style.layer}\u0000${label}`),
@@ -838,7 +822,7 @@ function planIcon(cache: LabelGlyphCache, feature: PointLabelFeature, style: Ico
   return {
     kind,
     styleIndex,
-    flags: LABEL_FLAG_HAS_GLYPHS,
+    flags: LabelFlagHasGlyphs,
     scale0: 1,
     scale1: 1,
     dedupeHash: label ? hashLabel(`${style.layer}\u0000${label}`) : 0,
@@ -890,9 +874,9 @@ function worstCaseScale(local: LocalFeature): number {
   // Along-line labels are STATIC.
   // The per-character anchors were baked into extent space, so the footprint only follows the tile and never grows on its own.
   // scale0 (the value the bbox was baked with) already IS the worst case.
-  if (local.flags & LABEL_FLAG_ALONG_LINE) return local.scale0;
+  if (local.flags & LabelFlagAlongLine) return local.scale0;
 
-  if (!(local.flags & LABEL_FLAG_ZOOM_SCALED)) return local.scale0;
+  if (!(local.flags & LabelFlatZoomScaled)) return local.scale0;
 
   // Point labels are DYNAMIC.
   // The renderer draws them at f(t) = (a + bt) * 2^-t, where a = scale0, b = scale1 - scale0, t in [0, 1]
@@ -923,11 +907,11 @@ function worstCaseScale(local: LocalFeature): number {
  * renderer would have computed is recovered by a single multiplication.
  */
 function computeCollisionBox(local: LocalFeature, extent: number): CollisionBox {
-  const designToExtent = extent / LABEL_DESIGN_SIZE;
-  const padding = LABEL_COLLISION_PADDING * designToExtent;
+  const designToExtent = extent / LabelDesignSize;
+  const padding = LabelCollisionPadding * designToExtent;
 
   // Along-line bounds are already absolute extent coordinates.
-  if (local.flags & LABEL_FLAG_ALONG_LINE) {
+  if (local.flags & LabelFlagAlongLine) {
     return {
       minX: local.minX - padding,
       minY: local.minY - padding,
@@ -1045,8 +1029,8 @@ function resolveTileCollisions(locals: Array<LocalFeature>, extent: number): Arr
 
 function quantiseLabelAngle(angle: number, extent: number): number {
   if (!extent) return 0;
-  const bucket = Math.round((angle / extent) * LABEL_ANGLE_BUCKETS);
-  return ((bucket % LABEL_ANGLE_BUCKETS) + LABEL_ANGLE_BUCKETS) % LABEL_ANGLE_BUCKETS;
+  const bucket = Math.round((angle / extent) * LabelAngleBuckets);
+  return ((bucket % LabelAngleBuckets) + LabelAngleBuckets) % LabelAngleBuckets;
 }
 
 /**
@@ -1076,7 +1060,7 @@ function bakeRotatedPlacements(features: Array<LocalFeature>): void {
       const bucket = placement.bucket ?? 0;
       if (bucket === 0 || !placement.sprite) continue;
 
-      const angle = (bucket / LABEL_ANGLE_BUCKETS) * Math.PI * 2;
+      const angle = (bucket / LabelAngleBuckets) * Math.PI * 2;
       const cos = Math.cos(angle);
       const sin = Math.sin(angle);
       const absCos = Math.abs(cos);
@@ -1089,8 +1073,8 @@ function bakeRotatedPlacements(features: Array<LocalFeature>): void {
       // The rotated bounding box, plus one transparent pixel per side: the cell
       // is resampled at draw time and an edge sample must not be able to reach
       // into whichever cell the shelf packer puts next to it.
-      const cellWidth = placement.pixelWidth * absCos + placement.pixelHeight * absSin + ROTATED_CELL_PADDING * 2;
-      const cellHeight = placement.pixelWidth * absSin + placement.pixelHeight * absCos + ROTATED_CELL_PADDING * 2;
+      const cellWidth = placement.pixelWidth * absCos + placement.pixelHeight * absSin + RotatedCellPadding * 2;
+      const cellHeight = placement.pixelWidth * absSin + placement.pixelHeight * absCos + RotatedCellPadding * 2;
 
       const centreX = placement.offsetX + placement.width / 2;
       const centreY = placement.offsetY + placement.height / 2;
@@ -1148,7 +1132,7 @@ function composeSheet(cache: LabelGlyphCache, features: Array<LocalFeature>, max
   for (const entry of sorted) sheetWidth = Math.max(sheetWidth, entry.placement.pixelWidth);
   sheetWidth = Math.min(maxSheetSize, Math.max(64, 1 << Math.ceil(Math.log2(Math.max(sheetWidth, Math.ceil(Math.sqrt(sorted.length)) * 32)))));
 
-  const rects = new Float32Array(order.length * GLYPH_STRIDE);
+  const rects = new Float32Array(order.length * LabelGlyphStride);
   let shelfX = 0;
   let shelfY = 0;
   let shelfHeight = 0;
@@ -1160,7 +1144,7 @@ function composeSheet(cache: LabelGlyphCache, features: Array<LocalFeature>, max
       shelfX = 0;
       shelfHeight = 0;
     }
-    const offset = entry.index * GLYPH_STRIDE;
+    const offset = entry.index * LabelGlyphStride;
     rects[offset] = shelfX;
     rects[offset + 1] = shelfY;
     rects[offset + 2] = pixelWidth;
@@ -1178,13 +1162,13 @@ function composeSheet(cache: LabelGlyphCache, features: Array<LocalFeature>, max
 
   for (let index = 0; index < order.length; index++) {
     const placement = order[index];
-    const offset = index * GLYPH_STRIDE;
+    const offset = index * LabelGlyphStride;
     if (placement.sprite) {
       const bucket = placement.bucket ?? 0;
       if (bucket !== 0) {
         // `bakeRotatedPlacements` already sized the cell to the rotated bounds,
         // so the sprite is simply centred in it at the bucket's angle.
-        cache.blitRotated(placement.sprite, context, rects[offset], rects[offset + 1], (bucket / LABEL_ANGLE_BUCKETS) * Math.PI * 2, rects[offset + 2], rects[offset + 3]);
+        cache.blitRotated(placement.sprite, context, rects[offset], rects[offset + 1], (bucket / LabelAngleBuckets) * Math.PI * 2, rects[offset + 2], rects[offset + 3]);
       } else {
         cache.blit(placement.sprite, context, rects[offset], rects[offset + 1]);
       }
@@ -1253,7 +1237,7 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
 
   if (sheet) {
     let maxSpriteHeight = 0;
-    for (let index = 3; index < glyphs.length; index += GLYPH_STRIDE) {
+    for (let index = 3; index < glyphs.length; index += LabelGlyphStride) {
       if (glyphs[index] > maxSpriteHeight) maxSpriteHeight = glyphs[index];
     }
   }
@@ -1261,10 +1245,10 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
   let placementCount = 0;
   for (const local of survivors) placementCount += local.placements.length;
 
-  const placements = new Float32Array(placementCount * PLACEMENT_STRIDE);
-  const features = new Uint32Array(survivors.length * FEATURE_U32_STRIDE);
-  const bounds = new Float32Array(survivors.length * FEATURE_F32_STRIDE);
-  const collisions = new Float32Array(survivors.length * COLLISION_STRIDE);
+  const placements = new Float32Array(placementCount * LabelPlacementStride);
+  const features = new Uint32Array(survivors.length * LabelFeaturesStride);
+  const bounds = new Float32Array(survivors.length * LabelBoundsStride);
+  const collisions = new Float32Array(survivors.length * LabelCollisionStride);
   const scales = new Float32Array(survivors.length * 2);
 
   let placementIndex = 0;
@@ -1275,7 +1259,7 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
     for (const placement of local.placements) {
       const glyphIndex = indices.get(placement);
       if (glyphIndex === undefined) continue;
-      const offset = placementIndex * PLACEMENT_STRIDE;
+      const offset = placementIndex * LabelPlacementStride;
       placements[offset] = glyphIndex;
       placements[offset + 1] = placement.anchorX;
       placements[offset + 2] = placement.anchorY;
@@ -1286,8 +1270,8 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
       placementIndex++;
     }
 
-    const featureOffset = index * FEATURE_U32_STRIDE;
-    features[featureOffset] = LABEL_KIND_CODES[local.kind];
+    const featureOffset = index * LabelFeaturesStride;
+    features[featureOffset] = LabelKindToCode[local.kind];
     features[featureOffset + 1] = local.styleIndex;
     features[featureOffset + 2] = start;
     features[featureOffset + 3] = placementIndex - start;
@@ -1295,9 +1279,9 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
     // A box that falls out of the tile is never tested against whatever occupies the neighbouring tile.
     const collision = placed[index].collision;
     const crossesSeam = collision.minX < 0 || collision.minY < 0 || collision.maxX > extent || collision.maxY > extent;
-    features[featureOffset + 5] = local.flags | (crossesSeam ? LABEL_FLAG_SEAM : 0);
+    features[featureOffset + 5] = local.flags | (crossesSeam ? LabelFlagSeam : 0);
 
-    const boundsOffset = index * FEATURE_F32_STRIDE;
+    const boundsOffset = index * LabelBoundsStride;
     bounds[boundsOffset] = local.anchorX;
     bounds[boundsOffset + 1] = local.anchorY;
     bounds[boundsOffset + 2] = local.minX;
@@ -1306,13 +1290,13 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
     bounds[boundsOffset + 5] = local.maxY;
     bounds[boundsOffset + 6] = local.offsetY;
 
-    const collisionOffset = index * COLLISION_STRIDE;
+    const collisionOffset = index * LabelCollisionStride;
     collisions[collisionOffset] = collision.minX;
     collisions[collisionOffset + 1] = collision.minY;
     collisions[collisionOffset + 2] = collision.maxX;
     collisions[collisionOffset + 3] = collision.maxY;
 
-    const scaleOffset = index * SCALE_STRIDE;
+    const scaleOffset = index * LabelScalesStride;
     scales[scaleOffset] = local.scale0;
     scales[scaleOffset + 1] = local.scale1;
   }
@@ -1320,10 +1304,10 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
   return {
     extent,
     zoom: collection.zoom,
-    designSize: LABEL_DESIGN_SIZE,
+    designSize: LabelDesignSize,
     sheet,
     glyphs,
-    placements: placements.subarray(0, placementIndex * PLACEMENT_STRIDE).slice(),
+    placements: placements.subarray(0, placementIndex * LabelPlacementStride).slice(),
     features,
     bounds,
     collisions,

@@ -1,5 +1,5 @@
 import { clamp } from '../../tools/math';
-import { COLLISION_STRIDE, FEATURE_F32_STRIDE, FEATURE_U32_STRIDE, GLYPH_STRIDE, LABEL_FLAG_ALONG_LINE, LABEL_FLAG_HAS_GLYPHS, LABEL_FLAG_SEAM, LABEL_FLAG_ZOOM_SCALED, LABEL_KIND_CODES, LabelGlyphPlan, PLACEMENT_STRIDE, SCALE_STRIDE } from './label-plan';
+import { LabelCollisionStride, LabelBoundsStride, LabelFeaturesStride, LabelGlyphStride, LabelFlagAlongLine, LabelFlagHasGlyphs, LabelFlagSeam, LabelFlatZoomScaled, LabelKindToCode, LabelGlyphPlan, LabelPlacementStride, LabelScalesStride } from './label-plan';
 
 type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
@@ -97,11 +97,11 @@ export function resolveLabelScale(flags: number, tileZoom: number, viewZoom: num
   // fixed by the geometry and only follows the tile as it is scaled on screen.
   // Multiplying the glyph size by a scale the spacing does not share would make
   // the characters grow apart from (or pile into) their own baked positions.
-  if (flags & LABEL_FLAG_ALONG_LINE) return scale0;
+  if (flags & LabelFlagAlongLine) return scale0;
 
   // Point labels are DYNAMIC: nothing about their layout is baked into extent
   // space, so the whole label may be interpolated across the zoom interval.
-  if (!(flags & LABEL_FLAG_ZOOM_SCALED)) return scale0;
+  if (!(flags & LabelFlatZoomScaled)) return scale0;
   const t = clamp(viewZoom - tileZoom, 0, 1);
 
   // 1. The tile is stretched by 2^t across its own interval and `designToPixel` already carries that stretch.
@@ -113,7 +113,7 @@ export function resolveLabelScale(flags: number, tileZoom: number, viewZoom: num
 function getPlanScales(plan: LabelGlyphPlan, index: number): [number, number] {
   const scales = plan.scales;
   if (!scales) return [1, 1];
-  const scaleOffset = index * SCALE_STRIDE;
+  const scaleOffset = index * LabelScalesStride;
   return [scales[scaleOffset], scales[scaleOffset + 1]];
 }
 
@@ -127,19 +127,19 @@ function getPlanScales(plan: LabelGlyphPlan, index: number): [number, number] {
  * dense tile draws.
  */
 function drawGlyphs(context: Context2D, plan: LabelGlyphPlan, featureIndex: number, tileX: number, tileY: number, extentToPixel: number, designToPixel: number, scale: number): void {
-  const featureOffset = featureIndex * FEATURE_U32_STRIDE;
+  const featureOffset = featureIndex * LabelFeaturesStride;
   const flags = plan.features[featureOffset + 5];
 
-  if (!(flags & LABEL_FLAG_HAS_GLYPHS) || !plan.sheet) return;
+  if (!(flags & LabelFlagHasGlyphs) || !plan.sheet) return;
 
   const start = plan.features[featureOffset + 2];
   const count = plan.features[featureOffset + 3];
-  const dy = plan.bounds[featureIndex * FEATURE_F32_STRIDE + 6] * designToPixel;
+  const dy = plan.bounds[featureIndex * LabelBoundsStride + 6] * designToPixel;
   const unit = scale * designToPixel;
 
   for (let index = start; index < start + count; index++) {
-    const offset = index * PLACEMENT_STRIDE;
-    const glyphOffset = plan.placements[offset] * GLYPH_STRIDE;
+    const offset = index * LabelPlacementStride;
+    const glyphOffset = plan.placements[offset] * LabelGlyphStride;
 
     const sx = plan.glyphs[glyphOffset];
     const sy = plan.glyphs[glyphOffset + 1];
@@ -192,11 +192,11 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
     // is the tile's current on-screen width. The glyph atlas is super-sampled
     // above this size, so drawImage always downscales, never magnifies.
     const designToPixel = tileWidth / plan.designSize;
-    const featureCount = plan.features.length / FEATURE_U32_STRIDE;
+    const featureCount = plan.features.length / LabelFeaturesStride;
 
     const circles = new Map<number, Array<[x: number, y: number]>>();
     for (let featureIndex = 0; featureIndex < featureCount; featureIndex++) {
-      const featureOffset = featureIndex * FEATURE_U32_STRIDE;
+      const featureOffset = featureIndex * LabelFeaturesStride;
       const flags = plan.features[featureOffset + 5];
       const dedupeHash = plan.features[featureOffset + 4];
 
@@ -204,7 +204,7 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
 
       // The reserved box is already padded and already sized for the worst case,
       // so projecting it costs one multiply per edge and needs no scale at all.
-      const collisionOffset = featureIndex * COLLISION_STRIDE;
+      const collisionOffset = featureIndex * LabelCollisionStride;
       const minX = screenBBox.minX + plan.collisions[collisionOffset] * extentToPixel;
       const minY = screenBBox.minY + plan.collisions[collisionOffset + 1] * extentToPixel;
       const maxX = screenBBox.minX + plan.collisions[collisionOffset + 2] * extentToPixel;
@@ -221,17 +221,17 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
       // Only boxes that leave their own tile can conflict with another tile's
       // labels; everything else was already resolved at plan time.
       const box: Box = { minX, minY, maxX, maxY };
-      if ((flags & LABEL_FLAG_SEAM) !== 0 && seams.collides(box)) {
+      if ((flags & LabelFlagSeam) !== 0 && seams.collides(box)) {
         continue;
       }
       seams.insert(box);
 
       if (dedupeHash !== 0) seen.add(dedupeHash);
 
-      if (plan.features[featureOffset] === LABEL_KIND_CODES.circle) {
+      if (plan.features[featureOffset] === LabelKindToCode.circle) {
         const styleReference = plan.features[featureOffset + 1];
         if (!circles.has(styleReference)) circles.set(styleReference, []);
-        const boundsOffset = featureIndex * FEATURE_F32_STRIDE;
+        const boundsOffset = featureIndex * LabelBoundsStride;
         const centreX = screenBBox.minX + plan.bounds[boundsOffset] * extentToPixel;
         const centreY = screenBBox.minY + plan.bounds[boundsOffset + 1] * extentToPixel;
         circles.get(styleReference)?.push([centreX, centreY]);
