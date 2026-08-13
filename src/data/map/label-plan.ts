@@ -305,8 +305,7 @@ export class LabelGlyphCache {
     context.textBaseline = 'alphabetic';
     context.lineJoin = 'round';
     context.miterLimit = 2;
-    context.imageSmoothingEnabled = true;
-    context.imageSmoothingQuality = 'high';
+    context.imageSmoothingEnabled = false;
     const page: AtlasPage = { canvas, context, shelfX: 0, shelfY: 0, shelfHeight: 0 };
     this.pages.push(page);
     return page;
