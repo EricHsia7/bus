@@ -6,6 +6,10 @@ declare const STYLE_BRAND: unique symbol;
 /** An index into the style table for `K`. */
 export type StyleRef<K extends LabelKind> = number & { readonly [STYLE_BRAND]: K };
 
+/**
+ * - text-scale
+ * - marker-scale
+ */
 export type LabelPropertyScale = [scale0: number, scale1: number];
 
 export interface BaseStyleProperties {
