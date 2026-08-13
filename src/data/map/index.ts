@@ -9,13 +9,11 @@ import { LabelGlyphPlan } from './label-plan';
  */
 export type MapLoaderTileState = 0 | 1 | 2 | 3 | 4;
 
-export type MapLoaderLayerArray<T> = [raster: T, labels: T];
-
 export interface MapLoaderTile {
   x: number;
   y: number;
   z: number;
-  state: MapLoaderLayerArray<MapLoaderTileState>;
+  state: MapLoaderTileState;
 }
 
 export interface MapLoaderResponse extends MapLoaderTile {
@@ -125,8 +123,8 @@ export class MapLoader {
     if (existing) {
       // A tile that was evicted can legitimately be requested again; every other
       // state means the tile is already pending, loading, loaded or known missing.
-      if (existing.state[0] !== 4 && existing.state[1] !== 4) return;
-      existing.state = [0, 0];
+      if (existing.state !== 4) return;
+      existing.state = 0;
       this.queue.push(key);
       return;
     }
@@ -135,7 +133,7 @@ export class MapLoader {
       x,
       y,
       z,
-      state: [0, 0]
+      state: 0
     });
     this.queue.push(key);
   }
@@ -146,7 +144,7 @@ export class MapLoader {
     const index = this.queue.indexOf(key);
     if (index < 0) return;
     const tile = this.tiles.get(key);
-    if (tile?.state[0] !== 0 || tile?.state[1] !== 0) return;
+    if (tile?.state !== 0) return;
     this.queue.splice(index, 1);
     this.tiles.delete(key);
   }
@@ -158,7 +156,7 @@ export class MapLoader {
     for (let i = 0, l = batch.length; i < l; i++) {
       const tile = this.tiles.get(batch[i]);
       if (tile) {
-        tile.state = [1, 1];
+        tile.state = 1;
         list.push(tile);
       }
     }
@@ -185,7 +183,7 @@ export class MapLoader {
         }
 
         const tile = this.tiles.get(key);
-        if (tile) tile.state = [2, 2];
+        if (tile) tile.state = 2;
         this.callback(response);
         this.scheduleEviction();
         break;
@@ -194,7 +192,7 @@ export class MapLoader {
         const { x, y, z } = message.tile;
         const key = this.getTileKey(x, y, z);
         const tile = this.tiles.get(key);
-        if (tile) tile.state = [3, 3];
+        if (tile) tile.state = 3;
         break;
       }
       default:
@@ -320,9 +318,8 @@ export class MapLoader {
 
     const tile = this.tiles.get(key);
     if (tile) {
-      // Marked evicted rather than deleted, so `enqueue` can tell a re-request apart
-      // from a tile that was never seen and can refetch it.
-      tile.state = [4, 4];
+      // Marked evicted rather than deleted, so `enqueue` can tell a re-request apart from a tile that was never seen and can refetch it.
+      tile.state = 4;
       this.onEvict?.(key, tile);
     } else {
       this.onEvict?.(key, response);
