@@ -1255,17 +1255,11 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
 
   const { sheet, glyphs, indices } = composeSheet(cache, survivors, 2048);
 
-  // One line per tile describing the whole super-sampling chain, so the atlas
-  // resolution can be confirmed from the console instead of inferred from how
-  // sharp the result looks. If `sheet` does not grow with `superSample`, the
-  // problem is upstream of the renderer; if it does grow but the screen looks
-  // unchanged, the problem is the downscale filtering at draw time.
   if (sheet) {
     let maxSpriteHeight = 0;
     for (let index = 3; index < glyphs.length; index += GLYPH_STRIDE) {
       if (glyphs[index] > maxSpriteHeight) maxSpriteHeight = glyphs[index];
     }
-    const font = cache.lastFont;
   }
 
   let placementCount = 0;
@@ -1276,7 +1270,6 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
   const bounds = new Float32Array(survivors.length * FEATURE_F32_STRIDE);
   const collisions = new Float32Array(survivors.length * COLLISION_STRIDE);
   const scales = new Float32Array(survivors.length * 2);
-  const labels: Array<string> = new Array(survivors.length);
 
   let placementIndex = 0;
   for (let index = 0; index < survivors.length; index++) {
@@ -1303,8 +1296,7 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
     features[featureOffset + 2] = start;
     features[featureOffset + 3] = placementIndex - start;
     features[featureOffset + 4] = local.dedupeHash;
-    // A box that leaves the tile was never tested against whatever occupies the
-    // neighbouring tile, so mark it for the renderer's seam pass.
+    // A box that falls out of the tile is never tested against whatever occupies the neighbouring tile.
     const collision = placed[index].collision;
     const crossesSeam = collision.minX < 0 || collision.minY < 0 || collision.maxX > extent || collision.maxY > extent;
     features[featureOffset + 5] = local.flags | (crossesSeam ? LABEL_FLAG_SEAM : 0);
@@ -1327,8 +1319,6 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: Ma
     const scaleOffset = index * SCALE_STRIDE;
     scales[scaleOffset] = local.scale0;
     scales[scaleOffset + 1] = local.scale1;
-
-    labels[index] = local.label;
   }
 
   return {
