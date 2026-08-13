@@ -399,7 +399,7 @@ export class LabelGlyphCache {
 
     const page = this.pages[slot.page];
     const originX = slot.x + padding + left;
-    const originY = slot.y + padding + ascent;
+    const originY = slot.y + padding + Math.abs(ascent);
 
     page.context.font = raster.font;
     page.context.clearRect(slot.x, slot.y, spriteWidth, spriteHeight);
