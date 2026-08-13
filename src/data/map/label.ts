@@ -56,7 +56,6 @@ export interface TextLabelProperties extends BaseLabelProperties {
   /** Resolved text: text-name evaluated against the feature tags. Always non-empty. */
   label: string;
   style: StyleRef<'text'>;
-  chars: Array<number>;
 }
 
 export interface IconLabelProperties extends BaseLabelProperties {
