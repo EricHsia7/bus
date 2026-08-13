@@ -26,20 +26,6 @@ export const LABEL_LINE_HEIGHT_RATIO = 1.2;
 
 export const LABEL_COLLISION_PADDING = 3;
 
-/**
- * Super-sampling factor used when rasterising glyphs into the atlas.
- *
- * Glyphs are rasterised at `logicalPixels * superSample` and then drawn back
- * down at `logicalPixels`, so the factor only buys definition — it must never
- * change the size a glyph occupies on the final canvas. Defaults to the device
- * pixel ratio when one is observable (workers do not expose `window`).
- */
-export const DEFAULT_SUPER_SAMPLE_RATIO = ((): number => {
-  const scope = typeof self !== 'undefined' ? (self as unknown as { devicePixelRatio?: number }) : undefined;
-  const ratio = scope?.devicePixelRatio;
-  return typeof ratio === 'number' && ratio > 0 ? ratio : 1;
-})();
-
 export function decodeLabelAngle(angle: number, extent: number): number {
   return (angle / extent) * 2 * Math.PI || 0;
 }
@@ -156,8 +142,7 @@ export interface LabelGlyphCacheOptions {
   fontFamily?: string;
   fontWeight?: number;
   /**
-   * Rasterisation over-sampling factor. Pass the main thread's
-   * `window.devicePixelRatio` when constructing the cache inside a worker.
+   * Rasterisation over-sampling factor.
    */
   superSample?: number;
 }
@@ -174,10 +159,10 @@ export class LabelGlyphCache {
   private readonly measureContext: OffscreenCanvasRenderingContext2D;
 
   constructor(options: LabelGlyphCacheOptions = {}) {
-    this.pageSize = options.pageSize ?? 1024;
-    this.fontFamily = options.fontFamily ?? "'Noto Sans TC', sans-serif";
-    this.fontWeight = options.fontWeight ?? 400;
-    this.superSample = Math.max(1, options.superSample ?? DEFAULT_SUPER_SAMPLE_RATIO);
+    this.pageSize = options.pageSize || 1024;
+    this.fontFamily = options.fontFamily || "'Noto Sans TC', sans-serif";
+    this.fontWeight = options.fontWeight || 400;
+    this.superSample = options.superSample || 1;
     this.measureContext = new OffscreenCanvas(1, 1).getContext('2d') as OffscreenCanvasRenderingContext2D;
   }
 

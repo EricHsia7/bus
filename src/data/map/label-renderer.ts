@@ -19,7 +19,6 @@ export interface DrawLabelTilesOptions {
   zoom: number;
   width: number;
   height: number;
-  dedupe?: boolean;
   devicePixelRatio: number;
 }
 
@@ -175,7 +174,6 @@ function drawGlyphs(context: Context2D, plan: LabelGlyphPlan, featureIndex: numb
  */
 export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, options: DrawLabelTilesOptions): void {
   const seen = new Set<number>();
-  const dedupe = options.dedupe !== false;
   const seams = new SeamCollisionIndex(options.width, options.height);
 
   for (let tileIndex = 0; tileIndex < tiles.length; tileIndex++) {
@@ -201,9 +199,7 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
       const flags = plan.features[featureOffset + 5];
       const dedupeHash = plan.features[featureOffset + 4];
 
-      if (dedupe && dedupeHash !== 0 && seen.has(dedupeHash)) {
-        continue;
-      }
+      if (dedupeHash !== 0 && seen.has(dedupeHash)) continue;
 
       // The reserved box is already padded and already sized for the worst case,
       // so projecting it costs one multiply per edge and needs no scale at all.
