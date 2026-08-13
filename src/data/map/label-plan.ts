@@ -1,3 +1,4 @@
+import { clamp } from '../../tools/math';
 import { MapLoaderTile } from './index';
 import { CircleStyleProperties, IconStyleProperties, LabelFeature, LabelFeatureCollection, LabelKind, LineStringLabelFeature, PointLabelFeature, TextStyleProperties } from './label';
 
@@ -215,12 +216,12 @@ export class LabelGlyphCache {
     return this.superSample;
   }
 
-  /**
-   * Requested vs actually-applied font size for the most recently built raster.
-   * These must stay equal; a divergence means the canvas rejected the font string
-   * and is measuring/rasterising at some other size entirely.
-   */
-  public lastFont: { requested: number; applied: number; appliedFont: string } | null = null;
+  // /**
+  //  * Requested vs actually-applied font size for the most recently built raster.
+  //  * These must stay equal; a divergence means the canvas rejected the font string
+  //  * and is measuring/rasterising at some other size entirely.
+  //  */
+  // public lastFont: { requested: number; applied: number; appliedFont: string } | null = null;
 
   public get size(): number {
     return this.sprites.size;
@@ -274,8 +275,10 @@ export class LabelGlyphCache {
     // Stage 2 — logical pixel to super-sampled raster pixel. `maxScale` is folded
     // in so a label that grows with zoom is still rasterised above its largest
     // on-screen size rather than being magnified from an under-sampled sprite.
+    const minFontPixels = 32; // Ensure visual quality
     const maxFontPixels = 192; // Protect against GPU texture overflow and browser canvas limits
-    const requestedPixels = Math.min(maxFontPixels, logicalPixels * maxScale * this.superSample);
+    const requestedPixels = clamp(Math.ceil(logicalPixels * maxScale * this.superSample), minFontPixels, maxFontPixels);
+    console.log(requestedPixels);
     const font = `${this.fontWeight} ${requestedPixels}px ${family}`;
 
     // Assigning an unparseable `font` is a SILENT no-op on a canvas context: the
@@ -294,11 +297,7 @@ export class LabelGlyphCache {
       console.warn(`[label-plan] font not applied: requested ${requestedPixels}px, got ${fontPixels}px ` + `(font="${font}", applied="${appliedFont}"). Glyphs will be rasterised at the ` + `applied size; check that the family is loaded in this context.`);
     }
 
-    // Exact inverse of the two stages above, including the clamp. Because every
-    // sprite metric is multiplied by this factor, the design-unit geometry the
-    // renderer consumes is invariant to `superSample` and to `maxScale`.
-    this.lastFont = { requested: requestedPixels, applied: fontPixels, appliedFont };
-
+    // Exact inverse of the two stages above, including the clamp. Because every sprite metric is multiplied by this factor, the design-unit geometry the renderer consumes is invariant to `superSample` and to `maxScale`.
     const designPerPixel = size / fontPixels;
 
     const metrics = this.measureContext.measureText('Hg');
