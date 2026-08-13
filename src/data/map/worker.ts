@@ -56,10 +56,7 @@ async function getLabels(url: string): Promise<LabelFeatureCollection> {
   return JSON.parse(decoder.decode(buffer)) as LabelFeatureCollection;
 }
 
-const cache = new LabelGlyphCache({
-  superSample: 3,
-  pageSize: 512
-});
+const cache = new LabelGlyphCache(512, 3);
 
 // /** Sprite sheets are fetched once and shared by every tile that references an icon. */
 // const icons = new Map<string, ImageBitmap>();

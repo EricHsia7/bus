@@ -141,9 +141,7 @@ export interface LabelGlyphCacheOptions {
   pageSize?: number;
   fontFamily?: string;
   fontWeight?: number;
-  /**
-   * Rasterisation over-sampling factor.
-   */
+  
   superSample?: number;
 }
 
@@ -158,11 +156,18 @@ export class LabelGlyphCache {
   private readonly styles = new Map<string, StyleRaster>();
   private readonly measureContext: OffscreenCanvasRenderingContext2D;
 
-  constructor(options: LabelGlyphCacheOptions = {}) {
-    this.pageSize = options.pageSize || 1024;
-    this.fontFamily = options.fontFamily || "'Noto Sans TC', sans-serif";
-    this.fontWeight = options.fontWeight || 400;
-    this.superSample = options.superSample || 1;
+  /**
+   * 
+   * @param pageSize size of a page
+   * @param superSample rasterisation over-sampling factor
+   * @param defaultFontFamily 
+   * @param defaultFontWeight 
+   */
+  constructor(pageSize: number = 1024, superSample: number = 1, defaultFontFamily: string = "'Noto Sans TC', sans-serif", defaultFontWeight: number = 400) {
+    this.pageSize = pageSize;
+    this.superSample = superSample;
+    this.fontFamily = defaultFontFamily;
+    this.fontWeight = defaultFontWeight;
     this.measureContext = new OffscreenCanvas(1, 1).getContext('2d') as OffscreenCanvasRenderingContext2D;
   }
 
@@ -220,7 +225,7 @@ export class LabelGlyphCache {
     const haloFill = style['text-halo-fill'] ?? null;
     const haloRadius = haloFill ? (style['text-halo-radius'] ?? 0) : 0;
     const family = this.resolveFontFamily(style['text-face-name']);
-    const signature = `${family}|${this.fontWeight}|${size}|${maxScale}|${this.superSample}|${fill}|${haloFill ?? ''}|${haloRadius}`;
+    const signature = `${family}|${this.fontWeight}|${size}|${maxScale}|${fill}|${haloFill ?? ''}|${haloRadius}`;
 
     const cached = this.styles.get(signature);
     if (cached) return cached;
