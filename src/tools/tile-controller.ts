@@ -592,7 +592,7 @@ export class MapTileController {
       const dt = Math.max(1, time - lastTime);
       lastTime = time;
 
-      if (Math.abs(this.velocity[0]) > 0.01 || Math.abs(this.velocity[1]) > 0.01) {
+      if (Math.abs(this.velocity[0]) > 0.02 || Math.abs(this.velocity[1]) > 0.02) {
         this.panBy(this.velocity[0] * dt, this.velocity[1] * dt);
         this.velocity[0] *= friction;
         this.velocity[1] *= friction;
