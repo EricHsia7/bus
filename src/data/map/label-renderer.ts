@@ -194,7 +194,7 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
     const designToPixel = tileWidth / plan.designSize;
     const featureCount = plan.features.length / LabelFeaturesStride;
 
-    const circles = new Map<number, Array<[x: number, y: number]>>();
+    const circles = new Map<number, Array<[x: number, y: number, scale: number]>>();
     for (let featureIndex = 0; featureIndex < featureCount; featureIndex++) {
       const featureOffset = featureIndex * LabelFeaturesStride;
       const flags = plan.features[featureOffset + 5];
@@ -234,7 +234,7 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
         const boundsOffset = featureIndex * LabelBoundsStride;
         const centreX = screenBBox.minX + plan.bounds[boundsOffset] * extentToPixel;
         const centreY = screenBBox.minY + plan.bounds[boundsOffset + 1] * extentToPixel;
-        circles.get(styleReference)?.push([centreX, centreY]);
+        circles.get(styleReference)?.push([centreX, centreY, scale]);
       } else {
         drawGlyphs(context, plan, featureIndex, screenBBox.minX, screenBBox.minY, extentToPixel, designToPixel, scale);
       }
@@ -245,9 +245,9 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
       if (!style['marker-width']) continue;
       const radius = (style['marker-width'] * designToPixel) / 2;
       context.beginPath();
-      for (const [centerX, centerY] of centerCoordinates) {
-        context.moveTo(centerX + radius, centerY);
-        context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      for (const [centerX, centerY, scale] of centerCoordinates) {
+        context.moveTo(centerX + radius * scale, centerY);
+        context.arc(centerX, centerY, radius * scale, 0, Math.PI * 2);
       }
       if (!style['marker-fill']) continue;
       context.fillStyle = style['marker-fill'];
