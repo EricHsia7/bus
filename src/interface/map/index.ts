@@ -513,10 +513,7 @@ function renderFrame(now: number): void {
   updateLayerStack(z, now);
   let animating = advanceLayerStack(now);
 
-  // Requests are normally issued once movement settles, but a zoom that crosses an integer
-  // boundary needs its tiles during the gesture, not after it. Without this a zoom out has
-  // nothing to fill the newly exposed ground with until the user lets go.
-  if (activeLayerZ !== null && activeLayerZ !== z) synchronizeQueue();
+  // if (activeLayerZ !== null && activeLayerZ !== z) synchronizeQueue();
   activeLayerZ = z;
 
   mapContext.globalAlpha = 1;
