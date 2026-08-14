@@ -47,7 +47,7 @@ const maxChildFallbackDepth = 2;
 /** Upper bound of retained fade states before pruning */
 const maxFadeStates = 1024;
 /** Decoded-tile budget handed to the loader's LRU cache, in bytes */
-const maxCacheBytes = 96 * 1024 * 1024;
+const maxCacheBytes = 256 * 1024 * 1024;
 /** Floor of the LRU budget, so small viewports still keep a useful history */
 const minCachedTiles = 64;
 /** The cache is never trimmed below this multiple of the tiles currently on screen */
