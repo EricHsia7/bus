@@ -7,10 +7,16 @@ import { MapLoaderTile, MapLoaderWorkerMessageData, MapLoaderWorkerMessageError 
 import { LabelFeatureCollection } from './label';
 import { buildLabelGlyphPlan, LabelGlyphCache } from './label-plan';
 
+let processing: number = 0;
+
 self.onmessage = function (event: MessageEvent): void {
   const batch = event.data as Array<MapLoaderTile>;
   for (const tile of batch) {
-    loadTile(tile).catch((error: Error) => self.postMessage({ type: 'error', error: error.message, tile } as MapLoaderWorkerMessageError));
+    processing++;
+    loadTile(tile).catch((error: Error) => {
+      processing--;
+      self.postMessage({ type: 'error', error: error.message, tile, processing } as MapLoaderWorkerMessageError);
+    });
   }
 };
 
@@ -78,6 +84,7 @@ async function loadTile(tile: MapLoaderTile) {
 
   const [bitmap, labels] = await Promise.all([getRaster(rasterURL), getLabels(labelsURL)]);
   const labelPlan = buildLabelGlyphPlan(labels, tile, cache);
+  processing--;
   self.postMessage(
     {
       type: 'data',
@@ -85,7 +92,8 @@ async function loadTile(tile: MapLoaderTile) {
         ...tile,
         bitmap,
         label: labelPlan
-      }
+      },
+      processing
     } as MapLoaderWorkerMessageData,
     [bitmap, labelPlan.sheet, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer]
   );

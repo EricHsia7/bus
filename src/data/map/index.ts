@@ -24,12 +24,14 @@ export interface MapLoaderResponse extends MapLoaderTile {
 export interface MapLoaderWorkerMessageData {
   type: 'data';
   response: MapLoaderResponse;
+  processing: number;
 }
 
 export interface MapLoaderWorkerMessageError {
   type: 'error';
   tile: MapLoaderTile;
   error: Error['message'];
+  processing: number;
 }
 
 export type MapLoaderWorkerMessage = MapLoaderWorkerMessageData | MapLoaderWorkerMessageError;
@@ -71,6 +73,7 @@ export class MapLoader {
    */
   cache: Map<string, MapLoaderResponse>;
   queue: Array<string>;
+  processing: number;
   worker: Worker;
   batchSize: number;
   callback: (response: MapLoaderResponse) => void;
@@ -93,6 +96,7 @@ export class MapLoader {
     this.tiles = new Map();
     this.cache = new Map();
     this.queue = [];
+    this.processing = 0;
     this.worker = new Worker(new URL('./worker.ts', import.meta.url));
     this.batchSize = batchSize;
     this.callback = callback;
@@ -150,6 +154,7 @@ export class MapLoader {
   }
 
   consume(amount: number = this.batchSize): void {
+    if (this.processing >= this.batchSize) return;
     const batch = this.queue.splice(-amount);
     const list: Array<MapLoaderTile> = [];
     if (batch.length === 0) return;
@@ -186,6 +191,7 @@ export class MapLoader {
         if (tile) tile.state = 2;
         this.callback(response);
         this.scheduleEviction();
+        this.processing = message.processing;
         break;
       }
       case 'error': {
@@ -193,6 +199,7 @@ export class MapLoader {
         const key = this.getTileKey(x, y, z);
         const tile = this.tiles.get(key);
         if (tile) tile.state = 3;
+        this.processing = message.processing;
         break;
       }
       default:

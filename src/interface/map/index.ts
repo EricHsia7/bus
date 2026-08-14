@@ -513,7 +513,7 @@ function renderFrame(now: number): void {
   updateLayerStack(z, now);
   let animating = advanceLayerStack(now);
 
-  // if (activeLayerZ !== null && activeLayerZ !== z) synchronizeQueue();
+  if (activeLayerZ !== null && activeLayerZ !== z) synchronizeQueue();
   activeLayerZ = z;
 
   mapContext.globalAlpha = 1;
