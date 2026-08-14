@@ -3,7 +3,7 @@ declare const self: DedicatedWorkerGlobalScope;
 // export {}; // make a script a module if no any export or import
 
 import { Decompress } from 'fflate';
-import { MapLoaderTile, MapLoaderWorkerMessageData, MapLoaderWorkerMessageError } from './index';
+import { MapLoaderTile, MapLoaderWorkerMessageData, MapLoaderWorkerMessageError, MapLoaderWorkerMessageStatus } from './index';
 import { LabelFeatureCollection } from './label';
 import { buildLabelGlyphPlan, LabelGlyphCache } from './label-plan';
 
@@ -18,6 +18,7 @@ self.onmessage = function (event: MessageEvent): void {
       self.postMessage({ type: 'error', error: error.message, tile, processing } as MapLoaderWorkerMessageError);
     });
   }
+  self.postMessage({ type: 'status', processing } as MapLoaderWorkerMessageStatus);
 };
 
 async function getRaster(url: string): Promise<ImageBitmap> {

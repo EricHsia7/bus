@@ -27,6 +27,11 @@ export interface MapLoaderWorkerMessageData {
   processing: number;
 }
 
+export interface MapLoaderWorkerMessageStatus {
+  type: 'status';
+  processing: number;
+}
+
 export interface MapLoaderWorkerMessageError {
   type: 'error';
   tile: MapLoaderTile;
@@ -34,7 +39,7 @@ export interface MapLoaderWorkerMessageError {
   processing: number;
 }
 
-export type MapLoaderWorkerMessage = MapLoaderWorkerMessageData | MapLoaderWorkerMessageError;
+export type MapLoaderWorkerMessage = MapLoaderWorkerMessageData | MapLoaderWorkerMessageStatus | MapLoaderWorkerMessageError;
 
 export interface MapLoaderCacheOptions {
   /**
@@ -153,8 +158,8 @@ export class MapLoader {
     this.tiles.delete(key);
   }
 
-  consume(amount: number = this.batchSize): void {
-    if (this.processing >= this.batchSize) return;
+  consume(amount: number = this.batchSize - this.processing): void {
+    if (this.processing >= this.batchSize || amount <= 0) return;
     const batch = this.queue.splice(-amount);
     const list: Array<MapLoaderTile> = [];
     if (batch.length === 0) return;
@@ -191,6 +196,10 @@ export class MapLoader {
         if (tile) tile.state = 2;
         this.callback(response);
         this.scheduleEviction();
+        this.processing = message.processing;
+        break;
+      }
+      case 'status': {
         this.processing = message.processing;
         break;
       }
