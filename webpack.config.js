@@ -91,7 +91,7 @@ module.exports = (env, argv) => {
                 purgeOnQuotaError: true
               },
               cacheableResponse: {
-                statuses: [0, 200]
+                statuses: [200]
               }
             }
           },
@@ -107,7 +107,7 @@ module.exports = (env, argv) => {
                 purgeOnQuotaError: true
               },
               cacheableResponse: {
-                statuses: [0, 200]
+                statuses: [200]
               }
             }
           }
