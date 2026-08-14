@@ -90,7 +90,7 @@ export class MapTileController {
   // Interaction state
   private isInteracting = false;
   private lastPointers = new Map<number, Point>();
-  private velocity = { x: 0, y: 0 };
+  private velocity = new Float32Array(2);
   private lastInteractionTime = 0;
   private animationFrameId: number | null = null;
   private initialPinchDistance: number | null = null;
@@ -410,7 +410,8 @@ export class MapTileController {
 
     if (!this.isInteracting) {
       this.isInteracting = true;
-      this.velocity = { x: 0, y: 0 };
+      this.velocity[0] = 0;
+      this.velocity[1] = 0;
       if (this.animationFrameId !== null) cancelAnimationFrame(this.animationFrameId);
       if (!continuesWheelGesture) this.onMovementStart?.();
     }
@@ -437,7 +438,8 @@ export class MapTileController {
       const dx = prevPoint.x - currentPoint.x;
       const dy = prevPoint.y - currentPoint.y;
 
-      this.velocity = { x: dx / dt, y: dy / dt };
+      this.velocity[0] = dx / dt;
+      this.velocity[1] = dy / dt;
       this.panBy(dx, dy);
     } else if (this.lastPointers.size === 2) {
       this.lastPointers.set(e.pointerId, currentPoint);
@@ -476,7 +478,8 @@ export class MapTileController {
     if (this.animationFrameId !== null) {
       cancelAnimationFrame(this.animationFrameId);
       this.animationFrameId = null;
-      this.velocity = { x: 0, y: 0 };
+      this.velocity[0] = 0;
+      this.velocity[1] = 0;
     }
 
     // Trackpads and smooth-scroll wheels emit a burst of events. Only the first one opens
@@ -540,7 +543,8 @@ export class MapTileController {
       cancelAnimationFrame(this.animationFrameId);
       this.animationFrameId = null;
     }
-    this.velocity = { x: 0, y: 0 };
+    this.velocity[0] = 0;
+    this.velocity[1] = 0;
     this.cancelWheelDebounce();
 
     const applyZoom = (zoomLevel: number) => {
@@ -581,20 +585,21 @@ export class MapTileController {
   }
 
   private startInertia = () => {
-    const friction = 0.92; // Decay rate
+    const friction = 0.94; // Decay rate
     let lastTime = performance.now();
 
     const animate = (time: number) => {
       const dt = Math.max(1, time - lastTime);
       lastTime = time;
 
-      if (Math.abs(this.velocity.x) > 0.05 || Math.abs(this.velocity.y) > 0.05) {
-        this.panBy(this.velocity.x * dt, this.velocity.y * dt);
-        this.velocity.x *= friction;
-        this.velocity.y *= friction;
+      if (Math.abs(this.velocity[0]) > 0.01 || Math.abs(this.velocity[1]) > 0.01) {
+        this.panBy(this.velocity[0] * dt, this.velocity[1] * dt);
+        this.velocity[0] *= friction;
+        this.velocity[1] *= friction;
         this.animationFrameId = requestAnimationFrame(animate);
       } else {
-        this.velocity = { x: 0, y: 0 };
+        this.velocity[0] = 0;
+        this.velocity[1] = 0;
         this.onMovementEnd?.();
         this.animationFrameId = null;
       }
