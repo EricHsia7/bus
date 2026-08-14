@@ -28,7 +28,6 @@ async function getLabels(url: string): Promise<LabelFeatureCollection> {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   if (!response.body) throw new Error('No response body to stream');
-  self.postMessage({ type: 'transferred' } as MapLoaderWorkerMessageTransferred);
 
   const inflater = new Decompress();
 
@@ -46,7 +45,7 @@ async function getLabels(url: string): Promise<LabelFeatureCollection> {
     if (done) break;
     inflater.push(value, false); // feed compressed bytes incrementally
   }
-
+  self.postMessage({ type: 'transferred' } as MapLoaderWorkerMessageTransferred);
   inflater.push(new Uint8Array(0), true); // final = true -> flush the tail
 
   const buffer = new Uint8Array(size);
