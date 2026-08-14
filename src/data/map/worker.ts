@@ -3,7 +3,7 @@ declare const self: DedicatedWorkerGlobalScope;
 // export {}; // make a script a module if no any export or import
 
 import { Decompress } from 'fflate';
-import { MapLoaderTile, MapLoaderWorkerMessageData, MapLoaderWorkerMessageError, MapLoaderWorkerMessageTransferred } from './index';
+import { MapLoaderTile, MapLoaderWorkerMessageData, MapLoaderWorkerMessageError } from './index';
 import { LabelFeatureCollection } from './label';
 import { buildLabelGlyphPlan, LabelGlyphCache } from './label-plan';
 
@@ -17,7 +17,6 @@ self.onmessage = function (event: MessageEvent): void {
 async function getRaster(url: string): Promise<ImageBitmap> {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  self.postMessage({ type: 'transferred' } as MapLoaderWorkerMessageTransferred);
   const blob = await response.blob();
   const bitmap = await createImageBitmap(blob);
   return bitmap;
@@ -45,7 +44,6 @@ async function getLabels(url: string): Promise<LabelFeatureCollection> {
     if (done) break;
     inflater.push(value, false); // feed compressed bytes incrementally
   }
-  self.postMessage({ type: 'transferred' } as MapLoaderWorkerMessageTransferred);
   inflater.push(new Uint8Array(0), true); // final = true -> flush the tail
 
   const buffer = new Uint8Array(size);

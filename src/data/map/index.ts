@@ -26,17 +26,13 @@ export interface MapLoaderWorkerMessageData {
   response: MapLoaderResponse;
 }
 
-export interface MapLoaderWorkerMessageTransferred {
-  type: 'transferred';
-}
-
 export interface MapLoaderWorkerMessageError {
   type: 'error';
   tile: MapLoaderTile;
   error: Error['message'];
 }
 
-export type MapLoaderWorkerMessage = MapLoaderWorkerMessageData | MapLoaderWorkerMessageTransferred | MapLoaderWorkerMessageError;
+export type MapLoaderWorkerMessage = MapLoaderWorkerMessageData | MapLoaderWorkerMessageError;
 
 export interface MapLoaderCacheOptions {
   /**
@@ -190,9 +186,6 @@ export class MapLoader {
         if (tile) tile.state = 2;
         this.callback(response);
         this.scheduleEviction();
-        break;
-      }
-      case 'transferred': {
         break;
       }
       case 'error': {
