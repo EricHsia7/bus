@@ -57,7 +57,7 @@ const evictionIdleDelay = 200;
 /** Largest frame delta honoured, so returning from an idle tab does not jump a fade to the end */
 const maxFrameDelta = 64;
 /** Painted underneath the tiles so fade-ins read as map background rather than a black flash */
-const backgroundFill = '#f0f2f5';
+const backgroundFill = '#f2f2f7';
 
 const mapLoader = new MapLoader(clamp(Math.floor(Math.log(window.navigator.hardwareConcurrency) / Math.log(2)), 1, 6), handleTileResponse, {
   maxCacheBytes,
