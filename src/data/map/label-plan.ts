@@ -529,7 +529,7 @@ function getTextScale(style: TextStyleProperties): LabelPropertyScale {
   return [scale[0], scale[1]];
 }
 
-function getCircleScale(style: CircleStyleProperties): LabelPropertyScale {
+function getMarkerScale(style: CircleStyleProperties): LabelPropertyScale {
   const scale = style['marker-scale'];
   if (!scale) return [1, 1];
   return [scale[0], scale[1]];
@@ -845,7 +845,7 @@ function planCircle(feature: PointLabelFeature, style: CircleStyleProperties, st
   const markerWidth = style['marker-width'];
   if (!markerWidth) return null;
   if (!style['marker-fill']) return null;
-  const scale = getCircleScale(style);
+  const scale = getMarkerScale(style);
 
   const radius = markerWidth / 2 + (style['marker-line-color'] ? 0.5 : 0);
 
