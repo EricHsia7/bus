@@ -169,6 +169,7 @@ export class MapLoader {
   }
 
   handleWorkerMessage(event: MessageEvent): void {
+    this.processing--;
     const message = event.data as MapLoaderWorkerMessage;
     switch (message.type) {
       case 'data': {
@@ -203,7 +204,6 @@ export class MapLoader {
       default:
         break;
     }
-    this.processing--;
     if (this.queue.length > 0) this.consume();
   }
 

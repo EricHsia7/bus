@@ -202,8 +202,7 @@ function getTileKey(x: number, y: number, z: number): string {
 }
 
 function handleTileResponse(response: MapLoaderResponse): void {
-  // The loader has already cached the decoded tile. The render loop picks it up on the
-  // next frame so it can fade in.
+  // The loader has already cached the decoded tile. The render loop picks it up on the next frame so it can fade in.
   requestFrame();
 }
 
