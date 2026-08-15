@@ -362,3 +362,6 @@ export class MapLoader {
     this.trim();
   };
 }
+
+const now = new Date();
+export const MapTilesVersion = `${now.getFullYear() * 100 + (now.getMonth() + 1)}`; // Monthly update

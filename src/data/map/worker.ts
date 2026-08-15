@@ -3,7 +3,7 @@ declare const self: DedicatedWorkerGlobalScope;
 // export {}; // make a script a module if no any export or import
 
 import { Decompress } from 'fflate';
-import { MapLoaderTile, MapLoaderWorkerMessageData, MapLoaderWorkerMessageError, MapLoaderWorkerMessageStatus } from './index';
+import { MapLoaderTile, MapLoaderWorkerMessageData, MapLoaderWorkerMessageError, MapLoaderWorkerMessageStatus, MapTilesVersion } from './index';
 import { LabelFeatureCollection } from './label';
 import { buildLabelGlyphPlan, LabelGlyphCache } from './label-plan';
 
@@ -79,9 +79,8 @@ const cache = new LabelGlyphCache(512, 3);
 // }
 
 async function loadTile(tile: MapLoaderTile) {
-  const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp?v=23`;
-  const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?v=23`;
-  // TODO: version.json
+  const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp?_=${MapTilesVersion}`;
+  const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?_=${MapTilesVersion}`;
 
   const [bitmap, labels] = await Promise.all([getRaster(rasterURL), getLabels(labelsURL)]);
   const labelPlan = buildLabelGlyphPlan(labels, tile, cache);
