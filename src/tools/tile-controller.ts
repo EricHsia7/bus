@@ -1,3 +1,5 @@
+import { clamp } from './math';
+
 export interface Point {
   x: number;
   y: number;
@@ -587,6 +589,8 @@ export class MapTileController {
   private startInertia = () => {
     const friction = 0.966; // Decay rate
     let lastTime = performance.now();
+    this.velocity[0] = clamp(this.velocity[0], -1.5, 1.5);
+    this.velocity[1] = clamp(this.velocity[1], -1.5, 1.5);
 
     const animate = (time: number) => {
       const dt = Math.max(1, time - lastTime);
