@@ -585,7 +585,7 @@ export class MapTileController {
   }
 
   private startInertia = () => {
-    const friction = 0.94; // Decay rate
+    const friction = 0.966; // Decay rate
     let lastTime = performance.now();
 
     const animate = (time: number) => {
