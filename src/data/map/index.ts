@@ -24,22 +24,15 @@ export interface MapLoaderResponse extends MapLoaderTile {
 export interface MapLoaderWorkerMessageData {
   type: 'data';
   response: MapLoaderResponse;
-  processing: number;
-}
-
-export interface MapLoaderWorkerMessageStatus {
-  type: 'status';
-  processing: number;
 }
 
 export interface MapLoaderWorkerMessageError {
   type: 'error';
   tile: MapLoaderTile;
   error: Error['message'];
-  processing: number;
 }
 
-export type MapLoaderWorkerMessage = MapLoaderWorkerMessageData | MapLoaderWorkerMessageStatus | MapLoaderWorkerMessageError;
+export type MapLoaderWorkerMessage = MapLoaderWorkerMessageData | MapLoaderWorkerMessageError;
 
 export interface MapLoaderCacheOptions {
   /**
@@ -158,8 +151,9 @@ export class MapLoader {
     this.tiles.delete(key);
   }
 
-  consume(amount: number = this.batchSize - this.processing): void {
-    if (this.processing >= this.batchSize || amount <= 0) return;
+  consume(): void {
+    const amount = this.batchSize - this.processing;
+    if (amount <= 0) return;
     const batch = this.queue.splice(-amount);
     const list: Array<MapLoaderTile> = [];
     if (batch.length === 0) return;
@@ -168,6 +162,7 @@ export class MapLoader {
       if (tile) {
         tile.state = 1;
         list.push(tile);
+        this.processing++;
       }
     }
     this.worker.postMessage(list);
@@ -196,11 +191,6 @@ export class MapLoader {
         if (tile) tile.state = 2;
         this.callback(response);
         this.scheduleEviction();
-        this.processing = message.processing;
-        break;
-      }
-      case 'status': {
-        this.processing = message.processing;
         break;
       }
       case 'error': {
@@ -208,13 +198,13 @@ export class MapLoader {
         const key = this.getTileKey(x, y, z);
         const tile = this.tiles.get(key);
         if (tile) tile.state = 3;
-        this.processing = message.processing;
         break;
       }
       default:
         break;
     }
-    if (this.queue.length > 0) this.consume(1);
+    this.processing--;
+    if (this.queue.length > 0) this.consume();
   }
 
   /** Reads a tile and marks it as most recently used. */

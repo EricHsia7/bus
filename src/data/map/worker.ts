@@ -3,27 +3,23 @@ declare const self: DedicatedWorkerGlobalScope;
 // export {}; // make a script a module if no any export or import
 
 import { Decompress } from 'fflate';
-import { MapLoaderTile, MapLoaderWorkerMessageData, MapLoaderWorkerMessageError, MapLoaderWorkerMessageStatus, MapTilesVersion } from './index';
+import { MapLoaderTile, MapLoaderWorkerMessageData, MapLoaderWorkerMessageError, MapTilesVersion } from './index';
 import { LabelFeatureCollection } from './label';
 import { buildLabelGlyphPlan, LabelGlyphCache } from './label-plan';
-
-let processing: number = 0;
 
 self.onmessage = function (event: MessageEvent): void {
   const batch = event.data as Array<MapLoaderTile>;
   for (const tile of batch) {
-    processing++;
     loadTile(tile).catch((error: Error) => {
-      processing--;
-      self.postMessage({ type: 'error', error: error.message, tile, processing } as MapLoaderWorkerMessageError);
+      self.postMessage({ type: 'error', error: error.message, tile } as MapLoaderWorkerMessageError);
     });
   }
-  self.postMessage({ type: 'status', processing } as MapLoaderWorkerMessageStatus);
 };
 
 async function getRaster(url: string): Promise<ImageBitmap> {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  if (!response.body) throw new Error('No response body to stream');
   const blob = await response.blob();
   const bitmap = await createImageBitmap(blob);
   return bitmap;
@@ -82,19 +78,18 @@ async function loadTile(tile: MapLoaderTile) {
   const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp?_=${MapTilesVersion}`;
   const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?_=${MapTilesVersion}`;
 
-  const [bitmap, labels] = await Promise.all([getRaster(rasterURL), getLabels(labelsURL)]);
-  const labelPlan = buildLabelGlyphPlan(labels, tile, cache);
-  processing--;
+  const [bitmap, labels] = await Promise.allSettled([getRaster(rasterURL), getLabels(labelsURL)]);
+  if (bitmap.status !== 'fulfilled' || labels.status !== 'fulfilled') throw new Error('Error fetching tiles.');
+  const labelPlan = buildLabelGlyphPlan(labels.value, tile, cache);
   self.postMessage(
     {
       type: 'data',
       response: {
         ...tile,
-        bitmap,
+        bitmap: bitmap.value,
         label: labelPlan
-      },
-      processing
+      }
     } as MapLoaderWorkerMessageData,
-    [bitmap, labelPlan.sheet, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer]
+    [bitmap.value, labelPlan.sheet, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer]
   );
 }
