@@ -92,7 +92,7 @@ async function checkout(id: number) {
   for (const key of memoryCache_modified.keys()) {
     if (memoryCache_existing.has(key)) {
       const group = memoryCache_existing.get(key) as BusArrivalTimeStatsGroup;
-      const stats = group.stats.map((e) => new Uint32Array(e)) as WeeklyArray<BusArrivalTimeStats>;
+      const stats = group.stats.map((e) => new Uint32Array(e)) as WeeklyArray<BusArrivalTimeStats>; // make a copy for transferring
       result.push({
         stats: stats,
         max: group.max,

@@ -8,10 +8,22 @@ import { lfGetItem, lfListItemKeys, lfSetItem } from '../../storage/index';
  * record per stop per day
  */
 export interface BusArrivalTimeRecord {
-  estimate: Int32Array; // estimate time (in seconds)
-  time: Uint32Array; // time elapsed (in seconds)
-  start: number; // timestamp in milliseconds representing the time when the record starts
-  id: number; // stop id
+  /**
+   * estimate time (in seconds)
+   */
+  estimate: Int32Array;
+  /**
+   * time elapsed (in seconds)
+   */
+  time: Uint32Array;
+  /**
+   * timestamp in milliseconds representing the time when the record starts
+   */
+  start: number;
+  /**
+   * stop id
+   */
+  id: number;
 }
 
 export type BusArrivalTimeTrackingList = Array<BusArrivalTimeRecord['id']>;
@@ -136,10 +148,22 @@ worker.onmessage = (event: MessageEvent) => {
 worker.onerror = (e) => console.error('Worker crashed:', e.message);
 
 interface BusArrivalTimeCollection {
-  estimate: Array<number>; // estimate time (in seconds)
-  time: Array<number>; // time elapsed (in seconds)
-  start: number; // timestamp representing the time when the record starts (in seconds)
-  id: number; // stop id
+  /**
+   * estimate time (in seconds)
+   */
+  estimate: Array<number>;
+  /**
+   * time elapsed (in seconds)
+   */
+  time: Array<number>;
+  /**
+   * timestamp representing the time when the record starts (in seconds)
+   */
+  start: number;
+  /**
+   * stop id
+   */
+  id: number;
 }
 
 const DataLength = 10;
