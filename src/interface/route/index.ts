@@ -1,3 +1,4 @@
+import { equalBusArrivalTimes } from '../../data/analytics/bus-arrival-time';
 import { getUpdateRate } from '../../data/analytics/update-rate/index';
 import { isFolderContentSaved } from '../../data/folder/index';
 import { stopHasNotifcationSchedules } from '../../data/notification/index';
@@ -964,12 +965,7 @@ function updateRouteField(integration: IntegratedRoute, skeletonScreen: boolean,
       if (!deepEqual(previousItem.buses, thisItem.buses)) {
         updateBuses(thisItemElement, thisItem);
       }
-      if (
-        !deepEqual(
-          previousItem.busArrivalTimes.map((e) => e.state),
-          thisItem.busArrivalTimes.map((e) => e.state)
-        )
-      ) {
+      if (!equalBusArrivalTimes(previousItem.busArrivalTimes, thisItem.busArrivalTimes)) {
         updateBusArrivalTimes(thisItemElement, thisItem);
       }
       if (previousItem.nearest !== thisItem.nearest) {

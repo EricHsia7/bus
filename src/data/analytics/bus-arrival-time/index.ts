@@ -303,3 +303,14 @@ export async function saveBusArrivalTimeStatsGroups(groups: Array<BusArrivalTime
     await lfSetItem(5, `stop_${group.id}`, JSON.stringify(group));
   }
 }
+
+export function equalBusArrivalTimes(a: Array<BusArrivalTime>, b: Array<BusArrivalTime>): boolean {
+  if (a.length !== b.length) return false;
+  for (let i = 0, l = a.length; i < l; i++) {
+    if (a[i].state.length !== b[i].state.length) return false;
+    for (let j = 0, m = a[i].state.length; j < m; j++) {
+      if (a[i].state[j] !== b[i].state[j]) return false;
+    }
+  }
+  return true;
+}

@@ -1,3 +1,4 @@
+import { equalBusArrivalTimes } from '../../data/analytics/bus-arrival-time';
 import { getUpdateRate } from '../../data/analytics/update-rate/index';
 import { isFolderContentSaved } from '../../data/folder/index';
 import { IntegratedLocation, IntegratedLocationItem, integrateLocation, LocationGroup, LocationGroupProperty } from '../../data/location/index';
@@ -722,12 +723,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
         updateBuses(thisElement, thisItem);
       }
 
-      if (
-        !deepEqual(
-          previousItem.busArrivalTimes.map((e) => e.state),
-          thisItem.busArrivalTimes.map((e) => e.state)
-        )
-      ) {
+      if (!equalBusArrivalTimes(previousItem.busArrivalTimes, thisItem.busArrivalTimes)) {
         updateBusArrivalTimes(thisElement, thisItem);
       }
 
