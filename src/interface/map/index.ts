@@ -556,7 +556,7 @@ function renderFrame(now: number): void {
     layerStack.splice(0, layerStack.length - 1);
   }
 
-  drawLabels();
+  drawOverlay();
 
   pruneFadeStates();
 
@@ -575,7 +575,7 @@ function renderFrame(now: number): void {
  * whole overlay is rebuilt each frame because a pan changes which label wins, not just where
  * it sits.
  */
-function drawLabels(): void {
+function drawOverlay(): void {
   mapOverlayContext.clearRect(0, 0, width, height);
   labelTileViews.length = 0;
   routeTileViews.length = 0;
