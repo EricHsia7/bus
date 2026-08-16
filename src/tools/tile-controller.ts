@@ -675,7 +675,7 @@ export class MapTileController {
    * @param padding Optional padding around the bounding box in pixels (default: 0)
    * @param duration Optional animation transition duration in milliseconds (default: 0)
    */
-  public fitTo(west: number, south: number, east: number, north: number, padding = 0, duration = 0) {
+  public fitTo(west: number, south: number, east: number, north: number, padding: number = 0, duration: number = 0) {
     const minLon = Math.min(west, east);
     const maxLon = Math.max(west, east);
     const minLat = Math.min(south, north);
