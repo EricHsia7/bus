@@ -17,14 +17,12 @@ export interface RouteRenderOptions {
    * When omitted or empty, **all available routes are rendered**.
    */
   selectedRoutes?: Iterable<number> | null;
-  /** Current (fractional) map zoom; drives `line-width-scale` interpolation. */
+  /** Current (fractional) map zoom */
   zoom: number;
   /** Device pixel ratio. Widths and dashes are multiplied by it. Defaults to 1. */
   devicePixelRatio?: number;
   /** Draw the casing/halo pass beneath the core strokes. Defaults to true. */
   casing?: boolean;
-  /** Global multiplier applied on top of the resolved width. Defaults to 1. */
-  lineWidthScale?: number;
 }
 
 interface DrawBatch {
@@ -32,8 +30,6 @@ interface DrawBatch {
   /** [tileIndex, featureIndex] pairs. */
   members: Array<number>;
 }
-
-const EMPTY_SELECTION: Set<number> = new Set();
 
 function resolveLineWidthScale(scale: RoutePropertyScale | undefined, viewZoom: number, tileZoom: number): number {
   if (!scale) return 1;
@@ -50,12 +46,11 @@ function resolveLineWidthScale(scale: RoutePropertyScale | undefined, viewZoom: 
 function buildBatches(tiles: Array<RouteTileView>, selection: Set<number>): Array<DrawBatch> {
   const batches: Array<DrawBatch> = [];
   const batchIndex = new Map<string, number>();
-  const filtering = selection.size > 0;
 
   for (let tileIndex = 0; tileIndex < tiles.length; tileIndex++) {
     const { plan } = tiles[tileIndex];
     for (let featureIndex = 0; featureIndex < plan.featureCount; featureIndex++) {
-      if (filtering && !selection.has(plan.routeIds[featureIndex])) continue;
+      if (!selection.has(plan.routeIds[featureIndex])) continue;
 
       const styleRef = plan.features[RouteFeatureStride * featureIndex + 3];
       const style = plan.styles[styleRef];
@@ -116,7 +111,9 @@ function tracePath(context: CanvasRenderingContext2D, tiles: Array<RouteTileView
 export function drawRouteTiles(context: CanvasRenderingContext2D, tiles: Array<RouteTileView>, options: RouteRenderOptions): void {
   if (tiles.length === 0) return;
 
-  const selection = options.selectedRoutes ? new Set(options.selectedRoutes) : EMPTY_SELECTION;
+  const selection = new Set(options.selectedRoutes || []);
+  if (selection.size === 0) return;
+
   const devicePixelRatio = options.devicePixelRatio ?? 1;
   const zoom = options.zoom;
   const drawCasing = options.casing !== false;

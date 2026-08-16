@@ -64,6 +64,7 @@ export interface LocationGroup {
   mapPreview: string;
   longitude: number;
   latitude: number;
+  routeIds: Array<number>;
   properties: Array<LocationGroupProperty>;
 }
 
@@ -174,6 +175,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
       mapPreview: `https://erichsia7.github.io/bus-map/tiles/${z}/${x}/${y}.webp?_=${MapRasterVersion}`,
       longitude: thisLocation.lo[i],
       latitude: thisLocation.la[i],
+      routeIds: thisLocation.r[i],
       properties: [
         {
           icon: 'personal_places',

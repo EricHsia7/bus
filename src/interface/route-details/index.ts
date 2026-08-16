@@ -8,7 +8,7 @@ import { Progress } from '../../tools/progress';
 import { shareLink } from '../../tools/share';
 import { getBlankIconElement, setIcon } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
-import { openMap, showRouteOnMap } from '../map';
+import { openMap, selectRoutesOnMap } from '../map';
 import { openQRCode } from '../qrcode/index';
 
 let previousIntegration = {} as IntegratedRouteDetails;
@@ -216,5 +216,6 @@ export async function showRoutePermalinkQRCode(RouteID: SimplifiedRouteItem['id'
 
 export function showRouteMap(RouteID: SimplifiedRouteItem['id']): void {
   openMap();
-  showRouteOnMap(RouteID);
+  selectRoutesOnMap([RouteID]);
+  // TODO: fitMapTo
 }

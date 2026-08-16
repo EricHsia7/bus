@@ -171,9 +171,12 @@ export function focusMapOn(lon: number, lat: number, zoom: number, duration: num
   mapTileController.focusOn(lon, lat, zoom, duration);
 }
 
-export function showRouteOnMap(RouteID: number, duration: number = 500): void {
-  selectedRoutes = [RouteID];
+export function fitMapTo(lon0: number, lat0: number, lon1: number, lat1: number, duration: number = 500): void {
   // TODO: mapTileController.fitTo(bbox, duration)
+}
+
+export function selectRoutesOnMap(RouteIDs: Array<number>): void {
+  selectedRoutes = RouteIDs;
 }
 
 export function closeMap(): void {
