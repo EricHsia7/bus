@@ -79,16 +79,3 @@ export function resolveRouteStyleProperties(collection: RouteFeatureCollection, 
   if (!style) throw new Error(`unknown route style ref: ${properties.style}`);
   return style;
 }
-
-/**
- * Interpolate a constant reference across the tile's zoom step.
- * Identical semantics to the Label `text-scale` rule.
- */
-export function resolveScaledWidth(style: LineStyleProperties, tileZoom: number, zoom: number): number {
-  const width = style['line-width'] ?? 1;
-  const scale = style['line-width-scale'];
-  if (!scale) return width;
-  const t = zoom - tileZoom;
-  const clamped = t < 0 ? 0 : t > 1 ? 1 : t;
-  return width * (scale[0] + (scale[1] - scale[0]) * clamped);
-}
