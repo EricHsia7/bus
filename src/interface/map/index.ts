@@ -6,12 +6,15 @@ import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPr
 import { drawLabelTiles, LabelTileView } from '../../data/map/label-renderer';
 import { drawRouteTiles, RouteTileView } from '../../data/map/route-renderer';
 import { SelectiveView, SelectiveViewItem } from '../../tools/selective-view';
+import { booleanToString } from '../../tools';
 
-const mapField = documentQuerySelector('.css_map_field');
-const mapCanvas = elementQuerySelector(mapField, '.css_map_canvas') as HTMLCanvasElement;
-const mapContext = mapCanvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
-const mapOverlayCanvas = elementQuerySelector(mapField, '.css_map_overlay') as HTMLCanvasElement;
-const mapOverlayContext = mapOverlayCanvas.getContext('2d') as CanvasRenderingContext2D;
+const Field = documentQuerySelector('.css_map_field');
+const MapCanvas = elementQuerySelector(Field, '.css_map_canvas') as HTMLCanvasElement;
+const MapContext = MapCanvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
+const MapOverlayCanvas = elementQuerySelector(Field, '.css_map_overlay') as HTMLCanvasElement;
+const MapOverlayContext = MapOverlayCanvas.getContext('2d') as CanvasRenderingContext2D;
+const MapContainerElement = elementQuerySelector(Field, '.css_map_panel_container');
+const MapPanelElement = elementQuerySelector(MapContainerElement, '.css_map_panel');
 
 type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
@@ -109,7 +112,7 @@ let activeLayerZ: number | null = null;
 let frameId: number | null = null;
 
 const mapTileController = new MapTileController({
-  element: mapCanvas,
+  element: MapCanvas,
   centerLon: (120.886 + 122.004) / 2,
   centerLat: (24.8 + 25.3) / 2,
   zoom: 16,
@@ -139,12 +142,12 @@ const mapTileController = new MapTileController({
 const mapSelectiveView = new SelectiveView([1, 0]);
 
 export function showMap(): void {
-  mapField.setAttribute('displayed', 'true');
+  Field.setAttribute('displayed', 'true');
   displayed = true;
 }
 
 export function hideMap(): void {
-  mapField.setAttribute('displayed', 'false');
+  Field.setAttribute('displayed', 'false');
   displayed = false;
 }
 
@@ -161,18 +164,6 @@ export function openMap(selectiveViewItems: Array<SelectiveViewItem>): void {
   mapSelectiveView.views = selectiveViewItems;
   initializeMap();
   hidePreviousPage();
-}
-
-export function focusMapOn(lon: number, lat: number, zoom: number, duration: number = 500): void {
-  mapTileController.focusOn(lon, lat, zoom, duration);
-}
-
-export function fitMapTo(west: number, south: number, east: number, north: number, duration: number = 500): void {
-  mapTileController.fitTo(west, south, east, north, 50, duration);
-}
-
-export function selectRoutesOnMap(RouteIDs: Array<number>): void {
-  selectedRoutes = RouteIDs;
 }
 
 export function closeMap(): void {
@@ -194,11 +185,32 @@ export function closeMap(): void {
   protectedTileKeys.clear();
   mapLoader.protect(protectedTileKeys);
   mapLoader.trim();
-  mapOverlayContext.clearRect(0, 0, width, height);
+  MapOverlayContext.clearRect(0, 0, width, height);
 }
 
-export function setRoutesRenderedOnMap(routes: Array<number>): void {
-  selectedRoutes = routes;
+export function focusMapOn(lon: number, lat: number, zoom: number, duration: number = 500): void {
+  mapTileController.focusOn(lon, lat, zoom, duration);
+}
+
+export function fitMapTo(west: number, south: number, east: number, north: number, duration: number = 500): void {
+  mapTileController.fitTo(west, south, east, north, 50, duration);
+}
+
+export function selectRoutesOnMap(RouteIDs: Array<number>): void {
+  selectedRoutes = RouteIDs;
+}
+
+export function showMapPanel(): void {
+  MapContainerElement.setAttribute('displayed', 'true');
+}
+
+export function hideMapPanel(): void {
+  MapContainerElement.setAttribute('displayed', 'true');
+}
+
+export function toggleMapPanel(): void {
+  const displayed = MapContainerElement.getAttribute('displayed') === 'true';
+  MapContainerElement.setAttribute('displayed', booleanToString(!displayed));
 }
 
 export function resizeMapCanvas(): void {
@@ -206,14 +218,14 @@ export function resizeMapCanvas(): void {
   width = size.width;
   height = size.height;
 
-  mapCanvas.width = width * devicePixelRatio;
-  mapCanvas.height = height * devicePixelRatio;
-  mapOverlayCanvas.width = width * devicePixelRatio;
-  mapOverlayCanvas.height = height * devicePixelRatio;
+  MapCanvas.width = width * devicePixelRatio;
+  MapCanvas.height = height * devicePixelRatio;
+  MapOverlayCanvas.width = width * devicePixelRatio;
+  MapOverlayCanvas.height = height * devicePixelRatio;
 
   // Resetting the backing store drops the transform, so re-apply it here.
-  mapContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
-  mapOverlayContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  MapContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  MapOverlayContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
 }
 
 function getTileKey(x: number, y: number, z: number): string {
@@ -484,7 +496,7 @@ function drawLayer(layer: ZoomLayer, isBottom: boolean, now: number): { complete
     for (const tile of tiles) {
       const fade = tileFadeStates.get(getTileKey(tile.x, tile.y, layer.z));
       if (mapLoader.get(tile.x, tile.y, layer.z) && fade && fade.opacity >= 1) continue;
-      drawFallbackTile(mapContext, tile.x, tile.y, layer.z);
+      drawFallbackTile(MapContext, tile.x, tile.y, layer.z);
     }
   }
 
@@ -515,7 +527,7 @@ function drawLayer(layer: ZoomLayer, isBottom: boolean, now: number): { complete
 
     // The two fades multiply, so a tile that lands in the middle of a zoom transition still
     // cannot appear at full strength ahead of the layer it belongs to.
-    drawTile(mapContext, cache, layer.z, easeInOut(fade.opacity) * layerAlpha);
+    drawTile(MapContext, cache, layer.z, easeInOut(fade.opacity) * layerAlpha);
   }
 
   return { complete, animating };
@@ -534,9 +546,9 @@ function renderFrame(now: number): void {
   if (activeLayerZ !== null && activeLayerZ !== z) synchronizeQueue();
   activeLayerZ = z;
 
-  mapContext.globalAlpha = 1;
-  mapContext.fillStyle = backgroundFill;
-  mapContext.fillRect(0, 0, width, height);
+  MapContext.globalAlpha = 1;
+  MapContext.fillStyle = backgroundFill;
+  MapContext.fillRect(0, 0, width, height);
 
   let topComplete = false;
   for (let index = 0; index < layerStack.length; index++) {
@@ -572,7 +584,7 @@ function renderFrame(now: number): void {
  * it sits.
  */
 function drawOverlay(): void {
-  mapOverlayContext.clearRect(0, 0, width, height);
+  MapOverlayContext.clearRect(0, 0, width, height);
   labelTileViews.length = 0;
   routeTileViews.length = 0;
 
@@ -586,7 +598,7 @@ function drawOverlay(): void {
   }
 
   if (routeTileViews.length > 0) {
-    drawRouteTiles(mapOverlayContext, routeTileViews, {
+    drawRouteTiles(MapOverlayContext, routeTileViews, {
       selectedRoutes,
       zoom: mapTileController.zoom,
       devicePixelRatio
@@ -594,7 +606,7 @@ function drawOverlay(): void {
   }
 
   if (labelTileViews.length > 0) {
-    drawLabelTiles(mapOverlayContext, labelTileViews, {
+    drawLabelTiles(MapOverlayContext, labelTileViews, {
       // The fractional zoom, not the native one: point labels interpolate across it.
       zoom: mapTileController.zoom,
       width,

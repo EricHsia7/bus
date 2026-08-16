@@ -34,7 +34,7 @@ import { closeSettingsOptions } from './interface/settings/options';
 import { openPermalink } from './tools/permalink';
 import { closeIconSelectorSearch, initializeIconSelectorSearchInput } from './interface/icon-selector-search';
 import { promptMessage } from './interface/prompt';
-import { closeMap, resizeMapCanvas } from './interface/map';
+import { closeMap, resizeMapCanvas, toggleMapPanel } from './interface/map';
 
 import './interface/theme.css';
 
@@ -203,7 +203,7 @@ import './interface/qrcode/body.css';
 import './interface/qrcode/qrcode.css';
 
 import './interface/map/field.css';
-import './interface/map/button.css';
+import './interface/map/buttons.css';
 import './interface/map/map.css';
 import './interface/map/attribution.css';
 import './interface/map/panel.css';
@@ -396,7 +396,8 @@ interface BusWindow extends Window {
     closeQRCode
   },
   map: {
-    closeMap
+    closeMap,
+    toggleMapPanel
   }
 };
 
