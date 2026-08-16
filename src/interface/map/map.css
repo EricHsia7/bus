@@ -1,5 +1,5 @@
 .css_map_field .css_map_canvas,
-.css_map_field .css_map_labels {
+.css_map_field .css_map_overlay {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -15,6 +15,6 @@
   will-change: transform;
 }
 
-.css_map_field .css_map_labels {
+.css_map_field .css_map_overlay {
   pointer-events: none;
 }

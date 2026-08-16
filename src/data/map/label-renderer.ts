@@ -1,14 +1,8 @@
+import { Box } from '.';
 import { clamp } from '../../tools/math';
 import { LabelCollisionStride, LabelBoundsStride, LabelFeaturesStride, LabelGlyphStride, LabelFlagAlongLine, LabelFlagHasGlyphs, LabelFlagSeam, LabelFlatZoomScaled, LabelKindToCode, LabelGlyphPlan, LabelPlacementStride, LabelScalesStride } from './label-plan';
 
 type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
-
-export interface Box {
-  minX: number;
-  minY: number;
-  maxX: number;
-  maxY: number;
-}
 
 export interface LabelTileView {
   plan: LabelGlyphPlan;

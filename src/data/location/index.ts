@@ -13,7 +13,7 @@ import { getLocation, MergedLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getStop, SimplifiedStop, SimplifiedStopItem } from '../apis/getStop/index';
 import { batchFindBusesForLocation, batchFindEstimateTime, BatchFoundEstimateTime, EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime } from '../apis/index';
-import { MapTilesVersion } from '../map';
+import { MapDataVersion, MapRasterVersion } from '../map';
 import { getSettingOptionValue } from '../settings/index';
 import { getUserOrientation } from '../user-orientation/index';
 
@@ -64,6 +64,7 @@ export interface LocationGroup {
   mapPreview: string;
   longitude: number;
   latitude: number;
+  routeIds: Array<number>;
   properties: Array<LocationGroupProperty>;
 }
 
@@ -171,9 +172,10 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
     itemQuantity[groupKey] = 0;
     groups[groupKey] = {
       name: labels[i],
-      mapPreview: `https://erichsia7.github.io/bus-map/tiles/${z}/${x}/${y}.webp?_=${MapTilesVersion}`,
+      mapPreview: `https://erichsia7.github.io/bus-map/tiles/${z}/${x}/${y}.webp?_=${MapRasterVersion}`,
       longitude: thisLocation.lo[i],
       latitude: thisLocation.la[i],
+      routeIds: thisLocation.r[i],
       properties: [
         {
           icon: 'personal_places',

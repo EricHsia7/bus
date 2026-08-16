@@ -16,7 +16,7 @@ import { VisibilityMonitor } from '../../tools/visibility-monitor';
 import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { GroupStyles, hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { openLocationDetails } from '../location-details/index';
-import { openMap } from '../map';
+import { focusMapOn, openMap, selectRoutesOnMap } from '../map';
 import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
@@ -485,8 +485,8 @@ function setupLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): voi
       groupedItems: { g_0: items, g_1: items },
       groupQuantity: 2,
       groups: {
-        g_0: { name: '載入中', mapPreview: 'none', properties: properties },
-        g_1: { name: '載入中', mapPreview: 'none', properties: properties }
+        g_0: { name: '載入中', mapPreview: 'none', longitude: 0, latitude: 0, routeIds: [], properties: properties },
+        g_1: { name: '載入中', mapPreview: 'none', longitude: 0, latitude: 0, routeIds: [], properties: properties }
       },
       itemQuantity: { g_0: itemQuantity, g_1: itemQuantity },
       LocationName: '載入中',
@@ -786,7 +786,9 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       if (!skeletonScreen) {
         thisElement.style.setProperty('--b-cssvar-location-group-details-map-preview-image', `url('${thisGroup.mapPreview}')`);
         thisElement.onclick = function () {
-          openMap(thisGroup.longitude, thisGroup.latitude, 16);
+          openMap();
+          selectRoutesOnMap(thisGroup.routeIds);
+          focusMapOn(thisGroup.longitude, thisGroup.latitude, 16);
         };
       }
     }

@@ -1,4 +1,5 @@
 import { LabelGlyphPlan } from './label-plan';
+import { RoutePlan } from './route-plan';
 
 /**
  * - 0: pending
@@ -19,6 +20,7 @@ export interface MapLoaderTile {
 export interface MapLoaderResponse extends MapLoaderTile {
   bitmap: ImageBitmap;
   label: LabelGlyphPlan;
+  route: RoutePlan;
 }
 
 export interface MapLoaderWorkerMessageData {
@@ -354,4 +356,14 @@ export class MapLoader {
 }
 
 const now = new Date();
-export const MapTilesVersion = `${now.getFullYear() * 100 + (now.getMonth() + 1)}-1`; // Monthly update
+export const MapDataVersion = `${now.getFullYear() * 100 + (now.getMonth() + 1)}`; // Monthly update
+export const MapRasterVersion = `${MapDataVersion}-1`;
+export const MapLabelsVersion = `${MapDataVersion}-1`;
+export const MapRoutesVersion = `${MapDataVersion}-2`;
+
+export interface Box {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+}

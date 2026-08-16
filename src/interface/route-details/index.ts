@@ -8,6 +8,7 @@ import { Progress } from '../../tools/progress';
 import { shareLink } from '../../tools/share';
 import { getBlankIconElement, setIcon } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
+import { openMap, selectRoutesOnMap } from '../map';
 import { openQRCode } from '../qrcode/index';
 
 let previousIntegration = {} as IntegratedRouteDetails;
@@ -136,7 +137,7 @@ function updateRouteDetailsField(integration: IntegratedRouteDetails, skeletonSc
 
 function setupRouteDetailsFieldSkeletonScreen(): void {
   const playing_animation = getSettingOptionValue('playing_animation');
-  const quantity = 4;
+  const quantity = 5;
   const actions: Array<IntegratedRouteDetailsAction> = new Array(quantity).fill({
     name: '',
     icon: '',
@@ -211,4 +212,10 @@ export async function showRoutePermalinkQRCode(RouteID: SimplifiedRouteItem['id'
     });
     openQRCode(link);
   }
+}
+
+export function showRouteMap(RouteID: SimplifiedRouteItem['id']): void {
+  openMap();
+  selectRoutesOnMap([RouteID]);
+  // TODO: fitMapTo
 }

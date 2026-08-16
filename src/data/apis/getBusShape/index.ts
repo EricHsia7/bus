@@ -31,9 +31,9 @@ export interface BusShapeItem {
   utime: string;
 
   /**
-   * 0: go
-   * 1: back
-   * 2: unknown
+   * - 0: go
+   * - 1: back
+   * - 2: loop
    */
   GoBack: number;
 }

@@ -4,12 +4,13 @@ import { clamp } from '../../tools/math';
 import { MapTileController, TileInfo } from '../../tools/tile-controller';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { drawLabelTiles, LabelTileView } from '../../data/map/label-renderer';
+import { drawRouteTiles, RouteTileView } from '../../data/map/route-renderer';
 
 const mapField = documentQuerySelector('.css_map_field');
 const mapCanvas = elementQuerySelector(mapField, '.css_map_canvas') as HTMLCanvasElement;
 const mapContext = mapCanvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
-const mapLabelCanvas = elementQuerySelector(mapField, '.css_map_labels') as HTMLCanvasElement;
-const mapLabelContext = mapLabelCanvas.getContext('2d') as CanvasRenderingContext2D;
+const mapOverlayCanvas = elementQuerySelector(mapField, '.css_map_overlay') as HTMLCanvasElement;
+const mapOverlayContext = mapOverlayCanvas.getContext('2d') as CanvasRenderingContext2D;
 
 type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
@@ -89,6 +90,8 @@ const requestedTileKeys = new Set<string>();
 /** Plans handed over by the label workers, cached here for the lifetime of the tile. */
 /** Reused every frame so the draw pass allocates nothing. */
 const labelTileViews: Array<LabelTileView> = [];
+const routeTileViews: Array<RouteTileView> = [];
+let selectedRoutes: Array<number> = [];
 
 interface ZoomLayer {
   /** Native zoom level this layer draws its tiles from */
@@ -150,14 +153,30 @@ export function hideMap(): void {
   displayed = false;
 }
 
-export function openMap(lon: number = (120.886 + 122.004) / 2, lat: number = (24.8 + 25.3) / 2, zoom = 16, duration: number = 500): void {
-  pushPageHistory('Map');
-  showMap();
+function initializeMap(): void {
+  selectedRoutes = [];
   resizeMapCanvas();
-  mapTileController.focusOn(lon, lat, zoom, duration);
   synchronizeQueue();
   requestFrame();
+}
+
+export function openMap(): void {
+  pushPageHistory('Map');
+  showMap();
+  initializeMap();
   hidePreviousPage();
+}
+
+export function focusMapOn(lon: number, lat: number, zoom: number, duration: number = 500): void {
+  mapTileController.focusOn(lon, lat, zoom, duration);
+}
+
+export function fitMapTo(lon0: number, lat0: number, lon1: number, lat1: number, duration: number = 500): void {
+  // TODO: mapTileController.fitTo(bbox, duration)
+}
+
+export function selectRoutesOnMap(RouteIDs: Array<number>): void {
+  selectedRoutes = RouteIDs;
 }
 
 export function closeMap(): void {
@@ -179,7 +198,11 @@ export function closeMap(): void {
   protectedTileKeys.clear();
   mapLoader.protect(protectedTileKeys);
   mapLoader.trim();
-  mapLabelContext.clearRect(0, 0, width, height);
+  mapOverlayContext.clearRect(0, 0, width, height);
+}
+
+export function setRoutesRenderedOnMap(routes: Array<number>): void {
+  selectedRoutes = routes;
 }
 
 export function resizeMapCanvas(): void {
@@ -189,12 +212,12 @@ export function resizeMapCanvas(): void {
 
   mapCanvas.width = width * devicePixelRatio;
   mapCanvas.height = height * devicePixelRatio;
-  mapLabelCanvas.width = width * devicePixelRatio;
-  mapLabelCanvas.height = height * devicePixelRatio;
+  mapOverlayCanvas.width = width * devicePixelRatio;
+  mapOverlayCanvas.height = height * devicePixelRatio;
 
   // Resetting the backing store drops the transform, so re-apply it here.
   mapContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
-  mapLabelContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  mapOverlayContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
 }
 
 function getTileKey(x: number, y: number, z: number): string {
@@ -553,25 +576,34 @@ function renderFrame(now: number): void {
  * it sits.
  */
 function drawLabels(): void {
-  mapLabelContext.clearRect(0, 0, width, height);
+  mapOverlayContext.clearRect(0, 0, width, height);
   labelTileViews.length = 0;
+  routeTileViews.length = 0;
 
   const z = mapTileController.getNativeZoom();
   for (const tile of mapTileController.getVisibleTiles(z)) {
     const { x, y, z } = tile;
     const cached = mapLoader.get(x, y, z);
     if (!cached) continue;
-    const plan = cached.label;
-    labelTileViews.push({ plan, screenBBox: tile.screenBBox });
+    labelTileViews.push({ plan: cached.label, screenBBox: tile.screenBBox });
+    routeTileViews.push({ plan: cached.route, screenBBox: tile.screenBBox });
   }
 
-  if (labelTileViews.length === 0) return;
+  if (routeTileViews.length > 0) {
+    drawRouteTiles(mapOverlayContext, routeTileViews, {
+      selectedRoutes,
+      zoom: mapTileController.zoom,
+      devicePixelRatio
+    });
+  }
 
-  drawLabelTiles(mapLabelContext, labelTileViews, {
-    // The fractional zoom, not the native one: point labels interpolate across it.
-    zoom: mapTileController.zoom,
-    width,
-    height,
-    devicePixelRatio
-  });
+  if (labelTileViews.length > 0) {
+    drawLabelTiles(mapOverlayContext, labelTileViews, {
+      // The fractional zoom, not the native one: point labels interpolate across it.
+      zoom: mapTileController.zoom,
+      width,
+      height,
+      devicePixelRatio
+    });
+  }
 }
