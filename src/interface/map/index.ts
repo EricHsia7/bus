@@ -91,6 +91,7 @@ const requestedTileKeys = new Set<string>();
 /** Reused every frame so the draw pass allocates nothing. */
 const labelTileViews: Array<LabelTileView> = [];
 const routeTileViews: Array<RouteTileView> = [];
+let selectedRoutes: Array<number> = [];
 
 interface ZoomLayer {
   /** Native zoom level this layer draws its tiles from */
@@ -182,6 +183,10 @@ export function closeMap(): void {
   mapLoader.protect(protectedTileKeys);
   mapLoader.trim();
   mapLabelContext.clearRect(0, 0, width, height);
+}
+
+export function setRoutesRenderedOnMap(routes: Array<number>): void {
+  selectedRoutes = routes;
 }
 
 export function resizeMapCanvas(): void {
@@ -569,7 +574,10 @@ function drawLabels(): void {
   }
 
   if (routeTileViews.length > 0) {
-    drawRouteTiles(mapLabelContext, routeTileViews, { selectedRoutes: [], zoom: mapTileController.zoom });
+    drawRouteTiles(mapLabelContext, routeTileViews, {
+      selectedRoutes,
+      zoom: mapTileController.zoom
+    });
   }
 
   if (labelTileViews.length > 0) {

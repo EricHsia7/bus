@@ -1,6 +1,6 @@
 import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 import { openRouteCalendar } from '../../interface/route-calendar/index';
-import { shareRoutePermalink, showRoutePermalinkQRCode } from '../../interface/route-details/index';
+import { shareRoutePermalink, showRouteMap, showRoutePermalinkQRCode } from '../../interface/route-details/index';
 import { openSaveToFolder } from '../../interface/save-to-folder/index';
 import { hasOwnProperty } from '../../tools/index';
 import { Progress, ProgressCallback } from '../../tools/progress';
@@ -76,6 +76,14 @@ export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], 
       name: '時刻表',
       action: function () {
         openRouteCalendar(RouteID);
+      }
+    },
+    // map
+    {
+      icon: 'map',
+      name: '地圖',
+      action: function () {
+        showRouteMap(RouteID);
       }
     },
     // share
