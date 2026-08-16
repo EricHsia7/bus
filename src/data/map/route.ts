@@ -1,12 +1,3 @@
-/**
- * Route tile types - the line analogue of `label.ts`.
- *
- * Mirrors the Label design:
- *  - a small, deduplicated *style table* stored once per tile
- *  - features carry a branded `StyleRef` index instead of inline style data
- *  - a `*-scale` interval interpolates the constant reference over one zoom step
- */
-
 export type RouteKind = 'line';
 
 declare const ROUTE_STYLE_BRAND: unique symbol;

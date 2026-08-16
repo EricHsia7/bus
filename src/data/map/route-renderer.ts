@@ -1,3 +1,4 @@
+import { clamp } from '../../tools/math';
 import { Box } from './index';
 import { LineStyleProperties, RoutePropertyScale } from './route';
 import { RouteFeatureStride, RoutePlan } from './route-plan';
@@ -34,18 +35,10 @@ interface DrawBatch {
 
 const EMPTY_SELECTION: Set<number> = new Set();
 
-function lerpScale(scale: RoutePropertyScale | undefined, t: number): number {
+function resolveLineWidthScale(scale: RoutePropertyScale | undefined, viewZoom: number, tileZoom: number): number {
   if (!scale) return 1;
-  const clamped = t < 0 ? 0 : t > 1 ? 1 : t;
-  return scale[0] + (scale[1] - scale[0]) * clamped;
-}
-
-/**
- * width(zoom) = line-width * lerp(s0, s1, zoom - tileZoom)
- * Mirrors the Label `text-scale` rule; the tile's own zoom is the lower anchor.
- */
-function resolveWidth(style: LineStyleProperties, tileZoom: number, zoom: number): number {
-  return (style['line-width'] ?? 1) * lerpScale(style['line-width-scale'], zoom - tileZoom);
+  const t = clamp(viewZoom - tileZoom, 0, 1);
+  return (scale[0] + (scale[1] - scale[0]) * t) * Math.pow(2, -t);
 }
 
 /**
@@ -125,7 +118,6 @@ export function drawRouteTiles(context: CanvasRenderingContext2D, tiles: Array<R
 
   const selection = options.selectedRoutes ? new Set(options.selectedRoutes) : EMPTY_SELECTION;
   const ratio = options.devicePixelRatio ?? 1;
-  const globalScale = options.lineWidthScale ?? 1;
   const zoom = options.zoom;
   const drawCasing = options.casing !== false;
 
@@ -143,23 +135,24 @@ export function drawRouteTiles(context: CanvasRenderingContext2D, tiles: Array<R
       const tileZoom = tiles[batch.members[0]].plan.zoom;
       if (style.minzoom !== undefined && zoom < style.minzoom) continue;
       if (style.maxzoom !== undefined && zoom >= style.maxzoom) continue;
+      if (!style['line-width']) continue;
 
-      const coreWidth = resolveWidth(style, tileZoom, zoom) * globalScale * ratio;
+      const coreWidth = style['line-width'] * resolveLineWidthScale(style['line-width-scale'], zoom, tileZoom) * ratio;
       if (coreWidth <= 0) continue;
 
-      const casingWidth = (style['line-casing-width'] ?? 0) * globalScale * ratio;
+      const casingWidth = (style['line-casing-width'] ?? 0) * ratio;
       const casingFill = style['line-casing-fill'];
       if (pass === 0 && (!casingFill || casingWidth <= 0)) continue;
 
       context.lineWidth = pass === 0 ? coreWidth + 2 * casingWidth : coreWidth;
-      context.strokeStyle = pass === 0 ? (casingFill as string) : style['line-fill'] ?? '#000';
+      context.strokeStyle = pass === 0 ? (casingFill as string) : (style['line-fill'] ?? '#000');
       context.globalAlpha = style['line-opacity'] ?? 1;
       context.lineCap = style['line-cap'] ?? 'butt';
       context.lineJoin = style['line-join'] ?? 'miter';
 
       const dashes = style['line-dasharray'];
       if (dashes && dashes.length > 0 && pass === 1) {
-        context.setLineDash(dashes.map((value) => value * ratio * globalScale));
+        context.setLineDash(dashes.map((value) => value * ratio));
       } else {
         context.setLineDash([]);
       }

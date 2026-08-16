@@ -72,9 +72,3 @@ export function buildRoutePlan(collection: RouteFeatureCollection): RoutePlan {
     featureCount
   };
 }
-
-/** Convenience accessor for the style of a feature within a plan. */
-export function getPlanFeatureStyle(plan: RoutePlan, featureIndex: number): LineStyleProperties {
-  const styleRef = plan.features[RouteFeatureStride * featureIndex + 3] as RouteStyleRef;
-  return plan.styles[styleRef];
-}
