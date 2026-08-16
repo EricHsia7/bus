@@ -5,6 +5,7 @@ import { MapTileController, TileInfo } from '../../tools/tile-controller';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { drawLabelTiles, LabelTileView } from '../../data/map/label-renderer';
 import { drawRouteTiles, RouteTileView } from '../../data/map/route-renderer';
+import { SelectiveView, SelectiveViewItem } from '../../tools/selective-view';
 
 const mapField = documentQuerySelector('.css_map_field');
 const mapCanvas = elementQuerySelector(mapField, '.css_map_canvas') as HTMLCanvasElement;
@@ -135,6 +136,8 @@ const mapTileController = new MapTileController({
   }
 });
 
+const mapSelectiveView = new SelectiveView([1, 0]);
+
 export function showMap(): void {
   mapField.setAttribute('displayed', 'true');
   displayed = true;
@@ -152,9 +155,10 @@ function initializeMap(): void {
   requestFrame();
 }
 
-export function openMap(): void {
+export function openMap(selectiveViewItems: Array<SelectiveViewItem>): void {
   pushPageHistory('Map');
   showMap();
+  mapSelectiveView.views = selectiveViewItems;
   initializeMap();
   hidePreviousPage();
 }
@@ -163,8 +167,8 @@ export function focusMapOn(lon: number, lat: number, zoom: number, duration: num
   mapTileController.focusOn(lon, lat, zoom, duration);
 }
 
-export function fitMapTo(lon0: number, lat0: number, lon1: number, lat1: number, duration: number = 500): void {
-  // TODO: mapTileController.fitTo(bbox, duration)
+export function fitMapTo(west: number, south: number, east: number, north: number, duration: number = 500): void {
+  mapTileController.fitTo(west, south, east, north, 50, duration);
 }
 
 export function selectRoutesOnMap(RouteIDs: Array<number>): void {

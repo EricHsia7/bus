@@ -1,0 +1,18 @@
+.css_map_field .css_map_panel {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: clamp(300px, 33%, 450px);
+  height: 300px;
+  backdrop-filter: var(--b-cssvar-backdrop-filter);
+  -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
+  background-color: var(--b-cssvar-ffffff-normal-50);
+  border-radius: var(--b-cssvar-border-radius-large);
+}
+
+
+@media (max-width: 767px) {
+  .css_map_field .css_map_panel {
+    width: calc(100% - 10px - 10px)
+  }
+}

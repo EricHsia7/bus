@@ -206,6 +206,7 @@ import './interface/map/field.css';
 import './interface/map/button.css';
 import './interface/map/map.css';
 import './interface/map/attribution.css';
+import './interface/map/panel.css';
 
 import './interface/prompt/index.css';
 

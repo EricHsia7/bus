@@ -1,4 +1,4 @@
-import { MaterialSymbol } from '@erichsia7/material-symbols-list';
+import { MaterialSymbol } from '../interface/icons/material-symbols-type';
 
 export interface BaseSelectiveView {
   icon: MaterialSymbol;
@@ -26,9 +26,8 @@ export class SelectiveView {
   sourcesVisibility: Uint8Array;
   views: Array<SelectiveViewItem>;
 
-  constructor(sourcesQuantity: number, defaultVisibility: 0 | 1) {
-    this.sourcesVisibility = new Uint8Array(sourcesQuantity);
-    this.sourcesVisibility.fill(defaultVisibility);
+  constructor(sourcesVisibility: Iterable<0 | 1>) {
+    this.sourcesVisibility = new Uint8Array(sourcesVisibility);
     this.views = [];
   }
 
