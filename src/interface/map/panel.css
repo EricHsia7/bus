@@ -35,7 +35,13 @@
 
 @media (max-width: 767px) {
   .css_map_field .css_map_panel_container {
-    width: calc(100% - 10px - 10px);
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    border-top-left-radius: var(--b-cssvar-border-radius-large);
+    border-top-right-radius: var(--b-cssvar-border-radius-large);
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
   }
 
   .css_map_field .css_map_panel_container .css_map_panel_space {
@@ -52,6 +58,9 @@
   background-color: var(--b-cssvar-ffffff-normal-50);
   backdrop-filter: var(--b-cssvar-backdrop-filter);
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
-  border-radius: var(--b-cssvar-border-radius-large);
+  border-top-left-radius: var(--b-cssvar-border-radius-large);
+  border-top-right-radius: var(--b-cssvar-border-radius-large);
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
   pointer-events: all;
 }
