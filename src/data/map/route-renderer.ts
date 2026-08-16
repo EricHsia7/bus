@@ -117,7 +117,7 @@ export function drawRouteTiles(context: CanvasRenderingContext2D, tiles: Array<R
   if (tiles.length === 0) return;
 
   const selection = options.selectedRoutes ? new Set(options.selectedRoutes) : EMPTY_SELECTION;
-  const ratio = options.devicePixelRatio ?? 1;
+  const devicePixelRatio = options.devicePixelRatio ?? 1;
   const zoom = options.zoom;
   const drawCasing = options.casing !== false;
 
@@ -137,10 +137,10 @@ export function drawRouteTiles(context: CanvasRenderingContext2D, tiles: Array<R
       if (style.maxzoom !== undefined && zoom >= style.maxzoom) continue;
       if (!style['line-width']) continue;
 
-      const coreWidth = style['line-width'] * resolveLineWidthScale(style['line-width-scale'], zoom, tileZoom) * ratio;
+      const coreWidth = style['line-width'] * resolveLineWidthScale(style['line-width-scale'], zoom, tileZoom) * devicePixelRatio;
       if (coreWidth <= 0) continue;
 
-      const casingWidth = (style['line-casing-width'] ?? 0) * ratio;
+      const casingWidth = (style['line-casing-width'] ?? 0) * devicePixelRatio;
       const casingFill = style['line-casing-fill'];
       if (pass === 0 && (!casingFill || casingWidth <= 0)) continue;
 
@@ -152,7 +152,7 @@ export function drawRouteTiles(context: CanvasRenderingContext2D, tiles: Array<R
 
       const dashes = style['line-dasharray'];
       if (dashes && dashes.length > 0 && pass === 1) {
-        context.setLineDash(dashes.map((value) => value * ratio));
+        context.setLineDash(dashes.map((value) => value * devicePixelRatio));
       } else {
         context.setLineDash([]);
       }

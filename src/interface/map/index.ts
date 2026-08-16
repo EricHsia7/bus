@@ -153,14 +153,27 @@ export function hideMap(): void {
   displayed = false;
 }
 
-export function openMap(lon: number = (120.886 + 122.004) / 2, lat: number = (24.8 + 25.3) / 2, zoom = 16, duration: number = 500): void {
-  pushPageHistory('Map');
-  showMap();
+function initializeMap(): void {
+  selectedRoutes = [];
   resizeMapCanvas();
-  mapTileController.focusOn(lon, lat, zoom, duration);
   synchronizeQueue();
   requestFrame();
+}
+
+export function openMap(): void {
+  pushPageHistory('Map');
+  showMap();
+  initializeMap();
   hidePreviousPage();
+}
+
+export function focusMapOn(lon: number, lat: number, zoom: number, duration: number = 500): void {
+  mapTileController.focusOn(lon, lat, zoom, duration);
+}
+
+export function showRouteOnMap(RouteID: number, duration: number = 500): void {
+  selectedRoutes = [RouteID];
+  // TODO: mapTileController.fitTo(bbox, duration)
 }
 
 export function closeMap(): void {
@@ -576,7 +589,8 @@ function drawLabels(): void {
   if (routeTileViews.length > 0) {
     drawRouteTiles(mapLabelContext, routeTileViews, {
       selectedRoutes,
-      zoom: mapTileController.zoom
+      zoom: mapTileController.zoom,
+      devicePixelRatio
     });
   }
 

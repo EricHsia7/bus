@@ -110,6 +110,22 @@ module.exports = (env, argv) => {
                 statuses: [200]
               }
             }
+          },
+          {
+            urlPattern: /^https:\/\/erichsia7.github.io\/bus-map-routes\/routes\/[0-9]+\/[0-9]+\/[0-9]+\.gz/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'map-routes',
+              matchOptions: {
+                ignoreSearch: false
+              },
+              expiration: {
+                purgeOnQuotaError: true
+              },
+              cacheableResponse: {
+                statuses: [200]
+              }
+            }
           }
         ]
       }),
