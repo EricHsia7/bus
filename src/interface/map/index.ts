@@ -9,8 +9,8 @@ import { drawRouteTiles, RouteTileView } from '../../data/map/route-renderer';
 const mapField = documentQuerySelector('.css_map_field');
 const mapCanvas = elementQuerySelector(mapField, '.css_map_canvas') as HTMLCanvasElement;
 const mapContext = mapCanvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
-const mapLabelCanvas = elementQuerySelector(mapField, '.css_map_labels') as HTMLCanvasElement;
-const mapLabelContext = mapLabelCanvas.getContext('2d') as CanvasRenderingContext2D;
+const mapOverlayCanvas = elementQuerySelector(mapField, '.css_map_overlay') as HTMLCanvasElement;
+const mapOverlayContext = mapOverlayCanvas.getContext('2d') as CanvasRenderingContext2D;
 
 type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
@@ -198,7 +198,7 @@ export function closeMap(): void {
   protectedTileKeys.clear();
   mapLoader.protect(protectedTileKeys);
   mapLoader.trim();
-  mapLabelContext.clearRect(0, 0, width, height);
+  mapOverlayContext.clearRect(0, 0, width, height);
 }
 
 export function setRoutesRenderedOnMap(routes: Array<number>): void {
@@ -212,12 +212,12 @@ export function resizeMapCanvas(): void {
 
   mapCanvas.width = width * devicePixelRatio;
   mapCanvas.height = height * devicePixelRatio;
-  mapLabelCanvas.width = width * devicePixelRatio;
-  mapLabelCanvas.height = height * devicePixelRatio;
+  mapOverlayCanvas.width = width * devicePixelRatio;
+  mapOverlayCanvas.height = height * devicePixelRatio;
 
   // Resetting the backing store drops the transform, so re-apply it here.
   mapContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
-  mapLabelContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  mapOverlayContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
 }
 
 function getTileKey(x: number, y: number, z: number): string {
@@ -576,7 +576,7 @@ function renderFrame(now: number): void {
  * it sits.
  */
 function drawLabels(): void {
-  mapLabelContext.clearRect(0, 0, width, height);
+  mapOverlayContext.clearRect(0, 0, width, height);
   labelTileViews.length = 0;
   routeTileViews.length = 0;
 
@@ -590,7 +590,7 @@ function drawLabels(): void {
   }
 
   if (routeTileViews.length > 0) {
-    drawRouteTiles(mapLabelContext, routeTileViews, {
+    drawRouteTiles(mapOverlayContext, routeTileViews, {
       selectedRoutes,
       zoom: mapTileController.zoom,
       devicePixelRatio
@@ -598,7 +598,7 @@ function drawLabels(): void {
   }
 
   if (labelTileViews.length > 0) {
-    drawLabelTiles(mapLabelContext, labelTileViews, {
+    drawLabelTiles(mapOverlayContext, labelTileViews, {
       // The fractional zoom, not the native one: point labels interpolate across it.
       zoom: mapTileController.zoom,
       width,
