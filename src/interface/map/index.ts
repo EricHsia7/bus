@@ -14,14 +14,6 @@ const mapOverlayContext = mapOverlayCanvas.getContext('2d') as CanvasRenderingCo
 
 type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
-/** Integer zoom levels for which raster tiles actually exist on the server */
-const minNativeZoom = 12;
-const maxNativeZoom = 16;
-// [minZoom, maxZoom] therefore covers under zoom + native zoom + over zoom.
-const minZoom = 12;
-const maxZoom = 18;
-const bounds = [120.886, 24.8, 122.004, 25.3];
-
 let width: number = window.innerWidth;
 let height: number = window.innerHeight;
 let displayed: boolean = false;
@@ -120,10 +112,10 @@ const mapTileController = new MapTileController({
   centerLon: (120.886 + 122.004) / 2,
   centerLat: (24.8 + 25.3) / 2,
   zoom: 16,
-  minZoom: minZoom,
-  maxZoom: maxZoom,
-  minNativeZoom: minNativeZoom,
-  maxNativeZoom: maxNativeZoom,
+  minZoom: 12,
+  maxZoom: 18,
+  minNativeZoom: 12,
+  maxNativeZoom: 16,
   tileSize: 256,
   onMovementStart: function () {
     requestFrame();

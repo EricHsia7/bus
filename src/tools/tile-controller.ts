@@ -192,7 +192,7 @@ export class MapTileController {
    * it saturates, which is what produces over zoom and under zoom.
    */
   public getNativeZoom(zoomLevel: number = this.zoom): number {
-    return Math.max(this.minNativeZoom, Math.min(this.maxNativeZoom, Math.floor(zoomLevel)));
+    return clamp(Math.floor(zoomLevel), this.minNativeZoom, this.maxNativeZoom);
   }
 
   /**
