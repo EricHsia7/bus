@@ -31,6 +31,7 @@
   position: relative;
   width: 100%;
   height: 40%;
+  pointer-events: none;
 }
 
 @media (max-width: 767px) {
@@ -42,10 +43,6 @@
     border-top-right-radius: var(--b-cssvar-border-radius-large);
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
-  }
-
-  .css_map_field .css_map_panel_container .css_map_panel_space {
-    pointer-events: all;
   }
 }
 
