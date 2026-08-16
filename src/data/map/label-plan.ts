@@ -1,5 +1,4 @@
 import { clamp } from '../../tools/math';
-import { MapLoaderTile } from './index';
 import { CircleStyleProperties, IconStyleProperties, LabelFeature, LabelFeatureCollection, LabelKind, LineStringLabelFeature, PointLabelFeature, LabelPropertyScale, TextStyleProperties } from './label';
 
 /**
@@ -1187,7 +1186,7 @@ function composeSheet(cache: LabelGlyphCache, features: Array<LocalFeature>, max
   return { sheet: canvas.transferToImageBitmap(), glyphs: rects, indices };
 }
 
-export function buildLabelGlyphPlan(collection: LabelFeatureCollection, tile: MapLoaderTile, cache: LabelGlyphCache): LabelGlyphPlan {
+export function buildLabelGlyphPlan(collection: LabelFeatureCollection, cache: LabelGlyphCache): LabelGlyphPlan {
   const extent = collection.extent || 1;
 
   warmLabelGlyphCache(collection, cache);

@@ -4,6 +4,7 @@ import { clamp } from '../../tools/math';
 import { MapTileController, TileInfo } from '../../tools/tile-controller';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { drawLabelTiles, LabelTileView } from '../../data/map/label-renderer';
+import { drawRouteTiles, RouteTileView } from '../../data/map/route-renderer';
 
 const mapField = documentQuerySelector('.css_map_field');
 const mapCanvas = elementQuerySelector(mapField, '.css_map_canvas') as HTMLCanvasElement;
@@ -89,6 +90,7 @@ const requestedTileKeys = new Set<string>();
 /** Plans handed over by the label workers, cached here for the lifetime of the tile. */
 /** Reused every frame so the draw pass allocates nothing. */
 const labelTileViews: Array<LabelTileView> = [];
+const routeTileViews: Array<RouteTileView> = [];
 
 interface ZoomLayer {
   /** Native zoom level this layer draws its tiles from */
@@ -555,23 +557,28 @@ function renderFrame(now: number): void {
 function drawLabels(): void {
   mapLabelContext.clearRect(0, 0, width, height);
   labelTileViews.length = 0;
+  routeTileViews.length = 0;
 
   const z = mapTileController.getNativeZoom();
   for (const tile of mapTileController.getVisibleTiles(z)) {
     const { x, y, z } = tile;
     const cached = mapLoader.get(x, y, z);
     if (!cached) continue;
-    const plan = cached.label;
-    labelTileViews.push({ plan, screenBBox: tile.screenBBox });
+    labelTileViews.push({ plan: cached.label, screenBBox: tile.screenBBox });
+    routeTileViews.push({ plan: cached.route, screenBBox: tile.screenBBox });
   }
 
-  if (labelTileViews.length === 0) return;
+  if (routeTileViews.length > 0) {
+    drawRouteTiles(mapLabelContext, routeTileViews, { selectedRoutes: [], zoom: mapTileController.zoom });
+  }
 
-  drawLabelTiles(mapLabelContext, labelTileViews, {
-    // The fractional zoom, not the native one: point labels interpolate across it.
-    zoom: mapTileController.zoom,
-    width,
-    height,
-    devicePixelRatio
-  });
+  if (labelTileViews.length > 0) {
+    drawLabelTiles(mapLabelContext, labelTileViews, {
+      // The fractional zoom, not the native one: point labels interpolate across it.
+      zoom: mapTileController.zoom,
+      width,
+      height,
+      devicePixelRatio
+    });
+  }
 }
