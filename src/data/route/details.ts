@@ -112,7 +112,7 @@ export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], 
     // map
     {
       icon: 'map',
-      name: '地圖',
+      name: '路線圖',
       action: function () {
         openMap({
           selection: [RouteID],
