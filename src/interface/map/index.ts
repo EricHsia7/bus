@@ -184,7 +184,7 @@ export function showMapPanel(): void {
 }
 
 export function hideMapPanel(): void {
-  MapPanelContainerElement.setAttribute('displayed', 'true');
+  MapPanelContainerElement.setAttribute('displayed', 'false');
 }
 
 export function toggleMapPanel(): void {

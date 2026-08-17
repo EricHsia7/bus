@@ -34,7 +34,7 @@ import { closeSettingsOptions } from './interface/settings/options';
 import { openPermalink } from './tools/permalink';
 import { closeIconSelectorSearch, initializeIconSelectorSearchInput } from './interface/icon-selector-search';
 import { promptMessage } from './interface/prompt';
-import { closeMap, resizeMapCanvas, toggleMapPanel } from './interface/map';
+import { closeMap, hideMapPanel, resizeMapCanvas, showMapPanel, toggleMapPanel } from './interface/map';
 
 import './interface/theme.css';
 
@@ -397,7 +397,9 @@ interface BusWindow extends Window {
   },
   map: {
     closeMap,
-    toggleMapPanel
+    toggleMapPanel,
+    showMapPanel,
+    hideMapPanel
   }
 };
 
