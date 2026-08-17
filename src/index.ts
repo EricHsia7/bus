@@ -34,7 +34,7 @@ import { closeSettingsOptions } from './interface/settings/options';
 import { openPermalink } from './tools/permalink';
 import { closeIconSelectorSearch, initializeIconSelectorSearchInput } from './interface/icon-selector-search';
 import { promptMessage } from './interface/prompt';
-import { closeMap, hideMapPanel, resizeMapCanvas, showMapPanel, toggleMapPanel } from './interface/map';
+import { hideMapPanel, initializeMapPanelEvents, resizeMapCanvas } from './interface/map';
 
 import './interface/theme.css';
 
@@ -274,6 +274,9 @@ interface BusWindow extends Window {
     initializeSearchInput();
     initializeIconSelectorSearchInput();
 
+    // initialize map
+    initializeMapPanelEvents();
+
     // handle window resize
     resizeSearchInputSVG();
     resizeMapCanvas();
@@ -396,9 +399,6 @@ interface BusWindow extends Window {
     closeQRCode
   },
   map: {
-    closeMap,
-    toggleMapPanel,
-    showMapPanel,
     hideMapPanel
   }
 };

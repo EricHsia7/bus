@@ -12,6 +12,10 @@ import { getBlankIconElement, setIcon } from '../icons';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 const Field = documentQuerySelector('.css_map_field');
+
+const LeftButtonElement = elementQuerySelector(Field, '.css_map_button_left');
+const RightButtonElement = elementQuerySelector(Field, '.css_map_button_right');
+
 const MapCanvas = elementQuerySelector(Field, '.css_map_canvas') as HTMLCanvasElement;
 const MapContext = MapCanvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
 const MapOverlayCanvas = elementQuerySelector(Field, '.css_map_overlay') as HTMLCanvasElement;
@@ -156,12 +160,12 @@ const mapTileController = new MapTileController({
 const mapOverlays = new MapOverlays(
   [
     {
-      icon: 'match_case',
+      icon: 'notes',
       name: '標籤',
       visible: true
     },
     {
-      icon: 'route',
+      icon: 'emoji_transportation',
       name: '路線',
       visible: true
     }
@@ -179,15 +183,53 @@ export function fitMapTo(west: number, south: number, east: number, north: numbe
 
 export function showMapPanel(): void {
   MapPanelContainerElement.setAttribute('displayed', 'true');
+  MapPanelElement.addEventListener(
+    'animationend',
+    function () {
+      MapPanelElement.classList.add('css_map_panel_popped_in');
+      MapPanelElement.classList.remove('css_map_panel_pop_in');
+    },
+    { once: true }
+  );
+  MapPanelElement.classList.add('css_map_panel_pop_in');
 }
 
 export function hideMapPanel(): void {
-  MapPanelContainerElement.setAttribute('displayed', 'false');
+  MapPanelElement.addEventListener(
+    'animationend',
+    function () {
+      MapPanelContainerElement.setAttribute('displayed', 'false');
+      MapPanelElement.classList.remove('css_map_panel_pop_out');
+    },
+    { once: true }
+  );
+  MapPanelElement.classList.remove('css_map_panel_popped_in');
+  MapPanelElement.classList.add('css_map_panel_pop_out');
 }
 
 export function toggleMapPanel(): void {
   const displayed = MapPanelContainerElement.getAttribute('displayed') === 'true';
-  MapPanelContainerElement.setAttribute('displayed', booleanToString(!displayed));
+  if (displayed) {
+    hideMapPanel();
+  } else {
+    showMapPanel();
+  }
+}
+
+export function initializeMapPanelEvents(): void {
+  MapPanelContainerElement.addEventListener('pointerdown', function (event) {
+    const target = event.target as HTMLElement;
+    if (target !== MapPanelContainerElement) return;
+    hideMapPanel();
+  });
+
+  LeftButtonElement.addEventListener('click', function () {
+    closeMap();
+  });
+
+  RightButtonElement.addEventListener('click', function () {
+    toggleMapPanel();
+  });
 }
 
 export function resizeMapCanvas(): void {
@@ -627,7 +669,7 @@ function updateMapField(overlays: Array<MapOverlay>, integration: IntegratedMapV
 
     function updateOnclick(thisElement: HTMLElement, index: number): void {
       thisElement.onclick = function () {
-        mapOverlays.toggle(index);
+        thisElement.setAttribute('highlighted', booleanToString(mapOverlays.toggle(index)));
       };
     }
 
@@ -653,11 +695,13 @@ function updateMapField(overlays: Array<MapOverlay>, integration: IntegratedMapV
         case 'point':
           thisElement.onclick = function () {
             mapTileController.focusOn(thisItem.centerLon, thisItem.centerLat, 16, 500);
+            hideMapPanel();
           };
           break;
         case 'box':
           thisElement.onclick = function () {
             mapTileController.fitTo(thisItem.minLon, thisItem.minLat, thisItem.maxLon, thisItem.maxLat, 50, 500);
+            hideMapPanel();
           };
           break;
         default:

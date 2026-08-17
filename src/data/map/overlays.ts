@@ -15,9 +15,10 @@ export class MapOverlays {
     this.onToggle = onToggle;
   }
 
-  toggle(index: number): void {
+  toggle(index: number): boolean {
     this.overlays[index].visible = !this.overlays[index].visible;
     this.onToggle();
+    return this.overlays[index].visible;
   }
 
   show(sources: Array<number>): void {
