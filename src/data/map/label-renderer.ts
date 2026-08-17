@@ -3,7 +3,6 @@ import { Context2D } from '../../tools/graphic';
 import { clamp } from '../../tools/math';
 import { LabelBoundsStride, LabelCollisionStride, LabelFeaturesStride, LabelFlagAlongLine, LabelFlagHasGlyphs, LabelFlagSeam, LabelFlatZoomScaled, LabelGlyphPlan, LabelGlyphStride, LabelKindToCode, LabelPlacementStride, LabelScalesStride } from './label-plan';
 
-
 export interface LabelTileView {
   plan: LabelGlyphPlan;
   screenBBox: Box;
@@ -42,11 +41,11 @@ class SeamCollisionIndex {
   }
 
   private column(value: number): number {
-    return Math.min(this.columns - 1, Math.max(0, Math.floor(value / SEAM_CELL_SIZE)));
+    return clamp(Math.floor(value / SEAM_CELL_SIZE), 0, this.columns - 1);
   }
 
   private row(value: number): number {
-    return Math.min(this.rows - 1, Math.max(0, Math.floor(value / SEAM_CELL_SIZE)));
+    return clamp(Math.floor(value / SEAM_CELL_SIZE), 0, this.rows - 1);
   }
 
   public collides(box: Box): boolean {

@@ -121,7 +121,7 @@
   syntax: '<length>';
   inherits: false;
   initial-value: 22px;
-  /* 5*sqrt(2) + 10*sqrt(2) ≈ 21.2132*/
+  /* 5*sqrt(2) + 10*sqrt(2) ≈ 21.2132 */
 }
 
 .css_settings_options_field .css_settings_options_body .css_settings_options .css_option .css_option_checkbox input[type="checkbox"] {
