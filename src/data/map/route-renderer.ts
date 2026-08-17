@@ -1,3 +1,4 @@
+import { Context2D } from '../../tools/graphic';
 import { clamp } from '../../tools/math';
 import { Box } from './index';
 import { LineStyleProperties, RoutePropertyScale } from './route';
@@ -12,17 +13,16 @@ export interface RouteTileView {
  * Render options.
  */
 export interface RouteRenderOptions {
-  /**
-   * RouteIDs of the visible routes.
-   * When omitted or empty, **all available routes are rendered**.
-   */
-  selectedRoutes?: Iterable<number> | null;
   /** Current (fractional) map zoom */
   zoom: number;
   /** Device pixel ratio. Widths and dashes are multiplied by it. Defaults to 1. */
   devicePixelRatio?: number;
   /** Draw the casing/halo pass beneath the core strokes. Defaults to true. */
   casing?: boolean;
+  /**
+   * RouteIDs of the visible routes.
+   */
+  selectedRoutes?: Iterable<number> | null;
 }
 
 interface DrawBatch {
@@ -73,7 +73,7 @@ function buildBatches(tiles: Array<RouteTileView>, selection: Set<number>): Arra
   return batches;
 }
 
-function tracePath(context: CanvasRenderingContext2D, tiles: Array<RouteTileView>, batch: DrawBatch): void {
+function tracePath(context: Context2D, tiles: Array<RouteTileView>, batch: DrawBatch): void {
   context.beginPath();
   const members = batch.members;
 
@@ -108,7 +108,7 @@ function tracePath(context: CanvasRenderingContext2D, tiles: Array<RouteTileView
  * Two passes are used so that casings never paint over a neighbouring route's
  * core stroke: every casing is drawn first, then every core stroke.
  */
-export function drawRouteTiles(context: CanvasRenderingContext2D, tiles: Array<RouteTileView>, options: RouteRenderOptions): void {
+export function drawRouteTiles(context: Context2D, tiles: Array<RouteTileView>, options: RouteRenderOptions): void {
   if (tiles.length === 0) return;
 
   const selection = new Set(options.selectedRoutes || []);

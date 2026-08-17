@@ -1,22 +1,40 @@
 import { MapLoader, MapLoaderResponse } from '../../data/map';
-import { documentQuerySelector, elementQuerySelector } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { clamp } from '../../tools/math';
 import { MapTileController, TileInfo } from '../../tools/tile-controller';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { drawLabelTiles, LabelTileView } from '../../data/map/label-renderer';
 import { drawRouteTiles, RouteTileView } from '../../data/map/route-renderer';
-import { SelectiveView, SelectiveViewItem } from '../../tools/selective-view';
 import { booleanToString } from '../../tools';
+import { IntegratedMapView, MapView } from '../../data/map/views/index';
+import { getBlankIconElement, setIcon } from '../icons';
+import { MapOverlay, MapOverlays } from '../../data/map/overlays';
+import { Context2D } from '../../tools/graphic';
 
 const Field = documentQuerySelector('.css_map_field');
 const MapCanvas = elementQuerySelector(Field, '.css_map_canvas') as HTMLCanvasElement;
 const MapContext = MapCanvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
 const MapOverlayCanvas = elementQuerySelector(Field, '.css_map_overlay') as HTMLCanvasElement;
 const MapOverlayContext = MapOverlayCanvas.getContext('2d') as CanvasRenderingContext2D;
-const MapContainerElement = elementQuerySelector(Field, '.css_map_panel_container');
-const MapPanelElement = elementQuerySelector(MapContainerElement, '.css_map_panel');
 
-type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+const MapPanelContainerElement = elementQuerySelector(Field, '.css_map_panel_container');
+const MapPanelElement = elementQuerySelector(MapPanelContainerElement, '.css_map_panel');
+const OverlaysElement = elementQuerySelector(MapPanelElement, '.css_map_panel_overlays');
+const OverlaysBodyElement = elementQuerySelector(OverlaysElement, '.css_map_panel_overlays_body');
+
+const ViewsElement = elementQuerySelector(MapPanelElement, '.css_map_panel_views');
+
+/**
+ * div.css_map_panel_overlays_overlay(n) in div.css_map_panel_overlays(1)
+ */
+const OverlayElements: Array<HTMLElement> = [];
+const ViewElements: Array<HTMLElement> = [];
+
+let previousIntegration: IntegratedMapView = {
+  type: 'route',
+  selection: [],
+  views: []
+};
 
 let width: number = window.innerWidth;
 let height: number = window.innerHeight;
@@ -87,7 +105,6 @@ const requestedTileKeys = new Set<string>();
 /** Reused every frame so the draw pass allocates nothing. */
 const labelTileViews: Array<LabelTileView> = [];
 const routeTileViews: Array<RouteTileView> = [];
-let selectedRoutes: Array<number> = [];
 
 interface ZoomLayer {
   /** Native zoom level this layer draws its tiles from */
@@ -139,54 +156,23 @@ const mapTileController = new MapTileController({
   }
 });
 
-const mapSelectiveView = new SelectiveView([1, 0]);
-
-export function showMap(): void {
-  Field.setAttribute('displayed', 'true');
-  displayed = true;
-}
-
-export function hideMap(): void {
-  Field.setAttribute('displayed', 'false');
-  displayed = false;
-}
-
-function initializeMap(): void {
-  selectedRoutes = [];
-  resizeMapCanvas();
-  synchronizeQueue();
-  requestFrame();
-}
-
-export function openMap(selectiveViewItems: Array<SelectiveViewItem>): void {
-  pushPageHistory('Map');
-  showMap();
-  mapSelectiveView.views = selectiveViewItems;
-  initializeMap();
-  hidePreviousPage();
-}
-
-export function closeMap(): void {
-  hideMap();
-  showPreviousPage();
-  revokePageHistory('Map');
-  if (frameId !== null) {
-    cancelAnimationFrame(frameId);
-    frameId = null;
+const mapOverlays = new MapOverlays(
+  [
+    {
+      icon: 'match_case',
+      name: '標籤',
+      visible: true
+    },
+    {
+      icon: 'route',
+      name: '路線',
+      visible: true
+    }
+  ],
+  function (overlay) {
+    requestFrame();
   }
-
-  // Reopening should show the current viewport straight away rather than replay a
-  // cross-fade against a layer that left the screen long ago.
-  activeLayerZ = null;
-  layerStack.length = 0;
-
-  // Nothing is on screen any more, so nothing needs protecting and the loader can
-  // trim straight down to its budget.
-  protectedTileKeys.clear();
-  mapLoader.protect(protectedTileKeys);
-  mapLoader.trim();
-  MapOverlayContext.clearRect(0, 0, width, height);
-}
+);
 
 export function focusMapOn(lon: number, lat: number, zoom: number, duration: number = 500): void {
   mapTileController.focusOn(lon, lat, zoom, duration);
@@ -201,16 +187,16 @@ export function selectRoutesOnMap(RouteIDs: Array<number>): void {
 }
 
 export function showMapPanel(): void {
-  MapContainerElement.setAttribute('displayed', 'true');
+  MapPanelContainerElement.setAttribute('displayed', 'true');
 }
 
 export function hideMapPanel(): void {
-  MapContainerElement.setAttribute('displayed', 'true');
+  MapPanelContainerElement.setAttribute('displayed', 'true');
 }
 
 export function toggleMapPanel(): void {
-  const displayed = MapContainerElement.getAttribute('displayed') === 'true';
-  MapContainerElement.setAttribute('displayed', booleanToString(!displayed));
+  const displayed = MapPanelContainerElement.getAttribute('displayed') === 'true';
+  MapPanelContainerElement.setAttribute('displayed', booleanToString(!displayed));
 }
 
 export function resizeMapCanvas(): void {
@@ -442,7 +428,7 @@ function updateLayerStack(z: number, now: number): void {
   while (layerStack.length > maxLayerStack) layerStack.shift();
 }
 
-/** Advances the topmost layer's fade and retires layers that can no longer be seen. */
+// Advances the topmost layer's fade and retires layers that can no longer be seen.
 function advanceLayerStack(now: number): boolean {
   let animating = false;
 
@@ -475,24 +461,16 @@ function advanceLayerStack(now: number): boolean {
   return animating;
 }
 
-/**
- * Draws one layer of the stack and reports whether it covered the viewport on its own.
- *
- * Only the bottom layer fills its gaps with stand-in imagery from other zoom levels. Gaps in
- * the layers above it are left alone on purpose: what shows through is the layer below, which
- * is the nearest imagery there is and is already on screen. That is what makes a zoom out
- * fill in immediately, since the finer layer the user just left stays visible underneath
- * until the coarser tiles have actually arrived.
- */
 function drawLayer(layer: ZoomLayer, isBottom: boolean, now: number): { complete: boolean; animating: boolean } {
+  // Only gaps/slots in the bottom layer may be filled with placeholder tiles borrowed from other zoom levels.
+  // Higher layers aren’t filled in. If they have gaps, the imagery underneath remains visible.
   const tiles: TileInfo[] = mapTileController.getVisibleTiles(layer.z);
   const layerAlpha = easeInOut(layer.opacity);
   let complete = true;
   let animating = false;
 
   if (isBottom) {
-    // Stand-ins go down first so the layer's own tiles fade over imagery rather than over
-    // the flat background.
+    // Stand-ins go down first so the layer's own tiles fade over imagery rather than over the flat background.
     for (const tile of tiles) {
       const fade = tileFadeStates.get(getTileKey(tile.x, tile.y, layer.z));
       if (mapLoader.get(tile.x, tile.y, layer.z) && fade && fade.opacity >= 1) continue;
@@ -531,6 +509,39 @@ function drawLayer(layer: ZoomLayer, isBottom: boolean, now: number): { complete
   }
 
   return { complete, animating };
+}
+
+function drawOverlay(): void {
+  MapOverlayContext.clearRect(0, 0, width, height);
+  labelTileViews.length = 0;
+  routeTileViews.length = 0;
+
+  const z = mapTileController.getNativeZoom();
+  const visibleTiles = mapTileController.getVisibleTiles(z);
+  for (const tile of visibleTiles) {
+    const { x, y, z } = tile;
+    const cached = mapLoader.get(x, y, z);
+    if (!cached) continue;
+    labelTileViews.push({ plan: cached.label, screenBBox: tile.screenBBox });
+    routeTileViews.push({ plan: cached.route, screenBBox: tile.screenBBox });
+  }
+
+  if (routeTileViews.length > 0) {
+    drawRouteTiles(MapOverlayContext, routeTileViews, {
+      zoom: mapTileController.zoom,
+      devicePixelRatio,
+      selectedRoutes: previousIntegration.selection
+    });
+  }
+
+  if (labelTileViews.length > 0) {
+    drawLabelTiles(MapOverlayContext, labelTileViews, {
+      zoom: mapTileController.zoom,
+      width,
+      height,
+      devicePixelRatio
+    });
+  }
 }
 
 function renderFrame(now: number): void {
@@ -575,43 +586,193 @@ function renderFrame(now: number): void {
   if (animating) requestFrame();
 }
 
-/**
- * Repaints the label overlay for the layer currently on top.
- *
- * Deduping and collision run across every visible tile at once, in screen space, so a label
- * crossing a seam is drawn once and two labels from neighbouring tiles cannot overlap. The
- * whole overlay is rebuilt each frame because a pan changes which label wins, not just where
- * it sits.
- */
-function drawOverlay(): void {
+function generateItemOfOverlay(): HTMLElement {
+  const element = documentCreateDivElement();
+  element.classList.add('css_map_panel_overlays_overlay');
+
+  const iconElement = documentCreateDivElement();
+  iconElement.classList.add('css_map_panel_overlays_overlay_icon');
+  iconElement.appendChild(getBlankIconElement());
+
+  const nameElement = documentCreateDivElement();
+  nameElement.classList.add('css_map_panel_overlays_overlay_name');
+
+  return element;
+}
+
+function generateItemOfView(): HTMLElement {
+  const element = documentCreateDivElement();
+  element.classList.add('css_map_panel_views_view');
+
+  const iconElement = documentCreateDivElement();
+  iconElement.classList.add('css_map_panel_views_view_icon');
+  iconElement.appendChild(getBlankIconElement());
+
+  const nameElement = documentCreateDivElement();
+  nameElement.classList.add('css_map_panel_views_view_name');
+
+  return element;
+}
+
+function updateMapField(overlays: Array<MapOverlay>, integration: IntegratedMapView): void {
+  function updateOverlay(thisElement: HTMLElement, thisItem: MapOverlay, index: number): void {
+    function updateIcon(thisElement: HTMLElement, thisItem: MapOverlay): void {
+      const iconElement = elementQuerySelector(thisElement, '.css_map_panel_overlays_overlay_icon');
+      setIcon(iconElement, thisItem.icon);
+    }
+
+    function updateName(thisElement: HTMLElement, thisItem: MapOverlay): void {
+      const nameElement = elementQuerySelector(thisElement, '.css_map_panel_overlays_overlay_name');
+      nameElement.textContent = thisItem.name;
+    }
+
+    function updateHighlighted(thisElement: HTMLElement, thisItem: MapOverlay): void {
+      thisElement.setAttribute('highlighted', booleanToString(thisItem.visible));
+    }
+
+    function updateOnclick(thisElement: HTMLElement, index: number): void {
+      thisElement.onclick = function () {
+        mapOverlays.toggle(index);
+      };
+    }
+
+    updateIcon(thisElement, thisItem);
+    updateName(thisElement, thisItem);
+    updateHighlighted(thisElement, thisItem);
+    updateOnclick(thisElement, index);
+  }
+
+  function updateView(thisElement: HTMLElement, thisItem: MapView): void {
+    function updateIcon(thisElement: HTMLElement, thisItem: MapView): void {
+      const iconElement = elementQuerySelector(thisElement, '.css_map_panel_views_view_icon');
+      setIcon(iconElement, thisItem.icon);
+    }
+
+    function updateName(thisElement: HTMLElement, thisItem: MapView): void {
+      const nameElement = elementQuerySelector(thisElement, '.css_map_panel_views_view_name');
+      nameElement.textContent = thisItem.name;
+    }
+
+    function updateOnclick(thisElement: HTMLElement, thisItem: MapView): void {
+      switch (thisItem.type) {
+        case 'point':
+          thisElement.onclick = function () {
+            mapTileController.focusOn(thisItem.centerLon, thisItem.centerLat, 16, 500);
+          };
+          break;
+        case 'box':
+          thisElement.onclick = function () {
+            mapTileController.fitTo(thisItem.minLon, thisItem.minLat, thisItem.maxLon, thisItem.maxLat, 50, 500);
+          };
+          break;
+        default:
+          thisElement.onclick = null;
+          break;
+      }
+    }
+
+    updateIcon(thisElement, thisItem);
+    updateName(thisElement, thisItem);
+    updateOnclick(thisElement, thisItem);
+  }
+
+  const overlaysLength = overlays.length;
+  const overlayElementsLength = OverlayElements.length;
+
+  if (overlaysLength !== overlayElementsLength) {
+    const difference = overlayElementsLength - overlaysLength;
+    if (difference < 0) {
+      const fragment = new DocumentFragment();
+      for (let o = 0; o > difference; o--) {
+        const newOverlayElement = generateItemOfOverlay();
+        fragment.appendChild(newOverlayElement);
+        OverlayElements.push(newOverlayElement);
+      }
+      OverlaysBodyElement.append(fragment);
+    } else if (difference > 0) {
+      for (let p = overlayElementsLength - 1, q = overlayElementsLength - difference - 1; p > q; p--) {
+        OverlayElements[p].remove();
+        OverlayElements.splice(p, 1);
+      }
+    }
+  }
+
+  for (let i = 0; i < overlaysLength; i++) {
+    updateOverlay(OverlayElements[i], overlays[i], i);
+  }
+
+  const viewsLength = integration.views.length;
+  const viewElementsLength = ViewElements.length;
+
+  if (viewsLength !== viewElementsLength) {
+    const difference = viewElementsLength - viewsLength;
+    if (difference < 0) {
+      const fragment = new DocumentFragment();
+      for (let o = 0; o > difference; o--) {
+        const newViewElement = generateItemOfView();
+        fragment.appendChild(newViewElement);
+        ViewElements.push(newViewElement);
+      }
+      ViewsElement.append(fragment);
+    } else if (difference > 0) {
+      for (let p = viewElementsLength - 1, q = viewElementsLength - difference - 1; p > q; p--) {
+        ViewElements[p].remove();
+        ViewElements.splice(p, 1);
+      }
+    }
+  }
+
+  for (let i = 0; i < viewsLength; i++) {
+    updateView(ViewElements[i], integration.views[i]);
+  }
+
+  // TODO: differential update
+
+  previousIntegration = integration;
+}
+
+export function showMap(): void {
+  Field.setAttribute('displayed', 'true');
+  displayed = true;
+}
+
+export function hideMap(): void {
+  Field.setAttribute('displayed', 'false');
+  displayed = false;
+}
+
+function initializeMap(integration: IntegratedMapView): void {
+  resizeMapCanvas();
+  synchronizeQueue();
+  requestFrame();
+  updateMapField(mapOverlays.overlays, integration);
+}
+
+export function openMap(integration: IntegratedMapView): void {
+  pushPageHistory('Map');
+  showMap();
+  initializeMap(integration);
+  hidePreviousPage();
+}
+
+export function closeMap(): void {
+  hideMap();
+  showPreviousPage();
+  revokePageHistory('Map');
+  if (frameId !== null) {
+    cancelAnimationFrame(frameId);
+    frameId = null;
+  }
+
+  // Reopening should show the current viewport straight away rather than replay a
+  // cross-fade against a layer that left the screen long ago.
+  activeLayerZ = null;
+  layerStack.length = 0;
+
+  // Nothing is on screen any more, so nothing needs protecting and the loader can
+  // trim straight down to its budget.
+  protectedTileKeys.clear();
+  mapLoader.protect(protectedTileKeys);
+  mapLoader.trim();
   MapOverlayContext.clearRect(0, 0, width, height);
-  labelTileViews.length = 0;
-  routeTileViews.length = 0;
-
-  const z = mapTileController.getNativeZoom();
-  for (const tile of mapTileController.getVisibleTiles(z)) {
-    const { x, y, z } = tile;
-    const cached = mapLoader.get(x, y, z);
-    if (!cached) continue;
-    labelTileViews.push({ plan: cached.label, screenBBox: tile.screenBBox });
-    routeTileViews.push({ plan: cached.route, screenBBox: tile.screenBBox });
-  }
-
-  if (routeTileViews.length > 0) {
-    drawRouteTiles(MapOverlayContext, routeTileViews, {
-      selectedRoutes,
-      zoom: mapTileController.zoom,
-      devicePixelRatio
-    });
-  }
-
-  if (labelTileViews.length > 0) {
-    drawLabelTiles(MapOverlayContext, labelTileViews, {
-      // The fractional zoom, not the native one: point labels interpolate across it.
-      zoom: mapTileController.zoom,
-      width,
-      height,
-      devicePixelRatio
-    });
-  }
 }
