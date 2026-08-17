@@ -1,15 +1,15 @@
 import { MapLoader, MapLoaderResponse } from '../../data/map';
+import { drawLabelTiles, LabelTileView } from '../../data/map/label-renderer';
+import { MapOverlay, MapOverlays } from '../../data/map/overlays';
+import { drawRouteTiles, RouteTileView } from '../../data/map/route-renderer';
+import { IntegratedMapView, MapView } from '../../data/map/views';
+import { booleanToString } from '../../tools';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
+import { Context2D } from '../../tools/graphic';
 import { clamp } from '../../tools/math';
 import { MapTileController, TileInfo } from '../../tools/tile-controller';
-import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
-import { drawLabelTiles, LabelTileView } from '../../data/map/label-renderer';
-import { drawRouteTiles, RouteTileView } from '../../data/map/route-renderer';
-import { booleanToString } from '../../tools';
-import { IntegratedMapView, MapView } from '../../data/map/views/index';
 import { getBlankIconElement, setIcon } from '../icons';
-import { MapOverlay, MapOverlays } from '../../data/map/overlays';
-import { Context2D } from '../../tools/graphic';
+import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 
 const Field = documentQuerySelector('.css_map_field');
 const MapCanvas = elementQuerySelector(Field, '.css_map_canvas') as HTMLCanvasElement;
@@ -20,18 +20,15 @@ const MapOverlayContext = MapOverlayCanvas.getContext('2d') as CanvasRenderingCo
 const MapPanelContainerElement = elementQuerySelector(Field, '.css_map_panel_container');
 const MapPanelElement = elementQuerySelector(MapPanelContainerElement, '.css_map_panel');
 const OverlaysElement = elementQuerySelector(MapPanelElement, '.css_map_panel_overlays');
-const OverlaysBodyElement = elementQuerySelector(OverlaysElement, '.css_map_panel_overlays_body');
-
 const ViewsElement = elementQuerySelector(MapPanelElement, '.css_map_panel_views');
 
 /**
- * div.css_map_panel_overlays_overlay(n) in div.css_map_panel_overlays(1)
+ * div.css_map_panel_overlay(n) in div.css_map_panel_overlays(1)
  */
 const OverlayElements: Array<HTMLElement> = [];
 const ViewElements: Array<HTMLElement> = [];
 
 let previousIntegration: IntegratedMapView = {
-  type: 'route',
   selection: [],
   views: []
 };
@@ -180,10 +177,6 @@ export function focusMapOn(lon: number, lat: number, zoom: number, duration: num
 
 export function fitMapTo(west: number, south: number, east: number, north: number, duration: number = 500): void {
   mapTileController.fitTo(west, south, east, north, 50, duration);
-}
-
-export function selectRoutesOnMap(RouteIDs: Array<number>): void {
-  selectedRoutes = RouteIDs;
 }
 
 export function showMapPanel(): void {
@@ -588,28 +581,32 @@ function renderFrame(now: number): void {
 
 function generateItemOfOverlay(): HTMLElement {
   const element = documentCreateDivElement();
-  element.classList.add('css_map_panel_overlays_overlay');
+  element.classList.add('css_map_panel_overlay');
 
   const iconElement = documentCreateDivElement();
-  iconElement.classList.add('css_map_panel_overlays_overlay_icon');
+  iconElement.classList.add('css_map_panel_overlay_icon');
   iconElement.appendChild(getBlankIconElement());
+  element.appendChild(iconElement);
 
   const nameElement = documentCreateDivElement();
-  nameElement.classList.add('css_map_panel_overlays_overlay_name');
+  nameElement.classList.add('css_map_panel_overlay_name');
+  element.appendChild(nameElement);
 
   return element;
 }
 
 function generateItemOfView(): HTMLElement {
   const element = documentCreateDivElement();
-  element.classList.add('css_map_panel_views_view');
+  element.classList.add('css_map_panel_view');
 
   const iconElement = documentCreateDivElement();
-  iconElement.classList.add('css_map_panel_views_view_icon');
+  iconElement.classList.add('css_map_panel_view_icon');
   iconElement.appendChild(getBlankIconElement());
+  element.appendChild(iconElement);
 
   const nameElement = documentCreateDivElement();
-  nameElement.classList.add('css_map_panel_views_view_name');
+  nameElement.classList.add('css_map_panel_view_name');
+  element.appendChild(nameElement);
 
   return element;
 }
@@ -617,12 +614,12 @@ function generateItemOfView(): HTMLElement {
 function updateMapField(overlays: Array<MapOverlay>, integration: IntegratedMapView): void {
   function updateOverlay(thisElement: HTMLElement, thisItem: MapOverlay, index: number): void {
     function updateIcon(thisElement: HTMLElement, thisItem: MapOverlay): void {
-      const iconElement = elementQuerySelector(thisElement, '.css_map_panel_overlays_overlay_icon');
+      const iconElement = elementQuerySelector(thisElement, '.css_map_panel_overlay_icon');
       setIcon(iconElement, thisItem.icon);
     }
 
     function updateName(thisElement: HTMLElement, thisItem: MapOverlay): void {
-      const nameElement = elementQuerySelector(thisElement, '.css_map_panel_overlays_overlay_name');
+      const nameElement = elementQuerySelector(thisElement, '.css_map_panel_overlay_name');
       nameElement.textContent = thisItem.name;
     }
 
@@ -644,12 +641,12 @@ function updateMapField(overlays: Array<MapOverlay>, integration: IntegratedMapV
 
   function updateView(thisElement: HTMLElement, thisItem: MapView): void {
     function updateIcon(thisElement: HTMLElement, thisItem: MapView): void {
-      const iconElement = elementQuerySelector(thisElement, '.css_map_panel_views_view_icon');
+      const iconElement = elementQuerySelector(thisElement, '.css_map_panel_view_icon');
       setIcon(iconElement, thisItem.icon);
     }
 
     function updateName(thisElement: HTMLElement, thisItem: MapView): void {
-      const nameElement = elementQuerySelector(thisElement, '.css_map_panel_views_view_name');
+      const nameElement = elementQuerySelector(thisElement, '.css_map_panel_view_name');
       nameElement.textContent = thisItem.name;
     }
 
@@ -688,7 +685,7 @@ function updateMapField(overlays: Array<MapOverlay>, integration: IntegratedMapV
         fragment.appendChild(newOverlayElement);
         OverlayElements.push(newOverlayElement);
       }
-      OverlaysBodyElement.append(fragment);
+      OverlaysElement.append(fragment);
     } else if (difference > 0) {
       for (let p = overlayElementsLength - 1, q = overlayElementsLength - difference - 1; p > q; p--) {
         OverlayElements[p].remove();
@@ -745,6 +742,7 @@ function initializeMap(integration: IntegratedMapView): void {
   resizeMapCanvas();
   synchronizeQueue();
   requestFrame();
+  showFirstMapView(integration);
   updateMapField(mapOverlays.overlays, integration);
 }
 
@@ -775,4 +773,20 @@ export function closeMap(): void {
   mapLoader.protect(protectedTileKeys);
   mapLoader.trim();
   MapOverlayContext.clearRect(0, 0, width, height);
+}
+
+function showFirstMapView(integration: IntegratedMapView): void {
+  if (integration.views.length > 0) {
+    const firstView = integration.views[0];
+    switch (firstView.type) {
+      case 'point':
+        mapTileController.focusOn(firstView.centerLon, firstView.centerLat, 16, 500);
+        break;
+      case 'box':
+        mapTileController.fitTo(firstView.minLon, firstView.minLat, firstView.maxLon, firstView.maxLat, 50, 500);
+        break;
+      default:
+        break;
+    }
+  }
 }

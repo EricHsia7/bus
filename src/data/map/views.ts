@@ -1,6 +1,4 @@
-import { MaterialSymbol } from '../../../interface/icons/material-symbols-type';
-import { IntegratedLocationMapView } from './location-map';
-import { IntegratedRouteMapView } from './route-map';
+import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
 
 export interface BaseMapView {
   /**
@@ -27,20 +25,10 @@ export interface MapViewBox extends BaseMapView {
 
 export type MapView = MapViewPoint | MapViewBox;
 
-export interface BaseIntegratedMapView {
+export interface IntegratedMapView {
   /**
    * selected routes
    */
   selection: Array<number>;
   views: Array<MapView>;
 }
-
-export interface IntegratedRouteMapView extends BaseIntegratedMapView {
-  type: 'route';
-}
-
-export interface IntegratedLocationMapView extends BaseIntegratedMapView {
-  type: 'location';
-}
-
-export type IntegratedMapView = IntegratedRouteMapView | IntegratedLocationMapView;

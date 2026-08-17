@@ -1,10 +1,14 @@
 import { MaterialSymbol } from '../../interface/icons/material-symbols-type';
+import { openMap } from '../../interface/map';
 import { openRouteCalendar } from '../../interface/route-calendar/index';
-import { shareRoutePermalink, showRouteMap, showRoutePermalinkQRCode } from '../../interface/route-details/index';
+import { shareRoutePermalink, showRoutePermalinkQRCode } from '../../interface/route-details/index';
 import { openSaveToFolder } from '../../interface/save-to-folder/index';
 import { hasOwnProperty } from '../../tools/index';
+import { findGlobalExtrema } from '../../tools/math';
 import { Progress, ProgressCallback } from '../../tools/progress';
+import { getBusShape, SimplifiedBusShape } from '../apis/getBusShape';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
+import { MapView } from '../map/views';
 
 /*
 function findProvider(Provider: Provider, providerId: number): ProviderItem {
@@ -49,9 +53,10 @@ export interface IntegratedRouteDetails {
 }
 
 export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], progressCallback: ProgressCallback): Promise<IntegratedRouteDetails> {
-  const progress = new Progress(2, progressCallback);
-  const Route = (await getRoute(progress, true)) as SimplifiedRoute;
+  const progress = new Progress(2 + 2, progressCallback);
+  const [Route, BusShape] = (await Promise.all([getRoute(progress, true), getBusShape(progress)])) as [SimplifiedRoute, SimplifiedBusShape];
   progress.terminate();
+
   const thisRouteKey = `r_${RouteID}`;
   if (!hasOwnProperty(Route, thisRouteKey)) {
     return {
@@ -60,6 +65,32 @@ export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], 
       RouteID: RouteID
     };
   }
+  const thisRoute = Route[thisRouteKey];
+
+  const views: Array<MapView> = [];
+  if (hasOwnProperty(BusShape, thisRouteKey)) {
+    const thisBusShape = BusShape[thisRouteKey];
+    for (let i = 0; i < 2; i++) {
+      const [minLon, maxLon] = findGlobalExtrema(thisBusShape[i].longtitudes);
+      const [minLat, maxLat] = findGlobalExtrema(thisBusShape[i].latitudes);
+      const thisRouteDeparture = thisRoute.dep;
+      const thisRouteDestination = thisRoute.des;
+      const thisRouteDirection = [thisRouteDestination, thisRouteDeparture][i];
+      const name = `${thisRoute.n} - 往${thisRouteDirection}`;
+      views.push({
+        type: 'box',
+        icon: 'route',
+        name: name,
+        minLon,
+        minLat,
+        maxLon,
+        maxLat,
+        sources: [0, 1] // labels and routes
+      });
+    }
+  }
+
+  // TODO: add stops
 
   const actions: IntegratedRouteDetailsActionArray = [
     // save to folder
@@ -83,7 +114,10 @@ export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], 
       icon: 'map',
       name: '地圖',
       action: function () {
-        showRouteMap(RouteID);
+        openMap({
+          selection: [RouteID],
+          views
+        });
       }
     },
     // share

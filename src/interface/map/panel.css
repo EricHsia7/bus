@@ -61,3 +61,118 @@
   border-bottom-right-radius: 0px;
   pointer-events: all;
 }
+
+/* container > panel > overlays */
+.css_map_field .css_map_panel_container .css_map_panel .css_map_panel_overlays {
+  position: relative;
+  width: 100%;
+}
+
+/* container > panel > overlays > head */
+.css_map_field .css_map_panel_container .css_map_panel .css_map_panel_overlays .css_map_panel_overlays_head {
+  position: relative;
+  left: 10px;
+  width: calc(100% - 10px - 10px);
+  /* padding: 10px + padding: 10px */
+  height: 50px;
+  font-size: 20px;
+  color: var(--b-cssvar-333333);
+  word-break: keep-all;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+/* container > panel > overlays */
+.css_map_field .css_map_panel_container .css_map_panel .css_map_panel_overlays {
+  position: relative;
+  width: 100%;
+  height: calc(60px + 30px);
+  display: grid;
+  grid-template-columns: repeat(2, calc(60px + 30px));
+}
+
+/* container > panel > overlays > overlay */
+.css_map_field .css_map_panel_container .css_map_panel .css_map_panel_overlays .css_map_panel_overlay {
+  position: relative;
+  height: calc(60px + 30px);
+  /* icon: 60px + name: 30px */
+}
+
+/* container > panel > overlays > overlay > icon */
+.css_map_field .css_map_panel_container .css_map_panel .css_map_panel_overlays .css_map_panel_overlay .css_map_panel_overlay_icon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: calc(60px + 30px);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: clip;
+}
+
+.css_map_field .css_map_panel_container .css_map_panel .css_map_panel_overlays .css_map_panel_overlay .css_map_panel_overlay_icon span.css_material_symbols_rounded {
+  color: var(--b-cssvar-333333);
+}
+
+/* container > panel > overlays > overlay > name */
+.css_map_field .css_map_panel_container .css_map_panel .css_map_panel_overlays .css_map_panel_overlay .css_map_panel_overlay_name {
+  position: absolute;
+  left: 0px;
+  top: 60px;
+  width: calc(60px + 30px);
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: clip;
+  color: var(--b-cssvar-333333);
+  font-size: 16px;
+}
+
+/* container > panel > views */
+.css_map_field .css_map_panel_container .css_map_panel .css_map_panel_views {
+  position: relative;
+  width: 100%;
+}
+
+/* container > panel > views > view */
+.css_map_field .css_map_panel_container .css_map_panel .css_map_panel_views .css_map_panel_view {
+  position: relative;
+  width: 100%;
+  height: 45px;
+}
+
+
+/* container > panel > views > view > icon */
+.css_map_field .css_map_panel_container .css_map_panel .css_map_panel_views .css_map_panel_view .css_map_panel_view_icon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: clip;
+}
+
+.css_map_field .css_map_panel_container .css_map_panel .css_map_panel_views .css_map_panel_view .css_map_panel_view_icon span.css_material_symbols_rounded {
+  color: var(--b-cssvar-333333);
+}
+
+/* container > panel > views > view > name */
+.css_map_field .css_map_panel_container .css_map_panel .css_map_panel_views .css_map_panel_view .css_map_panel_view_name {
+  position: absolute;
+  top: 0px;
+  left: 45px;
+  width: calc(100% - 45px);
+  /* icon: 45px */
+  height: 45px;
+  display: flex;
+  align-items: center;
+  overflow: clip;
+  color: var(--b-cssvar-333333);
+  font-size: 16px;
+}
