@@ -1,14 +1,13 @@
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../../data/apis/getRoute/index';
 import { IntegratedRouteDetails, IntegratedRouteDetailsAction, integrateRouteDetails } from '../../data/route/details';
 import { getSettingOptionValue } from '../../data/settings/index';
-import { documentCreateDivElement, documentQuerySelector, elementQuerySelector, elementQuerySelectorAll } from '../../tools/elements';
+import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { booleanToString, hasOwnProperty } from '../../tools/index';
 import { getPermalink } from '../../tools/permalink';
 import { Progress } from '../../tools/progress';
 import { shareLink } from '../../tools/share';
 import { getBlankIconElement, setIcon } from '../icons/index';
 import { hidePreviousPage, pushPageHistory, revokePageHistory, showPreviousPage } from '../index';
-import { openMap, selectRoutesOnMap } from '../map';
 import { openQRCode } from '../qrcode/index';
 
 let previousIntegration = {} as IntegratedRouteDetails;
@@ -212,10 +211,4 @@ export async function showRoutePermalinkQRCode(RouteID: SimplifiedRouteItem['id'
     });
     openQRCode(link);
   }
-}
-
-export function showRouteMap(RouteID: SimplifiedRouteItem['id']): void {
-  openMap();
-  selectRoutesOnMap([RouteID]);
-  // TODO: fitMapTo
 }

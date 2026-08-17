@@ -192,7 +192,7 @@ export class MapTileController {
    * it saturates, which is what produces over zoom and under zoom.
    */
   public getNativeZoom(zoomLevel: number = this.zoom): number {
-    return Math.max(this.minNativeZoom, Math.min(this.maxNativeZoom, Math.floor(zoomLevel)));
+    return clamp(Math.floor(zoomLevel), this.minNativeZoom, this.maxNativeZoom);
   }
 
   /**
@@ -663,5 +663,53 @@ export class MapTileController {
     };
 
     this.animationFrameId = requestAnimationFrame(animate);
+  }
+
+  /**
+   * Fits a geographic bounding box into the current viewport.
+   *
+   * @param west Minimum longitude
+   * @param south Minimum latitude
+   * @param east Maximum longitude
+   * @param north Maximum latitude
+   * @param padding Optional padding around the bounding box in pixels (default: 0)
+   * @param duration Optional animation transition duration in milliseconds (default: 0)
+   */
+  public fitTo(west: number, south: number, east: number, north: number, padding: number = 0, duration: number = 0) {
+    const minLon = Math.min(west, east);
+    const maxLon = Math.max(west, east);
+    const minLat = Math.min(south, north);
+    const maxLat = Math.max(south, north);
+
+    // Project the Northwest and Southeast corners to Mercator space at zoom level 0
+    const nw = this.wgs84ToXYZ({ lon: minLon, lat: maxLat }, 0);
+    const se = this.wgs84ToXYZ({ lon: maxLon, lat: minLat }, 0);
+
+    // Compute the center in Mercator space and convert it back to WGS84 coordinates.
+    // This accounts for Mercator latitude stretching and aligns the center perfectly.
+    const centerX = (nw.x + se.x) / 2;
+    const centerY = (nw.y + se.y) / 2;
+    const centerWGS84 = this.xyzToWGS84(centerX, centerY, 0);
+
+    // Get the delta coordinates at zoom level 0
+    const dx = se.x - nw.x;
+    const dy = se.y - nw.y;
+
+    let targetZoom = this.zoom;
+
+    // Calculate the zoom level that fits the bounds within viewport minus padding
+    if (dx > 0 && dy > 0) {
+      const availableWidth = Math.max(0, this.width - 2 * padding);
+      const availableHeight = Math.max(0, this.height - 2 * padding);
+
+      const zoomX = Math.log2(availableWidth / (dx * this.tileSize));
+      const zoomY = Math.log2(availableHeight / (dy * this.tileSize));
+
+      // Choose the limiting dimension (min of zoomX and zoomY)
+      targetZoom = Math.min(zoomX, zoomY);
+    }
+
+    // Transition viewport center and zoom
+    this.focusOn(centerWGS84.lon, centerWGS84.lat, targetZoom, duration);
   }
 }

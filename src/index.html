@@ -664,6 +664,7 @@
       </div>
     </div>
 
+    <!-- qrcode -->
     <div class="css_qrcode_field" displayed="false">
       <div class="css_qrcode_body"></div>
       <div class="css_qrcode_head">
@@ -677,12 +678,30 @@
       </div>
     </div>
 
+    <!-- map -->
     <div class="css_map_field" displayed="false">
       <canvas class="css_map_canvas"></canvas>
       <canvas class="css_map_overlay"></canvas>
       <div class="css_map_attribution">Map Data ©OpenStreetMap Contributors</div>
-      <div class="css_map_button_left" onclick="bus.map.closeMap()">
+      <div class="css_map_panel_container" displayed="false">
+        <div class="css_map_panel">
+          <div class="css_map_panel_head">
+            <div class="css_map_panel_head_title">詳細資料</div>
+            <div class="css_map_panel_head_button" onclick="bus.map.hideMapPanel()">
+              <span class="css_material_symbols_rounded">close</span>
+            </div>
+          </div>
+          <div class="css_map_panel_body">
+            <div class="css_map_panel_overlays"></div>
+            <div class="css_map_panel_views"></div>
+          </div>
+        </div>
+      </div>
+      <div class="css_map_button_left">
         <span class="css_material_symbols_rounded">arrow_back</span>
+      </div>
+      <div class="css_map_button_right">
+        <span class="css_material_symbols_rounded">layers</span>
       </div>
     </div>
 

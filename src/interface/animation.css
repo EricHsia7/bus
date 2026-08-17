@@ -28,7 +28,6 @@
   }
 }
 
-
 @keyframes b-css-processing {
   0% {
     opacity: 0.6;
@@ -40,5 +39,17 @@
 
   100% {
     opacity: 0.6;
+  }
+}
+
+@keyframes b-css-pop-in {
+  0% {
+    transform: scale(0.96);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }

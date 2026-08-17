@@ -112,3 +112,5 @@ export function generateRoundedRectPath(x: number, y: number, width: number, hei
   }
   return command;
 }
+
+export type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
