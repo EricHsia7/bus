@@ -1,7 +1,7 @@
 import { Box } from '.';
 import { Context2D } from '../../tools/graphic';
 import { clamp } from '../../tools/math';
-import { LabelCollisionStride, LabelBoundsStride, LabelFeaturesStride, LabelGlyphStride, LabelFlagAlongLine, LabelFlagHasGlyphs, LabelFlagSeam, LabelFlatZoomScaled, LabelKindToCode, LabelGlyphPlan, LabelPlacementStride, LabelScalesStride } from './label-plan';
+import { LabelBoundsStride, LabelCollisionStride, LabelFeaturesStride, LabelFlagAlongLine, LabelFlagHasGlyphs, LabelFlagSeam, LabelFlatZoomScaled, LabelGlyphPlan, LabelGlyphStride, LabelKindToCode, LabelPlacementStride, LabelScalesStride } from './label-plan';
 
 
 export interface LabelTileView {

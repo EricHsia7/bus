@@ -1,5 +1,5 @@
 import { clamp } from '../../tools/math';
-import { CircleStyleProperties, IconStyleProperties, LabelFeature, LabelFeatureCollection, LabelKind, LineStringLabelFeature, PointLabelFeature, LabelPropertyScale, TextStyleProperties } from './label';
+import { CircleStyleProperties, IconStyleProperties, LabelFeature, LabelFeatureCollection, LabelKind, LabelPropertyScale, LineStringLabelFeature, PointLabelFeature, TextStyleProperties } from './label';
 
 /**
  * Width and height, in pixels, of the raster tile images produced by the tile

@@ -804,13 +804,11 @@ export function closeMap(): void {
     frameId = null;
   }
 
-  // Reopening should show the current viewport straight away rather than replay a
-  // cross-fade against a layer that left the screen long ago.
+  // Reopening should show the current viewport straight away rather than replay a cross-fade against a layer that left the screen long ago.
   activeLayerZ = null;
   layerStack.length = 0;
 
-  // Nothing is on screen any more, so nothing needs protecting and the loader can
-  // trim straight down to its budget.
+  // Nothing is on screen any more, so nothing needs protecting and the loader can trim straight down to its budget.
   protectedTileKeys.clear();
   mapLoader.protect(protectedTileKeys);
   mapLoader.trim();
