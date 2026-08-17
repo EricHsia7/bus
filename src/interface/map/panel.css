@@ -30,6 +30,7 @@
   -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
   transform: scale(0.96);
   opacity: 0;
+  overflow: clip;
 }
 
 .css_map_field .css_map_panel_container .css_map_panel.css_map_panel_pop_in {
