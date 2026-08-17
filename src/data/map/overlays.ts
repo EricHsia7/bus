@@ -8,7 +8,7 @@ export interface MapOverlay {
 
 export class MapOverlays {
   overlays: Array<MapOverlay>;
-  onToggle: (overlay: MapOverlay) => void;
+  onToggle: () => void;
 
   constructor(overlays: Array<MapOverlay>, onToggle: MapOverlays['onToggle']) {
     this.overlays = overlays;
@@ -17,6 +17,13 @@ export class MapOverlays {
 
   toggle(index: number): void {
     this.overlays[index].visible = !this.overlays[index].visible;
-    this.onToggle(this.overlays[index]);
+    this.onToggle();
+  }
+
+  show(sources: Array<number>): void {
+    for (const source of sources) {
+      this.overlays[source].visible = true;
+    }
+    this.onToggle();
   }
 }

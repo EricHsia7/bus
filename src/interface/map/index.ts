@@ -166,9 +166,7 @@ const mapOverlays = new MapOverlays(
       visible: true
     }
   ],
-  function (overlay) {
-    requestFrame();
-  }
+  requestFrame
 );
 
 export function focusMapOn(lon: number, lat: number, zoom: number, duration: number = 500): void {
@@ -519,7 +517,7 @@ function drawOverlay(): void {
     routeTileViews.push({ plan: cached.route, screenBBox: tile.screenBBox });
   }
 
-  if (routeTileViews.length > 0) {
+  if (routeTileViews.length > 0 && mapOverlays.overlays[1].visible) {
     drawRouteTiles(MapOverlayContext, routeTileViews, {
       zoom: mapTileController.zoom,
       devicePixelRatio,
@@ -527,7 +525,7 @@ function drawOverlay(): void {
     });
   }
 
-  if (labelTileViews.length > 0) {
+  if (labelTileViews.length > 0 && mapOverlays.overlays[0].visible) {
     drawLabelTiles(MapOverlayContext, labelTileViews, {
       zoom: mapTileController.zoom,
       width,
@@ -788,5 +786,6 @@ function showFirstMapView(integration: IntegratedMapView): void {
       default:
         break;
     }
+    mapOverlays.show(firstView.sources);
   }
 }
