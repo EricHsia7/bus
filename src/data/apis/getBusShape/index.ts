@@ -51,7 +51,8 @@ export interface SimplifiedBusShapeItem {
   longtitudes: GenericNumberArray;
   latitudes: GenericNumberArray;
   markers: SimplifiedBusShapeMarkers;
-  cis: boolean
+  bound: [west: number, south: number, east: number, north: number];
+  cis: boolean;
 }
 
 export type SimplifiedBusShape = {
@@ -63,7 +64,7 @@ let BusShapeMemoryCache_data: SimplifiedBusShape = {};
 let BusShapeMemoryCache_timestamp: number = -1;
 
 const cacheTimeToLive = 60 * 60 * 24 * 30 * 1000;
-const cacheKey = 'bus_bus_shape_v3_cache';
+const cacheKey = 'bus_bus_shape_v4_cache';
 
 async function simplifyBusShape(BusShape: BusShape, Stop: Stop): Promise<SimplifiedBusShape> {
   const worker = new Worker(new URL('./simplifyBusShape-worker.ts', import.meta.url));

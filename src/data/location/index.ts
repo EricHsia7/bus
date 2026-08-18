@@ -8,13 +8,14 @@ import { Progress, ProgressCallback } from '../../tools/progress';
 import { BusArrivalTime, plotBusArrivalTime } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
-import { EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
+import { BusShapeItem, getBusShape, SimplifiedBusShapeItem } from '../apis/getBusShape';
+import { EstimateTime, EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation, MergedLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
 import { getStop, SimplifiedStop, SimplifiedStopItem } from '../apis/getStop/index';
 import { batchFindBusesForLocation, batchFindEstimateTime, BatchFoundEstimateTime, EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime } from '../apis/index';
 import { MapRasterVersion } from '../map';
-import { IntegratedMapView } from '../map/views';
+import { MapViews } from '../map/views';
 import { getSettingOptionValue } from '../settings/index';
 import { getUserOrientation } from '../user-orientation/index';
 
@@ -63,9 +64,7 @@ export interface LocationGroupProperty {
 export interface LocationGroup {
   name: string;
   mapPreview: string;
-  mapView: IntegratedMapView;
-  // longitude: number;
-  // latitude: number;
+  mapViews: MapViews;
   properties: Array<LocationGroupProperty>;
 }
 
@@ -103,9 +102,9 @@ export interface IntegratedLocation {
 }
 
 export async function integrateLocation(hash: string, chartWidth: number, chartHeight: number, progressCallback: ProgressCallback): Promise<IntegratedLocation> {
-  const progress = new Progress(12, progressCallback); // getLocation: 2 + getRoute: 2 + getStop: 2 + getEstimateTime: 2 + getBusEvent: 2 + getBusData_0: 2
-  const [Route, Stop, Location] = (await Promise.all([await getRoute(progress, true), await getStop(progress), await getLocation(progress, 1)])) as [SimplifiedRoute, SimplifiedStop, MergedLocation];
-  const [EstimateTime, BusEvent, BusData, BusArrivalTimes] = await Promise.all([getEstimateTime(progress), getBusEvent(progress), getBusData(progress), plotBusArrivalTime(chartWidth, chartHeight)]);
+  const progress = new Progress(16, progressCallback); // getLocation: 2 + getRoute: 2 + getStop: 2 + getEstimateTime: 2 + getBusShape: 4 + getBusEvent: 2 + getBusData: 2
+  const [EstimateTime, Route, Stop, Location] = (await Promise.all([getEstimateTime(progress), getRoute(progress, true), getStop(progress), getLocation(progress, 1)])) as [EstimateTime, SimplifiedRoute, SimplifiedStop, MergedLocation];
+  const [BusEvent, BusData, BusShape, BusArrivalTimes] = await Promise.all([getBusEvent(progress), getBusData(progress), getBusShape(progress), plotBusArrivalTime(chartWidth, chartHeight)]);
 
   const time_formatting_mode = getSettingOptionValue('time_formatting_mode');
   const location_labels = getSettingOptionValue('location_labels');
@@ -174,19 +173,17 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
     groups[groupKey] = {
       name: labels[i],
       mapPreview: `https://erichsia7.github.io/bus-map/tiles/${z}/${x}/${y}.webp?_=${MapRasterVersion}`,
-      mapView: {
-        selection: thisLocation.r[i],
-        views: [
-          {
-            type: 'point',
-            centerLon: thisLocation.lo[i],
-            centerLat: thisLocation.la[i],
-            sources: [0],
-            icon: 'location_on',
-            name: thisLocationName
-          }
-        ]
-      },
+      mapViews: [
+        {
+          type: 'point',
+          centerLon: thisLocation.lo[i],
+          centerLat: thisLocation.la[i],
+          selection: thisLocation.r[i],
+          sources: [0],
+          icon: 'location_on',
+          name: thisLocationName
+        }
+      ],
       properties: [
         {
           icon: 'personal_places',
@@ -219,6 +216,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
         continue;
       }
       integratedItem.stopId = thisStopID;
+      const thisRouteDirection = parseInt(thisStop.goBack, 10);
 
       // Collect data from 'thisGroupRanking'
       let thisItemRanking = { number: 0, text: '--', code: -1 } as IntegratedLocationItemRanking;
@@ -237,7 +235,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
         continue;
       }
       integratedItem.routeName = thisRoute.n;
-      integratedItem.routeDirection = `往${[thisRoute.des, thisRoute.dep, ''][parseInt(thisStop.goBack, 10)]}`;
+      integratedItem.routeDirection = `往${[thisRoute.des, thisRoute.dep, ''][thisRouteDirection]}`;
       integratedItem.routeId = thisRouteID;
 
       // Collect data from 'batchFoundEstimateTime'
@@ -263,6 +261,24 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
         thisBusArrivalTimes = BusArrivalTimes[thisStopKey];
       }
       integratedItem.busArrivalTimes = thisBusArrivalTimes;
+
+      // Collect data from 'BusShape'
+      if (hasOwnProperty(BusShape, thisRouteKey)) {
+        const thisBusShape = BusShape[thisRouteKey];
+        const thisBusShapeItem = thisBusShape[thisRouteDirection];
+        const [minLon, minLat, maxLon, maxLat] = thisBusShapeItem.bound;
+        groups[groupKey].mapViews.push({
+          type: 'box',
+          minLon,
+          minLat,
+          maxLon,
+          maxLat,
+          sources: [0, 1],
+          selection: [thisRouteID],
+          icon: 'route',
+          name: `${thisRoute.n} - 往${[thisRoute.des, thisRoute.dep, ''][thisRouteDirection]}`
+        });
+      }
 
       groupedItems[groupKey].push(integratedItem);
       itemQuantity[groupKey] += 1;

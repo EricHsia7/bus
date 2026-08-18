@@ -1,8 +1,8 @@
 import { MapLoader, MapLoaderResponse } from '../../data/map';
 import { drawLabelTiles, LabelTileView } from '../../data/map/label-renderer';
-import { MapOverlay, MapOverlays } from '../../data/map/overlays';
+import { MapOverlay, MapOverlays } from './overlays';
 import { drawRouteTiles, RouteTileView } from '../../data/map/route-renderer';
-import { IntegratedMapView, MapView } from '../../data/map/views';
+import { MapViews, MapView } from '../../data/map/views';
 import { booleanToString } from '../../tools';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { Context2D } from '../../tools/graphic';
@@ -32,10 +32,8 @@ const ViewsElement = elementQuerySelector(MapPanelElement, '.css_map_panel_views
 const OverlayElements: Array<HTMLElement> = [];
 const ViewElements: Array<HTMLElement> = [];
 
-let previousIntegration: IntegratedMapView = {
-  selection: [],
-  views: []
-};
+let previousIntegration: MapViews = [];
+let currentViewIndex: number = 0;
 
 let width: number = window.innerWidth;
 let height: number = window.innerHeight;
@@ -170,6 +168,7 @@ const mapOverlays = new MapOverlays(
       visible: true
     }
   ],
+  OverlayElements, // pass the reference
   requestFrame
 );
 
@@ -563,7 +562,7 @@ function drawOverlay(): void {
     drawRouteTiles(MapOverlayContext, routeTileViews, {
       zoom: mapTileController.zoom,
       devicePixelRatio,
-      selectedRoutes: previousIntegration.selection
+      selectedRoutes: previousIntegration[currentViewIndex]?.selection
     });
   }
 
@@ -651,7 +650,7 @@ function generateItemOfView(): HTMLElement {
   return element;
 }
 
-function updateMapField(overlays: Array<MapOverlay>, integration: IntegratedMapView): void {
+function updateMapField(overlays: Array<MapOverlay>, integration: MapViews): void {
   function updateOverlay(thisElement: HTMLElement, thisItem: MapOverlay, index: number): void {
     function updateIcon(thisElement: HTMLElement, thisItem: MapOverlay): void {
       const iconElement = elementQuerySelector(thisElement, '.css_map_panel_overlay_icon');
@@ -669,7 +668,7 @@ function updateMapField(overlays: Array<MapOverlay>, integration: IntegratedMapV
 
     function updateOnclick(thisElement: HTMLElement, index: number): void {
       thisElement.onclick = function () {
-        thisElement.setAttribute('highlighted', booleanToString(mapOverlays.toggle(index)));
+        mapOverlays.toggle(index);
       };
     }
 
@@ -679,7 +678,7 @@ function updateMapField(overlays: Array<MapOverlay>, integration: IntegratedMapV
     updateOnclick(thisElement, index);
   }
 
-  function updateView(thisElement: HTMLElement, thisItem: MapView): void {
+  function updateView(thisElement: HTMLElement, thisItem: MapView, index: number): void {
     function updateIcon(thisElement: HTMLElement, thisItem: MapView): void {
       const iconElement = elementQuerySelector(thisElement, '.css_map_panel_view_icon');
       setIcon(iconElement, thisItem.icon);
@@ -690,17 +689,21 @@ function updateMapField(overlays: Array<MapOverlay>, integration: IntegratedMapV
       nameElement.textContent = thisItem.name;
     }
 
-    function updateOnclick(thisElement: HTMLElement, thisItem: MapView): void {
+    function updateOnclick(thisElement: HTMLElement, thisItem: MapView, index: number): void {
       switch (thisItem.type) {
         case 'point':
           thisElement.onclick = function () {
             mapTileController.focusOn(thisItem.centerLon, thisItem.centerLat, 16, 500);
+            mapOverlays.show(thisItem.sources);
+            currentViewIndex = index;
             hideMapPanel();
           };
           break;
         case 'box':
           thisElement.onclick = function () {
             mapTileController.fitTo(thisItem.minLon, thisItem.minLat, thisItem.maxLon, thisItem.maxLat, 50, 500);
+            mapOverlays.show(thisItem.sources);
+            currentViewIndex = index;
             hideMapPanel();
           };
           break;
@@ -712,7 +715,7 @@ function updateMapField(overlays: Array<MapOverlay>, integration: IntegratedMapV
 
     updateIcon(thisElement, thisItem);
     updateName(thisElement, thisItem);
-    updateOnclick(thisElement, thisItem);
+    updateOnclick(thisElement, thisItem, index);
   }
 
   const overlaysLength = overlays.length;
@@ -740,7 +743,7 @@ function updateMapField(overlays: Array<MapOverlay>, integration: IntegratedMapV
     updateOverlay(OverlayElements[i], overlays[i], i);
   }
 
-  const viewsLength = integration.views.length;
+  const viewsLength = integration.length;
   const viewElementsLength = ViewElements.length;
 
   if (viewsLength !== viewElementsLength) {
@@ -762,7 +765,7 @@ function updateMapField(overlays: Array<MapOverlay>, integration: IntegratedMapV
   }
 
   for (let i = 0; i < viewsLength; i++) {
-    updateView(ViewElements[i], integration.views[i]);
+    updateView(ViewElements[i], integration[i], i);
   }
 
   // TODO: differential update
@@ -780,7 +783,7 @@ export function hideMap(): void {
   displayed = false;
 }
 
-function initializeMap(integration: IntegratedMapView): void {
+function initializeMap(integration: MapViews): void {
   resizeMapCanvas();
   synchronizeQueue();
   requestFrame();
@@ -788,7 +791,7 @@ function initializeMap(integration: IntegratedMapView): void {
   updateMapField(mapOverlays.overlays, integration);
 }
 
-export function openMap(integration: IntegratedMapView): void {
+export function openMap(integration: MapViews): void {
   pushPageHistory('Map');
   showMap();
   initializeMap(integration);
@@ -815,9 +818,9 @@ export function closeMap(): void {
   MapOverlayContext.clearRect(0, 0, width, height);
 }
 
-function showFirstMapView(integration: IntegratedMapView): void {
-  if (integration.views.length > 0) {
-    const firstView = integration.views[0];
+function showFirstMapView(integration: MapViews): void {
+  if (integration.length > 0) {
+    const firstView = integration[0];
     switch (firstView.type) {
       case 'point':
         mapTileController.focusOn(firstView.centerLon, firstView.centerLat, 16, 500);
@@ -828,6 +831,7 @@ function showFirstMapView(integration: IntegratedMapView): void {
       default:
         break;
     }
+    currentViewIndex = 0;
     mapOverlays.show(firstView.sources);
   }
 }

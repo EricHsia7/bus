@@ -786,7 +786,7 @@ function updateLocationField(integration: IntegratedLocation, skeletonScreen: bo
       if (!skeletonScreen) {
         thisElement.style.setProperty('--b-cssvar-location-group-details-map-preview-image', `url('${thisGroup.mapPreview}')`);
         thisElement.onclick = function () {
-          openMap(thisGroup.mapView);
+          openMap(thisGroup.mapViews);
         };
       }
     }

@@ -4,7 +4,6 @@ import { openRouteCalendar } from '../../interface/route-calendar/index';
 import { shareRoutePermalink, showRoutePermalinkQRCode } from '../../interface/route-details/index';
 import { openSaveToFolder } from '../../interface/save-to-folder/index';
 import { hasOwnProperty } from '../../tools/index';
-import { findGlobalExtrema } from '../../tools/math';
 import { Progress, ProgressCallback } from '../../tools/progress';
 import { getBusShape, SimplifiedBusShape } from '../apis/getBusShape';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
@@ -71,8 +70,7 @@ export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], 
   if (hasOwnProperty(BusShape, thisRouteKey)) {
     const thisBusShape = BusShape[thisRouteKey];
     for (let i = 0; i < 2; i++) {
-      const [minLon, maxLon] = findGlobalExtrema(thisBusShape[i].longtitudes);
-      const [minLat, maxLat] = findGlobalExtrema(thisBusShape[i].latitudes);
+      const [minLon, minLat, maxLon, maxLat] = thisBusShape[i].bound;
       const thisRouteDeparture = thisRoute.dep;
       const thisRouteDestination = thisRoute.des;
       const thisRouteDirection = [thisRouteDestination, thisRouteDeparture][i];
@@ -85,7 +83,8 @@ export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], 
         minLat,
         maxLon,
         maxLat,
-        sources: [0, 1] // labels and routes
+        sources: [0, 1], // labels and routes
+        selection: [RouteID]
       });
     }
   }
@@ -114,10 +113,7 @@ export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], 
       icon: 'map',
       name: '路線圖',
       action: function () {
-        openMap({
-          selection: [RouteID],
-          views
-        });
+        openMap(views);
       }
     },
     // share

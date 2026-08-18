@@ -14,25 +14,29 @@ self.onmessage = function (e) {
   processWorkerTask(BusShape, Stop);
 };
 
-function parseWKTLineString(string: string): [Float32Array<ArrayBuffer>, Float32Array<ArrayBuffer>] {
+function parseWKTLineString(string: string): [Float32Array<ArrayBuffer>, Float32Array<ArrayBuffer>, west: number, south: number, east: number, north: number] {
   const model = stripTopLevelModel(string);
-  if (model.model !== 'LINESTRING') return [new Float32Array(0), new Float32Array(0)];
+  if (model.model !== 'LINESTRING') return [new Float32Array(0), new Float32Array(0), 0, 0, 0, 0];
   const coordinates = model.result.split(', ');
   const length = coordinates.length;
   const lon = new Float32Array(length);
   const lat = new Float32Array(length);
 
   let minLongitude = Infinity;
+  let maxLongitude = -Infinity;
   let minLatitude = Infinity;
+  let maxLatitude = -Infinity;
   for (let i = length - 1; i >= 0; i--) {
     const components = coordinates[i].split(' ');
     lon[i] = parseFloat(components[0]);
     lat[i] = parseFloat(components[1]);
     if (lon[i] < minLongitude) minLongitude = lon[i];
+    if (lon[i] > maxLongitude) maxLongitude = lon[i];
     if (lat[i] < minLatitude) minLatitude = lat[i];
+    if (lat[i] > maxLatitude) maxLatitude = lat[i];
   }
 
-  return [lon, lat];
+  return [lon, lat, minLongitude, minLatitude, maxLongitude, maxLatitude];
 }
 
 const EarthRadius = 6371008.8; // metres
@@ -51,11 +55,12 @@ function processWorkerTask(BusShape: BusShape, Stop: Stop): void {
     if (!hasOwnProperty(candidates, routeKey)) {
       candidates[routeKey] = [[], []];
     }
-    const [longtitudes, latitudes] = parseWKTLineString(item.wkt);
+    const [longtitudes, latitudes, west, south, east, north] = parseWKTLineString(item.wkt);
     candidates[routeKey][item.GoBack].push({
       longtitudes,
       latitudes,
       markers: {},
+      bound: [west, south, east, north],
       cis: true
     });
   }
@@ -87,12 +92,15 @@ function processWorkerTask(BusShape: BusShape, Stop: Stop): void {
         latitudes: new Float32Array(0),
         longtitudes: new Float32Array(0),
         markers: {},
+        bound: [0, 0, 0, 0],
+
         cis: true
       },
       {
         latitudes: new Float32Array(0),
         longtitudes: new Float32Array(0),
         markers: {},
+        bound: [0, 0, 0, 0],
         cis: true
       }
     ];
@@ -215,6 +223,7 @@ function organize(item: SimplifiedBusShapeItem, stops: Array<Coordinate>): Simpl
     longtitudes: item.longtitudes,
     latitudes: item.latitudes,
     markers,
+    bound: item.bound,
     cis: sumDifference >= 0 // cis or trans coordinates
   };
 }
