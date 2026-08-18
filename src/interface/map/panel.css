@@ -101,6 +101,8 @@
   max-height: min(420px, calc(100vh - var(--b-cssvar-safe-area-top) - var(--b-cssvar-safe-area-bottom) - 150px));
   overflow-y: scroll;
   overflow-x: clip;
+  overscroll-behavior-x: auto;
+  overscroll-behavior-y: contain;
 }
 
 .css_map_field .css_map_panel_container .css_map_panel .css_map_panel_body::-webkit-scrollbar {
