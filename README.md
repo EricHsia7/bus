@@ -13,13 +13,6 @@
 
 Bus is a user-friendly web application designed to simplify your travel experience. Whether you're a frequent traveler, daily commuter, or simply exploring new places, Bus provides tools to help you find routes, manage locations, and organize your journeys effortlessly.
 
-## Getting Started
-
-Open this application in your browser via one of the urls.
-
-- [erichsia7.github.io/bus](https://erichsia7.github.io/bus/)
-- [erichsia7-bus.netlify.app](https://erichsia7-bus.netlify.app/)
-
 ## Key Features
 
 ### Supported Regions
