@@ -83,7 +83,8 @@ export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], 
         minLat,
         maxLon,
         maxLat,
-        sources: [0, 1] // labels and routes
+        sources: [0, 1], // labels and routes
+        selection: [RouteID]
       });
     }
   }
@@ -112,10 +113,7 @@ export async function integrateRouteDetails(RouteID: SimplifiedRouteItem['id'], 
       icon: 'map',
       name: '路線圖',
       action: function () {
-        openMap({
-          selection: [RouteID],
-          views
-        });
+        openMap(views);
       }
     },
     // share

@@ -5,6 +5,10 @@ export interface BaseMapView {
    * sources to show in this view
    */
   sources: Array<number>;
+  /**
+   * selected routes
+   */
+  selection: Array<number>;
   icon: MaterialSymbol;
   name: string;
 }
@@ -25,10 +29,4 @@ export interface MapViewBox extends BaseMapView {
 
 export type MapView = MapViewPoint | MapViewBox;
 
-export interface IntegratedMapView {
-  /**
-   * selected routes
-   */
-  selection: Array<number>;
-  views: Array<MapView>;
-}
+export type MapViews = Array<MapView>;

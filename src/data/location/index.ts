@@ -14,7 +14,7 @@ import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute
 import { getStop, SimplifiedStop, SimplifiedStopItem } from '../apis/getStop/index';
 import { batchFindBusesForLocation, batchFindEstimateTime, BatchFoundEstimateTime, EstimateTimeStatus, formatBus, FormattedBus, parseEstimateTime } from '../apis/index';
 import { MapRasterVersion } from '../map';
-import { IntegratedMapView } from '../map/views';
+import { MapViews } from '../map/views';
 import { getSettingOptionValue } from '../settings/index';
 import { getUserOrientation } from '../user-orientation/index';
 
@@ -63,7 +63,7 @@ export interface LocationGroupProperty {
 export interface LocationGroup {
   name: string;
   mapPreview: string;
-  mapView: IntegratedMapView;
+  mapView: MapViews;
   // longitude: number;
   // latitude: number;
   properties: Array<LocationGroupProperty>;
@@ -174,19 +174,17 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
     groups[groupKey] = {
       name: labels[i],
       mapPreview: `https://erichsia7.github.io/bus-map/tiles/${z}/${x}/${y}.webp?_=${MapRasterVersion}`,
-      mapView: {
-        selection: thisLocation.r[i],
-        views: [
-          {
-            type: 'point',
-            centerLon: thisLocation.lo[i],
-            centerLat: thisLocation.la[i],
-            sources: [0],
-            icon: 'location_on',
-            name: thisLocationName
-          }
-        ]
-      },
+      mapView: [
+        {
+          type: 'point',
+          centerLon: thisLocation.lo[i],
+          centerLat: thisLocation.la[i],
+          selection: thisLocation.r[i],
+          sources: [0],
+          icon: 'location_on',
+          name: thisLocationName
+        }
+      ],
       properties: [
         {
           icon: 'personal_places',
