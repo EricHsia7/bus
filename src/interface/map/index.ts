@@ -1,6 +1,6 @@
 import { MapLoader, MapLoaderResponse } from '../../data/map';
 import { drawLabelTiles, LabelTileView } from '../../data/map/label-renderer';
-import { MapOverlay, MapOverlays } from '../../data/map/overlays';
+import { MapOverlay, MapOverlays } from './overlays';
 import { drawRouteTiles, RouteTileView } from '../../data/map/route-renderer';
 import { MapViews, MapView } from '../../data/map/views';
 import { booleanToString } from '../../tools';
@@ -168,6 +168,7 @@ const mapOverlays = new MapOverlays(
       visible: true
     }
   ],
+  OverlayElements, // pass the reference
   requestFrame
 );
 
@@ -667,7 +668,7 @@ function updateMapField(overlays: Array<MapOverlay>, integration: MapViews): voi
 
     function updateOnclick(thisElement: HTMLElement, index: number): void {
       thisElement.onclick = function () {
-        thisElement.setAttribute('highlighted', booleanToString(mapOverlays.toggle(index)));
+        mapOverlays.toggle(index);
       };
     }
 
@@ -693,6 +694,7 @@ function updateMapField(overlays: Array<MapOverlay>, integration: MapViews): voi
         case 'point':
           thisElement.onclick = function () {
             mapTileController.focusOn(thisItem.centerLon, thisItem.centerLat, 16, 500);
+            mapOverlays.show(thisItem.sources);
             currentViewIndex = index;
             hideMapPanel();
           };
@@ -700,6 +702,7 @@ function updateMapField(overlays: Array<MapOverlay>, integration: MapViews): voi
         case 'box':
           thisElement.onclick = function () {
             mapTileController.fitTo(thisItem.minLon, thisItem.minLat, thisItem.maxLon, thisItem.maxLat, 50, 500);
+            mapOverlays.show(thisItem.sources);
             currentViewIndex = index;
             hideMapPanel();
           };

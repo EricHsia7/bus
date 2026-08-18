@@ -225,12 +225,14 @@
   position: absolute;
   top: 0px;
   left: 45px;
-  width: calc(100% - 45px);
-  /* icon: 45px */
+  width: calc(100% - 45px - 10px);
+  /* icon: 45px + padding: 10px */
   height: 45px;
-  display: flex;
-  align-items: center;
-  overflow: clip;
   color: var(--b-cssvar-333333);
   font-size: 16px;
+  line-height: 45px;
+  word-break: keep-all;
+  white-space: nowrap;
+  overflow: clip;
+  text-overflow: ellipsis;
 }
