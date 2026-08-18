@@ -1,8 +1,7 @@
 import { MapLoader, MapLoaderResponse } from '../../data/map';
 import { drawLabelTiles, LabelTileView } from '../../data/map/label-renderer';
-import { MapOverlay, MapOverlays } from './overlays';
 import { drawRouteTiles, RouteTileView } from '../../data/map/route-renderer';
-import { MapViews, MapView } from '../../data/map/views';
+import { MapView, MapViews } from '../../data/map/views';
 import { booleanToString } from '../../tools';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { Context2D } from '../../tools/graphic';
@@ -10,6 +9,7 @@ import { clamp } from '../../tools/math';
 import { MapTileController, TileInfo } from '../../tools/tile-controller';
 import { getBlankIconElement, setIcon } from '../icons';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
+import { MapOverlay, MapOverlays } from './overlays';
 
 const Field = documentQuerySelector('.css_map_field');
 
