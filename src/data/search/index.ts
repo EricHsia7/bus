@@ -73,7 +73,7 @@ export async function prepareForSearch() {
   }
 
   const progress = new Progress(6, function () {});
-  const [Route, mergedLocation, CarInfo] = (await Promise.all([await getRoute(progress, true), await getLocation(progress, 1), await getCarInfo(progress, true)])) as [SimplifiedRoute, MergedLocation, SimplifiedCarInfo];
+  const [Route, mergedLocation, CarInfo] = (await Promise.all([getRoute(progress, true), getLocation(progress, 1), getCarInfo(progress, true)])) as [SimplifiedRoute, MergedLocation, SimplifiedCarInfo];
   progress.terminate();
 
   const index: SearchIndex = {};
