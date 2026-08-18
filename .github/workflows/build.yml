@@ -12,9 +12,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
@@ -57,7 +55,7 @@ jobs:
       - name: Generate splash screen
         if: steps.restore-cached-splash-screen.outputs.cache-hit != 'true'
         run: node generate-splash-screen.js
-      
+
       - name: Cache splash screen
         id: cache-splash-screen
         uses: actions/cache/save@v5
@@ -65,7 +63,7 @@ jobs:
         with:
           path: ./dist/splash-screen
           key: ${{ steps.restore-cached-splash-screen.outputs.cache-primary-key }}
-      
+
       - name: Generate version.json
         run: node version.js
 
@@ -85,7 +83,9 @@ jobs:
           cp -r ./open-graph-image.png ./dist/open-graph-image.png
 
       - name: Create archive
-        run: zip -r ./dist.zip ./dist -x "*.DS_Store"
+        run: |
+          mkdir ./artifact
+          zip -r ./artifact/dist.zip ./dist -x "*.DS_Store"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
