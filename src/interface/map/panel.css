@@ -151,6 +151,17 @@
 
 .css_map_field .css_map_panel_container .css_map_panel .css_map_panel_body .css_map_panel_overlays .css_map_panel_overlay .css_map_panel_overlay_icon span.css_material_symbols_rounded {
   color: var(--b-cssvar-333333);
+  --b-cssvar-font-variation-settings-fill: 0;
+}
+
+/* highlighted: true */
+.css_map_field .css_map_panel_container .css_map_panel .css_map_panel_body .css_map_panel_overlays .css_map_panel_overlay[highlighted="true"] .css_map_panel_overlay_icon span.css_material_symbols_rounded {
+  color: var(--b-cssvar-main-color);
+  --b-cssvar-font-variation-settings-fill: 1;
+}
+
+.css_map_field[displayed="true"] .css_map_panel_container[displayed="true"] .css_map_panel .css_map_panel_body .css_map_panel_overlays .css_map_panel_overlay .css_map_panel_overlay_icon span.css_material_symbols_rounded {
+  transition: color var(--b-cssvar-transition-duration), --b-cssvar-font-variation-settings-fill var(--b-cssvar-transition-duration);
 }
 
 /* container > panel > body > overlays > overlay > name */
@@ -167,6 +178,15 @@
   font-size: 16px;
   word-break: keep-all;
   white-space: nowrap;
+}
+
+/* highlighted: true */
+.css_map_field .css_map_panel_container .css_map_panel .css_map_panel_body .css_map_panel_overlays .css_map_panel_overlay[highlighted="true"] .css_map_panel_overlay_name {
+  color: var(--b-cssvar-main-color);
+}
+
+.css_map_field[displayed="true"] .css_map_panel_container[displayed="true"] .css_map_panel .css_map_panel_body .css_map_panel_overlays .css_map_panel_overlay .css_map_panel_overlay_name {
+  transition: color var(--b-cssvar-transition-duration);
 }
 
 /* container > panel > body > views */
