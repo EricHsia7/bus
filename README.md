@@ -68,6 +68,7 @@ Locations and stops are different in some aspects. Stops are route-position pair
 ## Affiliated Repositories
 
 - [@EricHsia7/bus-map](https://github.com/EricHsia7/bus-map)
+- [@EricHsia7/bus-map-routes](https://github.com/EricHsia7/bus-map-routes)
 - [@EricHsia7/bus-notification-worker](https://github.com/EricHsia7/bus-notification-worker)
 - [@EricHsia7/bus-alternative-static-apis](https://github.com/EricHsia7/bus-alternative-static-apis)
 - [@EricHsia7/material-symbols-list](https://github.com/EricHsia7/material-symbols-list)
