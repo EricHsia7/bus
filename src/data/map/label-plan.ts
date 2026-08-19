@@ -2,13 +2,6 @@ import { clamp } from '../../tools/math';
 import { CircleStyleProperties, IconStyleProperties, LabelFeature, LabelFeatureCollection, LabelKind, LabelPropertyScale, LineStringLabelFeature, PointLabelFeature, TextStyleProperties } from './label';
 
 /**
- * Width and height, in pixels, of the raster tile images produced by the tile
- * server. This is the *native* resolution of a tile bitmap and is unrelated to
- * how large the tile is drawn on screen.
- */
-export const LabelNativeTileSize = 1024;
-
-/**
  * The design space that MapInk style values (`text-size`, `text-dy`,
  * `marker-width`, `text-wrap-width`, ...) are authored in. Every value stored
  * in a `LabelGlyphPlan` is expressed in these units.
