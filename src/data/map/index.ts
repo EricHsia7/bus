@@ -357,8 +357,8 @@ export class MapLoader {
 
 const now = new Date();
 export const MapDataVersion = `${now.getFullYear() * 100 + (now.getMonth() + 1)}`; // Monthly update
-export const MapRasterVersion = `${MapDataVersion}-5`;
-export const MapLabelsVersion = `${MapDataVersion}-5`;
+export const MapRasterVersion = `${MapDataVersion}-6`;
+export const MapLabelsVersion = `${MapDataVersion}-6`;
 export const MapRoutesVersion = `${MapDataVersion}-3`;
 
 export interface Box {
