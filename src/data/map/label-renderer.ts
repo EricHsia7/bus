@@ -242,9 +242,11 @@ export function drawLabelTiles(context: Context2D, tiles: Array<LabelTileView>, 
         context.moveTo(centerX + radius * scale, centerY);
         context.arc(centerX, centerY, radius * scale, 0, Math.PI * 2);
       }
-      if (!style['marker-fill']) continue;
-      context.fillStyle = style['marker-fill'];
-      context.fill();
+
+      if (style['marker-fill']) {
+        context.fillStyle = style['marker-fill'];
+        context.fill();
+      }
 
       if (style['marker-line-color']) {
         context.strokeStyle = style['marker-line-color'];
