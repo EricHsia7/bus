@@ -178,7 +178,7 @@ export async function integrateLocation(hash: string, chartWidth: number, chartH
           type: 'point',
           centerLon: thisLocation.lo[i],
           centerLat: thisLocation.la[i],
-          selection: thisLocation.r[i],
+          selection: [],
           sources: [0],
           icon: 'location_on',
           name: thisLocationName
