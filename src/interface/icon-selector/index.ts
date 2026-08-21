@@ -52,15 +52,19 @@ export function initializeIconSelectorVirtualScroll(): void {
   visibleElementsQuantity = Math.ceil(windowHeight / itemHeight) + buffer * 2;
   offsetY = parseInt(getCSSVariableValue('--b-cssvar-safe-area-top')) + 55;
 
-  BodyElement.addEventListener('scroll', function () {
-    const firstVisibleIndex = getFirstVisibleIndex(BodyElement.scrollTop);
-    const anchor = Math.max(0, firstVisibleIndex - (firstVisibleIndex % buffer));
-    if (anchor !== currentStartIndex) {
-      currentStartIndex = anchor;
-      updateIconSelectorField(currentIntegration, previousInputElement, currentStartIndex, previosuSkeletonScreen, previousAnimation);
-      ContentElement.style.setProperty('--b-cssvar-icon-selector-content-translate-y', `${getElementTop(anchor)}px`);
-    }
-  });
+  BodyElement.addEventListener(
+    'scroll',
+    function () {
+      const firstVisibleIndex = getFirstVisibleIndex(BodyElement.scrollTop);
+      const anchor = Math.max(0, firstVisibleIndex - (firstVisibleIndex % buffer));
+      if (anchor !== currentStartIndex) {
+        currentStartIndex = anchor;
+        updateIconSelectorField(currentIntegration, previousInputElement, currentStartIndex, previosuSkeletonScreen, previousAnimation);
+        ContentElement.style.setProperty('--b-cssvar-icon-selector-content-translate-y', `${getElementTop(anchor)}px`);
+      }
+    },
+    { passive: true }
+  );
 
   ContentElement.style.setProperty('--b-cssvar-icon-selector-content-translate-y', `${offsetY}px`);
   TrayElement.style.setProperty('--b-cssvar-icon-selector-tray-height', `${getTrayHeight()}px`);

@@ -164,9 +164,13 @@ export function initializeSearchInput(): void {
     updateSearchInput();
     updateSearchResult();
   });
-  SearchInputElement.addEventListener('scroll', function () {
-    updateSearchInput();
-  });
+  SearchInputElement.addEventListener(
+    'scroll',
+    function () {
+      updateSearchInput();
+    },
+    { passive: true }
+  );
 }
 
 function getSearchTypeFilterValue(): SearchItem['type'] | -1 {
