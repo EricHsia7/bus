@@ -305,7 +305,7 @@ export class LabelGlyphCache {
 
   private allocatePage(): AtlasPage {
     const canvas = new OffscreenCanvas(this.pageSize, this.pageSize);
-    const context = canvas.getContext('2d', { willReadFrequently: true }) as OffscreenCanvasRenderingContext2D;
+    const context = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
     context.textAlign = 'left';
     context.textBaseline = 'alphabetic';
     context.lineJoin = 'round';
