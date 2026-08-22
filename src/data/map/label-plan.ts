@@ -1235,7 +1235,7 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, cache: L
 
   if (sheet) {
     let maxSpriteHeight = 0;
-    for (let index = 3; index < glyphs.length; index += LabelGlyphStride) {
+    for (let index = LabelGlyphStride - 1; index < glyphs.length; index += LabelGlyphStride) {
       if (glyphs[index] > maxSpriteHeight) maxSpriteHeight = glyphs[index];
     }
   }
