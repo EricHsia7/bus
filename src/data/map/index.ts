@@ -18,7 +18,7 @@ export interface MapLoaderTile {
 }
 
 export interface MapLoaderResponse extends MapLoaderTile {
-  bitmap: ImageBitmap;
+  bitmap: ImageBitmap | null;
   label: LabelGlyphPlan;
   route: RoutePlan;
 }
@@ -182,8 +182,14 @@ export class MapLoader {
         let response = message.response;
         if (existing && existing !== response) {
           // The tile was decoded twice (a re-request raced an in-flight load). The cached bitmap stays authoritative and the duplicate is closed rather than leaked.
-          response.bitmap.close?.();
-          response.label.sheet.close?.();
+          if (response.bitmap) {
+            response.bitmap.close?.();
+            response.bitmap = null;
+          }
+          if (response.label.sheet) {
+            response.label.sheet.close?.();
+            response.label.sheet = null;
+          }
           response = existing;
           this.touch(key);
         } else {
@@ -324,8 +330,14 @@ export class MapLoader {
     if (this.cacheBytes < 0) this.cacheBytes = 0;
 
     // Owning the bitmap means the texture can be released now rather than whenever a GC happens to notice a handle that looks cheap on the JS heap.
-    response.bitmap.close?.();
-    response.label.sheet.close?.();
+    if (response.bitmap) {
+      response.bitmap.close?.();
+      response.bitmap = null;
+    }
+    if (response.label.sheet) {
+      response.label.sheet.close?.();
+      response.label.sheet = null;
+    }
 
     const tile = this.tiles.get(key);
     if (tile) {

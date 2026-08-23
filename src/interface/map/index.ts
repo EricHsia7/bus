@@ -362,8 +362,8 @@ function drawFallbackTile(context: Context2D, x: number, y: number, z: number): 
     if (!parent) continue;
 
     protectedTileKeys.add(getTileKey(parentX, parentY, z - depth));
-    const sourceWidth = parent.bitmap.width / scale;
-    const sourceHeight = parent.bitmap.height / scale;
+    const sourceWidth = (parent.bitmap?.width || 0) / scale;
+    const sourceHeight = (parent.bitmap?.height || 0) / scale;
     drawTileRegion(
       context,
       parent.bitmap,

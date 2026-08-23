@@ -78,7 +78,7 @@ export interface LabelGlyphPlan {
   extent: number;
   zoom: number;
   designSize: number;
-  sheet: ImageBitmap;
+  sheet: ImageBitmap | null;
   /**
    * - 4n+0: shelf x
    * - 4n+1: shelf y
@@ -129,11 +129,6 @@ export interface LabelGlyphPlan {
    */
   scales: Float32Array;
   circleStyles: Array<CircleStyleProperties>;
-}
-
-export function disposeLabelGlyphPlan(plan: LabelGlyphPlan): void {
-  plan.sheet?.close();
-  // plan.sheet = null;
 }
 
 interface AtlasPage {
