@@ -235,7 +235,7 @@ export class MapLoader {
     // Copied rather than aliased: the renderer rebuilds its set every frame, and an
     // eviction pass must never observe it half-populated.
     this.protectedKeys = new Set(keys);
-    this.scheduleEviction();
+    // this.scheduleEviction();
   }
 
   protectTiles(tiles: Iterable<{ x: number; y: number; z: number }>): void {
@@ -358,7 +358,7 @@ export class MapLoader {
     this.evictionTimeoutId = setTimeout(this.runEviction, this.evictionDelay);
   }
 
-  private runEviction = (): void => {
+  public runEviction = (): void => {
     this.evictionTimeoutId = null;
     if (this.shouldDeferEviction?.()) {
       this.scheduleEviction();

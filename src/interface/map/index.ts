@@ -147,6 +147,7 @@ const mapTileController = new MapTileController({
   onMovementEnd: function () {
     synchronizeQueue();
     requestFrame();
+    mapLoader.runEviction();
   },
   onResize: function () {
     resizeMapCanvas();
@@ -191,9 +192,9 @@ export function showMapPanel(): void {
     { once: true }
   );
   MapPanelElement.classList.add('css_map_panel_pop_in');
-  console.log('cache size', mapLoader.cache.size);
+  console.log('cache size', Array.from(mapLoader.cache.values()).filter((e) => e.state !== 4).length);
   for (const [key, cache] of mapLoader.cache) {
-    console.log(cache.bitmap?.width, cache.bitmap?.height, cache.label.sheet?.width, cache.label.sheet?.height);
+    if (cache.state !== 4) console.log(cache.bitmap?.width, cache.bitmap?.height, cache.label.sheet?.width, cache.label.sheet?.height);
   }
 }
 
