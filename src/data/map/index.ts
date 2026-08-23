@@ -301,12 +301,15 @@ export class MapLoader {
     if (previous !== undefined) this.cacheBytes -= previous;
 
     const bitmap = response.bitmap;
-    const bytes = bitmap?.width && bitmap?.height ? bitmap.width * bitmap.height * 4 : fallbackTileBytes;
+    const bitmapBytes = bitmap?.width && bitmap?.height ? bitmap.width * bitmap.height * 4 : fallbackTileBytes;
+    const sheet = response.label.sheet;
+    const sheetBytes = sheet?.width && sheet?.height ? sheet.width * sheet.height * 4 : fallbackTileBytes;
+    const totalBytes = bitmapBytes + sheetBytes;
 
     this.cache.delete(key);
     this.cache.set(key, response);
-    this.tileBytes.set(key, bytes);
-    this.cacheBytes += bytes;
+    this.tileBytes.set(key, totalBytes);
+    this.cacheBytes += totalBytes;
   }
 
   private evictKey(key: string, force: boolean = false): boolean {
