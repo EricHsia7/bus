@@ -232,10 +232,8 @@ export class MapLoader {
    * Protected tiles are never evicted, and they also raise the floor of the cache budget so the surrounding tiles survive a pan back and forth.
    */
   protect(keys: Iterable<string>): void {
-    // Copied rather than aliased: the renderer rebuilds its set every frame, and an
-    // eviction pass must never observe it half-populated.
+    // Copied rather than aliased: the renderer rebuilds its set every frame, and an eviction pass must never observe it half-populated.
     this.protectedKeys = new Set(keys);
-    // this.scheduleEviction();
   }
 
   protectTiles(tiles: Iterable<{ x: number; y: number; z: number }>): void {
