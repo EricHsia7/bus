@@ -135,7 +135,7 @@ const mapTileController = new MapTileController({
   minZoom: 12,
   maxZoom: 18,
   minNativeZoom: 12,
-  maxNativeZoom: 16,
+  maxNativeZoom: 17,
   tileSize: 256,
   onMovementStart: function () {
     requestFrame();
@@ -694,7 +694,7 @@ function updateMapField(overlays: Array<MapOverlay>, integration: MapViews): voi
       switch (thisItem.type) {
         case 'point':
           thisElement.onclick = function () {
-            mapTileController.focusOn(thisItem.centerLon, thisItem.centerLat, 16, 500);
+            mapTileController.focusOn(thisItem.centerLon, thisItem.centerLat, 17, 500);
             mapOverlays.show(thisItem.sources);
             currentViewIndex = index;
             hideMapPanel();
@@ -824,7 +824,7 @@ function showFirstMapView(integration: MapViews): void {
     const firstView = integration[0];
     switch (firstView.type) {
       case 'point':
-        mapTileController.focusOn(firstView.centerLon, firstView.centerLat, 16, 500);
+        mapTileController.focusOn(firstView.centerLon, firstView.centerLat, 17, 500);
         break;
       case 'box':
         mapTileController.fitTo(firstView.minLon, firstView.minLat, firstView.maxLon, firstView.maxLat, 50, 500);

@@ -100,7 +100,7 @@ export class MapLoader {
     this.callback = callback;
 
     this.maxCacheBytes = options.maxCacheBytes ?? 96 * 1024 * 1024;
-    this.minCachedTiles = options.minCachedTiles ?? 64;
+    this.minCachedTiles = options.minCachedTiles ?? 16;
     this.headroomFactor = options.headroomFactor ?? 3;
     this.evictionDelay = options.evictionDelay ?? 200;
     this.shouldDeferEviction = options.shouldDeferEviction;
@@ -368,9 +368,9 @@ export class MapLoader {
 
 const now = new Date();
 export const MapDataVersion = `${now.getFullYear() * 100 + (now.getMonth() + 1)}`; // Monthly update
-export const MapRasterVersion = `${MapDataVersion}-8`;
-export const MapLabelsVersion = `${MapDataVersion}-7`;
-export const MapRoutesVersion = `${MapDataVersion}-5`;
+export const MapRasterVersion = `${MapDataVersion}-9`;
+export const MapLabelsVersion = `${MapDataVersion}-9`;
+export const MapRoutesVersion = `${MapDataVersion}-6`;
 
 export interface Box {
   minX: number;
