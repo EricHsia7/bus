@@ -38,9 +38,7 @@ export type MapLoaderWorkerMessage = MapLoaderWorkerMessageData | MapLoaderWorke
 
 export interface MapLoaderCacheOptions {
   /**
-   * Soft ceiling of decoded tile bytes retained by the cache. Tiles are measured as
-   * `width * height * 4`, which is what an uploaded RGBA texture actually costs.
-   * Defaults to 96 MB.
+   * Soft ceiling of decoded tile bytes retained by the cache.
    */
   maxCacheBytes?: number;
   /** The cache is never trimmed below this many tiles, regardless of the byte budget. */

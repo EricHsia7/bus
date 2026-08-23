@@ -39,9 +39,6 @@ export const LabelPlacementStride = 7;
  */
 export const LabelAngleBuckets = 256;
 
-/** Transparent margin around a baked rotated cell, in raster pixels. */
-const RotatedCellPadding = 1;
-
 export const LabelFeaturesStride = 6;
 export const LabelBoundsStride = 7;
 
@@ -173,6 +170,7 @@ export class LabelGlyphCache {
   private readonly sprites = new Map<string, GlyphSprite | null>();
   private readonly styles = new Map<string, StyleRaster>();
   private readonly measureContext: OffscreenCanvasRenderingContext2D;
+  private readonly rastersByApplied = new Map<string, StyleRaster>();
 
   /**
    *
@@ -186,7 +184,7 @@ export class LabelGlyphCache {
     this.superSample = superSample;
     this.fontFamily = defaultFontFamily;
     this.fontWeight = defaultFontWeight;
-    this.measureContext = new OffscreenCanvas(1, 1).getContext('2d') as OffscreenCanvasRenderingContext2D;
+    this.measureContext = new OffscreenCanvas(1, 1).getContext('2d', { alpha: false }) as OffscreenCanvasRenderingContext2D;
     this.measureContext.textBaseline = 'alphabetic';
   }
 
@@ -208,7 +206,12 @@ export class LabelGlyphCache {
 
   public clear(): void {
     this.sprites.clear();
+    this.rastersByApplied.clear();
     this.styles.clear();
+    for (const page of this.pages) {
+      page.canvas.width = 0; // releases the backing store now
+      page.canvas.height = 0;
+    }
     this.pages.length = 0;
   }
 
@@ -240,13 +243,13 @@ export class LabelGlyphCache {
   }
 
   public getStyleRaster(style: TextStyleProperties, size: number, maxScale: number): StyleRaster {
+    const family = this.resolveFontFamily(style['text-face-name']);
     const fill = style['text-fill'] ?? '#000000';
     const haloFill = style['text-halo-fill'] ?? null;
     const haloRadius = haloFill ? (style['text-halo-radius'] ?? 0) : 0;
-    const family = this.resolveFontFamily(style['text-face-name']);
-    const signature = `${family}|${this.fontWeight}|${size}|${maxScale}|${fill}|${haloFill ?? ''}|${haloRadius}`;
 
-    const cached = this.styles.get(signature);
+    const inputKey = `${family}|${this.fontWeight}|${size}|${maxScale}|${fill}|${haloFill ?? ''}|${haloRadius}`;
+    const cached = this.styles.get(inputKey);
     if (cached) return cached;
 
     // Stage 1 — design unit to logical pixel: size / designSize * tileSize.
@@ -270,6 +273,7 @@ export class LabelGlyphCache {
     const appliedFont = this.measureContext.font;
     const appliedMatch = /(\d+(?:\.\d+)?)px/.exec(appliedFont);
     const fontPixels = appliedMatch ? parseFloat(appliedMatch[1]) : requestedPixels;
+    const haloPixels = haloRadius * (fontPixels / size);
 
     if (Math.abs(fontPixels - requestedPixels) > 0.01) {
       console.warn(`[label-plan] font not applied: requested ${requestedPixels}px, got ${fontPixels}px ` + `(font="${font}", applied="${appliedFont}"). Glyphs will be rasterised at the ` + `applied size; check that the family is loaded in this context.`);
@@ -278,18 +282,22 @@ export class LabelGlyphCache {
     // Exact inverse of the two stages above, including the clamp. Because every sprite metric is multiplied by this factor, the design-unit geometry the renderer consumes is invariant to `superSample` and to `maxScale`.
     const designPerPixel = size / fontPixels;
 
-    const raster: StyleRaster = {
-      signature,
-      font,
-      size,
-      maxScale,
-      designPerPixel,
-      fill,
-      haloFill,
-      haloPixels: haloRadius * (fontPixels / size)
-    };
-
-    this.styles.set(signature, raster);
+    const signature = `${font}|${fill}|${haloFill ?? ''}|${haloPixels}`;
+    let raster = this.rastersByApplied.get(signature);
+    if (!raster) {
+      raster = {
+        signature,
+        font,
+        size,
+        maxScale,
+        designPerPixel,
+        fill,
+        haloFill,
+        haloPixels
+      };
+      this.rastersByApplied.set(signature, raster);
+    }
+    this.styles.set(inputKey, raster); // fast path for next time
     return raster;
   }
 
@@ -367,7 +375,7 @@ export class LabelGlyphCache {
     const paddingDesign = (raster.haloPixels * raster.designPerPixel) / 2 + 1;
     const padding = paddingDesign / raster.designPerPixel;
 
-    // Exact, unquantised source box. `inkWidth` is proportional to the raster
+    // Exact, unquantized source box. `inkWidth` is proportional to the raster
     // font size and `designPerPixel` is its exact inverse, so
     //   boxWidth * designPerPixel === inkDesign + 2 * paddingDesign
     // is invariant under superSample by construction.
@@ -459,7 +467,7 @@ interface LocalPlacement {
   pixelWidth: number;
   pixelHeight: number;
   /**
-   * Quantised angle this placement's sheet cell is baked at, or 0 (or absent)
+   * quantized angle this placement's sheet cell is baked at, or 0 (or absent)
    * for an upright cell. Two placements share a cell only when they agree on
    * both the sprite and this bucket.
    */
@@ -690,7 +698,7 @@ function planAlongLine(cache: LabelGlyphCache, feature: LineStringLabelFeature, 
     // Snap to the sheet's angle table first, then derive the angle from the
     // bucket, so the collision bounds below describe exactly the rotation that
     // gets baked rather than one a fraction of a degree away from it.
-    const bucket = quantiseLabelAngle(angles[index], extent);
+    const bucket = quantizeLabelAngle(angles[index], extent);
     const angle = (bucket / LabelAngleBuckets) * Math.PI * 2;
 
     sumX += anchorX;
@@ -1021,7 +1029,7 @@ function resolveTileCollisions(locals: Array<LocalFeature>, extent: number): Arr
   return placed;
 }
 
-function quantiseLabelAngle(angle: number, extent: number): number {
+function quantizeLabelAngle(angle: number, extent: number): number {
   if (!extent) return 0;
   const bucket = Math.round((angle / extent) * LabelAngleBuckets);
   return ((bucket % LabelAngleBuckets) + LabelAngleBuckets) % LabelAngleBuckets;
@@ -1046,7 +1054,7 @@ function quantiseLabelAngle(angle: number, extent: number): number {
  *
  * Run this AFTER collision resolution: it rewrites per-glyph geometry only, and
  * the feature bounds the collision pass reserves already account for the
- * rotated span (`planAlongLine` computes them from the same quantised angle).
+ * rotated span (`planAlongLine` computes them from the same quantized angle).
  */
 function bakeRotatedPlacements(features: Array<LocalFeature>): void {
   for (const feature of features) {
@@ -1067,8 +1075,8 @@ function bakeRotatedPlacements(features: Array<LocalFeature>): void {
       // The rotated bounding box, plus one transparent pixel per side: the cell
       // is resampled at draw time and an edge sample must not be able to reach
       // into whichever cell the shelf packer puts next to it.
-      const cellWidth = placement.pixelWidth * absCos + placement.pixelHeight * absSin + RotatedCellPadding * 2;
-      const cellHeight = placement.pixelWidth * absSin + placement.pixelHeight * absCos + RotatedCellPadding * 2;
+      const cellWidth = placement.pixelWidth * absCos + placement.pixelHeight * absSin;
+      const cellHeight = placement.pixelWidth * absSin + placement.pixelHeight * absCos;
 
       const centreX = placement.offsetX + placement.width / 2;
       const centreY = placement.offsetY + placement.height / 2;

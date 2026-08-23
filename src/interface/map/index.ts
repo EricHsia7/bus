@@ -61,11 +61,11 @@ const maxChildFallbackDepth = 2;
 /** Upper bound of retained fade states before pruning */
 const maxFadeStates = 1024;
 /** Decoded-tile budget handed to the loader's LRU cache, in bytes */
-const maxCacheBytes = 150 * 1024 * 1024;
+const maxCacheBytes = 128 * 1024 * 1024;
 /** Floor of the LRU budget, so small viewports still keep a useful history */
-const minCachedTiles = 64;
+const minCachedTiles = 16;
 /** The cache is never trimmed below this multiple of the tiles currently on screen */
-const cacheHeadroomFactor = 3;
+const cacheHeadroomFactor = 2;
 /** Delay before an eviction pass is attempted once the map goes quiet, in milliseconds */
 const evictionIdleDelay = 200;
 /** Largest frame delta honoured, so returning from an idle tab does not jump a fade to the end */
@@ -191,6 +191,10 @@ export function showMapPanel(): void {
     { once: true }
   );
   MapPanelElement.classList.add('css_map_panel_pop_in');
+  console.log('cache size', mapLoader.cache.size);
+  for (const [key, cache] of mapLoader.cache) {
+    console.log(cache.bitmap?.width, cache.bitmap?.height, cache.label.sheet?.width, cache.label.sheet?.height);
+  }
 }
 
 export function hideMapPanel(): void {
