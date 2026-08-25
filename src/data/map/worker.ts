@@ -108,6 +108,6 @@ async function loadTile(tile: MapLoaderTile) {
         route: routePlan
       }
     } as MapLoaderWorkerMessageData,
-    [bitmap.value, labelPlan.sheet, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer]
+    [bitmap.value, labelPlan.sheet as ImageBitmap, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer]
   );
 }

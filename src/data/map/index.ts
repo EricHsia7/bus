@@ -38,9 +38,7 @@ export type MapLoaderWorkerMessage = MapLoaderWorkerMessageData | MapLoaderWorke
 
 export interface MapLoaderCacheOptions {
   /**
-   * Soft ceiling of decoded tile bytes retained by the cache. Tiles are measured as
-   * `width * height * 4`, which is what an uploaded RGBA texture actually costs.
-   * Defaults to 96 MB.
+   * Soft ceiling of decoded tile bytes retained by the cache.
    */
   maxCacheBytes?: number;
   /** The cache is never trimmed below this many tiles, regardless of the byte budget. */
@@ -102,7 +100,7 @@ export class MapLoader {
     this.callback = callback;
 
     this.maxCacheBytes = options.maxCacheBytes ?? 96 * 1024 * 1024;
-    this.minCachedTiles = options.minCachedTiles ?? 64;
+    this.minCachedTiles = options.minCachedTiles ?? 16;
     this.headroomFactor = options.headroomFactor ?? 3;
     this.evictionDelay = options.evictionDelay ?? 200;
     this.shouldDeferEviction = options.shouldDeferEviction;
@@ -234,10 +232,8 @@ export class MapLoader {
    * Protected tiles are never evicted, and they also raise the floor of the cache budget so the surrounding tiles survive a pan back and forth.
    */
   protect(keys: Iterable<string>): void {
-    // Copied rather than aliased: the renderer rebuilds its set every frame, and an
-    // eviction pass must never observe it half-populated.
+    // Copied rather than aliased: the renderer rebuilds its set every frame, and an eviction pass must never observe it half-populated.
     this.protectedKeys = new Set(keys);
-    this.scheduleEviction();
   }
 
   protectTiles(tiles: Iterable<{ x: number; y: number; z: number }>): void {
@@ -360,7 +356,7 @@ export class MapLoader {
     this.evictionTimeoutId = setTimeout(this.runEviction, this.evictionDelay);
   }
 
-  private runEviction = (): void => {
+  public runEviction = (): void => {
     this.evictionTimeoutId = null;
     if (this.shouldDeferEviction?.()) {
       this.scheduleEviction();
@@ -372,9 +368,9 @@ export class MapLoader {
 
 const now = new Date();
 export const MapDataVersion = `${now.getFullYear() * 100 + (now.getMonth() + 1)}`; // Monthly update
-export const MapRasterVersion = `${MapDataVersion}-8`;
-export const MapLabelsVersion = `${MapDataVersion}-7`;
-export const MapRoutesVersion = `${MapDataVersion}-5`;
+export const MapRasterVersion = `${MapDataVersion}-9`;
+export const MapLabelsVersion = `${MapDataVersion}-9`;
+export const MapRoutesVersion = `${MapDataVersion}-6`;
 
 export interface Box {
   minX: number;

@@ -61,11 +61,11 @@ const maxChildFallbackDepth = 2;
 /** Upper bound of retained fade states before pruning */
 const maxFadeStates = 1024;
 /** Decoded-tile budget handed to the loader's LRU cache, in bytes */
-const maxCacheBytes = 150 * 1024 * 1024;
+const maxCacheBytes = 100 * 1024 * 1024;
 /** Floor of the LRU budget, so small viewports still keep a useful history */
-const minCachedTiles = 64;
+const minCachedTiles = 16;
 /** The cache is never trimmed below this multiple of the tiles currently on screen */
-const cacheHeadroomFactor = 3;
+const cacheHeadroomFactor = 2;
 /** Delay before an eviction pass is attempted once the map goes quiet, in milliseconds */
 const evictionIdleDelay = 200;
 /** Largest frame delta honoured, so returning from an idle tab does not jump a fade to the end */
@@ -135,7 +135,7 @@ const mapTileController = new MapTileController({
   minZoom: 12,
   maxZoom: 18,
   minNativeZoom: 12,
-  maxNativeZoom: 16,
+  maxNativeZoom: 17,
   tileSize: 256,
   onMovementStart: function () {
     requestFrame();
@@ -147,6 +147,7 @@ const mapTileController = new MapTileController({
   onMovementEnd: function () {
     synchronizeQueue();
     requestFrame();
+    mapLoader.runEviction();
   },
   onResize: function () {
     resizeMapCanvas();
@@ -693,7 +694,7 @@ function updateMapField(overlays: Array<MapOverlay>, integration: MapViews): voi
       switch (thisItem.type) {
         case 'point':
           thisElement.onclick = function () {
-            mapTileController.focusOn(thisItem.centerLon, thisItem.centerLat, 16, 500);
+            mapTileController.focusOn(thisItem.centerLon, thisItem.centerLat, 17, 500);
             mapOverlays.show(thisItem.sources);
             currentViewIndex = index;
             hideMapPanel();
@@ -823,7 +824,7 @@ function showFirstMapView(integration: MapViews): void {
     const firstView = integration[0];
     switch (firstView.type) {
       case 'point':
-        mapTileController.focusOn(firstView.centerLon, firstView.centerLat, 16, 500);
+        mapTileController.focusOn(firstView.centerLon, firstView.centerLat, 17, 500);
         break;
       case 'box':
         mapTileController.fitTo(firstView.minLon, firstView.minLat, firstView.maxLon, firstView.maxLat, 50, 500);
