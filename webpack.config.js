@@ -83,7 +83,23 @@ module.exports = (env, argv) => {
             urlPattern: /^https:\/\/erichsia7.github.io\/bus-map\/tiles\/[0-9]+\/[0-9]+\/[0-9]+\.webp/,
             handler: 'CacheFirst',
             options: {
-              cacheName: 'map-tiles',
+              cacheName: 'map-raster-tiles',
+              matchOptions: {
+                ignoreSearch: false
+              },
+              expiration: {
+                purgeOnQuotaError: true
+              },
+              cacheableResponse: {
+                statuses: [200]
+              }
+            }
+          },
+          {
+            urlPattern: /^https:\/\/erichsia7.github.io\/bus-map\/tiles\/[0-9]+\/[0-9]+\/[0-9]+\.gz/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'map-vector-tiles',
               matchOptions: {
                 ignoreSearch: false
               },
