@@ -1,4 +1,4 @@
-import { PropertyScale } from "./style";
+import { PropertyScale } from './style';
 
 export type LabelKind = 'text' | 'marker' | 'point' | 'shield' | 'circle';
 export type IconKind = 'marker' | 'point' | 'shield';
