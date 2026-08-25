@@ -44,6 +44,10 @@ export interface VectorTile {
   zoom: number;
   descriptors: Array<VectorTileDescriptor>;
   styleReferences: Array<number>;
+  /**
+   * Descriptor offset where each run begins.
+   * - styleStartIndices.length === styleReferences.length + 1
+   * - The last entry is 'descriptors.length' */
   styleStartIndices: Array<number>;
   styles: Array<VectorTileStyle>;
 }

@@ -14,14 +14,11 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
   context.save();
   context.fillStyle = '#f2f2f7'; // TODO: vectorTile['background']
   context.fillRect(0, 0, renderSize, renderSize);
-
   context.restore();
 
   context.scale(renderSize / vectorTile.extent, renderSize / vectorTile.extent);
-
   const globalStrokeScaleFactor = vectorTile.extent / designTileSize;
-  const startIndicesLength = vectorTile.styleStartIndices.length;
-  for (let i = 0; i < startIndicesLength - 1; i++) {
+  for (let i = 0, l = vectorTile.styleReferences.length; i < l; i++) {
     context.save();
     const start = vectorTile.styleStartIndices[i];
     const end = vectorTile.styleStartIndices[i + 1];
@@ -35,16 +32,21 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
       }
     }
     const style = vectorTile.styles[vectorTile.styleReferences[i]];
+    const opacity = style['opacity'] || 1;
     if (style.fill) {
       context.fillStyle = style.fill;
+      if (style['fill-opacity']) context.globalAlpha = opacity * style['fill-opacity'];
       context.fill();
+      if (style['fill-opacity']) context.globalAlpha = opacity;
     }
     if (style.stroke) {
       if (style['stroke-width']) context.lineWidth = style['stroke-width'] * globalStrokeScaleFactor;
       if (style['stroke-linecap']) context.lineCap = style['stroke-linecap'];
       if (style['stroke-linejoin']) context.lineJoin = style['stroke-linejoin'];
       if (style['stroke-dasharray']) context.setLineDash(style['stroke-dasharray']);
+      if (style['stroke-opacity']) context.globalAlpha = opacity * style['stroke-opacity'];
       context.strokeStyle = style.stroke;
+      if (style['stroke-opacity']) context.globalAlpha = opacity;
       context.stroke();
     }
     context.restore();
