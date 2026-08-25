@@ -33,6 +33,7 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
     }
     const style = vectorTile.styles[vectorTile.styleReferences[i]];
     const opacity = style['opacity'] || 1;
+    if (style['opacity']) context.globalAlpha = opacity;
     if (style.fill) {
       context.fillStyle = style.fill;
       if (style['fill-opacity']) context.globalAlpha = opacity * style['fill-opacity'];
@@ -46,8 +47,8 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
       if (style['stroke-dasharray']) context.setLineDash(style['stroke-dasharray'].map((v) => v * globalStrokeScaleFactor));
       if (style['stroke-opacity']) context.globalAlpha = opacity * style['stroke-opacity'];
       context.strokeStyle = style.stroke;
-      if (style['stroke-opacity']) context.globalAlpha = opacity;
       context.stroke();
+      if (style['stroke-opacity']) context.globalAlpha = opacity;
     }
     context.restore();
   }
