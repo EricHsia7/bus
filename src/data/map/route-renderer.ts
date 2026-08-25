@@ -1,8 +1,9 @@
 import { Context2D } from '../../tools/graphic';
 import { clamp } from '../../tools/math';
 import { Box } from './index';
-import { LineStyleProperties, RoutePropertyScale } from './route';
+import { LineStyleProperties } from './route';
 import { RouteFeatureStride, RoutePlan } from './route-plan';
+import { PropertyScale } from './style';
 
 export interface RouteTileView {
   plan: RoutePlan;
@@ -31,7 +32,7 @@ interface DrawBatch {
   members: Array<number>;
 }
 
-function resolveLineWidthScale(scale: RoutePropertyScale | undefined, viewZoom: number, tileZoom: number): number {
+function resolveLineWidthScale(scale: PropertyScale | undefined, viewZoom: number, tileZoom: number): number {
   if (!scale) return 1;
   const t = clamp(viewZoom - tileZoom, 0, 1);
   return scale[0] + (scale[1] - scale[0]) * t; // * Math.pow(2, -t);
