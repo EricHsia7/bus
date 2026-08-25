@@ -17,7 +17,7 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
   context.restore();
 
   context.scale(renderSize / vectorTile.extent, renderSize / vectorTile.extent);
-  const globalStrokeScaleFactor = vectorTile.extent / designTileSize;
+  const globalStrokeScaleFactor = vectorTile.extent / designTileSize; // (vectorTile.extent / renderSize) * (renderSize / designTileSize);
   for (let i = 0, l = vectorTile.styleReferences.length; i < l; i++) {
     context.save();
     const start = vectorTile.styleStartIndices[i];
@@ -43,7 +43,7 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
       if (style['stroke-width']) context.lineWidth = style['stroke-width'] * globalStrokeScaleFactor;
       if (style['stroke-linecap']) context.lineCap = style['stroke-linecap'];
       if (style['stroke-linejoin']) context.lineJoin = style['stroke-linejoin'];
-      if (style['stroke-dasharray']) context.setLineDash(style['stroke-dasharray']);
+      if (style['stroke-dasharray']) context.setLineDash(style['stroke-dasharray'].map((v) => v * globalStrokeScaleFactor));
       if (style['stroke-opacity']) context.globalAlpha = opacity * style['stroke-opacity'];
       context.strokeStyle = style.stroke;
       if (style['stroke-opacity']) context.globalAlpha = opacity;
