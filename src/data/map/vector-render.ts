@@ -5,7 +5,8 @@ import { getVectorPlanPaths, VectorPlan } from './vector-plan';
 const designTileSize = 256;
 
 const canvas = new OffscreenCanvas(1, 1);
-const context = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
+const context = canvas.getContext('2d', { alpha: false }) as OffscreenCanvasRenderingContext2D;
+context.imageSmoothingEnabled = false;
 
 /**
  * The sub-square of a plan's tile that a frame must cover, in tile units.

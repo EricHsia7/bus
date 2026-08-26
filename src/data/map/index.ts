@@ -361,6 +361,9 @@ export class MapLoader {
     this.tileBytes.delete(key);
     if (this.cacheBytes < 0) this.cacheBytes = 0;
 
+    // release the path
+    response.vector.paths = undefined;
+
     // Owning the bitmap means the texture can be released now rather than whenever a GC happens to notice a handle that looks cheap on the JS heap.
     if (response.label.sheet) {
       response.label.sheet.close?.();

@@ -37,11 +37,6 @@ export interface VectorPlan {
   frameDeltaZooms: Array<number>;
   /**
    * One path per style run, in extent units.
-   *
-   * The geometry is zoom-invariant: a frame's zoom, resolution and sub-square all live
-   * in the transform, never in the coordinates. So a path built once is valid for every
-   * frame this plan is ever rasterized into, and the per-frame cost drops to setting a
-   * transform and calling fill / stroke.
    */
   paths?: Array<Path2D>;
   /**
@@ -112,25 +107,8 @@ export function buildVectorPlanPaths(vectorPlan: VectorPlan): Array<Path2D> {
   return paths;
 }
 
-/**
- * Paths for a plan, building them on first use.
- *
- * Cheap enough to call per frame: after the first call it is a field read.
- */
 export function getVectorPlanPaths(vectorPlan: VectorPlan): Array<Path2D> {
-  return vectorPlan.paths ?? buildVectorPlanPaths(vectorPlan);
-}
-
-/**
- * Release the built paths, keeping the plan usable.
- *
- * The geometry stays, so a later frame can rebuild. Lets a cache shed `pathBytes`
- * without dropping a tile that is still on screen.
- */
-export function releaseVectorPlanPaths(vectorPlan: VectorPlan): number {
-  if (!vectorPlan.paths) return 0;
-  vectorPlan.paths = undefined;
-  return vectorPlan.pathBytes;
+  return vectorPlan.paths || buildVectorPlanPaths(vectorPlan);
 }
 
 export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
