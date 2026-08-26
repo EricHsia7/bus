@@ -44,21 +44,7 @@ export interface VectorTileStyle {
   'opacity'?: number;
 }
 
-/**
- * Wire format, exactly as `JSON.parse` returns it.
- *
- * Geometry is stored as flat parallel arrays instead of nested
- * `[[[x, y], ...], ...]` descriptors, so every array can be handed straight to a
- * typed-array constructor with no per-point allocation:
- *
- * ```ts
- * const coordinates = new Int16Array(parsed.coordinates);
- * ```
- *
- * Nesting is expressed with three levels of offsets:
- * `style run -> descriptor -> part (ring / line) -> point`
- */
-export interface VectorTilePayload {
+export interface VectorTile {
   type: 'Vector';
   extent: number;
   buffer: number;
@@ -67,8 +53,9 @@ export interface VectorTilePayload {
    */
   zoom: number;
   /**
-   * Interleaved `x, y` for every point of every part, in descriptor order.
-   * Quantized to whole units in `[-buffer, extent + buffer]`, so it fits Int16.
+   * - 2n+0: x
+   * - 2n+1: y
+   * - -buffer <= x, y <= extent + buffer
    */
   coordinates: Array<number>;
   /**
@@ -108,68 +95,6 @@ export interface VectorTilePayload {
    * A single-entry list means the tile is scale-invariant.
    */
   frameDeltaZooms: Array<number>;
-}
-
-/**
- * Runtime format: the same buffers, as typed arrays.
- *
- * This is the *cheap, retained* half of a cached tile — a few typed arrays and
- * a small style table. Rendered bitmaps are held separately (see the frame
- * cache) precisely so they can be evicted while this survives, letting a frame
- * be re-rasterized without refetching or re-parsing anything.
- */
-export interface VectorTile {
-  type: 'Vector';
-  extent: number;
-  buffer: number;
-  /**
-   * tile zoom
-   */
-  zoom: number;
-  /**
-   * Interleaved `x, y`; point `i` is `coordinates[i * 2], coordinates[i * 2 + 1]`.
-   */
-  coordinates: Int16Array;
-  partStartIndices: Int32Array;
-  descriptorStartIndices: Int32Array;
-  descriptorTypes: Uint8Array;
-  styleReferences: Int16Array;
-  styleStartIndices: Int32Array;
-  styles: Array<VectorTileStyle>;
-  scaleSpread: number;
-  frameDeltaZooms: Array<number>;
-}
-
-/**
- * Adopt a parsed tile payload as typed arrays.
- *
- * Offsets stay 32-bit because a dense tile can hold more than 32767 points;
- * only the coordinates themselves are guaranteed to fit Int16.
- */
-export function parseVectorTile(parsed: VectorTilePayload): VectorTile {
-  return {
-    type: 'Vector',
-    extent: parsed.extent,
-    buffer: parsed.buffer,
-    zoom: parsed.zoom,
-    coordinates: new Int16Array(parsed.coordinates),
-    partStartIndices: new Int32Array(parsed.partStartIndices),
-    descriptorStartIndices: new Int32Array(parsed.descriptorStartIndices),
-    descriptorTypes: new Uint8Array(parsed.descriptorTypes),
-    styleReferences: new Int16Array(parsed.styleReferences),
-    styleStartIndices: new Int32Array(parsed.styleStartIndices),
-    styles: parsed.styles,
-    scaleSpread: parsed.scaleSpread ?? 0,
-    frameDeltaZooms: parsed.frameDeltaZooms && parsed.frameDeltaZooms.length > 0 ? parsed.frameDeltaZooms : [0]
-  };
-}
-
-/**
- * Retained bytes of a parsed tile — what the cache accounts for when it decides
- * what to keep. Cheap next to a single 1024x1024 bitmap (4 MB).
- */
-export function vectorTileByteLength(tile: VectorTile): number {
-  return tile.coordinates.byteLength + tile.partStartIndices.byteLength + tile.descriptorStartIndices.byteLength + tile.descriptorTypes.byteLength + tile.styleReferences.byteLength + tile.styleStartIndices.byteLength;
 }
 
 /**

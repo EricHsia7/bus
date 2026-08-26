@@ -71,6 +71,8 @@ export class MapLoader {
    * waiting for a garbage collection that only sees the handle, not the texture.
    */
   cache: Map<string, MapLoaderResponse>;
+  frameBuffer: Map<string, ImageBitmap>;
+  frameBufferSize: number; // TODO: limit frameBufferSize
   queue: Array<string>;
   processing: number;
   worker: Worker;
@@ -94,6 +96,8 @@ export class MapLoader {
   constructor(batchSize: number, callback: MapLoader['callback'], options: MapLoaderCacheOptions = {}) {
     this.tiles = new Map();
     this.cache = new Map();
+    this.frameBuffer = new Map();
+    this.frameBufferSize = 0;
     this.queue = [];
     this.processing = 0;
     this.worker = new Worker(new URL('./worker.ts', import.meta.url));
@@ -181,10 +185,6 @@ export class MapLoader {
         let response = message.response;
         if (existing && existing !== response) {
           // The tile was decoded twice (a re-request raced an in-flight load). The cached bitmap stays authoritative and the duplicate is closed rather than leaked.
-          for (let i = 0; i < response.vector.frameCount; i++) {
-            response.vector.bitmaps[i]?.close?.();
-            response.vector.bitmaps[i] = null;
-          }
           if (response.label.sheet) {
             response.label.sheet.close?.();
             response.label.sheet = null;
@@ -235,12 +235,6 @@ export class MapLoader {
   protect(keys: Iterable<string>): void {
     // Copied rather than aliased: the renderer rebuilds its set every frame, and an eviction pass must never observe it half-populated.
     this.protectedKeys = new Set(keys);
-  }
-
-  protectTiles(tiles: Iterable<{ x: number; y: number; z: number }>): void {
-    const keys = new Set<string>();
-    for (const tile of tiles) keys.add(this.getTileKey(tile.x, tile.y, tile.z));
-    this.protect(keys);
   }
 
   /** Drops a single tile immediately. Returns false when the tile is protected or absent. */
@@ -326,10 +320,6 @@ export class MapLoader {
     if (this.cacheBytes < 0) this.cacheBytes = 0;
 
     // Owning the bitmap means the texture can be released now rather than whenever a GC happens to notice a handle that looks cheap on the JS heap.
-    for (let i = 0; i < response.vector.frameCount; i++) {
-      response.vector.bitmaps[i]?.close?.();
-      response.vector.bitmaps[i] = null;
-    }
     if (response.label.sheet) {
       response.label.sheet.close?.();
       response.label.sheet = null;
@@ -364,6 +354,33 @@ export class MapLoader {
     }
     this.trim();
   };
+
+  public pushFrame(x: number, y: number, z: number, frame: ImageBitmap): void {
+    const key = this.getTileKey(x, y, z);
+    if (this.frameBuffer.has(key)) {
+      const existing = this.frameBuffer.get(key) as ImageBitmap;
+      this.frameBufferSize -= existing.width * existing.height * 4;
+      existing.close();
+    }
+    this.frameBuffer.set(key, frame);
+    this.frameBufferSize += frame.width * frame.height * 4;
+  }
+
+  public evictFrame(x: number, y: number, z: number): void {
+    const key = this.getTileKey(x, y, z);
+    if (this.frameBuffer.has(key)) {
+      const existing = this.frameBuffer.get(key) as ImageBitmap;
+      this.frameBufferSize -= existing.width * existing.height * 4;
+      existing.close();
+      this.frameBuffer.delete(key);
+    }
+  }
+
+  public getFrame(x: number, y: number, z: number): ImageBitmap | null {
+    return this.frameBuffer.get(this.getTileKey(x, y, z)) || null;
+  }
+
+  public trimFrameBuffer() {}
 }
 
 const now = new Date();
