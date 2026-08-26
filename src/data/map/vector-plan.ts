@@ -1,9 +1,5 @@
 import { VectorTile, VectorTileStyle, resolveStrokeWidth } from './vector';
 
-export interface VectorPlan {
-  bitmaps: Array<ImageBitmap>;
-}
-
 /**
  * One rasterization of a tile at a fractional zoom offset.
  *
@@ -14,13 +10,15 @@ export interface VectorPlan {
  * This is the *expensive, evictable* half of a cached tile: a 1024x1024 bitmap
  * is 4 MB, ~2 orders of magnitude more than the typed arrays it came from.
  */
-export interface VectorFrame extends VectorPlan {
-  /** Index into `tile.frameDeltaZooms`; the frame's cache key. */
-  frameIndex: number;
-  deltaZoom: number;
+
+export interface VectorPlan {
+  bitmaps: Array<ImageBitmap | null>;
+  frameDeltaZooms: VectorTile['frameDeltaZooms'];
+  frameCount: number;
+  size: number;
 }
 
-const renderSize = 1024;
+const renderSize = 512;
 const designTileSize = 256;
 
 /**
@@ -31,10 +29,9 @@ const designTileSize = 256;
  * `deltaZoom`. That is what makes re-rendering an evicted frame cheap: the
  * retained typed arrays are walked again, nothing is refetched or re-parsed.
  */
-export function buildVectorFrame(vectorTile: VectorTile, frameIndex: number): VectorFrame {
+export function getVectorTileBitmap(vectorTile: VectorTile, frameIndex: number): ImageBitmap {
   const frames = vectorTile.frameDeltaZooms;
-  const clampedIndex = frameIndex < 0 ? 0 : frameIndex >= frames.length ? frames.length - 1 : frameIndex;
-  const deltaZoom = frames[clampedIndex];
+  const deltaZoom = frames[frameIndex];
 
   const canvas = new OffscreenCanvas(renderSize, renderSize);
   const context = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
@@ -96,17 +93,23 @@ export function buildVectorFrame(vectorTile: VectorTile, frameIndex: number): Ve
     context.restore();
   }
 
-  return { frameIndex: clampedIndex, deltaZoom, bitmaps: [canvas.transferToImageBitmap()] };
+  return canvas.transferToImageBitmap();
 }
 
-/** Frame 0 (the tile's own zoom). Kept for callers that do not care about frames. */
 export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
-  return buildVectorFrame(vectorTile, 0);
-}
-
-/** Bytes a frame holds on the GPU/heap; the unit the frame cache budgets in. */
-export function vectorFrameByteLength(frame: VectorPlan): number {
-  let bytes = 0;
-  for (const bitmap of frame.bitmaps) bytes += bitmap.width * bitmap.height * 4;
-  return bytes;
+  const bitmaps: Array<ImageBitmap> = [];
+  const frameDeltaZooms = vectorTile.frameDeltaZooms;
+  const frameCount = frameDeltaZooms.length;
+  let size = 0;
+  for (let i = 0; i < frameCount; i++) {
+    const bitmap = getVectorTileBitmap(vectorTile, i);
+    bitmaps.push(bitmap);
+    size += bitmap.width * bitmap.height * 4;
+  }
+  return {
+    bitmaps,
+    frameDeltaZooms,
+    frameCount,
+    size
+  };
 }

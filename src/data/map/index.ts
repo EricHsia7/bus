@@ -1,5 +1,6 @@
 import { LabelGlyphPlan } from './label-plan';
 import { RoutePlan } from './route-plan';
+import { VectorPlan } from './vector-plan';
 
 /**
  * - 0: pending
@@ -18,7 +19,7 @@ export interface MapLoaderTile {
 }
 
 export interface MapLoaderResponse extends MapLoaderTile {
-  bitmap: ImageBitmap | null;
+  vector: VectorPlan;
   label: LabelGlyphPlan;
   route: RoutePlan;
 }
@@ -180,9 +181,9 @@ export class MapLoader {
         let response = message.response;
         if (existing && existing !== response) {
           // The tile was decoded twice (a re-request raced an in-flight load). The cached bitmap stays authoritative and the duplicate is closed rather than leaked.
-          if (response.bitmap) {
-            response.bitmap.close?.();
-            response.bitmap = null;
+          for (let i = 0; i < response.vector.frameCount; i++) {
+            response.vector.bitmaps[i]?.close?.();
+            response.vector.bitmaps[i] = null;
           }
           if (response.label.sheet) {
             response.label.sheet.close?.();
@@ -302,11 +303,10 @@ export class MapLoader {
     const previous = this.tileBytes.get(key);
     if (previous !== undefined) this.cacheBytes -= previous;
 
-    const bitmap = response.bitmap;
-    const bitmapBytes = bitmap?.width && bitmap?.height ? bitmap.width * bitmap.height * 4 : fallbackTileBytes;
+    const vectorBytes = response.vector.size;
     const sheet = response.label.sheet;
     const sheetBytes = sheet?.width && sheet?.height ? sheet.width * sheet.height * 4 : fallbackTileBytes;
-    const totalBytes = bitmapBytes + sheetBytes;
+    const totalBytes = vectorBytes + sheetBytes;
 
     this.cache.delete(key);
     this.cache.set(key, response);
@@ -326,9 +326,9 @@ export class MapLoader {
     if (this.cacheBytes < 0) this.cacheBytes = 0;
 
     // Owning the bitmap means the texture can be released now rather than whenever a GC happens to notice a handle that looks cheap on the JS heap.
-    if (response.bitmap) {
-      response.bitmap.close?.();
-      response.bitmap = null;
+    for (let i = 0; i < response.vector.frameCount; i++) {
+      response.vector.bitmaps[i]?.close?.();
+      response.vector.bitmaps[i] = null;
     }
     if (response.label.sheet) {
       response.label.sheet.close?.();

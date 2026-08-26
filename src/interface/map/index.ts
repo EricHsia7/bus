@@ -1,6 +1,7 @@
 import { MapLoader, MapLoaderResponse } from '../../data/map';
 import { drawLabelTiles, LabelTileView } from '../../data/map/label-renderer';
 import { drawRouteTiles, RouteTileView } from '../../data/map/route-renderer';
+import { pickFrameIndex } from '../../data/map/vector';
 import { MapView, MapViews } from '../../data/map/views';
 import { booleanToString } from '../../tools';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
@@ -41,13 +42,13 @@ let displayed: boolean = false;
 const devicePixelRatio = window.devicePixelRatio;
 
 /** Duration of the per-tile fade-in, in milliseconds, used as tiles stream in at a stable layer */
-const fadeDuration = 200;
+const fadeDuration = 0;
 /**
  * Duration of the cross-fade between two zoom layers, in milliseconds. Crossing an integer
  * zoom doubles the raster resolution in one step, so this runs longer than a tile fade to
  * keep that jump from reading as a pop.
  */
-const layerFadeDuration = 320;
+const layerFadeDuration = 0;
 /**
  * How many zoom layers may be kept alive at once. Zooming through several layers faster than
  * they can fade only ever costs this many passes, and the oldest layer is dropped rather than
@@ -312,7 +313,7 @@ function synchronizeQueue(): void {
  * the destination is the missing tile's box, while the source is the quarter, sixteenth,
  * ... of the ancestor bitmap that covers exactly that ground.
  */
-function drawTileRegion(context: Context2D, bitmap: MapLoaderResponse['bitmap'], destX: number, destY: number, destZ: number, source: { x: number; y: number; width: number; height: number } | null, alpha: number): void {
+function drawTileRegion(context: Context2D, bitmap: ImageBitmap, destX: number, destY: number, destZ: number, source: { x: number; y: number; width: number; height: number } | null, alpha: number): void {
   const { screenBBox } = mapTileController.getTileBoundingBox(destX, destY, destZ);
 
   const left = Math.round(screenBBox.minX * devicePixelRatio) / devicePixelRatio;
@@ -336,7 +337,9 @@ function drawTileRegion(context: Context2D, bitmap: MapLoaderResponse['bitmap'],
 }
 
 function drawTile(context: Context2D, response: MapLoaderResponse, z: number, alpha: number): void {
-  drawTileRegion(context, response.bitmap, response.x, response.y, z, null, alpha);
+  const frameIndex = pickFrameIndex(response.vector.frameDeltaZooms, mapTileController.zoom, z);
+  const bitmap = response.vector.bitmaps[frameIndex];
+  if (bitmap) drawTileRegion(context, bitmap, response.x, response.y, z, null, alpha);
 }
 
 /**
@@ -363,11 +366,14 @@ function drawFallbackTile(context: Context2D, x: number, y: number, z: number): 
     if (!parent) continue;
 
     protectedTileKeys.add(getTileKey(parentX, parentY, z - depth));
-    const sourceWidth = (parent.bitmap?.width || 0) / scale;
-    const sourceHeight = (parent.bitmap?.height || 0) / scale;
+    const frameIndex = pickFrameIndex(parent.vector.frameDeltaZooms, mapTileController.zoom, z);
+    const bitmap = parent.vector.bitmaps[frameIndex];
+    if (!bitmap) continue;
+    const sourceWidth = (bitmap?.width || 0) / scale;
+    const sourceHeight = (bitmap?.height || 0) / scale;
     drawTileRegion(
       context,
-      parent.bitmap,
+      bitmap,
       x,
       y,
       z,

@@ -1,3 +1,4 @@
+import { clamp } from '../../tools/math';
 import { LineCap, LineDash, LineJoin } from './style';
 
 /**
@@ -180,7 +181,7 @@ export function vectorTileByteLength(tile: VectorTile): number {
 export function sampleScale(scale: VectorTileScale | undefined, deltaZoom: number): number {
   if (scale === undefined) return 1;
   const t = deltaZoom < 0 ? 0 : deltaZoom > 1 ? 1 : deltaZoom;
-  return scale[0] + (scale[1] - scale[0]) * t;
+  return (scale[0] + (scale[1] - scale[0]) * t) * Math.pow(2, -t);
 }
 
 /**
@@ -197,14 +198,13 @@ export function resolveStrokeWidth(style: VectorTileStyle, deltaZoom: number): n
  * Pick the nearest server-recommended frame for a view zoom. Returns an index
  * into `frameDeltaZooms`, which doubles as the frame cache key.
  */
-export function pickFrameIndex(tile: VectorTile, viewZoom: number): number {
-  const frames = tile.frameDeltaZooms;
-  if (frames.length <= 1) return 0;
-  const deltaZoom = Math.min(1, Math.max(0, viewZoom - tile.zoom));
+export function pickFrameIndex(frameDeltaZooms: VectorTile['frameDeltaZooms'], viewZoom: number, tileZoom: number): number {
+  if (frameDeltaZooms.length <= 1) return 0;
+  const deltaZoom = clamp(viewZoom - tileZoom, 0, 1);
   let best = 0;
   let bestDistance = Infinity;
-  for (let i = 0; i < frames.length; i++) {
-    const distance = Math.abs(frames[i] - deltaZoom);
+  for (let i = 0; i < frameDeltaZooms.length; i++) {
+    const distance = Math.abs(frameDeltaZooms[i] - deltaZoom);
     if (distance < bestDistance) {
       bestDistance = distance;
       best = i;
