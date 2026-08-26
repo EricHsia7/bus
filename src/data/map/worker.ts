@@ -8,7 +8,7 @@ import { LabelFeatureCollection } from './label';
 import { buildLabelGlyphPlan, LabelGlyphCache } from './label-plan';
 import { RouteFeatureCollection } from './route';
 import { buildRoutePlan } from './route-plan';
-import { parseVectorTile, VectorTilePayload } from './vector';
+import { VectorTile } from './vector';
 import { buildVectorPlan } from './vector-plan';
 
 self.onmessage = function (event: MessageEvent): void {
@@ -74,9 +74,9 @@ async function loadTile(tile: MapLoaderTile) {
   const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?_=${MapLabelsVersion}`;
   const routesURL = `https://erichsia7.github.io/bus-map-routes/routes/${tile.z}/${tile.x}/${tile.y}.gz?_=${MapRoutesVersion}`;
 
-  const [vector, labels, routes] = await Promise.allSettled([getJSON<VectorTilePayload>(vectorURL), getJSON<LabelFeatureCollection>(labelsURL), getJSON<RouteFeatureCollection>(routesURL)]);
+  const [vector, labels, routes] = await Promise.allSettled([getJSON<VectorTile>(vectorURL), getJSON<LabelFeatureCollection>(labelsURL), getJSON<RouteFeatureCollection>(routesURL)]);
   if (vector.status !== 'fulfilled' || labels.status !== 'fulfilled') throw new Error('Error fetching tiles.');
-  const vectorPlan = buildVectorPlan(parseVectorTile(vector.value));
+  const vectorPlan = buildVectorPlan(vector.value);
   const labelPlan = buildLabelGlyphPlan(labels.value, cache);
   const routePlan =
     routes.status === 'fulfilled'
@@ -97,11 +97,11 @@ async function loadTile(tile: MapLoaderTile) {
       type: 'data',
       response: {
         ...tile,
-        bitmap: vectorPlan.bitmaps[0],
+        vector: vectorPlan,
         label: labelPlan,
         route: routePlan
       }
     } as MapLoaderWorkerMessageData,
-    [...vectorPlan.bitmaps, labelPlan.sheet as ImageBitmap, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer]
+    [vectorPlan.coordinates.buffer, vectorPlan.descriptorStartIndices.buffer, vectorPlan.descriptorTypes.buffer, vectorPlan.partStartIndices.buffer, vectorPlan.styleReferences.buffer, vectorPlan.styleStartIndices.buffer, labelPlan.sheet as ImageBitmap, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer]
   );
 }

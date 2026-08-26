@@ -1,5 +1,6 @@
 import { LabelGlyphPlan } from './label-plan';
 import { RoutePlan } from './route-plan';
+import { VectorPlan } from './vector-plan';
 
 /**
  * - 0: pending
@@ -18,9 +19,28 @@ export interface MapLoaderTile {
 }
 
 export interface MapLoaderResponse extends MapLoaderTile {
-  bitmap: ImageBitmap | null;
+  vector: VectorPlan;
   label: LabelGlyphPlan;
   route: RoutePlan;
+}
+
+/**
+ * A rasterized tile, plus what it was rasterized from. Both halves of the provenance
+ * matter: `sourceZ` says whose geometry is on screen (a stand-in ancestor while the tile
+ * itself is still loading), and `frameIndex` / `deltaZoom` say which point of the shipped
+ * `[zoom, zoom + 1]` scale interval it was styled for.
+ */
+export interface MapLoaderFrame {
+  bitmap: ImageBitmap;
+  /** Zoom of the plan the frame was rasterized from. Lower than the frame's own z while a coarser tile stands in for one that has not arrived yet. */
+  sourceZ: number;
+  /** Index into the source plan's `frameDeltaZooms`. */
+  frameIndex: number;
+  /** Clamped zoom offset the scale-dependent styling was sampled at. */
+  deltaZoom: number;
+  width: number;
+  height: number;
+  bytes: number;
 }
 
 export interface MapLoaderWorkerMessageData {
@@ -48,6 +68,14 @@ export interface MapLoaderCacheOptions {
   /** Delay before a deferred eviction pass runs, in milliseconds. Defaults to 200. */
   evictionDelay?: number;
   /**
+   * Soft ceiling of rasterized frame bytes retained by the frame buffer. Frames are
+   * pure output: they can always be produced again from a cached plan, so this budget is
+   * separate from (and trimmed more eagerly than) the decoded-tile budget.
+   */
+  maxFrameBufferBytes?: number;
+  /** The frame buffer is never trimmed below this many frames, regardless of the byte budget. */
+  minBufferedFrames?: number;
+  /**
    * Return `true` to postpone eviction. The renderer passes a predicate that is true
    * while a frame is pending, so trimming never competes with drawing for the frame.
    */
@@ -70,6 +98,17 @@ export class MapLoader {
    * waiting for a garbage collection that only sees the handle, not the texture.
    */
   cache: Map<string, MapLoaderResponse>;
+  /**
+   * Rasterized frames in least-recently-used order, keyed by the tile box they are drawn
+   * as rather than by the plan they came from. A stand-in frame therefore sits under the
+   * key of the tile that is still loading, and is replaced in place once that tile
+   * arrives and can be rasterized from its own geometry.
+   *
+   * As with the decoded tiles, the loader is the sole owner of these bitmaps: only
+   * `evictFrame` / `trimFrameBuffer` may close them.
+   */
+  frameBuffer: Map<string, MapLoaderFrame>;
+  frameBufferBytes: number;
   queue: Array<string>;
   processing: number;
   worker: Worker;
@@ -80,6 +119,8 @@ export class MapLoader {
   minCachedTiles: number;
   headroomFactor: number;
   evictionDelay: number;
+  maxFrameBufferBytes: number;
+  minBufferedFrames: number;
 
   private shouldDeferEviction?: () => boolean;
   private onEvict?: (key: string, tile: MapLoaderTile) => void;
@@ -88,11 +129,15 @@ export class MapLoader {
   private cacheBytes: number;
   /** Tiles the caller is currently drawing. These are never evicted. */
   private protectedKeys: Set<string>;
+  /** Frames painted in the most recent frame. These are never trimmed. */
+  private protectedFrameKeys: Set<string>;
   private evictionTimeoutId: ReturnType<typeof setTimeout> | null;
 
   constructor(batchSize: number, callback: MapLoader['callback'], options: MapLoaderCacheOptions = {}) {
     this.tiles = new Map();
     this.cache = new Map();
+    this.frameBuffer = new Map();
+    this.frameBufferBytes = 0;
     this.queue = [];
     this.processing = 0;
     this.worker = new Worker(new URL('./worker.ts', import.meta.url));
@@ -103,12 +148,15 @@ export class MapLoader {
     this.minCachedTiles = options.minCachedTiles ?? 16;
     this.headroomFactor = options.headroomFactor ?? 3;
     this.evictionDelay = options.evictionDelay ?? 200;
+    this.maxFrameBufferBytes = options.maxFrameBufferBytes ?? 64 * 1024 * 1024;
+    this.minBufferedFrames = options.minBufferedFrames ?? 16;
     this.shouldDeferEviction = options.shouldDeferEviction;
     this.onEvict = options.onEvict;
 
     this.tileBytes = new Map();
     this.cacheBytes = 0;
     this.protectedKeys = new Set();
+    this.protectedFrameKeys = new Set();
     this.evictionTimeoutId = null;
 
     this.worker.onmessage = this.handleWorkerMessage.bind(this);
@@ -180,10 +228,6 @@ export class MapLoader {
         let response = message.response;
         if (existing && existing !== response) {
           // The tile was decoded twice (a re-request raced an in-flight load). The cached bitmap stays authoritative and the duplicate is closed rather than leaked.
-          if (response.bitmap) {
-            response.bitmap.close?.();
-            response.bitmap = null;
-          }
           if (response.label.sheet) {
             response.label.sheet.close?.();
             response.label.sheet = null;
@@ -236,12 +280,6 @@ export class MapLoader {
     this.protectedKeys = new Set(keys);
   }
 
-  protectTiles(tiles: Iterable<{ x: number; y: number; z: number }>): void {
-    const keys = new Set<string>();
-    for (const tile of tiles) keys.add(this.getTileKey(tile.x, tile.y, tile.z));
-    this.protect(keys);
-  }
-
   /** Drops a single tile immediately. Returns false when the tile is protected or absent. */
   release(x: number, y: number, z: number): boolean {
     return this.evictKey(this.getTileKey(x, y, z));
@@ -278,6 +316,7 @@ export class MapLoader {
       if (!includeProtected && this.protectedKeys.has(key)) continue;
       this.evictKey(key, includeProtected);
     }
+    this.clearFrameBuffer(includeProtected);
   }
 
   dispose(): void {
@@ -302,11 +341,7 @@ export class MapLoader {
     const previous = this.tileBytes.get(key);
     if (previous !== undefined) this.cacheBytes -= previous;
 
-    const bitmap = response.bitmap;
-    const bitmapBytes = bitmap?.width && bitmap?.height ? bitmap.width * bitmap.height * 4 : fallbackTileBytes;
-    const sheet = response.label.sheet;
-    const sheetBytes = sheet?.width && sheet?.height ? sheet.width * sheet.height * 4 : fallbackTileBytes;
-    const totalBytes = bitmapBytes + sheetBytes;
+    const totalBytes = response.vector.size + response.label.size;
 
     this.cache.delete(key);
     this.cache.set(key, response);
@@ -326,14 +361,15 @@ export class MapLoader {
     if (this.cacheBytes < 0) this.cacheBytes = 0;
 
     // Owning the bitmap means the texture can be released now rather than whenever a GC happens to notice a handle that looks cheap on the JS heap.
-    if (response.bitmap) {
-      response.bitmap.close?.();
-      response.bitmap = null;
-    }
     if (response.label.sheet) {
       response.label.sheet.close?.();
       response.label.sheet = null;
     }
+
+    // The frame was rasterized from this plan, so once the plan is gone the frame can no
+    // longer be reproduced. It is dropped with the plan unless it is still on screen, in
+    // which case it survives as its own stand-in until it leaves the viewport.
+    this.dropFrame(key);
 
     const tile = this.tiles.get(key);
     if (tile) {
@@ -363,12 +399,122 @@ export class MapLoader {
       return;
     }
     this.trim();
+    this.trimFrameBuffer();
   };
+
+  /**
+   * Stores the frame drawn for a tile box, replacing whatever was there before.
+   *
+   * Replacing is always allowed, protected or not: a new frame for a protected key is a
+   * refresh of the imagery that is on screen, not an eviction of it.
+   */
+  public pushFrame(x: number, y: number, z: number, bitmap: ImageBitmap, source: { sourceZ: number; frameIndex: number; deltaZoom: number }): MapLoaderFrame {
+    const key = this.getTileKey(x, y, z);
+    this.dropFrame(key, true);
+
+    const frame: MapLoaderFrame = {
+      bitmap,
+      sourceZ: source.sourceZ,
+      frameIndex: source.frameIndex,
+      deltaZoom: source.deltaZoom,
+      width: bitmap.width,
+      height: bitmap.height,
+      bytes: bitmap.width * bitmap.height * 4
+    };
+
+    this.frameBuffer.set(key, frame);
+    this.frameBufferBytes += frame.bytes;
+    this.scheduleEviction();
+
+    return frame;
+  }
+
+  /** Reads a frame and marks it as most recently used. */
+  public getFrame(x: number, y: number, z: number): MapLoaderFrame | null {
+    const key = this.getTileKey(x, y, z);
+    const frame = this.frameBuffer.get(key);
+    if (!frame) return null;
+    // Reinserting keeps the coldest frame at the front of the iteration order, so the
+    // trim pass can walk the buffer least-recently-drawn first.
+    this.frameBuffer.delete(key);
+    this.frameBuffer.set(key, frame);
+    return frame;
+  }
+
+  /**
+   * Reads a frame without disturbing the LRU order. Used when deciding whether a frame
+   * still matches the viewport, which must not count as drawing it.
+   */
+  public peekFrame(x: number, y: number, z: number): MapLoaderFrame | null {
+    return this.frameBuffer.get(this.getTileKey(x, y, z)) ?? null;
+  }
+
+  /** Drops a single frame immediately. Returns false when the frame is protected or absent. */
+  public evictFrame(x: number, y: number, z: number, force: boolean = false): boolean {
+    return this.dropFrame(this.getTileKey(x, y, z), force);
+  }
+
+  /**
+   * Declares the frames that were painted in the last pass. Anything not in this set is a
+   * candidate for trimming, which is what lets the buffer keep a ring of off-screen
+   * frames for a pan back without growing without bound.
+   */
+  public protectFrames(keys: Iterable<string>): void {
+    // Copied rather than aliased, for the same reason as `protect`.
+    this.protectedFrameKeys = new Set(keys);
+  }
+
+  /** Bytes currently held by rasterized frames. */
+  get frameBytes(): number {
+    return this.frameBufferBytes;
+  }
+
+  /**
+   * Trims the frame buffer down to its byte budget, least-recently-drawn frame first.
+   * Protected frames and the minimum frame floor are always respected, so this can
+   * return over budget when everything left is still on screen.
+   */
+  public trimFrameBuffer(): number {
+    const frameFloor = Math.max(this.minBufferedFrames, this.protectedFrameKeys.size * this.headroomFactor);
+    let evicted = 0;
+
+    for (const key of Array.from(this.frameBuffer.keys())) {
+      if (this.frameBufferBytes <= this.maxFrameBufferBytes) break;
+      if (this.frameBuffer.size <= frameFloor) break;
+      if (this.protectedFrameKeys.has(key)) continue;
+      if (this.dropFrame(key)) evicted++;
+    }
+
+    return evicted;
+  }
+
+  /** Drops every unprotected frame, for example when the map is hidden. */
+  public clearFrameBuffer(includeProtected: boolean = false): void {
+    for (const key of Array.from(this.frameBuffer.keys())) {
+      this.dropFrame(key, includeProtected);
+    }
+  }
+
+  private dropFrame(key: string, force: boolean = false): boolean {
+    const frame = this.frameBuffer.get(key);
+    if (!frame) return false;
+    if (!force && this.protectedFrameKeys.has(key)) return false;
+
+    this.frameBuffer.delete(key);
+    this.frameBufferBytes -= frame.bytes;
+    if (this.frameBufferBytes < 0) this.frameBufferBytes = 0;
+
+    // Owning the bitmap means the texture is released here rather than whenever a GC
+    // happens to notice a handle that looks cheap on the JS heap.
+    frame.bitmap.close();
+
+    return true;
+  }
 }
 
 const now = new Date();
 export const MapDataVersion = `${now.getFullYear() * 100 + (now.getMonth() + 1)}`; // Monthly update
-export const MapVectorVersion = `${MapDataVersion}-3`;
+export const MapVectorVersion = `${MapDataVersion}-4`;
 export const MapRasterVersion = `${MapDataVersion}-9`;
 export const MapLabelsVersion = `${MapDataVersion}-9`;
 export const MapRoutesVersion = `${MapDataVersion}-6`;

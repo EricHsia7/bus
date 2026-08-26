@@ -1,6 +1,8 @@
 import { MapLoader, MapLoaderResponse } from '../../data/map';
 import { drawLabelTiles, LabelTileView } from '../../data/map/label-renderer';
 import { drawRouteTiles, RouteTileView } from '../../data/map/route-renderer';
+import { VectorPlan } from '../../data/map/vector-plan';
+import { renderVectorFrame, resolveVectorFrame, VectorFrameRegion } from '../../data/map/vector-render';
 import { MapView, MapViews } from '../../data/map/views';
 import { booleanToString } from '../../tools';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
@@ -40,36 +42,32 @@ let height: number = window.innerHeight;
 let displayed: boolean = false;
 const devicePixelRatio = window.devicePixelRatio;
 
-/** Duration of the per-tile fade-in, in milliseconds, used as tiles stream in at a stable layer */
-const fadeDuration = 200;
-/**
- * Duration of the cross-fade between two zoom layers, in milliseconds. Crossing an integer
- * zoom doubles the raster resolution in one step, so this runs longer than a tile fade to
- * keep that jump from reading as a pop.
- */
-const layerFadeDuration = 320;
-/**
- * How many zoom layers may be kept alive at once. Zooming through several layers faster than
- * they can fade only ever costs this many passes, and the oldest layer is dropped rather than
- * accumulating history that nobody can see.
- */
-const maxLayerStack = 3;
-/** How many coarser zoom levels may be searched for stand-in imagery while a tile is missing */
-const maxParentFallbackDepth = 5;
-/** How many finer zoom levels may be searched for stand-in imagery while a tile is missing */
-const maxChildFallbackDepth = 2;
-/** Upper bound of retained fade states before pruning */
-const maxFadeStates = 1024;
 /** Decoded-tile budget handed to the loader's LRU cache, in bytes */
-const maxCacheBytes = 100 * 1024 * 1024;
+const maxCacheBytes = 96 * 1024 * 1024;
 /** Floor of the LRU budget, so small viewports still keep a useful history */
 const minCachedTiles = 16;
 /** The cache is never trimmed below this multiple of the tiles currently on screen */
 const cacheHeadroomFactor = 2;
 /** Delay before an eviction pass is attempted once the map goes quiet, in milliseconds */
 const evictionIdleDelay = 200;
+/** Rasterized-frame budget handed to the loader's frame buffer, in bytes */
+const maxFrameBufferBytes = 96 * 1024 * 1024;
+/** Floor of the frame budget, so a viewport's worth of frames always survives a trim */
+const minBufferedFrames = 16;
+/**
+ * How many coarser layers may stand in for a tile that has not arrived yet. Three steps
+ * is an eighth of the tile's ground per axis, past which the stand-in carries so little
+ * detail that the background reads better than a smear.
+ */
+const maxAncestorFallbackDepth = 3;
+/**
+ * How far a cached frame's resolution may drift from the wanted one before it is
+ * rasterized again. Mid-gesture, letting the compositor stretch a frame by a few percent
+ * is much cheaper than re-running the vector pass every animation frame; the settle pass
+ * at the end of the movement brings it back to exactly one bitmap pixel per device pixel.
+ */
+const frameResolutionTolerance = 1.25;
 /** Largest frame delta honoured, so returning from an idle tab does not jump a fade to the end */
-const maxFrameDelta = 64;
 /** Painted underneath the tiles so fade-ins read as map background rather than a black flash */
 const backgroundFill = '#f2f2f7';
 
@@ -78,6 +76,8 @@ const mapLoader = new MapLoader(clamp(Math.floor(Math.log(window.navigator.hardw
   minCachedTiles,
   headroomFactor: cacheHeadroomFactor,
   evictionDelay: evictionIdleDelay,
+  maxFrameBufferBytes,
+  minBufferedFrames,
   // Eviction waits while a frame is queued, so trimming never competes with drawing.
   shouldDeferEviction: () => frameId !== null,
   // The loader owns the bitmap; the renderer only drops the state derived from it.
@@ -100,6 +100,17 @@ const tileFadeStates = new Map<string, TileFadeState>();
 const protectedTileKeys = new Set<string>();
 /** Tile keys already handed to the loader, used to diff visible sets between movements */
 const requestedTileKeys = new Set<string>();
+/**
+ * Frame keys painted in the most recent frame. Handed to the loader after each frame so
+ * its frame buffer never trims a bitmap that is currently on screen.
+ */
+const protectedFrameKeys = new Set<string>();
+/**
+ * Boxes painted this pass, rebuilt every frame. A box is normally a visible tile, but
+ * while a zoom-out is still loading it can also be one of the finer tiles left over from
+ * before, each of which covers a quarter of its parent.
+ */
+const frameTargets: Array<TileInfo> = [];
 /** Plans handed over by the label workers, cached here for the lifetime of the tile. */
 /** Reused every frame so the draw pass allocates nothing. */
 const labelTileViews: Array<LabelTileView> = [];
@@ -126,6 +137,8 @@ const layerStack: ZoomLayer[] = [];
 /** Native layer requested in the previous frame, used to detect a zoom layer swap */
 let activeLayerZ: number | null = null;
 let frameId: number | null = null;
+/** Set while the next pass must produce frames at exactly the tiles' screen resolution. */
+let exactFrameRequested = false;
 
 const mapTileController = new MapTileController({
   element: MapCanvas,
@@ -133,7 +146,7 @@ const mapTileController = new MapTileController({
   centerLat: (24.8 + 25.3) / 2,
   zoom: 16,
   minZoom: 12,
-  maxZoom: 18,
+  maxZoom: 19,
   minNativeZoom: 12,
   maxNativeZoom: 17,
   tileSize: 256,
@@ -146,12 +159,15 @@ const mapTileController = new MapTileController({
   },
   onMovementEnd: function () {
     synchronizeQueue();
+    // The viewport has stopped, so this is the moment to pay for exact-resolution frames.
+    exactFrameRequested = true;
     requestFrame();
     mapLoader.runEviction();
   },
   onResize: function () {
     resizeMapCanvas();
     synchronizeQueue();
+    exactFrameRequested = true;
     requestFrame();
   }
 });
@@ -252,7 +268,10 @@ function getTileKey(x: number, y: number, z: number): string {
 }
 
 function handleTileResponse(response: MapLoaderResponse): void {
-  // The loader has already cached the decoded tile. The render loop picks it up on the next frame so it can fade in.
+  // The loader has already cached the decoded tile. Rasterizing happens in the render
+  // loop rather than here, so a burst of arrivals costs one vector pass per tile per
+  // frame instead of one per message, and every frame is produced for the viewport that
+  // is about to be drawn rather than the one that was current when the message landed.
   requestFrame();
 }
 
@@ -312,7 +331,7 @@ function synchronizeQueue(): void {
  * the destination is the missing tile's box, while the source is the quarter, sixteenth,
  * ... of the ancestor bitmap that covers exactly that ground.
  */
-function drawTileRegion(context: Context2D, bitmap: MapLoaderResponse['bitmap'], destX: number, destY: number, destZ: number, source: { x: number; y: number; width: number; height: number } | null, alpha: number): void {
+function drawTileRegion(context: Context2D, bitmap: ImageBitmap, destX: number, destY: number, destZ: number, source: { x: number; y: number; width: number; height: number } | null): void {
   const { screenBBox } = mapTileController.getTileBoundingBox(destX, destY, destZ);
 
   const left = Math.round(screenBBox.minX * devicePixelRatio) / devicePixelRatio;
@@ -326,222 +345,140 @@ function drawTileRegion(context: Context2D, bitmap: MapLoaderResponse['bitmap'],
   // Stand-in tiles from finer layers can fall outside the viewport, so skip those draws.
   if (right < 0 || bottom < 0 || left > width || top > height) return;
 
-  context.globalAlpha = alpha;
   if (source) {
     context.drawImage(bitmap as CanvasImageSource, source.x, source.y, source.width, source.height, left, top, tileWidth, tileHeight);
   } else {
     context.drawImage(bitmap as CanvasImageSource, left, top, tileWidth, tileHeight);
   }
-  context.globalAlpha = 1;
 }
 
-function drawTile(context: Context2D, response: MapLoaderResponse, z: number, alpha: number): void {
-  drawTileRegion(context, response.bitmap, response.x, response.y, z, null, alpha);
+/** A plan standing in for a tile box, and which part of that plan covers the box. */
+interface FrameSource {
+  plan: VectorPlan;
+  x: number;
+  y: number;
+  z: number;
+  region: VectorFrameRegion | null;
 }
 
 /**
- * Fills a tile that has not arrived yet with the closest cached imagery there is,
- * searching outwards from the requested layer (z-1, z+1, z-2, z+2, ...) and never beyond
- * the native range, where no raster exists at all.
- *
- * The nearest cached ancestor is painted first because a single ancestor always covers the
- * whole tile, then any cached descendants are painted over it, coarsest first, so the
- * sharpest imagery available ends up on top. Nothing is requested here: only tiles already
- * decoded in the loader's cache are used, so this never competes with the real queue.
- * Everything painted is registered as protected so the LRU cannot evict imagery on screen.
+ * Picks the plan that should be rasterized for a tile box. The tile's own plan wins;
+ * while it is still loading the nearest coarser ancestor already in the cache stands in,
+ * contributing the sub-square of itself that covers exactly this box.
  */
-function drawFallbackTile(context: Context2D, x: number, y: number, z: number): boolean {
-  const maxUp = Math.min(maxParentFallbackDepth, z - mapTileController.minNativeZoom);
-  const maxDown = Math.min(maxChildFallbackDepth, mapTileController.maxNativeZoom - z);
-  let painted = false;
+function findFrameSource(x: number, y: number, z: number): FrameSource | null {
+  // peek, not get: choosing a source is not drawing it, so the LRU order is left alone
+  // until the source is actually rasterized.
+  const exact = mapLoader.peek(x, y, z);
+  if (exact) return { plan: exact.vector, x, y, z, region: null };
 
-  for (let depth = 1; depth <= maxUp; depth++) {
-    const scale = Math.pow(2, depth);
-    const parentX = Math.floor(x / scale);
-    const parentY = Math.floor(y / scale);
-    const parent = mapLoader.get(parentX, parentY, z - depth);
-    if (!parent) continue;
-
-    protectedTileKeys.add(getTileKey(parentX, parentY, z - depth));
-    const sourceWidth = (parent.bitmap?.width || 0) / scale;
-    const sourceHeight = (parent.bitmap?.height || 0) / scale;
-    drawTileRegion(
-      context,
-      parent.bitmap,
-      x,
-      y,
-      z,
-      {
-        x: (x - parentX * scale) * sourceWidth,
-        y: (y - parentY * scale) * sourceHeight,
-        width: sourceWidth,
-        height: sourceHeight
-      },
-      1
-    );
-    painted = true;
-    break;
+  const minZ = Math.max(mapTileController.minNativeZoom, z - maxAncestorFallbackDepth);
+  for (let sourceZ = z - 1; sourceZ >= minZ; sourceZ--) {
+    const step = z - sourceZ;
+    const sourceX = x >> step;
+    const sourceY = y >> step;
+    const ancestor = mapLoader.peek(sourceX, sourceY, sourceZ);
+    if (!ancestor) continue;
+    const size = Math.pow(2, -step);
+    return {
+      plan: ancestor.vector,
+      x: sourceX,
+      y: sourceY,
+      z: sourceZ,
+      region: { x: (x - (sourceX << step)) * size, y: (y - (sourceY << step)) * size, size }
+    };
   }
 
-  for (let depth = 1; depth <= maxDown; depth++) {
-    const scale = Math.pow(2, depth);
-    let covered = 0;
+  return null;
+}
 
-    for (let childX = x * scale; childX < (x + 1) * scale; childX++) {
-      for (let childY = y * scale; childY < (y + 1) * scale; childY++) {
-        const child = mapLoader.get(childX, childY, z + depth);
-        if (!child) continue;
-        protectedTileKeys.add(getTileKey(childX, childY, z + depth));
-        drawTile(context, child, z + depth, 1);
-        covered++;
+/**
+ * Rebuilds the list of boxes this pass paints. Normally one box per visible tile, but a
+ * tile with nothing to stand in for it falls back the other way: right after a zoom-out
+ * the finer tiles are the ones still cached, and each covers a quarter of the box.
+ * Coverage can be partial there, which reads as background in the gaps.
+ */
+function collectFrameTargets(): void {
+  frameTargets.length = 0;
+
+  const visibleTiles = mapTileController.getVisibleTiles();
+  for (const tile of visibleTiles) {
+    if (findFrameSource(tile.x, tile.y, tile.z) || mapLoader.peekFrame(tile.x, tile.y, tile.z)) {
+      frameTargets.push(tile);
+      continue;
+    }
+
+    if (tile.z >= mapTileController.maxNativeZoom) continue;
+    const childZ = tile.z + 1;
+    for (let dy = 0; dy < 2; dy++) {
+      for (let dx = 0; dx < 2; dx++) {
+        const childX = tile.x * 2 + dx;
+        const childY = tile.y * 2 + dy;
+        if (!mapLoader.peek(childX, childY, childZ) && !mapLoader.peekFrame(childX, childY, childZ)) continue;
+        frameTargets.push(mapTileController.getTileBoundingBox(childX, childY, childZ));
       }
     }
-
-    if (covered > 0) painted = true;
-    // Fully covered by this level, so finer levels would only cost lookups.
-    if (covered === scale * scale) break;
-  }
-
-  return painted;
-}
-
-function easeInOut(progress: number): number {
-  return progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-}
-
-function pruneFadeStates(): void {
-  if (tileFadeStates.size <= maxFadeStates) return;
-  for (const key of Array.from(tileFadeStates.keys())) {
-    if (tileFadeStates.size <= maxFadeStates / 2) break;
-    if (requestedTileKeys.has(key)) continue;
-    tileFadeStates.delete(key);
   }
 }
 
-/**
- * Points the stack at the layer that should be on screen, without ever leaving a
- * half-transparent layer buried in the middle of it.
- *
- * Three things can happen. The requested layer is already on top, so it just keeps fading in.
- * The requested layer is the one directly underneath, which is the case when the user zooms
- * back across the same boundary, so the transition is reversed rather than stacked on top of
- * itself. Or it is a genuinely new layer, in which case the transition in flight is committed
- * to full opacity before the new layer is pushed, so the stack below the top is always opaque
- * imagery instead of a blend that has been frozen mid-way.
- */
-function updateLayerStack(z: number, now: number): void {
-  const top = layerStack[layerStack.length - 1];
-
-  // First frame after opening: there is nothing to cross-fade against.
-  if (!top) {
-    layerStack.push({ z, opacity: 1, target: 1, timestamp: now });
-    return;
-  }
-
-  if (top.z === z) {
-    top.target = 1;
-    return;
-  }
-
-  const below = layerStack[layerStack.length - 2];
-  if (below && below.z === z) {
-    // Zooming back across a boundary mid-fade rewinds the fade it interrupted. The layer
-    // underneath is already opaque, so fading the top back out lands exactly where the map
-    // started, and flicking back and forth stays continuous instead of piling up ghosts.
-    top.target = 0;
-    return;
-  }
-
-  top.opacity = 1;
-  top.target = 1;
-  layerStack.push({ z, opacity: 0, target: 1, timestamp: now });
-
-  // Zooming faster than the fades can finish drops the oldest layer. The new bottom layer
-  // fills its own gaps from cache, so coverage is preserved.
-  while (layerStack.length > maxLayerStack) layerStack.shift();
+function isFrameResolutionAcceptable(frame: { width: number; height: number }, wantedWidth: number, wantedHeight: number, exact: boolean): boolean {
+  if (frame.width === wantedWidth && frame.height === wantedHeight) return true;
+  if (exact) return false;
+  const drift = Math.max(wantedWidth / frame.width, frame.width / wantedWidth, wantedHeight / frame.height, frame.height / wantedHeight);
+  return drift <= frameResolutionTolerance;
 }
 
-// Advances the topmost layer's fade and retires layers that can no longer be seen.
-function advanceLayerStack(now: number): boolean {
-  let animating = false;
+function updateFrame(tile: TileInfo, exact: boolean): void {
+  const source = findFrameSource(tile.x, tile.y, tile.z);
+  if (!source) return;
 
-  for (let index = 0; index < layerStack.length; index++) {
-    const layer = layerStack[index];
-    // Only the topmost layer animates; everything below it is held opaque so the cross-fade
-    // has full coverage to blend against.
-    if (index < layerStack.length - 1) {
-      layer.opacity = 1;
-      layer.timestamp = now;
-      continue;
-    }
+  // Whatever is painted has to survive the next eviction pass, even when the existing
+  // frame is reused unchanged: the plan is what makes that frame reproducible.
+  protectedTileKeys.add(getTileKey(source.x, source.y, source.z));
 
-    if (layer.opacity !== layer.target) {
-      const elapsed = Math.min(maxFrameDelta, Math.max(0, now - layer.timestamp));
-      const step = layerFadeDuration > 0 ? elapsed / layerFadeDuration : 1;
-      layer.opacity = layer.target > layer.opacity ? Math.min(layer.target, layer.opacity + step) : Math.max(layer.target, layer.opacity - step);
-      animating = true;
-    }
-    layer.timestamp = now;
-  }
+  const wantedWidth = Math.max(1, Math.floor((tile.screenBBox.maxX - tile.screenBBox.minX) * devicePixelRatio));
+  const wantedHeight = Math.max(1, Math.floor((tile.screenBBox.maxY - tile.screenBBox.minY) * devicePixelRatio));
 
-  // An abandoned layer that has faded out completely is gone from the screen already.
-  while (layerStack.length > 1) {
-    const top = layerStack[layerStack.length - 1];
-    if (top.target !== 0 || top.opacity > 0) break;
-    layerStack.pop();
-  }
+  // The offset is whichever one the plan ships closest to the view zoom, clamped into
+  // [zoom, zoom + 1]: a stand-in ancestor used past its own octave saturates at the last
+  // frame it ships instead of having its widths extrapolated beyond the interval.
+  const { frameIndex, deltaZoom } = resolveVectorFrame(source.plan, mapTileController.zoom);
 
-  return animating;
+  const existing = mapLoader.peekFrame(tile.x, tile.y, tile.z);
+  // Resolution and styling offset are compared separately, because they do not move
+  // together. A changed fractional zoom always changes the render size, so the bitmap has
+  // to be produced again to stay pixel-exact; but the clamped offset it was styled for can
+  // legitimately be unchanged across that re-raster, once the viewport has left the plan's
+  // octave. Recording both also catches what a size comparison alone would miss: a
+  // stand-in ancestor being replaced by the tile's own geometry at the very same size.
+  if (existing && existing.sourceZ === source.z && existing.frameIndex === frameIndex && isFrameResolutionAcceptable(existing, wantedWidth, wantedHeight, exact)) return;
+
+  // Now the plan is really being read, so it counts as recently used.
+  mapLoader.get(source.x, source.y, source.z);
+
+  const bitmap = renderVectorFrame(source.plan, {
+    width: wantedWidth,
+    height: wantedHeight,
+    region: source.region,
+    deltaZoom
+  });
+
+  mapLoader.pushFrame(tile.x, tile.y, tile.z, bitmap, { sourceZ: source.z, frameIndex, deltaZoom });
 }
 
-function drawLayer(layer: ZoomLayer, isBottom: boolean, now: number): { complete: boolean; animating: boolean } {
-  // Only gaps/slots in the bottom layer may be filled with placeholder tiles borrowed from other zoom levels.
-  // Higher layers aren’t filled in. If they have gaps, the imagery underneath remains visible.
-  const tiles: TileInfo[] = mapTileController.getVisibleTiles(layer.z);
-  const layerAlpha = easeInOut(layer.opacity);
-  let complete = true;
-  let animating = false;
-
-  if (isBottom) {
-    // Stand-ins go down first so the layer's own tiles fade over imagery rather than over the flat background.
-    for (const tile of tiles) {
-      const fade = tileFadeStates.get(getTileKey(tile.x, tile.y, layer.z));
-      if (mapLoader.get(tile.x, tile.y, layer.z) && fade && fade.opacity >= 1) continue;
-      drawFallbackTile(MapContext, tile.x, tile.y, layer.z);
-    }
+function updateVisibleFrames(exact: boolean = false): void {
+  for (const tile of frameTargets) {
+    updateFrame(tile, exact);
   }
+}
 
-  for (const tile of tiles) {
-    const key = getTileKey(tile.x, tile.y, layer.z);
-    protectedTileKeys.add(key);
-
-    const cache = mapLoader.get(tile.x, tile.y, layer.z);
-    if (!cache) {
-      complete = false;
-      continue;
-    }
-
-    let fade = tileFadeStates.get(key);
-    if (!fade) {
-      // The fade starts when the tile first becomes drawable, not when it was requested.
-      fade = { opacity: 0, timestamp: now };
-      tileFadeStates.set(key, fade);
-    }
-
-    if (fade.opacity < 1) {
-      const elapsed = Math.min(maxFrameDelta, Math.max(0, now - fade.timestamp));
-      fade.opacity = Math.min(1, fade.opacity + (fadeDuration > 0 ? elapsed / fadeDuration : 1));
-      complete = false;
-      animating = true;
-    }
-    fade.timestamp = now;
-
-    // The two fades multiply, so a tile that lands in the middle of a zoom transition still
-    // cannot appear at full strength ahead of the layer it belongs to.
-    drawTile(MapContext, cache, layer.z, easeInOut(fade.opacity) * layerAlpha);
+function drawTiles(): void {
+  for (const tile of frameTargets) {
+    const frame = mapLoader.getFrame(tile.x, tile.y, tile.z);
+    if (!frame) continue;
+    drawTileRegion(MapContext, frame.bitmap, tile.x, tile.y, tile.z, null);
+    protectedFrameKeys.add(getTileKey(tile.x, tile.y, tile.z));
   }
-
-  return { complete, animating };
 }
 
 function drawOverlay(): void {
@@ -555,6 +492,9 @@ function drawOverlay(): void {
     const { x, y, z } = tile;
     const cached = mapLoader.get(x, y, z);
     if (!cached) continue;
+    // Labels and routes are drawn straight from the plan, so those plans are on screen
+    // just as much as the rasterized ones and must be protected too.
+    protectedTileKeys.add(getTileKey(x, y, z));
     labelTileViews.push({ plan: cached.label, screenBBox: tile.screenBBox });
     routeTileViews.push({ plan: cached.route, screenBBox: tile.screenBBox });
   }
@@ -580,43 +520,31 @@ function drawOverlay(): void {
 function renderFrame(now: number): void {
   frameId = null;
 
-  const z = mapTileController.getNativeZoom();
-  // Rebuilt every frame: the tiles painted below are exactly the ones eviction must keep.
+  const nativeZoom = mapTileController.getNativeZoom();
+  // Rebuilt every frame: what is painted below is exactly what the loader must keep.
   protectedTileKeys.clear();
+  protectedFrameKeys.clear();
 
-  updateLayerStack(z, now);
-  let animating = advanceLayerStack(now);
+  if (activeLayerZ !== null && activeLayerZ !== nativeZoom) synchronizeQueue();
+  activeLayerZ = nativeZoom;
 
-  if (activeLayerZ !== null && activeLayerZ !== z) synchronizeQueue();
-  activeLayerZ = z;
+  // Both passes run unconditionally. Which plan stands in for which box can change
+  // without the viewport moving at all (a tile finishes loading), and the render size
+  // changes whenever the fractional zoom does. Each is a no-op when nothing it depends on
+  // changed, so the cost of asking every frame is a peek and a size comparison per box.
+  collectFrameTargets();
+  updateVisibleFrames(exactFrameRequested);
+  exactFrameRequested = false;
 
-  MapContext.globalAlpha = 1;
   MapContext.fillStyle = backgroundFill;
   MapContext.fillRect(0, 0, width, height);
 
-  let topComplete = false;
-  for (let index = 0; index < layerStack.length; index++) {
-    const result = drawLayer(layerStack[index], index === 0, now);
-    if (result.animating) animating = true;
-    topComplete = result.complete;
-  }
-
-  // Once the top layer is opaque and has every tile it needs, the layers underneath cannot
-  // contribute a single pixel, so they stop costing draw calls and stop protecting tiles.
-  const top = layerStack[layerStack.length - 1];
-  if (layerStack.length > 1 && top.target === 1 && top.opacity >= 1 && topComplete) {
-    layerStack.splice(0, layerStack.length - 1);
-  }
+  drawTiles();
 
   drawOverlay();
 
-  pruneFadeStates();
-
-  // Publish what was just painted, stand-ins included. The loader will not evict these, and
-  // it defers its own trimming while a frame is still queued.
   mapLoader.protect(protectedTileKeys);
-
-  if (animating) requestFrame();
+  mapLoader.protectFrames(protectedFrameKeys);
 }
 
 function generateItemOfOverlay(): HTMLElement {
@@ -810,12 +738,18 @@ export function closeMap(): void {
 
   // Reopening should show the current viewport straight away rather than replay a cross-fade against a layer that left the screen long ago.
   activeLayerZ = null;
-  layerStack.length = 0;
+  exactFrameRequested = true;
+  frameTargets.length = 0;
 
   // Nothing is on screen any more, so nothing needs protecting and the loader can trim straight down to its budget.
   protectedTileKeys.clear();
+  protectedFrameKeys.clear();
   mapLoader.protect(protectedTileKeys);
+  mapLoader.protectFrames(protectedFrameKeys);
   mapLoader.trim();
+  // Frames are cheap to produce again from the retained plans and are sized for a
+  // viewport that is no longer visible, so the whole buffer goes rather than a trim.
+  mapLoader.clearFrameBuffer(true);
   MapOverlayContext.clearRect(0, 0, width, height);
 }
 
