@@ -70,8 +70,8 @@ const cache = new LabelGlyphCache(512, 3);
 // }
 
 async function loadTile(tile: MapLoaderTile) {
-  const vectorURL = `../../../bus-map-f/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.gz?_=${MapVectorVersion}`;
-  const labelsURL = `../../../bus-map-f/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?_=${MapLabelsVersion}`;
+  const vectorURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.gz?_=${MapVectorVersion}`;
+  const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?_=${MapLabelsVersion}`;
   const routesURL = `https://erichsia7.github.io/bus-map-routes/routes/${tile.z}/${tile.x}/${tile.y}.gz?_=${MapRoutesVersion}`;
 
   const [vector, labels, routes] = await Promise.allSettled([getJSON<VectorTile>(vectorURL), getJSON<LabelFeatureCollection>(labelsURL), getJSON<RouteFeatureCollection>(routesURL)]);
