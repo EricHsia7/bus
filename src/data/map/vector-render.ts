@@ -1,7 +1,6 @@
 import { clamp } from '../../tools/math';
-import { TileInfo } from '../../tools/tile-controller';
 import { pickFrameIndex, resolveStrokeWidth } from './vector';
-import { VectorPlan } from './vector-plan';
+import { getVectorPlanPaths, VectorPlan } from './vector-plan';
 
 const designTileSize = 256;
 
@@ -89,7 +88,12 @@ export function renderVectorFrame(vectorPlan: VectorPlan, request: VectorFrameRe
     context.restore();
   }
 
-  const { extent, coordinates, partStartIndices, descriptorStartIndices, styleReferences, styleStartIndices, styles } = vectorPlan;
+  const { extent, styleReferences, styles } = vectorPlan;
+
+  // Built once per plan, reused by every frame. The paths are in tile units, so this
+  // frame's resolution, sub-square and zoom all live in the transform below and none of
+  // them can invalidate the geometry.
+  const paths = getVectorPlanPaths(vectorPlan);
 
   // Map the requested sub-square of tile space onto the whole bitmap. For a full tile
   // this is the plain `renderSize / extent` scale; for a sub-square it is that scale
@@ -106,31 +110,14 @@ export function renderVectorFrame(vectorPlan: VectorPlan, request: VectorFrameRe
   for (let i = 0, l = styleReferences.length; i < l; i++) {
     context.save();
 
-    // style run -> descriptor -> part (ring / line) -> point
-    const descriptorStart = styleStartIndices[i];
-    const descriptorEnd = styleStartIndices[i + 1];
-    context.beginPath();
-    for (let j = descriptorStart; j < descriptorEnd; j++) {
-      const partStart = descriptorStartIndices[j];
-      const partEnd = descriptorStartIndices[j + 1];
-      for (let p = partStart; p < partEnd; p++) {
-        const pointStart = partStartIndices[p];
-        const pointEnd = partStartIndices[p + 1];
-        if (pointStart === pointEnd) continue;
-        context.moveTo(coordinates[pointStart * 2], coordinates[pointStart * 2 + 1]);
-        for (let k = pointStart + 1; k < pointEnd; k++) {
-          context.lineTo(coordinates[k * 2], coordinates[k * 2 + 1]);
-        }
-      }
-    }
-
+    const path = paths[i];
     const style = styles[styleReferences[i]];
     const opacity = style['opacity'] || 1;
     if (style['opacity']) context.globalAlpha = opacity;
     if (style.fill) {
       context.fillStyle = style.fill;
       if (style['fill-opacity']) context.globalAlpha = opacity * style['fill-opacity'];
-      context.fill();
+      context.fill(path);
       if (style['fill-opacity']) context.globalAlpha = opacity;
     }
     if (style.stroke) {
@@ -144,7 +131,7 @@ export function renderVectorFrame(vectorPlan: VectorPlan, request: VectorFrameRe
       if (style['stroke-dasharray']) context.setLineDash(style['stroke-dasharray'].map((v) => v * globalStrokeScaleFactor));
       if (style['stroke-opacity']) context.globalAlpha = opacity * style['stroke-opacity'];
       context.strokeStyle = style.stroke;
-      context.stroke();
+      context.stroke(path);
       if (style['stroke-opacity']) context.globalAlpha = opacity;
     }
     context.restore();

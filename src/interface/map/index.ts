@@ -7,7 +7,6 @@ import { MapView, MapViews } from '../../data/map/views';
 import { booleanToString } from '../../tools';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
 import { Context2D } from '../../tools/graphic';
-import { clamp } from '../../tools/math';
 import { MapTileController, TileInfo } from '../../tools/tile-controller';
 import { getBlankIconElement, setIcon } from '../icons';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
@@ -43,7 +42,7 @@ let displayed: boolean = false;
 const devicePixelRatio = window.devicePixelRatio;
 
 /** Decoded-tile budget handed to the loader's LRU cache, in bytes */
-const maxCacheBytes = 96 * 1024 * 1024;
+const maxCacheBytes = 100 * 1024 * 1024;
 /** Floor of the LRU budget, so small viewports still keep a useful history */
 const minCachedTiles = 16;
 /** The cache is never trimmed below this multiple of the tiles currently on screen */
@@ -66,12 +65,12 @@ const maxAncestorFallbackDepth = 3;
  * is much cheaper than re-running the vector pass every animation frame; the settle pass
  * at the end of the movement brings it back to exactly one bitmap pixel per device pixel.
  */
-const frameResolutionTolerance = 1.25;
+const frameResolutionTolerance = 1.5;
 /** Largest frame delta honoured, so returning from an idle tab does not jump a fade to the end */
 /** Painted underneath the tiles so fade-ins read as map background rather than a black flash */
 const backgroundFill = '#f2f2f7';
 
-const mapLoader = new MapLoader(clamp(Math.floor(Math.log(window.navigator.hardwareConcurrency) / Math.log(2)), 1, 6), handleTileResponse, {
+const mapLoader = new MapLoader(2, handleTileResponse, {
   maxCacheBytes,
   minCachedTiles,
   headroomFactor: cacheHeadroomFactor,
@@ -451,7 +450,7 @@ function updateFrame(tile: TileInfo, exact: boolean): void {
   // legitimately be unchanged across that re-raster, once the viewport has left the plan's
   // octave. Recording both also catches what a size comparison alone would miss: a
   // stand-in ancestor being replaced by the tile's own geometry at the very same size.
-  if (existing && existing.sourceZ === source.z && existing.frameIndex === frameIndex && isFrameResolutionAcceptable(existing, wantedWidth, wantedHeight, exact)) return;
+  if (existing && existing.sourceZ === source.z && existing.frameIndex === frameIndex) return; // && isFrameResolutionAcceptable(existing, wantedWidth, wantedHeight, exact)
 
   // Now the plan is really being read, so it counts as recently used.
   mapLoader.get(source.x, source.y, source.z);

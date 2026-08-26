@@ -102,6 +102,6 @@ async function loadTile(tile: MapLoaderTile) {
         route: routePlan
       }
     } as MapLoaderWorkerMessageData,
-    [vectorPlan.coordinates.buffer, vectorPlan.descriptorStartIndices.buffer, vectorPlan.descriptorTypes.buffer, vectorPlan.partStartIndices.buffer, vectorPlan.styleReferences.buffer, vectorPlan.styleStartIndices.buffer, labelPlan.sheet as ImageBitmap, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer]
+    [vectorPlan.coordinates.buffer, vectorPlan.descriptorStartIndices.buffer, vectorPlan.descriptorTypes.buffer, vectorPlan.partStartIndices.buffer, vectorPlan.styleReferences.buffer, vectorPlan.styleStartIndices.buffer, labelPlan.sheet as ImageBitmap, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer, routePlan.features.buffer, routePlan.routeIds.buffer, routePlan.x.buffer, routePlan.y.buffer]
   );
 }

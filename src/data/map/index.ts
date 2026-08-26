@@ -1,6 +1,6 @@
 import { LabelGlyphPlan } from './label-plan';
 import { RoutePlan } from './route-plan';
-import { VectorPlan } from './vector-plan';
+import { buildVectorPlanPaths, VectorPlan } from './vector-plan';
 
 /**
  * - 0: pending
@@ -235,6 +235,7 @@ export class MapLoader {
           response = existing;
           this.touch(key);
         } else {
+          response.vector.paths = buildVectorPlanPaths(response.vector);
           this.store(key, response);
         }
 
