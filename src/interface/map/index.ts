@@ -43,7 +43,7 @@ let displayed: boolean = false;
 const devicePixelRatio = window.devicePixelRatio;
 
 /** Decoded-tile budget handed to the loader's LRU cache, in bytes */
-const maxCacheBytes = 64 * 1024 * 1024;
+const maxCacheBytes = 96 * 1024 * 1024;
 /** Floor of the LRU budget, so small viewports still keep a useful history */
 const minCachedTiles = 16;
 /** The cache is never trimmed below this multiple of the tiles currently on screen */
@@ -146,7 +146,7 @@ const mapTileController = new MapTileController({
   centerLat: (24.8 + 25.3) / 2,
   zoom: 16,
   minZoom: 12,
-  maxZoom: 18,
+  maxZoom: 19,
   minNativeZoom: 12,
   maxNativeZoom: 17,
   tileSize: 256,

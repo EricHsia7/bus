@@ -341,10 +341,7 @@ export class MapLoader {
     const previous = this.tileBytes.get(key);
     if (previous !== undefined) this.cacheBytes -= previous;
 
-    const vectorBytes = response.vector.size;
-    const sheet = response.label.sheet;
-    const sheetBytes = sheet?.width && sheet?.height ? sheet.width * sheet.height * 4 : fallbackTileBytes;
-    const totalBytes = vectorBytes + sheetBytes;
+    const totalBytes = response.vector.size + response.label.size;
 
     this.cache.delete(key);
     this.cache.set(key, response);

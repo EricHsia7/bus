@@ -127,6 +127,10 @@ export interface LabelGlyphPlan {
    */
   scales: Float32Array;
   circleStyles: Array<CircleStyleProperties>;
+  /**
+   * size in bytes
+   */
+  size: number;
 }
 
 interface AtlasPage {
@@ -1303,17 +1307,19 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, cache: L
     scales[scaleOffset + 1] = local.scale1;
   }
 
+  const truncatedPlacements = placements.subarray(0, placementIndex * LabelPlacementStride).slice();
   return {
     extent,
     zoom: collection.zoom,
     designSize: LabelDesignSize,
     sheet,
     glyphs,
-    placements: placements.subarray(0, placementIndex * LabelPlacementStride).slice(),
+    placements: truncatedPlacements,
     features,
     bounds,
     collisions,
     scales,
-    circleStyles: collection.circleStyles
+    circleStyles: collection.circleStyles,
+    size: sheet.width * sheet.height * 4 + glyphs.byteLength + truncatedPlacements.byteLength + features.byteLength + bounds.byteLength + collisions.byteLength + scales.byteLength
   };
 }

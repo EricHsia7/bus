@@ -105,7 +105,7 @@ export interface VectorTile {
  */
 export function sampleScale(scale: VectorTileScale | undefined, deltaZoom: number): number {
   if (scale === undefined) return 1;
-  const t = deltaZoom < 0 ? 0 : deltaZoom > 1 ? 1 : deltaZoom;
+  const t = clamp(deltaZoom, 0, 1);
   return (scale[0] + (scale[1] - scale[0]) * t) * Math.pow(2, -t);
 }
 

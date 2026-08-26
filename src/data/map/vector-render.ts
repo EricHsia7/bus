@@ -152,16 +152,3 @@ export function renderVectorFrame(vectorPlan: VectorPlan, request: VectorFrameRe
 
   return canvas.transferToImageBitmap();
 }
-
-/**
- * Rasterizes a whole tile at its current screen size. Kept as the simple entry point for
- * callers that draw a plan as its own tile.
- */
-export function getVectorTileFrame(vectorPlan: VectorPlan, tile: TileInfo, viewZoom: number, devicePixelRatio: number): ImageBitmap {
-  const { deltaZoom } = resolveVectorFrame(vectorPlan, viewZoom);
-  return renderVectorFrame(vectorPlan, {
-    width: (tile.screenBBox.maxX - tile.screenBBox.minX) * devicePixelRatio,
-    height: (tile.screenBBox.maxY - tile.screenBBox.minY) * devicePixelRatio,
-    deltaZoom
-  });
-}
