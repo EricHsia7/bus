@@ -83,7 +83,23 @@ module.exports = (env, argv) => {
             urlPattern: /^https:\/\/erichsia7.github.io\/bus-map\/tiles\/[0-9]+\/[0-9]+\/[0-9]+\.webp/,
             handler: 'CacheFirst',
             options: {
-              cacheName: 'map-tiles',
+              cacheName: 'map-raster-tiles',
+              matchOptions: {
+                ignoreSearch: false
+              },
+              expiration: {
+                purgeOnQuotaError: true
+              },
+              cacheableResponse: {
+                statuses: [200]
+              }
+            }
+          },
+          {
+            urlPattern: /^https:\/\/erichsia7.github.io\/bus-map\/tiles\/[0-9]+\/[0-9]+\/[0-9]+\.gz/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'map-vector-tiles',
               matchOptions: {
                 ignoreSearch: false
               },
@@ -155,7 +171,7 @@ module.exports = (env, argv) => {
       rules: [
         {
           test: /\.js|ts|jsx|tsx$/, // Use babel-loader for TypeScript files
-          exclude: [/node_modules/, /index\.html/],
+          exclude: [/node_modules/, /index\.html/, /\.(glsl|vs|fs|vert|frag)$/],
           use: {
             loader: 'babel-loader',
             options: {
@@ -179,6 +195,10 @@ module.exports = (env, argv) => {
         {
           test: /\.css$/,
           use: [MiniCssExtractPlugin.loader, 'css-loader']
+        },
+        {
+          test: /\.(glsl|vert|frag)$/,
+          type: 'asset/source'
         }
       ]
     },

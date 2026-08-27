@@ -1,5 +1,6 @@
 import { LabelGlyphPlan } from './label-plan';
 import { RoutePlan } from './route-plan';
+import { VectorPlan } from './vector-plan';
 
 /**
  * - 0: pending
@@ -18,9 +19,28 @@ export interface MapLoaderTile {
 }
 
 export interface MapLoaderResponse extends MapLoaderTile {
-  bitmap: ImageBitmap | null;
+  vector: VectorPlan;
   label: LabelGlyphPlan;
   route: RoutePlan;
+}
+
+/**
+ * A rasterized tile, plus what it was rasterized from. Both halves of the provenance
+ * matter: `sourceZ` says whose geometry is on screen (a stand-in ancestor while the tile
+ * itself is still loading), and `frameIndex` / `deltaZoom` say which point of the shipped
+ * `[zoom, zoom + 1]` scale interval it was styled for.
+ */
+export interface MapLoaderFrame {
+  bitmap: ImageBitmap;
+  /** Zoom of the plan the frame was rasterized from. Lower than the frame's own z while a coarser tile stands in for one that has not arrived yet. */
+  sourceZ: number;
+  /** Index into the source plan's `frameDeltaZooms`. */
+  frameIndex: number;
+  /** Clamped zoom offset the scale-dependent styling was sampled at. */
+  deltaZoom: number;
+  width: number;
+  height: number;
+  bytes: number;
 }
 
 export interface MapLoaderWorkerMessageData {
@@ -70,6 +90,15 @@ export class MapLoader {
    * waiting for a garbage collection that only sees the handle, not the texture.
    */
   cache: Map<string, MapLoaderResponse>;
+  /**
+   * Rasterized frames in least-recently-used order, keyed by the tile box they are drawn
+   * as rather than by the plan they came from. A stand-in frame therefore sits under the
+   * key of the tile that is still loading, and is replaced in place once that tile
+   * arrives and can be rasterized from its own geometry.
+   *
+   * As with the decoded tiles, the loader is the sole owner of these bitmaps: only
+   * `evictFrame` may close them.
+   */
   queue: Array<string>;
   processing: number;
   worker: Worker;
@@ -88,6 +117,8 @@ export class MapLoader {
   private cacheBytes: number;
   /** Tiles the caller is currently drawing. These are never evicted. */
   private protectedKeys: Set<string>;
+  /** Frames painted in the most recent frame. These are never trimmed. */
+  private protectedFrameKeys: Set<string>;
   private evictionTimeoutId: ReturnType<typeof setTimeout> | null;
 
   constructor(batchSize: number, callback: MapLoader['callback'], options: MapLoaderCacheOptions = {}) {
@@ -109,6 +140,7 @@ export class MapLoader {
     this.tileBytes = new Map();
     this.cacheBytes = 0;
     this.protectedKeys = new Set();
+    this.protectedFrameKeys = new Set();
     this.evictionTimeoutId = null;
 
     this.worker.onmessage = this.handleWorkerMessage.bind(this);
@@ -180,10 +212,6 @@ export class MapLoader {
         let response = message.response;
         if (existing && existing !== response) {
           // The tile was decoded twice (a re-request raced an in-flight load). The cached bitmap stays authoritative and the duplicate is closed rather than leaked.
-          if (response.bitmap) {
-            response.bitmap.close?.();
-            response.bitmap = null;
-          }
           if (response.label.sheet) {
             response.label.sheet.close?.();
             response.label.sheet = null;
@@ -234,12 +262,6 @@ export class MapLoader {
   protect(keys: Iterable<string>): void {
     // Copied rather than aliased: the renderer rebuilds its set every frame, and an eviction pass must never observe it half-populated.
     this.protectedKeys = new Set(keys);
-  }
-
-  protectTiles(tiles: Iterable<{ x: number; y: number; z: number }>): void {
-    const keys = new Set<string>();
-    for (const tile of tiles) keys.add(this.getTileKey(tile.x, tile.y, tile.z));
-    this.protect(keys);
   }
 
   /** Drops a single tile immediately. Returns false when the tile is protected or absent. */
@@ -302,11 +324,7 @@ export class MapLoader {
     const previous = this.tileBytes.get(key);
     if (previous !== undefined) this.cacheBytes -= previous;
 
-    const bitmap = response.bitmap;
-    const bitmapBytes = bitmap?.width && bitmap?.height ? bitmap.width * bitmap.height * 4 : fallbackTileBytes;
-    const sheet = response.label.sheet;
-    const sheetBytes = sheet?.width && sheet?.height ? sheet.width * sheet.height * 4 : fallbackTileBytes;
-    const totalBytes = bitmapBytes + sheetBytes;
+    const totalBytes = response.vector.size + response.label.size;
 
     this.cache.delete(key);
     this.cache.set(key, response);
@@ -326,10 +344,6 @@ export class MapLoader {
     if (this.cacheBytes < 0) this.cacheBytes = 0;
 
     // Owning the bitmap means the texture can be released now rather than whenever a GC happens to notice a handle that looks cheap on the JS heap.
-    if (response.bitmap) {
-      response.bitmap.close?.();
-      response.bitmap = null;
-    }
     if (response.label.sheet) {
       response.label.sheet.close?.();
       response.label.sheet = null;
@@ -368,6 +382,7 @@ export class MapLoader {
 
 const now = new Date();
 export const MapDataVersion = `${now.getFullYear() * 100 + (now.getMonth() + 1)}`; // Monthly update
+export const MapVectorVersion = `${MapDataVersion}-5`;
 export const MapRasterVersion = `${MapDataVersion}-9`;
 export const MapLabelsVersion = `${MapDataVersion}-9`;
 export const MapRoutesVersion = `${MapDataVersion}-6`;

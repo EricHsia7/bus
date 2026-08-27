@@ -3,11 +3,13 @@ declare const self: DedicatedWorkerGlobalScope;
 // export {}; // make a script a module if no any export or import
 
 import { Decompress } from 'fflate';
-import { MapLabelsVersion, MapLoaderTile, MapLoaderWorkerMessageData, MapLoaderWorkerMessageError, MapRasterVersion, MapRoutesVersion } from './index';
+import { MapLabelsVersion, MapLoaderTile, MapLoaderWorkerMessageData, MapLoaderWorkerMessageError, MapRoutesVersion, MapVectorVersion } from './index';
 import { LabelFeatureCollection } from './label';
 import { buildLabelGlyphPlan, LabelGlyphCache } from './label-plan';
 import { RouteFeatureCollection } from './route';
 import { buildRoutePlan } from './route-plan';
+import { VectorTile } from './vector';
+import { buildVectorPlan } from './vector-plan';
 
 self.onmessage = function (event: MessageEvent): void {
   const batch = event.data as Array<MapLoaderTile>;
@@ -17,15 +19,6 @@ self.onmessage = function (event: MessageEvent): void {
     });
   }
 };
-
-async function getRaster(url: string): Promise<ImageBitmap> {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  if (!response.body) throw new Error('No response body to stream');
-  const blob = await response.blob();
-  const bitmap = await createImageBitmap(blob);
-  return bitmap;
-}
 
 const decoder = new TextDecoder();
 async function getJSON<T>(url: string): Promise<T> {
@@ -77,12 +70,13 @@ const cache = new LabelGlyphCache(512, 3);
 // }
 
 async function loadTile(tile: MapLoaderTile) {
-  const rasterURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.webp?_=${MapRasterVersion}`;
+  const vectorURL = `https://erichsia7.github.io/bus-map/tiles/${tile.z}/${tile.x}/${tile.y}.gz?_=${MapVectorVersion}`;
   const labelsURL = `https://erichsia7.github.io/bus-map/labels/${tile.z}/${tile.x}/${tile.y}.gz?_=${MapLabelsVersion}`;
   const routesURL = `https://erichsia7.github.io/bus-map-routes/routes/${tile.z}/${tile.x}/${tile.y}.gz?_=${MapRoutesVersion}`;
 
-  const [bitmap, labels, routes] = await Promise.allSettled([getRaster(rasterURL), getJSON<LabelFeatureCollection>(labelsURL), getJSON<RouteFeatureCollection>(routesURL)]);
-  if (bitmap.status !== 'fulfilled' || labels.status !== 'fulfilled') throw new Error('Error fetching tiles.');
+  const [vector, labels, routes] = await Promise.allSettled([getJSON<VectorTile>(vectorURL), getJSON<LabelFeatureCollection>(labelsURL), getJSON<RouteFeatureCollection>(routesURL)]);
+  if (vector.status !== 'fulfilled' || labels.status !== 'fulfilled') throw new Error('Error fetching tiles.');
+  const vectorPlan = buildVectorPlan(vector.value);
   const labelPlan = buildLabelGlyphPlan(labels.value, cache);
   const routePlan =
     routes.status === 'fulfilled'
@@ -103,11 +97,11 @@ async function loadTile(tile: MapLoaderTile) {
       type: 'data',
       response: {
         ...tile,
-        bitmap: bitmap.value,
+        vector: vectorPlan,
         label: labelPlan,
         route: routePlan
       }
     } as MapLoaderWorkerMessageData,
-    [bitmap.value, labelPlan.sheet as ImageBitmap, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer]
+    [vectorPlan.coordinates.buffer, vectorPlan.descriptorStartIndices.buffer, vectorPlan.descriptorTypes.buffer, vectorPlan.partStartIndices.buffer, vectorPlan.styleReferences.buffer, vectorPlan.styleStartIndices.buffer, vectorPlan.gpu.polygonPositions.buffer, vectorPlan.gpu.polygonStyles.buffer, vectorPlan.gpu.polygonIndices.buffer, vectorPlan.gpu.lineVertices.buffer, vectorPlan.gpu.lineStyles.buffer, vectorPlan.gpu.lineIndices.buffer, vectorPlan.gpu.palette.buffer, vectorPlan.gpu.styleData.buffer, labelPlan.sheet as ImageBitmap, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer, routePlan.features.buffer, routePlan.routeIds.buffer, routePlan.x.buffer, routePlan.y.buffer]
   );
 }

@@ -1,5 +1,6 @@
 import { clamp } from '../../tools/math';
-import { CircleStyleProperties, IconStyleProperties, LabelFeature, LabelFeatureCollection, LabelKind, LabelPropertyScale, LineStringLabelFeature, PointLabelFeature, TextStyleProperties } from './label';
+import { CircleStyleProperties, IconStyleProperties, LabelFeature, LabelFeatureCollection, LabelKind, LineStringLabelFeature, PointLabelFeature, TextStyleProperties } from './label';
+import { PropertyScale } from './style';
 
 /**
  * The design space that MapInk style values (`text-size`, `text-dy`,
@@ -126,6 +127,10 @@ export interface LabelGlyphPlan {
    */
   scales: Float32Array;
   circleStyles: Array<CircleStyleProperties>;
+  /**
+   * size in bytes
+   */
+  size: number;
 }
 
 interface AtlasPage {
@@ -518,13 +523,13 @@ function hashLabel(text: string): number {
   return hash >>> 0;
 }
 
-function getTextScale(style: TextStyleProperties): LabelPropertyScale {
+function getTextScale(style: TextStyleProperties): PropertyScale {
   const scale = style['text-scale'];
   if (!scale) return [1, 1];
   return [scale[0], scale[1]];
 }
 
-function getMarkerScale(style: CircleStyleProperties): LabelPropertyScale {
+function getMarkerScale(style: CircleStyleProperties): PropertyScale {
   const scale = style['marker-scale'];
   if (!scale) return [1, 1];
   return [scale[0], scale[1]];
@@ -1302,17 +1307,19 @@ export function buildLabelGlyphPlan(collection: LabelFeatureCollection, cache: L
     scales[scaleOffset + 1] = local.scale1;
   }
 
+  const truncatedPlacements = placements.subarray(0, placementIndex * LabelPlacementStride).slice();
   return {
     extent,
     zoom: collection.zoom,
     designSize: LabelDesignSize,
     sheet,
     glyphs,
-    placements: placements.subarray(0, placementIndex * LabelPlacementStride).slice(),
+    placements: truncatedPlacements,
     features,
     bounds,
     collisions,
     scales,
-    circleStyles: collection.circleStyles
+    circleStyles: collection.circleStyles,
+    size: sheet.width * sheet.height * 4 + glyphs.byteLength + truncatedPlacements.byteLength + features.byteLength + bounds.byteLength + collisions.byteLength + scales.byteLength
   };
 }

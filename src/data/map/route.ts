@@ -1,18 +1,11 @@
+import { LineCap, LineDash, LineJoin, PropertyScale } from './style';
+
 export type RouteKind = 'line';
 
 declare const ROUTE_STYLE_BRAND: unique symbol;
 
 /** An index into the line style table. */
 export type RouteStyleRef = number & { readonly [ROUTE_STYLE_BRAND]: 'line' };
-
-/**
- * Scale interval [s0, s1] spanning [zoom, zoom + 1].
- * Analogous to `LabelPropertyScale` (text-scale / marker-scale).
- */
-export type RoutePropertyScale = [scale0: number, scale1: number];
-
-export type LineCap = 'butt' | 'round' | 'square';
-export type LineJoin = 'bevel' | 'round' | 'miter';
 
 export interface BaseRouteStyleProperties {
   layer: string;
@@ -27,7 +20,7 @@ export interface LineStyleProperties extends BaseRouteStyleProperties {
    * Scale interval [s0, s1] spanning [zoom, zoom + 1]
    * - width(zoom) = line-width * lerp(s0, s1, zoom - collection.zoom)
    */
-  'line-width-scale'?: RoutePropertyScale;
+  'line-width-scale'?: PropertyScale;
   'line-fill'?: string;
   /** Casing / halo drawn beneath the core stroke (analogue of text-halo-fill). */
   'line-casing-fill'?: string;
@@ -37,7 +30,7 @@ export interface LineStyleProperties extends BaseRouteStyleProperties {
   'line-cap'?: LineCap;
   'line-join'?: LineJoin;
   /** Dash pattern in unscaled pixels; scaled with the stroke width at draw time. */
-  'line-dasharray'?: Array<number>;
+  'line-dasharray'?: LineDash;
 }
 
 export interface RouteProperties {

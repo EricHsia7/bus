@@ -1,3 +1,5 @@
+import { PropertyScale } from './style';
+
 export type LabelKind = 'text' | 'marker' | 'point' | 'shield' | 'circle';
 export type IconKind = 'marker' | 'point' | 'shield';
 
@@ -5,12 +7,6 @@ declare const STYLE_BRAND: unique symbol;
 
 /** An index into the style table for `K`. */
 export type StyleRef<K extends LabelKind> = number & { readonly [STYLE_BRAND]: K };
-
-/**
- * - text-scale
- * - marker-scale
- */
-export type LabelPropertyScale = [scale0: number, scale1: number];
 
 export interface BaseStyleProperties {
   layer: string;
@@ -24,8 +20,9 @@ export interface TextStyleProperties extends BaseStyleProperties {
   /**
    * Scale interval [s0, s1] spanning [minzoom, minzoom + 1]
    * - size(zoom) = text-size * lerp(s0, s1, zoom - minzoom)
+   * - radius(zoom) = marker-width / 2 * lerp(s0, s1, zoom - minzoom)
    */
-  'text-scale'?: LabelPropertyScale;
+  'text-scale'?: PropertyScale;
   'text-fill'?: string;
   'text-halo-fill'?: string;
   'text-halo-radius'?: number;
@@ -49,7 +46,7 @@ export interface CircleStyleProperties extends BaseStyleProperties {
   'marker-fill'?: string;
   'marker-line-color'?: string;
   'marker-width'?: number;
-  'marker-scale'?: LabelPropertyScale;
+  'marker-scale'?: PropertyScale;
 }
 
 export type StyleProperties = TextStyleProperties | IconStyleProperties | CircleStyleProperties;

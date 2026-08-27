@@ -15,6 +15,10 @@
   will-change: transform;
 }
 
+.css_map_field .css_map_canvas {
+  background: #f2f2f7;
+}
+
 .css_map_field .css_map_overlay {
   pointer-events: none;
 }
