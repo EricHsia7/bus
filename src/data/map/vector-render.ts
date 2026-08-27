@@ -100,9 +100,9 @@ function createBuffer(gl: WebGL2RenderingContext, target: number, data: ArrayBuf
   return buffer;
 }
 
-function createPaletteTexture(gl: WebGL2RenderingContext, palette: Uint8Array, width: number): WebGLTexture {
+function createPaletteTexture(gl: WebGL2RenderingContext, palette: Uint8Array, width: number): WebGLTexture | null {
   const texture = gl.createTexture();
-  if (!texture) throw new Error('Unable to create palette texture');
+  if (!texture || palette.length === 0) return null;
   gl.bindTexture(gl.TEXTURE_2D, texture);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -114,9 +114,9 @@ function createPaletteTexture(gl: WebGL2RenderingContext, palette: Uint8Array, w
   return texture;
 }
 
-function createStyleTexture(gl: WebGL2RenderingContext, styleData: Float32Array, width: number): WebGLTexture {
+function createStyleTexture(gl: WebGL2RenderingContext, styleData: Float32Array, width: number): WebGLTexture | null {
   const texture = gl.createTexture();
-  if (!texture) throw new Error('Unable to create style texture');
+  if (!texture || styleData.length === 0) return null;
   gl.bindTexture(gl.TEXTURE_2D, texture);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
