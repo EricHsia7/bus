@@ -1,12 +1,10 @@
 import { MapLoader, MapLoaderResponse } from '../../data/map';
 import { drawLabelTiles, LabelTileView } from '../../data/map/label-renderer';
 import { drawRouteTiles, RouteTileView } from '../../data/map/route-renderer';
-import { VectorPlan } from '../../data/map/vector-plan';
-import { VectorRenderer, VectorTileView } from '../../data/map/vector-render';
+import { VectorRenderer, VectorRenderLoop, VectorTileView } from '../../data/map/vector-render';
 import { MapView, MapViews } from '../../data/map/views';
 import { booleanToString } from '../../tools';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
-import { Context2D } from '../../tools/graphic';
 import { MapTileController, TileInfo } from '../../tools/tile-controller';
 import { getBlankIconElement, setIcon } from '../icons';
 import { hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
@@ -42,7 +40,7 @@ let displayed: boolean = false;
 const devicePixelRatio = window.devicePixelRatio;
 
 /** Decoded-tile budget handed to the loader's LRU cache, in bytes */
-const maxCacheBytes = 100 * 1024 * 1024;
+const maxCacheBytes = 256 * 1024 * 1024;
 /** Floor of the LRU budget, so small viewports still keep a useful history */
 const minCachedTiles = 16;
 /** The cache is never trimmed below this multiple of the tiles currently on screen */
@@ -55,6 +53,10 @@ const maxFrameBufferBytes = 96 * 1024 * 1024;
 const minBufferedFrames = 16;
 const backgroundFill = '#f2f2f7';
 
+const vectorTileViews: Array<VectorTileView> = [];
+
+const vectorRenderer = new VectorRenderer(MapCanvas);
+const vectorRendererLoop = new VectorRenderLoop(vectorRenderer, () => ({ tiles: vectorTileViews, viewZoom: mapTileController.zoom }));
 const mapLoader = new MapLoader(2, handleTileResponse, {
   maxCacheBytes,
   minCachedTiles,
@@ -63,16 +65,12 @@ const mapLoader = new MapLoader(2, handleTileResponse, {
   maxFrameBufferBytes,
   minBufferedFrames,
   // Eviction waits while a frame is queued, so trimming never competes with drawing.
-  shouldDeferEviction: () => frameId !== null,
+  shouldDeferEviction: () => vectorRendererLoop.isFramePending,
   // The loader owns the bitmap; the renderer only drops the state derived from it.
   onEvict: (key) => {
     tileFadeStates.delete(key);
   }
 });
-
-const vectorTileViews: Array<VectorTileView> = [];
-
-const vectorRenderer = new VectorRenderer(MapCanvas);
 
 interface TileFadeState {
   opacity: number;
@@ -104,24 +102,6 @@ const frameTargets: Array<TileInfo> = [];
 const labelTileViews: Array<LabelTileView> = [];
 const routeTileViews: Array<RouteTileView> = [];
 
-interface ZoomLayer {
-  /** Native zoom level this layer draws its tiles from */
-  z: number;
-  /** Current fade progress, 0 to 1 */
-  opacity: number;
-  /** 1 while this layer is the one being shown, 0 while it is being abandoned */
-  target: number;
-  timestamp: number;
-}
-
-/**
- * Zoom layers currently on screen, ordered bottom to top. Every layer below the top is fully
- * opaque and only the topmost one animates, so the composite is always
- * `lower * (1 - alpha) + top * alpha`: a real cross-fade that cannot let the background leak
- * through, and one that is re-derived from live tiles every frame rather than from a frozen
- * copy of an earlier frame.
- */
-const layerStack: ZoomLayer[] = [];
 /** Native layer requested in the previous frame, used to detect a zoom layer swap */
 let activeLayerZ: number | null = null;
 let frameId: number | null = null;
@@ -146,7 +126,7 @@ const mapTileController = new MapTileController({
     requestFrame();
   },
   onMovementEnd: function () {
-    // synchronizeQueue();
+    synchronizeQueue();
     // The viewport has stopped, so this is the moment to pay for exact-resolution frames.
     requestFrame();
     mapLoader.runEviction();
@@ -240,8 +220,8 @@ export function resizeMapCanvas(): void {
   width = size.width;
   height = size.height;
 
-  MapCanvas.width = width; // * devicePixelRatio;
-  MapCanvas.height = height; // * devicePixelRatio;
+  MapCanvas.width = width * devicePixelRatio;
+  MapCanvas.height = height * devicePixelRatio;
   MapOverlayCanvas.width = width * devicePixelRatio;
   MapOverlayCanvas.height = height * devicePixelRatio;
 

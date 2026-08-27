@@ -15,7 +15,34 @@ export interface VectorTileView {
   region?: { x: number; y: number; size: number } | null;
 }
 
+export interface VectorRendererOptions {
+  /**
+   * Device pixels per CSS pixel. Tile boxes arrive in CSS pixels while the drawing
+   * buffer is sized in device pixels, so the two must be reconciled explicitly.
+   * Defaults to `devicePixelRatio` when a window is available, otherwise 1.
+   */
+  pixelRatio?: number;
+  /**
+   * Keep the drawing buffer after compositing.
+   *
+   * Leave this `true` (the default) for draw-on-demand rendering: with the WebGL
+   * default of `false` the buffer is discarded after every composite, so a canvas
+   * that is only redrawn when a tile arrives goes blank on the next unrelated
+   * repaint, resize or scroll. Set it to `false` only if `renderVectorTiles` is
+   * driven from a `requestAnimationFrame` loop that repaints every frame.
+   */
+  preserveDrawingBuffer?: boolean;
+  /** Called after the GL context is lost. Rendering is a no-op until it is restored. */
+  onContextLost?: () => void;
+  /**
+   * Called after the context is restored and the previously visible tiles have been
+   * re-uploaded. Request a repaint from here.
+   */
+  onContextRestored?: () => void;
+}
+
 interface GPUResource {
+  /** The plan this resource was uploaded from. Identity is the upload cache key. */
   plan: VectorPlan;
   polygonPosition: WebGLBuffer | null;
   polygonStyle: WebGLBuffer | null;
@@ -122,32 +149,270 @@ function deleteGPUResource(gl: WebGL2RenderingContext, resource: GPUResource): v
   gl.deleteTexture(resource.styleTexture);
 }
 
+function defaultPixelRatio(): number {
+  return typeof globalThis !== 'undefined' && typeof (globalThis as { devicePixelRatio?: number }).devicePixelRatio === 'number' ? (globalThis as { devicePixelRatio: number }).devicePixelRatio : 1;
+}
+
 export class VectorRenderer {
   readonly canvas: OffscreenCanvas | HTMLCanvasElement;
-  readonly gl: WebGL2RenderingContext;
+  gl: WebGL2RenderingContext;
 
-  private readonly program: WebGLProgram;
+  private program: WebGLProgram;
   private readonly resources = new Map<string, GPUResource>();
+  /**
+   * The last full set of views handed to `syncVectorTiles`, kept so the GPU cache can be
+   * rebuilt after a context loss without waiting for the tiles to be reloaded.
+   */
+  private lastViews = new Map<string, VectorTileView>();
+  private pixelRatio: number;
+  private contextLost = false;
+  private readonly options: VectorRendererOptions;
+  private readonly contextLostHandler?: (event: Event) => void;
+  private readonly contextRestoredHandler?: () => void;
 
-  private readonly uTileScale: WebGLUniformLocation | null;
-  private readonly uTileOffset: WebGLUniformLocation | null;
-  private readonly uViewport: WebGLUniformLocation | null;
-  private readonly uExtent: WebGLUniformLocation | null;
-  private readonly uDeltaZoom: WebGLUniformLocation | null;
-  private readonly uDesignTileSize: WebGLUniformLocation | null;
-  private readonly uIsLine: WebGLUniformLocation | null;
-  private readonly uPalette: WebGLUniformLocation | null;
-  private readonly uStyleData: WebGLUniformLocation | null;
-  private readonly uPaletteWidth: WebGLUniformLocation | null;
-  private readonly uStyleTexelWidth: WebGLUniformLocation | null;
+  private uTileScale: WebGLUniformLocation | null = null;
+  private uTileOffset: WebGLUniformLocation | null = null;
+  private uViewport: WebGLUniformLocation | null = null;
+  private uExtent: WebGLUniformLocation | null = null;
+  private uDeltaZoom: WebGLUniformLocation | null = null;
+  private uDesignTileSize: WebGLUniformLocation | null = null;
+  private uIsLine: WebGLUniformLocation | null = null;
+  private uPalette: WebGLUniformLocation | null = null;
+  private uStyleData: WebGLUniformLocation | null = null;
+  private uPaletteWidth: WebGLUniformLocation | null = null;
+  private uStyleTexelWidth: WebGLUniformLocation | null = null;
 
-  constructor(canvas: OffscreenCanvas | HTMLCanvasElement) {
+  constructor(canvas: OffscreenCanvas | HTMLCanvasElement, options: VectorRendererOptions = {}) {
     this.canvas = canvas;
-    const gl = canvas.getContext('webgl2', { alpha: true, antialias: true }) as WebGL2RenderingContext;
+    this.options = options;
+    this.pixelRatio = options.pixelRatio ?? defaultPixelRatio();
+
+    const gl = canvas.getContext('webgl2', {
+      alpha: true,
+      antialias: true,
+      // Draw-on-demand safe by default: see VectorRendererOptions.preserveDrawingBuffer.
+      preserveDrawingBuffer: options.preserveDrawingBuffer ?? true
+    }) as WebGL2RenderingContext | null;
     if (!gl) throw new Error('WebGL2 is not available');
     this.gl = gl;
     this.program = createProgram(gl);
+    this.readUniformLocations();
 
+    // A lost context silently drops every buffer and texture, which reads on screen as
+    // tiles that paint once and then vanish. Recover instead of going dark.
+    const target = canvas as unknown as {
+      addEventListener?: (type: string, listener: (event: Event) => void) => void;
+      removeEventListener?: (type: string, listener: (event: Event) => void) => void;
+    };
+    if (typeof target.addEventListener === 'function') {
+      this.contextLostHandler = (event: Event) => {
+        event.preventDefault();
+        this.handleContextLost();
+      };
+      this.contextRestoredHandler = () => this.handleContextRestored();
+      target.addEventListener('webglcontextlost', this.contextLostHandler);
+      target.addEventListener('webglcontextrestored', this.contextRestoredHandler);
+    }
+  }
+
+  /** True while the GL context is unusable. Rendering is skipped rather than half-drawn. */
+  get isContextLost(): boolean {
+    return this.contextLost || this.gl.isContextLost();
+  }
+
+  /** Number of tiles currently resident on the GPU. Useful as a churn assertion in tests. */
+  get residentTileCount(): number {
+    return this.resources.size;
+  }
+
+  hasTile(key: string): boolean {
+    return this.resources.has(key);
+  }
+
+  /** Updates the CSS-pixel to device-pixel ratio used to place tile boxes. */
+  setPixelRatio(pixelRatio: number): void {
+    this.pixelRatio = pixelRatio > 0 ? pixelRatio : 1;
+  }
+
+  /**
+   * Resizes the drawing buffer from a CSS-pixel size.
+   *
+   * Assigning `width` / `height` clears the drawing buffer, so this is a no-op when the
+   * size is unchanged and the caller must repaint after a real resize.
+   */
+  resize(cssWidth: number, cssHeight: number, pixelRatio: number = this.pixelRatio): boolean {
+    this.setPixelRatio(pixelRatio);
+    const width = Math.max(1, Math.round(cssWidth * this.pixelRatio));
+    const height = Math.max(1, Math.round(cssHeight * this.pixelRatio));
+    if (this.canvas.width === width && this.canvas.height === height) return false;
+    this.canvas.width = width;
+    this.canvas.height = height;
+    return true;
+  }
+
+  /**
+   * Synchronizes the GPU cache with the tiles that are currently visible.
+   *
+   * `visibleTiles` must be the COMPLETE viewport set, not the tiles that just arrived:
+   * anything absent from it is released. Pass a single tile through `uploadTile` /
+   * `releaseTile` instead when reacting to one loader callback.
+   *
+   * A tile already uploaded from the same plan is left untouched, so a steady viewport
+   * costs nothing and buffers are never destroyed and re-created behind a live frame.
+   */
+  syncVectorTiles(visibleTiles: Iterable<VectorTileView>): void {
+    if (this.isContextLost) {
+      // Still record the intent so the cache can be rebuilt on restore.
+      this.lastViews = new Map(Array.from(visibleTiles, (tile) => [tile.key, tile] as const));
+      return;
+    }
+
+    const views = new Map<string, VectorTileView>();
+    for (const tile of visibleTiles) {
+      views.set(tile.key, tile);
+      this.uploadTile(tile);
+    }
+
+    for (const key of Array.from(this.resources.keys())) {
+      if (!views.has(key)) this.releaseTile(key);
+    }
+
+    this.lastViews = views;
+  }
+
+  /**
+   * Uploads one tile, reusing the existing resource when it came from the same plan.
+   * Safe to call from a per-tile loader callback: it never touches other tiles.
+   */
+  uploadTile(tile: VectorTileView): void {
+    if (this.isContextLost) return;
+    const existing = this.resources.get(tile.key);
+    if (existing) {
+      if (existing.plan === tile.plan) return;
+      deleteGPUResource(this.gl, existing);
+    }
+    this.resources.set(tile.key, createGPUResource(this.gl, tile.plan));
+    this.lastViews.set(tile.key, tile);
+  }
+
+  /**
+   * Releases one tile's GPU resources. Wire this to `MapLoaderCacheOptions.onEvict` so a
+   * plan dropped by the loader does not leave a stale resource holding a dead plan.
+   */
+  releaseTile(key: string): boolean {
+    const resource = this.resources.get(key);
+    if (!resource) return false;
+    if (!this.isContextLost) deleteGPUResource(this.gl, resource);
+    this.resources.delete(key);
+    this.lastViews.delete(key);
+    return true;
+  }
+
+  /** Render all currently visible vector tiles in one frame. */
+  renderVectorTiles(visibleTiles: Iterable<VectorTileView>, viewZoom: number): void {
+    if (this.isContextLost) return;
+
+    const gl = this.gl;
+    const width = this.canvas.width as number;
+    const height = this.canvas.height as number;
+    const ratio = this.pixelRatio;
+
+    gl.viewport(0, 0, width, height);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.useProgram(this.program);
+
+    gl.uniform2f(this.uViewport, width, height);
+    gl.uniform1f(this.uDesignTileSize, DESIGN_TILE_SIZE * ratio);
+
+    for (const tile of visibleTiles) {
+      const resource = this.resources.get(tile.key);
+      // A missing resource means the tile was never uploaded for this frame. Uploading it
+      // here keeps a tile from blinking out for one frame after a sync/render race.
+      if (!resource) {
+        this.uploadTile(tile);
+      }
+      const ready = resource ?? this.resources.get(tile.key);
+      if (!ready) continue;
+
+      const plan = ready.plan;
+      const gpu = plan.gpu;
+      const region = tile.region ?? { x: 0, y: 0, size: 1 };
+      // Tile boxes are CSS pixels; the drawing buffer is device pixels.
+      const scale = (tile.size * ratio) / (plan.extent * region.size);
+      const offsetX = tile.x * ratio - region.x * plan.extent * scale;
+      const offsetY = tile.y * ratio - region.y * plan.extent * scale;
+      const deltaZoom = Math.max(0, Math.min(1, viewZoom - plan.zoom));
+
+      gl.uniform2f(this.uTileScale, scale, scale);
+      gl.uniform2f(this.uTileOffset, offsetX, offsetY);
+      gl.uniform1f(this.uExtent, plan.extent);
+      gl.uniform1f(this.uDeltaZoom, deltaZoom);
+      gl.uniform1f(this.uPaletteWidth, Math.max(1, gpu.paletteCount));
+      gl.uniform1f(this.uStyleTexelWidth, gpu.styleTextureWidth);
+
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, ready.paletteTexture);
+      gl.uniform1i(this.uPalette, 0);
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, ready.styleTexture);
+      gl.uniform1i(this.uStyleData, 1);
+
+      if (gpu.polygonIndexCount && ready.polygonPosition && ready.polygonStyle && ready.polygonIndex) {
+        gl.uniform1f(this.uIsLine, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, ready.polygonPosition);
+        gl.enableVertexAttribArray(0);
+        gl.vertexAttribPointer(0, 2, gl.SHORT, false, 0, 0);
+        gl.disableVertexAttribArray(1);
+        gl.disableVertexAttribArray(2);
+        gl.disableVertexAttribArray(3);
+        gl.bindBuffer(gl.ARRAY_BUFFER, ready.polygonStyle);
+        gl.enableVertexAttribArray(4);
+        gl.vertexAttribPointer(4, 1, gl.UNSIGNED_SHORT, false, 0, 0);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ready.polygonIndex);
+        gl.drawElements(gl.TRIANGLES, gpu.polygonIndexCount, gl.UNSIGNED_INT, 0);
+      }
+
+      if (gpu.lineIndexCount && ready.lineVertex && ready.lineStyle && ready.lineIndex) {
+        gl.uniform1f(this.uIsLine, 1);
+        gl.bindBuffer(gl.ARRAY_BUFFER, ready.lineVertex);
+        gl.enableVertexAttribArray(0);
+        gl.vertexAttribPointer(0, 2, gl.SHORT, false, 14, 0);
+        gl.enableVertexAttribArray(1);
+        gl.vertexAttribPointer(1, 2, gl.SHORT, false, 14, 4);
+        gl.enableVertexAttribArray(2);
+        gl.vertexAttribPointer(2, 2, gl.SHORT, false, 14, 8);
+        gl.enableVertexAttribArray(3);
+        gl.vertexAttribPointer(3, 1, gl.SHORT, false, 14, 12);
+        gl.bindBuffer(gl.ARRAY_BUFFER, ready.lineStyle);
+        gl.enableVertexAttribArray(4);
+        gl.vertexAttribPointer(4, 1, gl.UNSIGNED_SHORT, false, 0, 0);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ready.lineIndex);
+        gl.drawElements(gl.TRIANGLES, gpu.lineIndexCount, gl.UNSIGNED_INT, 0);
+      }
+    }
+  }
+
+  destroy(): void {
+    const target = this.canvas as unknown as {
+      removeEventListener?: (type: string, listener: (event: Event) => void) => void;
+    };
+    if (typeof target.removeEventListener === 'function') {
+      if (this.contextLostHandler) target.removeEventListener('webglcontextlost', this.contextLostHandler);
+      if (this.contextRestoredHandler) target.removeEventListener('webglcontextrestored', this.contextRestoredHandler);
+    }
+    if (!this.isContextLost) {
+      for (const resource of this.resources.values()) deleteGPUResource(this.gl, resource);
+      this.gl.deleteProgram(this.program);
+    }
+    this.resources.clear();
+    this.lastViews.clear();
+  }
+
+  private readUniformLocations(): void {
+    const gl = this.gl;
     this.uTileScale = gl.getUniformLocation(this.program, 'u_tileScale');
     this.uTileOffset = gl.getUniformLocation(this.program, 'u_tileOffset');
     this.uViewport = gl.getUniformLocation(this.program, 'u_viewport');
@@ -161,109 +426,21 @@ export class VectorRenderer {
     this.uStyleTexelWidth = gl.getUniformLocation(this.program, 'u_styleTexelWidth');
   }
 
-  /**
-   * Synchronize the GPU cache with the currently visible vector tiles.
-   * Plans already uploaded are retained; newly visible cached plans are uploaded;
-   * resources no longer visible are released.
-   */
-  syncVectorTiles(visibleTiles: Iterable<VectorTileView>): void {
-    const visible = new Set<string>();
-    for (const tile of visibleTiles) {
-      visible.add(tile.key);
-      const existing = this.resources.get(tile.key);
-      if (existing) deleteGPUResource(this.gl, existing);
-      this.resources.set(tile.key, createGPUResource(this.gl, tile.plan));
-    }
-
-    for (const [key, resource] of this.resources) {
-      if (!visible.has(key)) {
-        deleteGPUResource(this.gl, resource);
-        this.resources.delete(key);
-      }
-    }
-  }
-
-  /** Render all currently visible vector tiles in one frame. */
-  renderVectorTiles(visibleTiles: Iterable<VectorTileView>, viewZoom: number): void {
-    const gl = this.gl;
-    const width = this.canvas.width as number;
-    const height = this.canvas.height as number;
-
-    gl.viewport(0, 0, width, height);
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    gl.useProgram(this.program);
-
-    gl.uniform2f(this.uViewport, width, height);
-    gl.uniform1f(this.uDesignTileSize, DESIGN_TILE_SIZE);
-
-    for (const tile of visibleTiles) {
-      const resource = this.resources.get(tile.key);
-      if (!resource) continue;
-
-      const plan = resource.plan;
-      const gpu = plan.gpu;
-      const region = tile.region ?? { x: 0, y: 0, size: 1 };
-      const scale = tile.size / (plan.extent * region.size);
-      const offsetX = tile.x - region.x * plan.extent * scale;
-      const offsetY = tile.y - region.y * plan.extent * scale;
-      const deltaZoom = Math.max(0, Math.min(1, viewZoom - plan.zoom));
-
-      gl.uniform2f(this.uTileScale, scale, scale);
-      gl.uniform2f(this.uTileOffset, offsetX, offsetY);
-      gl.uniform1f(this.uExtent, plan.extent);
-      gl.uniform1f(this.uDeltaZoom, deltaZoom);
-      gl.uniform1f(this.uPaletteWidth, Math.max(1, gpu.paletteCount));
-      gl.uniform1f(this.uStyleTexelWidth, gpu.styleTextureWidth);
-
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, resource.paletteTexture);
-      gl.uniform1i(this.uPalette, 0);
-      gl.activeTexture(gl.TEXTURE1);
-      gl.bindTexture(gl.TEXTURE_2D, resource.styleTexture);
-      gl.uniform1i(this.uStyleData, 1);
-
-      if (gpu.polygonIndexCount && resource.polygonPosition && resource.polygonStyle && resource.polygonIndex) {
-        gl.uniform1f(this.uIsLine, 0);
-        gl.bindBuffer(gl.ARRAY_BUFFER, resource.polygonPosition);
-        gl.enableVertexAttribArray(0);
-        gl.vertexAttribPointer(0, 2, gl.SHORT, false, 0, 0);
-        gl.disableVertexAttribArray(1);
-        gl.disableVertexAttribArray(2);
-        gl.disableVertexAttribArray(3);
-        gl.bindBuffer(gl.ARRAY_BUFFER, resource.polygonStyle);
-        gl.enableVertexAttribArray(4);
-        gl.vertexAttribPointer(4, 1, gl.UNSIGNED_SHORT, false, 0, 0);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resource.polygonIndex);
-        gl.drawElements(gl.TRIANGLES, gpu.polygonIndexCount, gl.UNSIGNED_INT, 0);
-      }
-
-      if (gpu.lineIndexCount && resource.lineVertex && resource.lineStyle && resource.lineIndex) {
-        gl.uniform1f(this.uIsLine, 1);
-        gl.bindBuffer(gl.ARRAY_BUFFER, resource.lineVertex);
-        gl.enableVertexAttribArray(0);
-        gl.vertexAttribPointer(0, 2, gl.SHORT, false, 14, 0);
-        gl.enableVertexAttribArray(1);
-        gl.vertexAttribPointer(1, 2, gl.SHORT, false, 14, 4);
-        gl.enableVertexAttribArray(2);
-        gl.vertexAttribPointer(2, 2, gl.SHORT, false, 14, 8);
-        gl.enableVertexAttribArray(3);
-        gl.vertexAttribPointer(3, 1, gl.SHORT, false, 14, 12);
-        gl.bindBuffer(gl.ARRAY_BUFFER, resource.lineStyle);
-        gl.enableVertexAttribArray(4);
-        gl.vertexAttribPointer(4, 1, gl.UNSIGNED_SHORT, false, 0, 0);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resource.lineIndex);
-        gl.drawElements(gl.TRIANGLES, gpu.lineIndexCount, gl.UNSIGNED_INT, 0);
-      }
-    }
-  }
-
-  destroy(): void {
-    for (const resource of this.resources.values()) deleteGPUResource(this.gl, resource);
+  private handleContextLost(): void {
+    this.contextLost = true;
+    // The handles are already dead; drop them without issuing GL calls.
     this.resources.clear();
-    this.gl.deleteProgram(this.program);
+    this.options.onContextLost?.();
+  }
+
+  private handleContextRestored(): void {
+    this.contextLost = false;
+    this.program = createProgram(this.gl);
+    this.readUniformLocations();
+    const views = Array.from(this.lastViews.values());
+    this.resources.clear();
+    for (const view of views) this.uploadTile(view);
+    this.options.onContextRestored?.();
   }
 }
 
@@ -273,4 +450,51 @@ export function syncVectorTiles(renderer: VectorRenderer, visibleTiles: Iterable
 
 export function renderVectorTiles(renderer: VectorRenderer, visibleTiles: Iterable<VectorTileView>, viewZoom: number): void {
   renderer.renderVectorTiles(visibleTiles, viewZoom);
+}
+
+/**
+ * Coalesces repaint requests onto animation frames.
+ *
+ * The renderer must own the full viewport set on every pass, so the loop asks for it
+ * through `collect` rather than being handed a delta by whatever happened to change.
+ * `isFramePending` is meant to be passed to `MapLoaderCacheOptions.shouldDeferEviction`,
+ * so trimming never closes a bitmap that the pending pass is about to draw.
+ */
+export class VectorRenderLoop {
+  private handle: number | null = null;
+  private dirty = false;
+
+  constructor(
+    private readonly renderer: VectorRenderer,
+    private readonly collect: () => { tiles: Array<VectorTileView>; viewZoom: number },
+    private readonly requestFrame: (callback: () => void) => number = (callback) => (globalThis as unknown as { requestAnimationFrame: (cb: () => void) => number }).requestAnimationFrame(callback),
+    private readonly cancelFrame: (handle: number) => void = (handle) => (globalThis as unknown as { cancelAnimationFrame: (h: number) => void }).cancelAnimationFrame(handle)
+  ) {}
+
+  /** True while a repaint is scheduled but not yet drawn. */
+  get isFramePending(): boolean {
+    return this.handle !== null;
+  }
+
+  /** Marks the view dirty. Cheap to call many times per frame. */
+  invalidate(): void {
+    this.dirty = true;
+    if (this.handle !== null) return;
+    this.handle = this.requestFrame(this.run);
+  }
+
+  stop(): void {
+    if (this.handle === null) return;
+    this.cancelFrame(this.handle);
+    this.handle = null;
+  }
+
+  private run = (): void => {
+    this.handle = null;
+    if (!this.dirty) return;
+    this.dirty = false;
+    const { tiles, viewZoom } = this.collect();
+    this.renderer.syncVectorTiles(tiles);
+    this.renderer.renderVectorTiles(tiles, viewZoom);
+  };
 }
