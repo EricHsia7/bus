@@ -76,7 +76,6 @@ const requestedTileKeys = new Set<string>();
 /**
  * Frame keys painted in the most recent frame. Handed to the loader after each frame so its frame buffer never trims a bitmap that is currently on screen.
  */
-const protectedFrameKeys = new Set<string>();
 
 interface FallbackOverlay {
   label: MapLoaderResponse['label'];
@@ -397,7 +396,6 @@ function renderFrame(now: number): void {
   const nativeZoom = mapTileController.getNativeZoom();
   // Rebuilt every frame: what is painted below is exactly what the loader must keep.
   protectedTileKeys.clear();
-  protectedFrameKeys.clear();
   fallbackOverlays.clear();
 
   if (activeLayerZ !== null && activeLayerZ !== nativeZoom) synchronizeQueue();

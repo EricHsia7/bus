@@ -154,10 +154,6 @@ function deleteGPUResource(gl: WebGL2RenderingContext, resource: GPUResource): v
   gl.deleteTexture(resource.styleTexture);
 }
 
-function defaultPixelRatio(): number {
-  return typeof globalThis !== 'undefined' && typeof (globalThis as { devicePixelRatio?: number }).devicePixelRatio === 'number' ? (globalThis as { devicePixelRatio: number }).devicePixelRatio : 1;
-}
-
 export class VectorRenderer {
   readonly canvas: OffscreenCanvas | HTMLCanvasElement;
   gl: WebGL2RenderingContext;
@@ -196,7 +192,6 @@ export class VectorRenderer {
     const gl = canvas.getContext('webgl2', {
       alpha: true,
       antialias: true,
-      // Draw-on-demand safe by default: see VectorRendererOptions.preserveDrawingBuffer.
       preserveDrawingBuffer: options.preserveDrawingBuffer ?? true
     }) as WebGL2RenderingContext | null;
     if (!gl) throw new Error('WebGL2 is not available');

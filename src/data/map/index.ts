@@ -24,25 +24,6 @@ export interface MapLoaderResponse extends MapLoaderTile {
   route: RoutePlan;
 }
 
-/**
- * A rasterized tile, plus what it was rasterized from. Both halves of the provenance
- * matter: `sourceZ` says whose geometry is on screen (a stand-in ancestor while the tile
- * itself is still loading), and `frameIndex` / `deltaZoom` say which point of the shipped
- * `[zoom, zoom + 1]` scale interval it was styled for.
- */
-export interface MapLoaderFrame {
-  bitmap: ImageBitmap;
-  /** Zoom of the plan the frame was rasterized from. Lower than the frame's own z while a coarser tile stands in for one that has not arrived yet. */
-  sourceZ: number;
-  /** Index into the source plan's `frameDeltaZooms`. */
-  frameIndex: number;
-  /** Clamped zoom offset the scale-dependent styling was sampled at. */
-  deltaZoom: number;
-  width: number;
-  height: number;
-  bytes: number;
-}
-
 export interface MapLoaderWorkerMessageData {
   type: 'data';
   response: MapLoaderResponse;
@@ -117,8 +98,6 @@ export class MapLoader {
   private cacheBytes: number;
   /** Tiles the caller is currently drawing. These are never evicted. */
   private protectedKeys: Set<string>;
-  /** Frames painted in the most recent frame. These are never trimmed. */
-  private protectedFrameKeys: Set<string>;
   private evictionTimeoutId: ReturnType<typeof setTimeout> | null;
 
   constructor(batchSize: number, callback: MapLoader['callback'], options: MapLoaderCacheOptions = {}) {
@@ -140,7 +119,6 @@ export class MapLoader {
     this.tileBytes = new Map();
     this.cacheBytes = 0;
     this.protectedKeys = new Set();
-    this.protectedFrameKeys = new Set();
     this.evictionTimeoutId = null;
 
     this.worker.onmessage = this.handleWorkerMessage.bind(this);

@@ -106,22 +106,3 @@ export function resolveStrokeWidth(style: VectorTileStyle, deltaZoom: number): n
   if (width === undefined) return 0;
   return width * sampleScale(style['stroke-width-scale'], deltaZoom);
 }
-
-/**
- * Pick the nearest server-recommended frame for a view zoom. Returns an index
- * into `frameDeltaZooms`, which doubles as the frame cache key.
- */
-export function pickFrameIndex(frameDeltaZooms: VectorTile['frameDeltaZooms'], viewZoom: number, tileZoom: number): number {
-  if (frameDeltaZooms.length <= 1) return 0;
-  const deltaZoom = clamp(viewZoom - tileZoom, 0, 1);
-  let best = 0;
-  let bestDistance = Infinity;
-  for (let i = 0; i < frameDeltaZooms.length; i++) {
-    const distance = Math.abs(frameDeltaZooms[i] - deltaZoom);
-    if (distance < bestDistance) {
-      bestDistance = distance;
-      best = i;
-    }
-  }
-  return best;
-}
