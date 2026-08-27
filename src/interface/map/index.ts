@@ -47,11 +47,6 @@ const minCachedTiles = 16;
 const cacheHeadroomFactor = 2;
 /** Delay before an eviction pass is attempted once the map goes quiet, in milliseconds */
 const evictionIdleDelay = 200;
-/** Rasterized-frame budget handed to the loader's frame buffer, in bytes */
-const maxFrameBufferBytes = 96 * 1024 * 1024;
-/** Floor of the frame budget, so a viewport's worth of frames always survives a trim */
-const minBufferedFrames = 16;
-const backgroundFill = '#f2f2f7';
 
 const vectorTileViews: Array<VectorTileView> = [];
 
@@ -64,8 +59,6 @@ const mapLoader = new MapLoader(2, handleTileResponse, {
   minCachedTiles,
   headroomFactor: cacheHeadroomFactor,
   evictionDelay: evictionIdleDelay,
-  maxFrameBufferBytes,
-  minBufferedFrames,
   // Eviction waits while a frame is queued, so trimming never competes with drawing.
   shouldDeferEviction: () => frameId !== null,
   // The loader owns the bitmap; the renderer only drops the state derived from it.
@@ -535,7 +528,6 @@ function renderFrame(now: number): void {
   }
 
   mapLoader.protect(protectedTileKeys);
-  mapLoader.protectFrames(protectedFrameKeys);
 }
 
 function generateItemOfOverlay(): HTMLElement {
@@ -734,13 +726,10 @@ export function closeMap(): void {
 
   // Nothing is on screen any more, so nothing needs protecting and the loader can trim straight down to its budget.
   protectedTileKeys.clear();
-  protectedFrameKeys.clear();
   mapLoader.protect(protectedTileKeys);
-  mapLoader.protectFrames(protectedFrameKeys);
   mapLoader.trim();
   // Frames are cheap to produce again from the retained plans and are sized for a
   // viewport that is no longer visible, so the whole buffer goes rather than a trim.
-  mapLoader.clearFrameBuffer(true);
   MapOverlayContext.clearRect(0, 0, width, height);
 }
 
