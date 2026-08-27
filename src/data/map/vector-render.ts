@@ -1,6 +1,7 @@
 import vertexShaderSource from './vector.vert';
 import fragmentShaderSource from './vector.frag';
 import { VectorPlan } from './vector-plan';
+import { clamp } from '../../tools/math';
 
 export interface VectorTileView {
   /** Stable tile/cache key. */
@@ -320,12 +321,11 @@ export class VectorRenderer {
 
       const plan = ready.plan;
       const gpu = plan.gpu;
-      const region = tile.region ?? { x: 0, y: 0, size: 1 };
       // Tile boxes are CSS pixels; the drawing buffer is device pixels.
-      const scale = (tile.size * ratio) / (plan.extent * region.size);
-      const offsetX = tile.x * ratio - region.x * plan.extent * scale;
-      const offsetY = tile.y * ratio - region.y * plan.extent * scale;
-      const deltaZoom = Math.max(0, Math.min(1, viewZoom - plan.zoom));
+      const scale = (tile.size / plan.extent) * ratio;
+      const offsetX = tile.x * ratio;
+      const offsetY = tile.y * ratio;
+      const deltaZoom = clamp(viewZoom - plan.zoom, 0, 1);
 
       gl.uniform2f(this.uTileScale, scale, scale);
       gl.uniform2f(this.uTileOffset, offsetX, offsetY);
