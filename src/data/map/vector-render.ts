@@ -74,13 +74,6 @@ export function renderVectorFrame(vectorPlan: VectorPlan, request: VectorFrameRe
   canvas.width = renderWidth;
   canvas.height = renderHeight;
 
-  // Resizing the backing store already resets the state, but the transform is set
-  // explicitly so a same-size frame cannot inherit the previous one's mapping.
-  context.setTransform(1, 0, 0, 1, 0, 0);
-  context.globalAlpha = 1;
-  context.setLineDash([]);
-  context.clearRect(0, 0, renderWidth, renderHeight);
-
   const background = request.background === undefined ? '#f2f2f7' : request.background; // TODO: vectorTile['background']
   if (background) {
     context.save();
