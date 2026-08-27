@@ -47,7 +47,7 @@ void main() {
         float scale0 = widthData.z;
         float scale1 = widthData.w;
         float zoomScale = mix(scale0, scale1, u_deltaZoom) * exp2(-u_deltaZoom);
-        float halfWidth = width * zoomScale * (u_extent / u_designTileSize) * u_devicePixelRatio * 0.5f;
+        float halfWidth = width * zoomScale * (u_extent / u_designTileSize) * 0.5f;
 
         // Segment vectors. Lengths are tested before any normalize() so a
         // zero-length segment cannot yield NaN and silently delete triangles.

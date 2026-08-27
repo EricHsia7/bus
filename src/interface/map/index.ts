@@ -1,7 +1,7 @@
 import { MapLoader, MapLoaderResponse } from '../../data/map';
 import { drawLabelTiles, LabelTileView } from '../../data/map/label-renderer';
 import { drawRouteTiles, RouteTileView } from '../../data/map/route-renderer';
-import { VectorRenderer, VectorRenderLoop, VectorTileView } from '../../data/map/vector-render';
+import { VectorRenderer, VectorTileView } from '../../data/map/vector-render';
 import { MapView, MapViews } from '../../data/map/views';
 import { booleanToString } from '../../tools';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
@@ -55,12 +55,10 @@ const backgroundFill = '#f2f2f7';
 
 const vectorTileViews: Array<VectorTileView> = [];
 
-const vectorRenderer = new VectorRenderer(MapCanvas);
-const vectorRendererLoop = new VectorRenderLoop(vectorRenderer, () => ({
-  tiles: vectorTileViews,
-  viewZoom: mapTileController.zoom,
-  pixelRatio: devicePixelRatio
-}));
+// Tile boxes are handed over in device pixels; the ratio is what scale-dependent styling
+// such as stroke width is measured against.
+const vectorRenderer = new VectorRenderer(MapCanvas, { pixelRatio: devicePixelRatio });
+
 const mapLoader = new MapLoader(2, handleTileResponse, {
   maxCacheBytes,
   minCachedTiles,
@@ -69,7 +67,7 @@ const mapLoader = new MapLoader(2, handleTileResponse, {
   maxFrameBufferBytes,
   minBufferedFrames,
   // Eviction waits while a frame is queued, so trimming never competes with drawing.
-  shouldDeferEviction: () => vectorRendererLoop.isFramePending,
+  shouldDeferEviction: () => frameId !== null,
   // The loader owns the bitmap; the renderer only drops the state derived from it.
   onEvict: (key) => {
     tileFadeStates.delete(key);
@@ -95,6 +93,20 @@ const requestedTileKeys = new Set<string>();
  * its frame buffer never trims a bitmap that is currently on screen.
  */
 const protectedFrameKeys = new Set<string>();
+interface FallbackOverlay {
+  label: MapLoaderResponse['label'];
+  route: MapLoaderResponse['route'];
+  /** Box the plan's own geometry is laid out against, in CSS pixels. */
+  screenBBox: TileInfo['screenBBox'];
+  /** Boxes this plan stands in for. Drawing is clipped to their union. */
+  boxes: Array<TileInfo['screenBBox']>;
+}
+
+/**
+ * Stand-in plans whose labels and routes are drawn this frame, keyed by tile. A plan is
+ * drawn once however many boxes it covers, and only inside those boxes.
+ */
+const fallbackOverlays = new Map<string, FallbackOverlay>();
 /**
  * Boxes painted this pass, rebuilt every frame. A box is normally a visible tile, but
  * while a zoom-out is still loading it can also be one of the finer tiles left over from
@@ -262,8 +274,8 @@ function synchronizeQueue(): void {
 
   // Clamped into the native range, so over/under zoom never requests a layer that
   // has no raster tiles behind it.
-  const z = mapTileController.getNativeZoom();
-  const visibleTiles = mapTileController.getVisibleTiles(z);
+  const nativeZoom = mapTileController.getNativeZoom();
+  const visibleTiles = mapTileController.getVisibleTiles(nativeZoom);
 
   const visibleKeys = new Set<string>();
   for (const tile of visibleTiles) {
@@ -278,36 +290,122 @@ function synchronizeQueue(): void {
     requestedTileKeys.delete(key);
   }
 
+  // Requests only. Building views here raced renderFrame: it published a different set to
+  // the renderer (with no stand-ins, and skipping every already-requested tile), and
+  // whichever ran last decided what was resident on the GPU.
   let enqueued = 0;
-  vectorTileViews.length = 0;
   for (const tile of visibleTiles) {
-    const key = getTileKey(tile.x, tile.y, tile.z);
+    const { x, y, z } = tile;
+    const key = getTileKey(x, y, z);
     if (requestedTileKeys.has(key)) continue;
     requestedTileKeys.add(key);
-    // A cached tile needs no request; `get` also marks it as recently used.
-    const existing = mapLoader.get(tile.x, tile.y, tile.z);
 
-    if (existing) {
-      const width = tile.screenBBox.maxX - tile.screenBBox.minX;
-      // const height = tile.screenBBox.maxY - tile.screenBBox.minY;
+    // A cached tile needs no request. `peek` leaves the LRU order alone, which is
+    // renderFrame's business: it marks what it actually paints.
+    if (mapLoader.peek(x, y, z)) continue;
 
-      vectorTileViews.push({
-        key,
-        plan: existing.vector,
-        x: tile.screenBBox.minX * devicePixelRatio,
-        y: tile.screenBBox.minY * devicePixelRatio,
-        size: width * devicePixelRatio
-      });
-    }
-
-    if (existing) continue;
-    mapLoader.enqueue(tile.x, tile.y, tile.z);
+    mapLoader.enqueue(x, y, z);
     enqueued++;
   }
 
-  vectorRenderer.syncVectorTiles(vectorTileViews);
-
   if (enqueued > 0) mapLoader.consume();
+}
+
+/** Deepest ancestor, and finest descendant, searched for a stand-in plan. */
+const maxFallbackDepth = mapTileController.maxNativeZoom - mapTileController.minNativeZoom;
+
+interface FallbackTile {
+  key: string;
+  response: MapLoaderResponse;
+  /** Box the stand-in's labels and routes are drawn against, in CSS pixels. */
+  screenBBox: TileInfo['screenBBox'];
+  view: VectorTileView;
+}
+
+/**
+ * Finds cached geometry to stand in for a tile that has not arrived yet.
+ *
+ * Choosing a stand-in needs the cache, not just the zoom ranges. Coarser ancestors are
+ * preferred because a single one covers the whole box, drawn through `region` as a
+ * sub-square of the ancestor's geometry. Failing that, finer descendants left over from a
+ * zoom-out each paint their own share of the box.
+ */
+function resolveFallbackTiles(tile: TileInfo): Array<FallbackTile> {
+  const { x, y, z } = tile;
+  const boxX = tile.screenBBox.minX * devicePixelRatio;
+  const boxY = tile.screenBBox.minY * devicePixelRatio;
+  const boxSize = (tile.screenBBox.maxX - tile.screenBBox.minX) * devicePixelRatio;
+  const fallbacks: Array<FallbackTile> = [];
+
+  // Coarser ancestor: full coverage from one plan, so the nearest one wins outright.
+  for (let depth = 1; depth <= maxFallbackDepth; depth++) {
+    const ancestorZ = z - depth;
+    if (ancestorZ < mapTileController.minNativeZoom) break;
+
+    const span = Math.pow(2, depth);
+    const ancestorX = Math.floor(x / span);
+    const ancestorY = Math.floor(y / span);
+    const cached = mapLoader.get(ancestorX, ancestorY, ancestorZ);
+    if (!cached) continue;
+
+    const key = getTileKey(ancestorX, ancestorY, ancestorZ);
+    fallbacks.push({
+      key,
+      response: cached,
+      screenBBox: mapTileController.getTileBoundingBox(ancestorX, ancestorY, ancestorZ).screenBBox,
+      view: {
+        key,
+        plan: cached.vector,
+        // The box is this tile's own, filled by the slice of the ancestor covering it.
+        x: boxX,
+        y: boxY,
+        size: boxSize,
+        region: {
+          x: (x - ancestorX * span) / span,
+          y: (y - ancestorY * span) / span,
+          size: 1 / span
+        }
+      }
+    });
+    return fallbacks;
+  }
+
+  // Finer descendants: coverage may be partial, so take the first depth that has any.
+  for (let depth = 1; depth <= maxFallbackDepth; depth++) {
+    const descendantZ = z + depth;
+    if (descendantZ > mapTileController.maxNativeZoom) break;
+
+    const span = Math.pow(2, depth);
+    const childSize = boxSize / span;
+
+    for (let row = 0; row < span; row++) {
+      for (let column = 0; column < span; column++) {
+        const childX = x * span + column;
+        const childY = y * span + row;
+        const cached = mapLoader.get(childX, childY, descendantZ);
+        if (!cached) continue;
+
+        const key = getTileKey(childX, childY, descendantZ);
+        fallbacks.push({
+          key,
+          response: cached,
+          screenBBox: mapTileController.getTileBoundingBox(childX, childY, descendantZ).screenBBox,
+          view: {
+            key,
+            plan: cached.vector,
+            // A descendant is drawn whole into its own share of the box.
+            x: boxX + column * childSize,
+            y: boxY + row * childSize,
+            size: childSize
+          }
+        });
+      }
+    }
+
+    if (fallbacks.length > 0) return fallbacks;
+  }
+
+  return fallbacks;
 }
 
 function renderFrame(now: number): void {
@@ -317,6 +415,7 @@ function renderFrame(now: number): void {
   // Rebuilt every frame: what is painted below is exactly what the loader must keep.
   protectedTileKeys.clear();
   protectedFrameKeys.clear();
+  fallbackOverlays.clear();
 
   if (activeLayerZ !== null && activeLayerZ !== nativeZoom) synchronizeQueue();
   activeLayerZ = nativeZoom;
@@ -341,24 +440,84 @@ function renderFrame(now: number): void {
   for (const tile of visibleTiles) {
     const { x, y, z } = tile;
     const cached = mapLoader.get(x, y, z);
-    if (!cached) continue;
-    // Labels and routes are drawn straight from the plan, so those plans are on screen
-    // just as much as the rasterized ones and must be protected too.
-    protectedTileKeys.add(getTileKey(x, y, z));
-    vectorTileViews.push({
-      key: getTileKey(x, y, z),
-      plan: cached.vector,
-      x: tile.screenBBox.minX * devicePixelRatio,
-      y: tile.screenBBox.minY * devicePixelRatio,
-      size: (tile.screenBBox.maxX - tile.screenBBox.minX)* devicePixelRatio
-    });
-    labelTileViews.push({ plan: cached.label, screenBBox: tile.screenBBox });
-    routeTileViews.push({ plan: cached.route, screenBBox: tile.screenBBox });
+    if (cached) {
+      // Labels and routes are drawn straight from the plan, so those plans are on screen
+      // just as much as the rasterized ones and must be protected too.
+      protectedTileKeys.add(getTileKey(x, y, z));
+      vectorTileViews.push({
+        key: getTileKey(x, y, z),
+        plan: cached.vector,
+        x: tile.screenBBox.minX * devicePixelRatio,
+        y: tile.screenBBox.minY * devicePixelRatio,
+        size: (tile.screenBBox.maxX - tile.screenBBox.minX) * devicePixelRatio
+      });
+      labelTileViews.push({ plan: cached.label, screenBBox: tile.screenBBox });
+      routeTileViews.push({ plan: cached.route, screenBBox: tile.screenBBox });
+    } else {
+      for (const fallback of resolveFallbackTiles(tile)) {
+        // A stand-in is on screen, so the loader must keep it as much as a native tile.
+        protectedTileKeys.add(fallback.key);
+        vectorTileViews.push(fallback.view);
+
+        // Labels and routes are laid out against the stand-in's own box, which is larger
+        // than the box being filled, so they have to be clipped to it: an ancestor's
+        // sheet otherwise paints over neighbours that already drew their own, doubling
+        // every hairline and translucent halo. One ancestor commonly stands in for
+        // several boxes, so the boxes accumulate and the plan is drawn once.
+        const overlay = fallbackOverlays.get(fallback.key);
+        if (overlay) {
+          overlay.boxes.push(tile.screenBBox);
+          continue;
+        }
+        fallbackOverlays.set(fallback.key, {
+          label: fallback.response.label,
+          route: fallback.response.route,
+          screenBBox: fallback.screenBBox,
+          boxes: [tile.screenBBox]
+        });
+      }
+    }
   }
 
+  // Sync before drawing: this is the only place the full painted set is known, so it is
+  // the only place that may decide what stays resident on the GPU.
+  vectorRenderer.syncVectorTiles(vectorTileViews);
   vectorRenderer.renderVectorTiles(vectorTileViews, mapTileController.zoom);
 
-  if (routeTileViews.length > 0 && mapOverlays.overlays[1].visible) {
+  const routesVisible = mapOverlays.overlays[1].visible;
+  const labelsVisible = mapOverlays.overlays[0].visible;
+
+  // Stand-ins go down first, so where a stand-in and a native plan cover the same ground
+  // the native one paints over it.
+  for (const overlay of fallbackOverlays.values()) {
+    MapOverlayContext.save();
+    MapOverlayContext.beginPath();
+    for (const box of overlay.boxes) {
+      MapOverlayContext.rect(box.minX, box.minY, box.maxX - box.minX, box.maxY - box.minY);
+    }
+    MapOverlayContext.clip();
+
+    if (routesVisible) {
+      drawRouteTiles(MapOverlayContext, [{ plan: overlay.route, screenBBox: overlay.screenBBox }], {
+        zoom: mapTileController.zoom,
+        devicePixelRatio,
+        selectedRoutes: previousIntegration[currentViewIndex]?.selection
+      });
+    }
+
+    if (labelsVisible) {
+      drawLabelTiles(MapOverlayContext, [{ plan: overlay.label, screenBBox: overlay.screenBBox }], {
+        zoom: mapTileController.zoom,
+        width,
+        height,
+        devicePixelRatio
+      });
+    }
+
+    MapOverlayContext.restore();
+  }
+
+  if (routeTileViews.length > 0 && routesVisible) {
     drawRouteTiles(MapOverlayContext, routeTileViews, {
       zoom: mapTileController.zoom,
       devicePixelRatio,
@@ -366,7 +525,7 @@ function renderFrame(now: number): void {
     });
   }
 
-  if (labelTileViews.length > 0 && mapOverlays.overlays[0].visible) {
+  if (labelTileViews.length > 0 && labelsVisible) {
     drawLabelTiles(MapOverlayContext, labelTileViews, {
       zoom: mapTileController.zoom,
       width,

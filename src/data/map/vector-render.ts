@@ -7,12 +7,16 @@ export interface VectorTileView {
   /** Stable tile/cache key. */
   key: string;
   plan: VectorPlan;
-  /** Top-left of the tile's screen box in CSS pixels. */
+  /** Top-left of the tile's screen box, in DEVICE pixels. */
   x: number;
   y: number;
-  /** Screen size of the tile in CSS pixels. */
+  /** Screen size of the tile's box, in DEVICE pixels. */
   size: number;
-  /** Optional sub-square of the plan used as a stand-in for this tile. */
+  /**
+   * Optional sub-square of the plan used as a stand-in for this tile, in NORMALIZED plan
+   * units: `x` / `y` in `[0, 1)` and `size` in `(0, 1]`. An ancestor `depth` levels
+   * coarser has `size = 1 / 2 ** depth`. Never screen pixels.
+   */
   region?: { x: number; y: number; size: number } | null;
 }
 
@@ -303,6 +307,8 @@ export class VectorRenderer {
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    // Enabled after the clear, which must cover the whole surface.
+    gl.enable(gl.SCISSOR_TEST);
     gl.useProgram(this.program);
 
     gl.uniform2f(this.uViewport, width, height);
@@ -321,11 +327,35 @@ export class VectorRenderer {
 
       const plan = ready.plan;
       const gpu = plan.gpu;
-      // Tile boxes are CSS pixels; the drawing buffer is device pixels.
-      const scale = (tile.size / plan.extent) * ratio;
-      const offsetX = tile.x * ratio;
-      const offsetY = tile.y * ratio;
+
+      // `region` is a NORMALIZED sub-square of the plan: `x` / `y` are fractions of the
+      // plan's extent and `size` is the fraction of it that fills the box. It is how a
+      // coarser ancestor stands in for a tile that has not arrived yet, so `size` MUST
+      // divide the scale: without it the ancestor is drawn at its own native scale, which
+      // puts the wrong quadrant far outside the box and reads on screen as a stand-in
+      // that never appears.
+      const region = tile.region ?? { x: 0, y: 0, size: 1 };
+      const regionSize = region.size > 0 ? region.size : 1;
+      const scale = tile.size / (plan.extent * regionSize);
+      const offsetX = tile.x - region.x * plan.extent * scale;
+      const offsetY = tile.y - region.y * plan.extent * scale;
       const deltaZoom = clamp(viewZoom - plan.zoom, 0, 1);
+
+      // Every draw is clipped to its own box. Plans carry `buffer` worth of geometry past
+      // the tile edge, and a stand-in covers only a sub-square of a much larger plan, so
+      // without a scissor box that surplus lands on top of the neighbour's own copy of
+      // the same features. Opaque fills conceal it; anything thin or translucent
+      // composites twice and reads as doubled.
+      //
+      // Both edges are rounded rather than floored and ceiled, so adjacent boxes agree on
+      // the integer boundary between them: no seam, and no shared column of pixels that
+      // would be painted by both.
+      const left = Math.round(tile.x);
+      const right = Math.round(tile.x + tile.size);
+      // GL's scissor origin is bottom-left, while boxes are measured from the top.
+      const bottom = Math.round(height - (tile.y + tile.size));
+      const top = Math.round(height - tile.y);
+      gl.scissor(left, bottom, Math.max(0, right - left), Math.max(0, top - bottom));
 
       gl.uniform2f(this.uTileScale, scale, scale);
       gl.uniform2f(this.uTileOffset, offsetX, offsetY);
@@ -374,6 +404,9 @@ export class VectorRenderer {
         gl.drawElements(gl.TRIANGLES, gpu.lineIndexCount, gl.UNSIGNED_INT, 0);
       }
     }
+
+    // Shared context state: the scissor box must not leak into whatever draws next.
+    gl.disable(gl.SCISSOR_TEST);
   }
 
   destroy(): void {
@@ -432,51 +465,4 @@ export function syncVectorTiles(renderer: VectorRenderer, visibleTiles: Iterable
 
 export function renderVectorTiles(renderer: VectorRenderer, visibleTiles: Iterable<VectorTileView>, viewZoom: number): void {
   renderer.renderVectorTiles(visibleTiles, viewZoom);
-}
-
-/**
- * Coalesces repaint requests onto animation frames.
- *
- * The renderer must own the full viewport set on every pass, so the loop asks for it
- * through `collect` rather than being handed a delta by whatever happened to change.
- * `isFramePending` is meant to be passed to `MapLoaderCacheOptions.shouldDeferEviction`,
- * so trimming never closes a bitmap that the pending pass is about to draw.
- */
-export class VectorRenderLoop {
-  private handle: number | null = null;
-  private dirty = false;
-
-  constructor(
-    private readonly renderer: VectorRenderer,
-    private readonly collect: () => { tiles: Array<VectorTileView>; viewZoom: number },
-    private readonly requestFrame: (callback: () => void) => number = (callback) => (globalThis as unknown as { requestAnimationFrame: (cb: () => void) => number }).requestAnimationFrame(callback),
-    private readonly cancelFrame: (handle: number) => void = (handle) => (globalThis as unknown as { cancelAnimationFrame: (h: number) => void }).cancelAnimationFrame(handle)
-  ) {}
-
-  /** True while a repaint is scheduled but not yet drawn. */
-  get isFramePending(): boolean {
-    return this.handle !== null;
-  }
-
-  /** Marks the view dirty. Cheap to call many times per frame. */
-  invalidate(): void {
-    this.dirty = true;
-    if (this.handle !== null) return;
-    this.handle = this.requestFrame(this.run);
-  }
-
-  stop(): void {
-    if (this.handle === null) return;
-    this.cancelFrame(this.handle);
-    this.handle = null;
-  }
-
-  private run = (): void => {
-    this.handle = null;
-    if (!this.dirty) return;
-    this.dirty = false;
-    const { tiles, viewZoom } = this.collect();
-    this.renderer.syncVectorTiles(tiles);
-    this.renderer.renderVectorTiles(tiles, viewZoom);
-  };
 }
