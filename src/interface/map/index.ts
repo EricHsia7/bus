@@ -63,29 +63,21 @@ const mapLoader = new MapLoader(2, handleTileResponse, {
   shouldDeferEviction: () => frameId !== null,
   // The loader owns the bitmap; the renderer only drops the state derived from it.
   onEvict: (key) => {
-    tileFadeStates.delete(key);
+    vectorRenderer.releaseTile(key);
   }
 });
 
-interface TileFadeState {
-  opacity: number;
-  timestamp: number;
-}
-
-/** Fade progress per tile key, used when tiles stream in at a stable zoom level */
-const tileFadeStates = new Map<string, TileFadeState>();
 /**
- * Tile keys painted in the most recent frame. Handed to the loader after each frame
- * so its LRU never evicts imagery that is currently on screen.
+ * Tile keys painted in the most recent frame. Handed to the loader after each frame so its LRU never evicts imagery that is currently on screen.
  */
 const protectedTileKeys = new Set<string>();
 /** Tile keys already handed to the loader, used to diff visible sets between movements */
 const requestedTileKeys = new Set<string>();
 /**
- * Frame keys painted in the most recent frame. Handed to the loader after each frame so
- * its frame buffer never trims a bitmap that is currently on screen.
+ * Frame keys painted in the most recent frame. Handed to the loader after each frame so its frame buffer never trims a bitmap that is currently on screen.
  */
 const protectedFrameKeys = new Set<string>();
+
 interface FallbackOverlay {
   label: MapLoaderResponse['label'];
   route: MapLoaderResponse['route'];
@@ -115,7 +107,6 @@ const routeTileViews: Array<RouteTileView> = [];
 let activeLayerZ: number | null = null;
 let frameId: number | null = null;
 /** Set while the next pass must produce frames at exactly the tiles' screen resolution. */
-let exactFrameRequested = false;
 
 const mapTileController = new MapTileController({
   element: MapCanvas,
@@ -143,7 +134,6 @@ const mapTileController = new MapTileController({
   onResize: function () {
     resizeMapCanvas();
     synchronizeQueue();
-    exactFrameRequested = true;
     requestFrame();
   }
 });
@@ -417,11 +407,6 @@ function renderFrame(now: number): void {
   // without the viewport moving at all (a tile finishes loading), and the render size
   // changes whenever the fractional zoom does. Each is a no-op when nothing it depends on
   // changed, so the cost of asking every frame is a peek and a size comparison per box.
-
-  exactFrameRequested = false;
-
-  // MapContext.fillStyle = backgroundFill;
-  // MapContext.fillRect(0, 0, width, height);
 
   MapOverlayContext.clearRect(0, 0, width, height);
 
@@ -721,7 +706,6 @@ export function closeMap(): void {
 
   // Reopening should show the current viewport straight away rather than replay a cross-fade against a layer that left the screen long ago.
   activeLayerZ = null;
-  exactFrameRequested = true;
   frameTargets.length = 0;
 
   // Nothing is on screen any more, so nothing needs protecting and the loader can trim straight down to its budget.

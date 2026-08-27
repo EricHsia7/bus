@@ -29,7 +29,7 @@ const float MITER_LIMIT = 1.0f;
 // Squared length below which a segment counts as degenerate. Tile coordinates
 // are quantised to u_extent, so distinct source points routinely collapse onto
 // each other and must never reach normalize().
-const float EPS2 = 1e-12; // 1e-6 * 1e-6
+const float EPS2 = 1e-12f; // 1e-6 * 1e-6
 
 vec4 styleTexel(float style, float texel) {
     float x = (style * 4.0f + texel + 0.5f) / u_styleTexelWidth;
@@ -90,7 +90,7 @@ void main() {
             vec2 dir = has1 ? t1 : t0;
             float along = has1 ? -1.0f : 1.0f;
             vec2 normal = vec2(-dir.y, dir.x);
-            offset = normal * a_side * halfWidth + dir * along * halfWidth;
+            offset = (normal * a_side + dir * along) * halfWidth;
         } else {
             // Fully degenerate vertex: no direction information at all.
             offset = vec2(0.0f);
