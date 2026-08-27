@@ -181,11 +181,12 @@ export class VectorRenderer {
   private uStyleData: WebGLUniformLocation | null = null;
   private uPaletteWidth: WebGLUniformLocation | null = null;
   private uStyleTexelWidth: WebGLUniformLocation | null = null;
+  private uDevicePixelRatio: WebGLUniformLocation | null = null;
 
   constructor(canvas: OffscreenCanvas | HTMLCanvasElement, options: VectorRendererOptions = {}) {
     this.canvas = canvas;
     this.options = options;
-    this.pixelRatio = options.pixelRatio ?? defaultPixelRatio();
+    this.pixelRatio = options.pixelRatio || 1;
 
     const gl = canvas.getContext('webgl2', {
       alpha: true,
@@ -227,27 +228,6 @@ export class VectorRenderer {
 
   hasTile(key: string): boolean {
     return this.resources.has(key);
-  }
-
-  /** Updates the CSS-pixel to device-pixel ratio used to place tile boxes. */
-  setPixelRatio(pixelRatio: number): void {
-    this.pixelRatio = pixelRatio > 0 ? pixelRatio : 1;
-  }
-
-  /**
-   * Resizes the drawing buffer from a CSS-pixel size.
-   *
-   * Assigning `width` / `height` clears the drawing buffer, so this is a no-op when the
-   * size is unchanged and the caller must repaint after a real resize.
-   */
-  resize(cssWidth: number, cssHeight: number, pixelRatio: number = this.pixelRatio): boolean {
-    this.setPixelRatio(pixelRatio);
-    const width = Math.max(1, Math.round(cssWidth * this.pixelRatio));
-    const height = Math.max(1, Math.round(cssHeight * this.pixelRatio));
-    if (this.canvas.width === width && this.canvas.height === height) return false;
-    this.canvas.width = width;
-    this.canvas.height = height;
-    return true;
   }
 
   /**
@@ -325,7 +305,8 @@ export class VectorRenderer {
     gl.useProgram(this.program);
 
     gl.uniform2f(this.uViewport, width, height);
-    gl.uniform1f(this.uDesignTileSize, DESIGN_TILE_SIZE * ratio);
+    gl.uniform1f(this.uDesignTileSize, DESIGN_TILE_SIZE);
+    gl.uniform1f(this.uDevicePixelRatio, ratio);
 
     for (const tile of visibleTiles) {
       const resource = this.resources.get(tile.key);
@@ -424,6 +405,7 @@ export class VectorRenderer {
     this.uStyleData = gl.getUniformLocation(this.program, 'u_styleData');
     this.uPaletteWidth = gl.getUniformLocation(this.program, 'u_paletteWidth');
     this.uStyleTexelWidth = gl.getUniformLocation(this.program, 'u_styleTexelWidth');
+    this.uDevicePixelRatio = gl.getUniformLocation(this.program, 'u_devicePixelRatio');
   }
 
   private handleContextLost(): void {

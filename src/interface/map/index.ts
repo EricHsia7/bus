@@ -56,7 +56,11 @@ const backgroundFill = '#f2f2f7';
 const vectorTileViews: Array<VectorTileView> = [];
 
 const vectorRenderer = new VectorRenderer(MapCanvas);
-const vectorRendererLoop = new VectorRenderLoop(vectorRenderer, () => ({ tiles: vectorTileViews, viewZoom: mapTileController.zoom }));
+const vectorRendererLoop = new VectorRenderLoop(vectorRenderer, () => ({
+  tiles: vectorTileViews,
+  viewZoom: mapTileController.zoom,
+  pixelRatio: devicePixelRatio
+}));
 const mapLoader = new MapLoader(2, handleTileResponse, {
   maxCacheBytes,
   minCachedTiles,
@@ -290,9 +294,9 @@ function synchronizeQueue(): void {
       vectorTileViews.push({
         key,
         plan: existing.vector,
-        x: tile.screenBBox.minX,
-        y: tile.screenBBox.minY,
-        size: width
+        x: tile.screenBBox.minX * devicePixelRatio,
+        y: tile.screenBBox.minY * devicePixelRatio,
+        size: width * devicePixelRatio
       });
     }
 
@@ -305,8 +309,6 @@ function synchronizeQueue(): void {
 
   if (enqueued > 0) mapLoader.consume();
 }
-
-function drawOverlay(): void {}
 
 function renderFrame(now: number): void {
   frameId = null;
@@ -346,9 +348,9 @@ function renderFrame(now: number): void {
     vectorTileViews.push({
       key: getTileKey(x, y, z),
       plan: cached.vector,
-      x: tile.screenBBox.minX,
-      y: tile.screenBBox.minY,
-      size: tile.screenBBox.maxX - tile.screenBBox.minX
+      x: tile.screenBBox.minX * devicePixelRatio,
+      y: tile.screenBBox.minY * devicePixelRatio,
+      size: (tile.screenBBox.maxX - tile.screenBBox.minX)* devicePixelRatio
     });
     labelTileViews.push({ plan: cached.label, screenBBox: tile.screenBBox });
     routeTileViews.push({ plan: cached.route, screenBBox: tile.screenBBox });

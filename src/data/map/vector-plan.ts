@@ -80,6 +80,7 @@ export interface VectorGPUPlan {
 const EMPTY_STYLE = -1;
 const DEFAULT_BACKGROUND = '#f2f2f7';
 
+// TODO: serve [r,g,b,a]
 function parseRGBA(value: string | undefined, fallback: [number, number, number, number]): [number, number, number, number] {
   if (!value) return fallback;
   const text = value.trim().toLowerCase();

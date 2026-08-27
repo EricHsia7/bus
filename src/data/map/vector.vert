@@ -17,6 +17,7 @@ uniform float u_styleTexelWidth;
 uniform float u_isLine;
 uniform float u_extent;
 uniform float u_designTileSize;
+uniform float u_devicePixelRatio;
 
 out float v_style;
 out float v_lineDistance;
@@ -38,7 +39,7 @@ void main() {
         float scale1 = widthData.w;
         float t = clamp(u_deltaZoom, 0.0f, 1.0f);
         float zoomScale = mix(scale0, scale1, t) * exp2(-t);
-        float halfWidth = width * zoomScale * (u_extent / u_designTileSize) * 0.5f;
+        float halfWidth = width * zoomScale * (u_extent / u_designTileSize) * u_devicePixelRatio * 0.5f;
 
         vec2 tangent;
         if(a_position == a_previous) {
