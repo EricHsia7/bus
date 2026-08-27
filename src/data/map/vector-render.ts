@@ -1,6 +1,6 @@
 import { clamp } from '../../tools/math';
 import { pickFrameIndex, resolveStrokeWidth } from './vector';
-import { getVectorPlanPaths, VectorPlan } from './vector-plan';
+import { VectorPlan } from './vector-plan';
 
 const designTileSize = 256;
 
@@ -71,64 +71,62 @@ export function renderVectorFrame(vectorPlan: VectorPlan, request: VectorFrameRe
   const renderWidth = Math.max(1, Math.floor(request.width));
   const renderHeight = Math.max(1, Math.floor(request.height));
 
+  const { extent, styleReferences, styles, paths } = vectorPlan;
+
   canvas.width = renderWidth;
   canvas.height = renderHeight;
 
-  const background = request.background === undefined ? '#f2f2f7' : request.background; // TODO: vectorTile['background']
-  if (background) {
-    context.save();
-    context.fillStyle = background;
-    context.fillRect(0, 0, renderWidth, renderHeight);
-    context.restore();
-  }
+  const background = '#f2f2f7'; // TODO: vectorTile['background']
 
-  const { extent, styleReferences, styles } = vectorPlan;
-
-  // Built once per plan, reused by every frame. The paths are in tile units, so this
-  // frame's resolution, sub-square and zoom all live in the transform below and none of
-  // them can invalidate the geometry.
-  const paths = getVectorPlanPaths(vectorPlan);
+  context.save();
+  context.fillStyle = background;
+  context.fillRect(0, 0, renderWidth, renderHeight);
+  context.restore();
 
   // Map the requested sub-square of tile space onto the whole bitmap. For a full tile
   // this is the plain `renderSize / extent` scale; for a sub-square it is that scale
   // divided by the sub-square's size, which is the stretch a stand-in tile undergoes.
-  const scaleX = renderWidth / (extent * region.size);
-  const scaleY = renderHeight / (extent * region.size);
-  context.setTransform(scaleX, 0, 0, scaleY, -region.x * extent * scaleX, -region.y * extent * scaleY);
 
   // Widths are authored against a 256 px tile, so they are converted into tile units
   // once and then follow the transform above: they stretch with a stand-in tile and
   // sharpen with the device pixel ratio, without either being special-cased.
+
+  const scaleX = renderWidth / (extent * region.size);
+  const scaleY = renderHeight / (extent * region.size);
+  context.setTransform(scaleX, 0, 0, scaleY, -region.x * extent * scaleX, -region.y * extent * scaleY);
+
   const globalStrokeScaleFactor = extent / designTileSize;
 
-  for (let i = 0, l = styleReferences.length; i < l; i++) {
-    context.save();
+  if (paths) {
+    for (let i = 0, l = styleReferences.length; i < l; i++) {
+      context.save();
 
-    const path = paths[i];
-    const style = styles[styleReferences[i]];
-    const opacity = style['opacity'] || 1;
-    if (style['opacity']) context.globalAlpha = opacity;
-    if (style.fill) {
-      context.fillStyle = style.fill;
-      if (style['fill-opacity']) context.globalAlpha = opacity * style['fill-opacity'];
-      context.fill(path);
-      if (style['fill-opacity']) context.globalAlpha = opacity;
+      const path = paths[i];
+      const style = styles[styleReferences[i]];
+      const opacity = style['opacity'] || 1;
+      if (style['opacity']) context.globalAlpha = opacity;
+      if (style.fill) {
+        context.fillStyle = style.fill;
+        if (style['fill-opacity']) context.globalAlpha = opacity * style['fill-opacity'];
+        context.fill(path);
+        if (style['fill-opacity']) context.globalAlpha = opacity;
+      }
+      if (style.stroke) {
+        // stroke-width is a reference width; stroke-width-scale is its [s0, s1]
+        // multiplier across [zoom, zoom + 1], sampled at this frame's clamped deltaZoom.
+        if (style['stroke-width']) context.lineWidth = resolveStrokeWidth(style, deltaZoom) * globalStrokeScaleFactor;
+        if (style['stroke-linecap']) context.lineCap = style['stroke-linecap'];
+        if (style['stroke-linejoin']) context.lineJoin = style['stroke-linejoin'];
+        // The dash pattern is intentionally NOT scaled with zoom: the authored rhythm stays
+        // put so dashes do not visibly re-phase while zooming inside one octave.
+        if (style['stroke-dasharray']) context.setLineDash(style['stroke-dasharray'].map((v) => v * globalStrokeScaleFactor));
+        if (style['stroke-opacity']) context.globalAlpha = opacity * style['stroke-opacity'];
+        context.strokeStyle = style.stroke;
+        context.stroke(path);
+        if (style['stroke-opacity']) context.globalAlpha = opacity;
+      }
+      context.restore();
     }
-    if (style.stroke) {
-      // stroke-width is a reference width; stroke-width-scale is its [s0, s1]
-      // multiplier across [zoom, zoom + 1], sampled at this frame's clamped deltaZoom.
-      if (style['stroke-width']) context.lineWidth = resolveStrokeWidth(style, deltaZoom) * globalStrokeScaleFactor;
-      if (style['stroke-linecap']) context.lineCap = style['stroke-linecap'];
-      if (style['stroke-linejoin']) context.lineJoin = style['stroke-linejoin'];
-      // The dash pattern is intentionally NOT scaled with zoom: the authored rhythm stays
-      // put so dashes do not visibly re-phase while zooming inside one octave.
-      if (style['stroke-dasharray']) context.setLineDash(style['stroke-dasharray'].map((v) => v * globalStrokeScaleFactor));
-      if (style['stroke-opacity']) context.globalAlpha = opacity * style['stroke-opacity'];
-      context.strokeStyle = style.stroke;
-      context.stroke(path);
-      if (style['stroke-opacity']) context.globalAlpha = opacity;
-    }
-    context.restore();
   }
 
   return canvas.transferToImageBitmap();
