@@ -197,8 +197,17 @@ module.exports = (env, argv) => {
           use: [MiniCssExtractPlugin.loader, 'css-loader']
         },
         {
-          test: /\.(glsl|vert|frag)$/,
-          type: 'asset/source'
+          test: /\.(glsl|vert|frag)$/, // match your shader files
+          use: {
+            loader: 'webpack-glsl-minify',
+            options: {
+              output: 'source', // Ensures compatibility with asset/source
+              stripComments: true,
+              preserveDefines: true,
+              preserveUniforms: true,
+              preserveVariables: true
+            }
+          }
         }
       ]
     },
