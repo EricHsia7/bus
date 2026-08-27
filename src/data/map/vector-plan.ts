@@ -1,31 +1,17 @@
-import { VectorTile, VectorTileStyle } from './vector';
+import earcut from 'earcut';
+import { VectorTile, VectorTileStyle, VECTOR_TILE_LINE, VECTOR_TILE_POLYGON } from './vector';
 
 /**
- * Estimated retained cost of one path point: two f64 in the path's own coordinate
- * storage. Coordinates are shipped as Int16 but a Path2D keeps them as doubles, so the
- * path costs about 8x the geometry it was built from.
+ * CPU-side vector plan plus a GPU-ready representation.
+ *
+ * The original tile geometry remains compact Int16/Int32 data.  The GPU plan is
+ * produced once in the worker and consists only of transferable typed arrays.
  */
-const pathPointBytes = 16;
-
-/**
- * Estimated per-subpath overhead: the verb plus its bookkeeping. Small next to the
- * points, but a tile of very short lines is nearly all subpaths.
- */
-const pathSubpathBytes = 8;
-
 export interface VectorPlan {
   type: 'Vector';
   extent: number;
   buffer: number;
-  /**
-   * tile zoom
-   */
   zoom: number;
-  /**
-   * - 2n+0: x
-   * - 2n+1: y
-   * - -buffer <= x, y <= extent + buffer
-   */
   coordinates: Int16Array;
   partStartIndices: Int32Array;
   descriptorStartIndices: Int32Array;
@@ -35,80 +21,290 @@ export interface VectorPlan {
   styles: Array<VectorTileStyle>;
   scaleSpread: number;
   frameDeltaZooms: Array<number>;
-  /**
-   * One path per style run, in extent units.
-   */
-  paths?: Array<Path2D>;
-  /**
-   * Bytes of the decoded typed arrays.
-   */
+  gpu: VectorGPUPlan;
   geometryBytes: number;
-  /**
-   * Estimated bytes the built paths retain.
-   *
-   * Computed from the geometry rather than measured, so the figure is known before the
-   * paths exist and stays stable across the `postMessage` boundary. Counted from the
-   * moment the plan is created: over-reporting a not-yet-hydrated plan errs toward
-   * evicting early, which is the safe direction for a budget.
-   */
-  pathBytes: number;
-  /**
-   * Total budgeted size in bytes: geometry plus the paths built from it.
-   */
+  gpuBytes: number;
   size: number;
 }
 
-/**
- * Estimate what the paths for a plan's geometry will retain.
- *
- * Every point becomes two doubles and every part opens one subpath, which is the whole
- * cost model — style runs and descriptors only decide how the points are grouped, not
- * how many there are.
- */
-function estimatePathBytes(pointCount: number, partCount: number): number {
-  return pointCount * pathPointBytes + partCount * pathSubpathBytes;
+/** One style record consumed by the palette data texture. */
+export interface VectorGPUStyle {
+  /** RGBA palette index for fill. -1 means no fill. */
+  fill: number;
+  /** RGBA palette index for stroke. -1 means no stroke. */
+  stroke: number;
+  fillOpacity: number;
+  strokeOpacity: number;
+  opacity: number;
+  strokeWidth: number;
+  strokeScale0: number;
+  strokeScale1: number;
+  lineCap: number;
+  lineJoin: number;
 }
 
-/**
- * Build one path per style run.
- *
- * This is the loop that used to run per frame inside the rasterizer. Hoisting it here
- * means a tile walks its coordinates once on arrival instead of once per frame per
- * zoom step, which is what made a continuous zoom rebuild identical geometry dozens of
- * times.
- */
-export function buildVectorPlanPaths(vectorPlan: VectorPlan): Array<Path2D> {
-  const { coordinates, partStartIndices, descriptorStartIndices, styleReferences, styleStartIndices } = vectorPlan;
-  const paths: Array<Path2D> = [];
+/** GPU-ready geometry produced in the worker. */
+export interface VectorGPUPlan {
+  /** x,y in tile extent units; one style index per vertex. */
+  polygonPositions: Int16Array;
+  polygonStyles: Uint16Array;
+  polygonIndices: Uint32Array;
 
-  for (let i = 0, l = styleReferences.length; i < l; i++) {
-    const path = new Path2D();
+  /**
+   * Per vertex: x, y, previous x, previous y, next x, next y, side.
+   * The vertex shader expands this centerline into a stroke.
+   */
+  lineVertices: Int16Array;
+  lineStyles: Uint16Array;
+  lineIndices: Uint32Array;
 
-    // style run -> descriptor (batched by style) -> part (ring / line) -> point
-    const descriptorStart = styleStartIndices[i];
-    const descriptorEnd = styleStartIndices[i + 1];
-    for (let j = descriptorStart; j < descriptorEnd; j++) {
-      const partStart = descriptorStartIndices[j];
-      const partEnd = descriptorStartIndices[j + 1];
-      for (let p = partStart; p < partEnd; p++) {
-        const pointStart = partStartIndices[p];
-        const pointEnd = partStartIndices[p + 1];
-        if (pointStart === pointEnd) continue;
-        path.moveTo(coordinates[pointStart * 2], coordinates[pointStart * 2 + 1]);
-        for (let k = pointStart + 1; k < pointEnd; k++) {
-          path.lineTo(coordinates[k * 2], coordinates[k * 2 + 1]);
-        }
-      }
+  /** Number of vertices/indices in each geometry stream. */
+  polygonVertexCount: number;
+  polygonIndexCount: number;
+  lineVertexCount: number;
+  lineIndexCount: number;
+
+  /** Packed RGBA palette, four bytes per entry. */
+  palette: Uint8Array;
+
+  /** Style data, four float32 values per texel. */
+  styleData: Float32Array;
+
+  /** Maximum texture width required by the style texture. */
+  styleTextureWidth: number;
+
+  /** Number of palette entries. */
+  paletteCount: number;
+}
+
+const EMPTY_STYLE = -1;
+const DEFAULT_BACKGROUND = '#f2f2f7';
+
+function parseRGBA(value: string | undefined, fallback: [number, number, number, number]): [number, number, number, number] {
+  if (!value) return fallback;
+  const text = value.trim().toLowerCase();
+
+  if (text[0] === '#') {
+    const hex = text.slice(1);
+    if (hex.length === 3 || hex.length === 4) {
+      return [parseInt(hex[0] + hex[0], 16), parseInt(hex[1] + hex[1], 16), parseInt(hex[2] + hex[2], 16), hex.length === 4 ? parseInt(hex[3] + hex[3], 16) : 255];
     }
-
-    paths.push(path);
+    if (hex.length === 6 || hex.length === 8) {
+      return [parseInt(hex.slice(0, 2), 16), parseInt(hex.slice(2, 4), 16), parseInt(hex.slice(4, 6), 16), hex.length === 8 ? parseInt(hex.slice(6, 8), 16) : 255];
+    }
   }
 
-  return paths;
+  const match = text.match(/^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:[,\s/]+([\d.]+%?))?\s*\)$/);
+  if (match) {
+    const alpha = match[4] === undefined ? 255 : match[4].endsWith('%') ? Math.round(parseFloat(match[4]) * 2.55) : Math.round(parseFloat(match[4]) * 255);
+    return [Math.round(+match[1]), Math.round(+match[2]), Math.round(+match[3]), alpha];
+  }
+
+  // CSS named colors are deliberately not parsed here. Prefer compiling the palette
+  // from the style compiler, where named colors can be normalized once.
+  throw new Error(`Unsupported vector color: ${value}`);
 }
 
-export function getVectorPlanPaths(vectorPlan: VectorPlan): Array<Path2D> {
-  return vectorPlan.paths || buildVectorPlanPaths(vectorPlan);
+function colorKey(value: string | undefined, fallback: [number, number, number, number]): string {
+  const c = parseRGBA(value, fallback);
+  return `${c[0]},${c[1]},${c[2]},${c[3]}`;
+}
+
+function lineCapCode(cap: VectorTileStyle['stroke-linecap']): number {
+  switch (cap) {
+    case 'round':
+      return 1;
+    case 'square':
+      return 2;
+    default:
+      return 0; // butt
+  }
+}
+
+function lineJoinCode(join: VectorTileStyle['stroke-linejoin']): number {
+  switch (join) {
+    case 'round':
+      return 1;
+    case 'bevel':
+      return 2;
+    default:
+      return 0; // miter
+  }
+}
+
+function createPalette(styles: Array<VectorTileStyle>): { palette: Uint8Array; indices: Map<string, number> } {
+  const colors: number[] = [];
+  const indices = new Map<string, number>();
+
+  const add = (value: string | undefined, fallback: [number, number, number, number]): number => {
+    if (!value) return EMPTY_STYLE;
+    const key = colorKey(value, fallback);
+    const existing = indices.get(key);
+    if (existing !== undefined) return existing;
+    const index = indices.size;
+    indices.set(key, index);
+    colors.push(...parseRGBA(value, fallback));
+    return index;
+  };
+
+  for (const style of styles) {
+    add(style.fill, [0, 0, 0, 255]);
+    add(style.stroke, [0, 0, 0, 255]);
+  }
+
+  return { palette: Uint8Array.from(colors), indices };
+}
+
+function paletteIndex(value: string | undefined, fallback: [number, number, number, number], indices: Map<string, number>): number {
+  if (!value) return EMPTY_STYLE;
+  return indices.get(colorKey(value, fallback)) ?? EMPTY_STYLE;
+}
+
+function buildStyleData(styles: Array<VectorTileStyle>, paletteIndices: Map<string, number>): Float32Array {
+  // Four RGBA32F texels per style:
+  // 0: fill palette index, stroke palette index, fill opacity, stroke opacity
+  // 1: overall opacity, reference width, scale0, scale1
+  // 2: cap, join, unused, unused
+  // 3: reserved for future style properties
+  const data = new Float32Array(styles.length * 16);
+
+  for (let i = 0; i < styles.length; i++) {
+    const style = styles[i];
+    const o = i * 16;
+    data[o + 0] = paletteIndex(style.fill, [0, 0, 0, 255], paletteIndices);
+    data[o + 1] = paletteIndex(style.stroke, [0, 0, 0, 255], paletteIndices);
+    data[o + 2] = style['fill-opacity'] ?? 1;
+    data[o + 3] = style['stroke-opacity'] ?? 1;
+
+    data[o + 4] = style.opacity ?? 1;
+    data[o + 5] = style['stroke-width'] ?? 0;
+    data[o + 6] = style['stroke-width-scale']?.[0] ?? 1;
+    data[o + 7] = style['stroke-width-scale']?.[1] ?? 1;
+
+    data[o + 8] = lineCapCode(style['stroke-linecap']);
+    data[o + 9] = lineJoinCode(style['stroke-linejoin']);
+  }
+
+  return data;
+}
+
+function buildPolygonGeometry(plan: VectorPlan, polygonParts: Array<number>, styleIndex: number, positions: number[], styles: number[], indices: number[]): void {
+  const { coordinates, partStartIndices } = plan;
+  const flat: number[] = [];
+  const holes: number[] = [];
+  let pointBase = positions.length / 2;
+
+  for (let r = 0; r < polygonParts.length; r++) {
+    const part = polygonParts[r];
+    const start = partStartIndices[part];
+    const end = partStartIndices[part + 1];
+    if (end - start < 3) continue;
+
+    if (flat.length > 0) holes.push(flat.length / 2);
+    for (let p = start; p < end; p++) {
+      flat.push(coordinates[p * 2], coordinates[p * 2 + 1]);
+    }
+  }
+
+  if (flat.length < 6) return;
+
+  const localIndices = earcut(flat, holes, 2);
+  positions.push(...flat);
+  for (let i = 0; i < flat.length / 2; i++) styles.push(styleIndex);
+  for (const index of localIndices) indices.push(pointBase + index);
+}
+
+function buildLineGeometry(plan: VectorPlan, lineParts: Array<number>, styleIndex: number, vertices: number[], styles: number[], indices: number[]): void {
+  const { coordinates, partStartIndices } = plan;
+
+  for (const part of lineParts) {
+    const start = partStartIndices[part];
+    const end = partStartIndices[part + 1];
+    const count = end - start;
+    if (count < 2) continue;
+
+    const base = vertices.length / 7;
+
+    for (let i = 0; i < count; i++) {
+      const point = start + i;
+      const prev = i === 0 ? point : point - 1;
+      const next = i === count - 1 ? point : point + 1;
+
+      vertices.push(coordinates[point * 2], coordinates[point * 2 + 1], coordinates[prev * 2], coordinates[prev * 2 + 1], coordinates[next * 2], coordinates[next * 2 + 1], -1);
+      styles.push(styleIndex);
+
+      vertices.push(coordinates[point * 2], coordinates[point * 2 + 1], coordinates[prev * 2], coordinates[prev * 2 + 1], coordinates[next * 2], coordinates[next * 2 + 1], 1);
+      styles.push(styleIndex);
+    }
+
+    for (let i = 0; i < count - 1; i++) {
+      const a = base + i * 2;
+      const b = a + 1;
+      const c = a + 2;
+      const d = a + 3;
+      indices.push(a, b, c, c, b, d);
+    }
+  }
+}
+
+/**
+ * Build transferable GPU geometry in the worker.
+ *
+ * Polygons are triangulated with earcut. Lines are converted to a reusable
+ * per-point stroke representation; the vertex shader applies the current width,
+ * cap and join rules, so zoom never requires rebuilding the mesh.
+ */
+export function buildVectorGPUPlan(vectorPlan: VectorPlan): VectorGPUPlan {
+  const { palette, indices: paletteIndices } = createPalette(vectorPlan.styles);
+  const styleData = buildStyleData(vectorPlan.styles, paletteIndices);
+
+  const polygonPositions: number[] = [];
+  const polygonStyles: number[] = [];
+  const polygonIndices: number[] = [];
+  const lineVertices: number[] = [];
+  const lineStyles: number[] = [];
+  const lineIndices: number[] = [];
+
+  for (let styleRun = 0; styleRun < vectorPlan.styleReferences.length; styleRun++) {
+    const styleIndex = vectorPlan.styleReferences[styleRun];
+    const descriptorStart = vectorPlan.styleStartIndices[styleRun];
+    const descriptorEnd = vectorPlan.styleStartIndices[styleRun + 1];
+    for (let descriptor = descriptorStart; descriptor < descriptorEnd; descriptor++) {
+      const partStart = vectorPlan.descriptorStartIndices[descriptor];
+      const partEnd = vectorPlan.descriptorStartIndices[descriptor + 1];
+      const parts: number[] = [];
+      for (let part = partStart; part < partEnd; part++) parts.push(part);
+
+      if (vectorPlan.descriptorTypes[descriptor] === VECTOR_TILE_POLYGON) {
+        buildPolygonGeometry(vectorPlan, parts, styleIndex, polygonPositions, polygonStyles, polygonIndices);
+      } else if (vectorPlan.descriptorTypes[descriptor] === VECTOR_TILE_LINE) {
+        buildLineGeometry(vectorPlan, parts, styleIndex, lineVertices, lineStyles, lineIndices);
+      }
+    }
+  }
+
+  const gpu: VectorGPUPlan = {
+    polygonPositions: Int16Array.from(polygonPositions),
+    polygonStyles: Uint16Array.from(polygonStyles),
+    polygonIndices: Uint32Array.from(polygonIndices),
+    lineVertices: Int16Array.from(lineVertices),
+    lineStyles: Uint16Array.from(lineStyles),
+    lineIndices: Uint32Array.from(lineIndices),
+    polygonVertexCount: polygonPositions.length / 2,
+    polygonIndexCount: polygonIndices.length,
+    lineVertexCount: lineVertices.length / 7,
+    lineIndexCount: lineIndices.length,
+    palette,
+    styleData,
+    styleTextureWidth: Math.max(1, vectorPlan.styles.length * 4),
+    paletteCount: palette.length / 4
+  };
+
+  return gpu;
+}
+
+function estimateGPUBytes(gpu: VectorGPUPlan): number {
+  return gpu.polygonPositions.byteLength + gpu.polygonStyles.byteLength + gpu.polygonIndices.byteLength + gpu.lineVertices.byteLength + gpu.lineStyles.byteLength + gpu.lineIndices.byteLength + gpu.palette.byteLength + gpu.styleData.byteLength;
 }
 
 export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
@@ -120,9 +316,8 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
   const styleStartIndices = new Int32Array(vectorTile.styleStartIndices);
 
   const geometryBytes = coordinates.byteLength + partStartIndices.byteLength + descriptorStartIndices.byteLength + descriptorTypes.byteLength + styleReferences.byteLength + styleStartIndices.byteLength;
-  const pathBytes = estimatePathBytes(coordinates.length / 2, Math.max(0, partStartIndices.length - 1));
 
-  return {
+  const base: VectorPlan = {
     type: 'Vector',
     extent: vectorTile.extent,
     buffer: vectorTile.buffer,
@@ -136,9 +331,14 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
     styles: vectorTile.styles,
     scaleSpread: vectorTile.scaleSpread || 0,
     frameDeltaZooms: vectorTile.frameDeltaZooms && vectorTile.frameDeltaZooms.length > 0 ? vectorTile.frameDeltaZooms : [0],
-    paths: [], // not clonable -> build on the main thread
+    gpu: undefined as unknown as VectorGPUPlan,
     geometryBytes,
-    pathBytes,
-    size: geometryBytes + pathBytes
+    gpuBytes: 0,
+    size: geometryBytes
   };
+
+  base.gpu = buildVectorGPUPlan(base);
+  base.gpuBytes = estimateGPUBytes(base.gpu);
+  base.size = geometryBytes + base.gpuBytes;
+  return base;
 }

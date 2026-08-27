@@ -1,6 +1,6 @@
 import { LabelGlyphPlan } from './label-plan';
 import { RoutePlan } from './route-plan';
-import { buildVectorPlanPaths, VectorPlan } from './vector-plan';
+import { VectorPlan } from './vector-plan';
 
 /**
  * - 0: pending
@@ -235,7 +235,6 @@ export class MapLoader {
           response = existing;
           this.touch(key);
         } else {
-          response.vector.paths = buildVectorPlanPaths(response.vector);
           this.store(key, response);
         }
 
@@ -360,9 +359,6 @@ export class MapLoader {
     this.cacheBytes -= this.tileBytes.get(key) ?? 0;
     this.tileBytes.delete(key);
     if (this.cacheBytes < 0) this.cacheBytes = 0;
-
-    // release the path
-    response.vector.paths = undefined;
 
     // Owning the bitmap means the texture can be released now rather than whenever a GC happens to notice a handle that looks cheap on the JS heap.
     if (response.label.sheet) {

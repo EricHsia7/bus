@@ -2,7 +2,7 @@ import { MapLoader, MapLoaderResponse } from '../../data/map';
 import { drawLabelTiles, LabelTileView } from '../../data/map/label-renderer';
 import { drawRouteTiles, RouteTileView } from '../../data/map/route-renderer';
 import { VectorPlan } from '../../data/map/vector-plan';
-import { renderVectorFrame, resolveVectorFrame, VectorFrameRegion } from '../../data/map/vector-render';
+import { VectorRenderer, VectorTileView } from '../../data/map/vector-render';
 import { MapView, MapViews } from '../../data/map/views';
 import { booleanToString } from '../../tools';
 import { documentCreateDivElement, documentQuerySelector, elementQuerySelector } from '../../tools/elements';
@@ -18,7 +18,7 @@ const LeftButtonElement = elementQuerySelector(Field, '.css_map_button_left');
 const RightButtonElement = elementQuerySelector(Field, '.css_map_button_right');
 
 const MapCanvas = elementQuerySelector(Field, '.css_map_canvas') as HTMLCanvasElement;
-const MapContext = MapCanvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
+// const MapContext = MapCanvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
 const MapOverlayCanvas = elementQuerySelector(Field, '.css_map_overlay') as HTMLCanvasElement;
 const MapOverlayContext = MapOverlayCanvas.getContext('2d') as CanvasRenderingContext2D;
 
@@ -53,21 +53,6 @@ const evictionIdleDelay = 200;
 const maxFrameBufferBytes = 96 * 1024 * 1024;
 /** Floor of the frame budget, so a viewport's worth of frames always survives a trim */
 const minBufferedFrames = 16;
-/**
- * How many coarser layers may stand in for a tile that has not arrived yet. Three steps
- * is an eighth of the tile's ground per axis, past which the stand-in carries so little
- * detail that the background reads better than a smear.
- */
-const maxAncestorFallbackDepth = 3;
-/**
- * How far a cached frame's resolution may drift from the wanted one before it is
- * rasterized again. Mid-gesture, letting the compositor stretch a frame by a few percent
- * is much cheaper than re-running the vector pass every animation frame; the settle pass
- * at the end of the movement brings it back to exactly one bitmap pixel per device pixel.
- */
-const frameResolutionTolerance = 1.5;
-/** Largest frame delta honoured, so returning from an idle tab does not jump a fade to the end */
-/** Painted underneath the tiles so fade-ins read as map background rather than a black flash */
 const backgroundFill = '#f2f2f7';
 
 const mapLoader = new MapLoader(2, handleTileResponse, {
@@ -84,6 +69,10 @@ const mapLoader = new MapLoader(2, handleTileResponse, {
     tileFadeStates.delete(key);
   }
 });
+
+const vectorTileViews: Array<VectorTileView> = [];
+
+const vectorRenderer = new VectorRenderer(MapCanvas);
 
 interface TileFadeState {
   opacity: number;
@@ -157,9 +146,8 @@ const mapTileController = new MapTileController({
     requestFrame();
   },
   onMovementEnd: function () {
-    synchronizeQueue();
+    // synchronizeQueue();
     // The viewport has stopped, so this is the moment to pay for exact-resolution frames.
-    exactFrameRequested = true;
     requestFrame();
     mapLoader.runEviction();
   },
@@ -252,13 +240,13 @@ export function resizeMapCanvas(): void {
   width = size.width;
   height = size.height;
 
-  MapCanvas.width = width * devicePixelRatio;
-  MapCanvas.height = height * devicePixelRatio;
+  MapCanvas.width = width; // * devicePixelRatio;
+  MapCanvas.height = height; // * devicePixelRatio;
   MapOverlayCanvas.width = width * devicePixelRatio;
   MapOverlayCanvas.height = height * devicePixelRatio;
 
   // Resetting the backing store drops the transform, so re-apply it here.
-  MapContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  // MapContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
   MapOverlayContext.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
 }
 
@@ -307,186 +295,67 @@ function synchronizeQueue(): void {
   }
 
   let enqueued = 0;
+  vectorTileViews.length = 0;
   for (const tile of visibleTiles) {
     const key = getTileKey(tile.x, tile.y, tile.z);
     if (requestedTileKeys.has(key)) continue;
     requestedTileKeys.add(key);
     // A cached tile needs no request; `get` also marks it as recently used.
-    if (mapLoader.get(tile.x, tile.y, tile.z)) continue;
+    const existing = mapLoader.get(tile.x, tile.y, tile.z);
+
+    if (existing) {
+      const width = tile.screenBBox.maxX - tile.screenBBox.minX;
+      // const height = tile.screenBBox.maxY - tile.screenBBox.minY;
+
+      vectorTileViews.push({
+        key,
+        plan: existing.vector,
+        x: tile.screenBBox.minX,
+        y: tile.screenBBox.minY,
+        size: width
+      });
+    }
+
+    if (existing) continue;
     mapLoader.enqueue(tile.x, tile.y, tile.z);
     enqueued++;
   }
 
+  vectorRenderer.syncVectorTiles(vectorTileViews);
+
   if (enqueued > 0) mapLoader.consume();
 }
 
-/**
- * Paints one tile-sized rectangle, snapped to whole device pixels on every edge.
- * Neighbouring tiles share their geographic edge, so both round to the same device
- * pixel and no seam is left between them.
- *
- * `source` selects the sub-rectangle of the bitmap that should be stretched across the
- * destination box. That is how an ancestor tile stands in for a missing finer tile:
- * the destination is the missing tile's box, while the source is the quarter, sixteenth,
- * ... of the ancestor bitmap that covers exactly that ground.
- */
-function drawTileRegion(context: Context2D, bitmap: ImageBitmap, destX: number, destY: number, destZ: number, source: { x: number; y: number; width: number; height: number } | null): void {
-  const { screenBBox } = mapTileController.getTileBoundingBox(destX, destY, destZ);
+function drawOverlay(): void {}
 
-  const left = Math.round(screenBBox.minX * devicePixelRatio) / devicePixelRatio;
-  const top = Math.round(screenBBox.minY * devicePixelRatio) / devicePixelRatio;
-  const right = Math.round(screenBBox.maxX * devicePixelRatio) / devicePixelRatio;
-  const bottom = Math.round(screenBBox.maxY * devicePixelRatio) / devicePixelRatio;
+function renderFrame(now: number): void {
+  frameId = null;
 
-  const tileWidth = right - left;
-  const tileHeight = bottom - top;
-  if (tileWidth <= 0 || tileHeight <= 0) return;
-  // Stand-in tiles from finer layers can fall outside the viewport, so skip those draws.
-  if (right < 0 || bottom < 0 || left > width || top > height) return;
+  const nativeZoom = mapTileController.getNativeZoom();
+  // Rebuilt every frame: what is painted below is exactly what the loader must keep.
+  protectedTileKeys.clear();
+  protectedFrameKeys.clear();
 
-  if (source) {
-    context.drawImage(bitmap as CanvasImageSource, source.x, source.y, source.width, source.height, left, top, tileWidth, tileHeight);
-  } else {
-    context.drawImage(bitmap as CanvasImageSource, left, top, tileWidth, tileHeight);
-  }
-}
+  if (activeLayerZ !== null && activeLayerZ !== nativeZoom) synchronizeQueue();
+  activeLayerZ = nativeZoom;
 
-/** A plan standing in for a tile box, and which part of that plan covers the box. */
-interface FrameSource {
-  plan: VectorPlan;
-  x: number;
-  y: number;
-  z: number;
-  region: VectorFrameRegion | null;
-}
+  // Both passes run unconditionally. Which plan stands in for which box can change
+  // without the viewport moving at all (a tile finishes loading), and the render size
+  // changes whenever the fractional zoom does. Each is a no-op when nothing it depends on
+  // changed, so the cost of asking every frame is a peek and a size comparison per box.
 
-/**
- * Picks the plan that should be rasterized for a tile box. The tile's own plan wins;
- * while it is still loading the nearest coarser ancestor already in the cache stands in,
- * contributing the sub-square of itself that covers exactly this box.
- */
-function findFrameSource(x: number, y: number, z: number): FrameSource | null {
-  // peek, not get: choosing a source is not drawing it, so the LRU order is left alone
-  // until the source is actually rasterized.
-  const exact = mapLoader.peek(x, y, z);
-  if (exact) return { plan: exact.vector, x, y, z, region: null };
+  exactFrameRequested = false;
 
-  const minZ = Math.max(mapTileController.minNativeZoom, z - maxAncestorFallbackDepth);
-  for (let sourceZ = z - 1; sourceZ >= minZ; sourceZ--) {
-    const step = z - sourceZ;
-    const sourceX = x >> step;
-    const sourceY = y >> step;
-    const ancestor = mapLoader.peek(sourceX, sourceY, sourceZ);
-    if (!ancestor) continue;
-    const size = Math.pow(2, -step);
-    return {
-      plan: ancestor.vector,
-      x: sourceX,
-      y: sourceY,
-      z: sourceZ,
-      region: { x: (x - (sourceX << step)) * size, y: (y - (sourceY << step)) * size, size }
-    };
-  }
+  // MapContext.fillStyle = backgroundFill;
+  // MapContext.fillRect(0, 0, width, height);
 
-  return null;
-}
-
-/**
- * Rebuilds the list of boxes this pass paints. Normally one box per visible tile, but a
- * tile with nothing to stand in for it falls back the other way: right after a zoom-out
- * the finer tiles are the ones still cached, and each covers a quarter of the box.
- * Coverage can be partial there, which reads as background in the gaps.
- */
-function collectFrameTargets(): void {
-  frameTargets.length = 0;
-
-  const visibleTiles = mapTileController.getVisibleTiles();
-  for (const tile of visibleTiles) {
-    if (findFrameSource(tile.x, tile.y, tile.z) || mapLoader.peekFrame(tile.x, tile.y, tile.z)) {
-      frameTargets.push(tile);
-      continue;
-    }
-
-    if (tile.z >= mapTileController.maxNativeZoom) continue;
-    const childZ = tile.z + 1;
-    for (let dy = 0; dy < 2; dy++) {
-      for (let dx = 0; dx < 2; dx++) {
-        const childX = tile.x * 2 + dx;
-        const childY = tile.y * 2 + dy;
-        if (!mapLoader.peek(childX, childY, childZ) && !mapLoader.peekFrame(childX, childY, childZ)) continue;
-        frameTargets.push(mapTileController.getTileBoundingBox(childX, childY, childZ));
-      }
-    }
-  }
-}
-
-function isFrameResolutionAcceptable(frame: { width: number; height: number }, wantedWidth: number, wantedHeight: number, exact: boolean): boolean {
-  if (frame.width === wantedWidth && frame.height === wantedHeight) return true;
-  if (exact) return false;
-  const drift = Math.max(wantedWidth / frame.width, frame.width / wantedWidth, wantedHeight / frame.height, frame.height / wantedHeight);
-  return drift <= frameResolutionTolerance;
-}
-
-function updateFrame(tile: TileInfo, exact: boolean): void {
-  const source = findFrameSource(tile.x, tile.y, tile.z);
-  if (!source) return;
-
-  // Whatever is painted has to survive the next eviction pass, even when the existing
-  // frame is reused unchanged: the plan is what makes that frame reproducible.
-  protectedTileKeys.add(getTileKey(source.x, source.y, source.z));
-
-  const wantedWidth = Math.max(1, Math.floor((tile.screenBBox.maxX - tile.screenBBox.minX) * devicePixelRatio));
-  const wantedHeight = Math.max(1, Math.floor((tile.screenBBox.maxY - tile.screenBBox.minY) * devicePixelRatio));
-
-  // The offset is whichever one the plan ships closest to the view zoom, clamped into
-  // [zoom, zoom + 1]: a stand-in ancestor used past its own octave saturates at the last
-  // frame it ships instead of having its widths extrapolated beyond the interval.
-  const { frameIndex, deltaZoom } = resolveVectorFrame(source.plan, mapTileController.zoom);
-
-  const existing = mapLoader.peekFrame(tile.x, tile.y, tile.z);
-  // Resolution and styling offset are compared separately, because they do not move
-  // together. A changed fractional zoom always changes the render size, so the bitmap has
-  // to be produced again to stay pixel-exact; but the clamped offset it was styled for can
-  // legitimately be unchanged across that re-raster, once the viewport has left the plan's
-  // octave. Recording both also catches what a size comparison alone would miss: a
-  // stand-in ancestor being replaced by the tile's own geometry at the very same size.
-  if (existing && existing.sourceZ === source.z && existing.frameIndex === frameIndex) return; // && isFrameResolutionAcceptable(existing, wantedWidth, wantedHeight, exact)
-
-  // Now the plan is really being read, so it counts as recently used.
-  mapLoader.get(source.x, source.y, source.z);
-
-  const bitmap = renderVectorFrame(source.plan, {
-    width: wantedWidth,
-    height: wantedHeight,
-    region: source.region,
-    deltaZoom
-  });
-
-  mapLoader.pushFrame(tile.x, tile.y, tile.z, bitmap, { sourceZ: source.z, frameIndex, deltaZoom });
-}
-
-function updateVisibleFrames(exact: boolean = false): void {
-  for (const tile of frameTargets) {
-    updateFrame(tile, exact);
-  }
-}
-
-function drawTiles(): void {
-  for (const tile of frameTargets) {
-    const frame = mapLoader.getFrame(tile.x, tile.y, tile.z);
-    if (!frame) continue;
-    drawTileRegion(MapContext, frame.bitmap, tile.x, tile.y, tile.z, null);
-    protectedFrameKeys.add(getTileKey(tile.x, tile.y, tile.z));
-  }
-}
-
-function drawOverlay(): void {
   MapOverlayContext.clearRect(0, 0, width, height);
+
+  vectorTileViews.length = 0;
   labelTileViews.length = 0;
   routeTileViews.length = 0;
 
-  const z = mapTileController.getNativeZoom();
-  const visibleTiles = mapTileController.getVisibleTiles(z);
+  const visibleTiles = mapTileController.getVisibleTiles();
   for (const tile of visibleTiles) {
     const { x, y, z } = tile;
     const cached = mapLoader.get(x, y, z);
@@ -494,9 +363,18 @@ function drawOverlay(): void {
     // Labels and routes are drawn straight from the plan, so those plans are on screen
     // just as much as the rasterized ones and must be protected too.
     protectedTileKeys.add(getTileKey(x, y, z));
+    vectorTileViews.push({
+      key: getTileKey(x, y, z),
+      plan: cached.vector,
+      x: tile.screenBBox.minX,
+      y: tile.screenBBox.minY,
+      size: tile.screenBBox.maxX - tile.screenBBox.minX
+    });
     labelTileViews.push({ plan: cached.label, screenBBox: tile.screenBBox });
     routeTileViews.push({ plan: cached.route, screenBBox: tile.screenBBox });
   }
+
+  vectorRenderer.renderVectorTiles(vectorTileViews, mapTileController.zoom);
 
   if (routeTileViews.length > 0 && mapOverlays.overlays[1].visible) {
     drawRouteTiles(MapOverlayContext, routeTileViews, {
@@ -514,33 +392,6 @@ function drawOverlay(): void {
       devicePixelRatio
     });
   }
-}
-
-function renderFrame(now: number): void {
-  frameId = null;
-
-  const nativeZoom = mapTileController.getNativeZoom();
-  // Rebuilt every frame: what is painted below is exactly what the loader must keep.
-  protectedTileKeys.clear();
-  protectedFrameKeys.clear();
-
-  if (activeLayerZ !== null && activeLayerZ !== nativeZoom) synchronizeQueue();
-  activeLayerZ = nativeZoom;
-
-  // Both passes run unconditionally. Which plan stands in for which box can change
-  // without the viewport moving at all (a tile finishes loading), and the render size
-  // changes whenever the fractional zoom does. Each is a no-op when nothing it depends on
-  // changed, so the cost of asking every frame is a peek and a size comparison per box.
-  collectFrameTargets();
-  updateVisibleFrames(exactFrameRequested);
-  exactFrameRequested = false;
-
-  MapContext.fillStyle = backgroundFill;
-  MapContext.fillRect(0, 0, width, height);
-
-  drawTiles();
-
-  drawOverlay();
 
   mapLoader.protect(protectedTileKeys);
   mapLoader.protectFrames(protectedFrameKeys);
