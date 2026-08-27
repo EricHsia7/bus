@@ -171,7 +171,7 @@ module.exports = (env, argv) => {
       rules: [
         {
           test: /\.js|ts|jsx|tsx$/, // Use babel-loader for TypeScript files
-          exclude: [/node_modules/, /index\.html/, /\.(glsl|vs|fs|vert|frag)$/],
+          exclude: [/node_modules/, /index\.html/, /\.(glsl|vert|frag)$/],
           use: {
             loader: 'babel-loader',
             options: {
@@ -197,7 +197,7 @@ module.exports = (env, argv) => {
           use: [MiniCssExtractPlugin.loader, 'css-loader']
         },
         {
-          test: /\.(glsl|vert|frag)$/, // match your shader files
+          test: /\.(glsl|vert|frag)$/,
           use: {
             loader: 'webpack-glsl-minify',
             options: {
