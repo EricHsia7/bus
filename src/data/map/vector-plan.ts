@@ -19,8 +19,6 @@ export interface VectorPlan {
   styleReferences: Int16Array;
   styleStartIndices: Int32Array;
   styles: Array<VectorTileStyle>;
-  scaleSpread: number;
-  frameDeltaZooms: Array<number>;
   gpu: VectorGPUPlan;
   geometryBytes: number;
   gpuBytes: number;
@@ -330,8 +328,6 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
     styleReferences,
     styleStartIndices,
     styles: vectorTile.styles,
-    scaleSpread: vectorTile.scaleSpread || 0,
-    frameDeltaZooms: vectorTile.frameDeltaZooms && vectorTile.frameDeltaZooms.length > 0 ? vectorTile.frameDeltaZooms : [0],
     gpu: undefined as unknown as VectorGPUPlan,
     geometryBytes,
     gpuBytes: 0,

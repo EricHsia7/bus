@@ -83,18 +83,6 @@ export interface VectorTile {
    */
   styleStartIndices: Array<number>;
   styles: Array<VectorTileStyle>;
-  /**
-   * Largest relative change any scaled property undergoes across
-   * `[zoom, zoom + 1]`, i.e. `max(|s1 / s0 - 1|)`. `0` means nothing in this
-   * tile is zoom-dependent, so one frame is valid for the whole octave.
-   */
-  scaleSpread: number;
-  /**
-   * Fractional zoom offsets the server considers worth rasterizing, computed
-   * from `scaleSpread` against the perceptual tolerance. Always starts at `0`.
-   * A single-entry list means the tile is scale-invariant.
-   */
-  frameDeltaZooms: Array<number>;
 }
 
 /**
