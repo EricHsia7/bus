@@ -52,7 +52,10 @@ const vectorTileViews: Array<VectorTileView> = [];
 
 // Tile boxes are handed over in device pixels; the ratio is what scale-dependent styling
 // such as stroke width is measured against.
-const vectorRenderer = new VectorRenderer(MapCanvas, { pixelRatio: devicePixelRatio });
+const vectorRenderer = new VectorRenderer(MapCanvas, {
+  width: width * devicePixelRatio,
+  height: height * devicePixelRatio
+});
 
 const mapLoader = new MapLoader(2, handleTileResponse, {
   maxCacheBytes,
@@ -220,6 +223,10 @@ export function resizeMapCanvas(): void {
 
   MapCanvas.width = width * devicePixelRatio;
   MapCanvas.height = height * devicePixelRatio;
+
+  vectorRenderer.width = width * devicePixelRatio;
+  vectorRenderer.height = height * devicePixelRatio;
+
   MapOverlayCanvas.width = width * devicePixelRatio;
   MapOverlayCanvas.height = height * devicePixelRatio;
 

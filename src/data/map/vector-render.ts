@@ -21,22 +21,8 @@ export interface VectorTileView {
 }
 
 export interface VectorRendererOptions {
-  /**
-   * Device pixels per CSS pixel. Tile boxes arrive in CSS pixels while the drawing
-   * buffer is sized in device pixels, so the two must be reconciled explicitly.
-   * Defaults to `devicePixelRatio` when a window is available, otherwise 1.
-   */
-  pixelRatio?: number;
-  /**
-   * Keep the drawing buffer after compositing.
-   *
-   * Leave this `true` (the default) for draw-on-demand rendering: with the WebGL
-   * default of `false` the buffer is discarded after every composite, so a canvas
-   * that is only redrawn when a tile arrives goes blank on the next unrelated
-   * repaint, resize or scroll. Set it to `false` only if `renderVectorTiles` is
-   * driven from a `requestAnimationFrame` loop that repaints every frame.
-   */
-  preserveDrawingBuffer?: boolean;
+  width?: number;
+  height?: number;
   /** Called after the GL context is lost. Rendering is a no-op until it is restored. */
   onContextLost?: () => void;
   /**
@@ -165,11 +151,12 @@ export class VectorRenderer {
    * rebuilt after a context loss without waiting for the tiles to be reloaded.
    */
   private lastViews = new Map<string, VectorTileView>();
-  private pixelRatio: number;
   private contextLost = false;
   private readonly options: VectorRendererOptions;
   private readonly contextLostHandler?: (event: Event) => void;
   private readonly contextRestoredHandler?: () => void;
+  public width: number = 1;
+  public height: number = 1;
 
   private uTileScale: WebGLUniformLocation | null = null;
   private uTileOffset: WebGLUniformLocation | null = null;
@@ -182,17 +169,17 @@ export class VectorRenderer {
   private uStyleData: WebGLUniformLocation | null = null;
   private uPaletteWidth: WebGLUniformLocation | null = null;
   private uStyleTexelWidth: WebGLUniformLocation | null = null;
-  private uDevicePixelRatio: WebGLUniformLocation | null = null;
 
   constructor(canvas: OffscreenCanvas | HTMLCanvasElement, options: VectorRendererOptions = {}) {
     this.canvas = canvas;
     this.options = options;
-    this.pixelRatio = options.pixelRatio || 1;
+    this.width = options.width || 1;
+    this.height = options.height || 1;
 
     const gl = canvas.getContext('webgl2', {
       alpha: true,
       antialias: true,
-      preserveDrawingBuffer: options.preserveDrawingBuffer ?? true
+      preserveDrawingBuffer: true
     }) as WebGL2RenderingContext | null;
     if (!gl) throw new Error('WebGL2 is not available');
     this.gl = gl;
@@ -293,9 +280,8 @@ export class VectorRenderer {
     if (this.isContextLost) return;
 
     const gl = this.gl;
-    const width = this.canvas.width as number;
-    const height = this.canvas.height as number;
-    const ratio = this.pixelRatio;
+    const width = this.width as number;
+    const height = this.height as number;
 
     gl.viewport(0, 0, width, height);
     gl.clearColor(0, 0, 0, 0);
@@ -308,7 +294,6 @@ export class VectorRenderer {
 
     gl.uniform2f(this.uViewport, width, height);
     gl.uniform1f(this.uDesignTileSize, DESIGN_TILE_SIZE);
-    gl.uniform1f(this.uDevicePixelRatio, ratio);
 
     for (const tile of visibleTiles) {
       const resource = this.resources.get(tile.key);
@@ -433,7 +418,6 @@ export class VectorRenderer {
     this.uStyleData = gl.getUniformLocation(this.program, 'u_styleData');
     this.uPaletteWidth = gl.getUniformLocation(this.program, 'u_paletteWidth');
     this.uStyleTexelWidth = gl.getUniformLocation(this.program, 'u_styleTexelWidth');
-    this.uDevicePixelRatio = gl.getUniformLocation(this.program, 'u_devicePixelRatio');
   }
 
   private handleContextLost(): void {

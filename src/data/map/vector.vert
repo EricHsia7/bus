@@ -2,12 +2,14 @@
 precision highp float;
 precision highp int;
 
+// attributes
 layout(location = 0) in vec2 a_position;
 layout(location = 1) in vec2 a_previous;
 layout(location = 2) in vec2 a_next;
 layout(location = 3) in float a_side;
 layout(location = 4) in float a_style;
 
+// uniforms
 uniform vec2 u_tileScale;
 uniform vec2 u_tileOffset;
 uniform vec2 u_viewport;
@@ -17,7 +19,6 @@ uniform float u_styleTexelWidth;
 uniform float u_isLine;
 uniform float u_extent;
 uniform float u_designTileSize;
-uniform float u_devicePixelRatio;
 
 out float v_style;
 out float v_lineDistance;
@@ -66,7 +67,7 @@ void main() {
             vec2 sum = t0 + t1;
             vec2 tangent;
             if(dot(sum, sum) > EPS2) {
-                tangent = sum * inversesqrt(dot(sum, sum));
+                tangent = normalize(sum);
             } else {
                 // Line doubles back: t0 == -t1 and the mitre is undefined.
                 // Fall back rather than normalising a zero vector.
