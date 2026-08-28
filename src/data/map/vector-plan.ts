@@ -1,5 +1,6 @@
 import earcut from 'earcut';
 import { VectorTile, VectorTileStyle, VECTOR_TILE_LINE, VECTOR_TILE_POLYGON } from './vector';
+import { deltaDecode } from '../../tools/delta';
 
 /**
  * CPU-side vector plan plus a GPU-ready representation.
@@ -313,6 +314,12 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
   const descriptorTypes = new Uint8Array(vectorTile.descriptorTypes);
   const styleReferences = new Int16Array(vectorTile.styleReferences);
   const styleStartIndices = new Int32Array(vectorTile.styleStartIndices);
+
+  deltaDecode(coordinates, 2);
+  deltaDecode(partStartIndices, 1);
+  deltaDecode(descriptorStartIndices, 1);
+  deltaDecode(styleReferences, 1);
+  deltaDecode(styleStartIndices, 1);
 
   const geometryBytes = coordinates.byteLength + partStartIndices.byteLength + descriptorStartIndices.byteLength + descriptorTypes.byteLength + styleReferences.byteLength + styleStartIndices.byteLength;
 

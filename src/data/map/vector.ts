@@ -56,30 +56,39 @@ export interface VectorTile {
    * - 2n+0: x
    * - 2n+1: y
    * - -buffer <= x, y <= extent + buffer
+   * - delta-encoded
    */
   coordinates: Array<number>;
   /**
    * Point offset where each part (ring / line) begins.
    * - `partStartIndices.length === partCount + 1`
    * - the last entry is `coordinates.length / 2`
+   * - delta-encoded
    */
   partStartIndices: Array<number>;
   /**
    * Part offset where each descriptor begins.
    * - `descriptorStartIndices.length === descriptorCount + 1`
    * - the last entry is `partStartIndices.length - 1`
+   * - delta-encoded
    */
   descriptorStartIndices: Array<number>;
   /**
    * Kind of each descriptor: `0` polygon, `1` line.
    * - `descriptorTypes.length === descriptorCount`
+   * - delta-encoded
    */
   descriptorTypes: Array<number>;
+  /**
+   * References to the styles
+   * - delta-encoded
+   */
   styleReferences: Array<number>;
   /**
    * Descriptor offset where each style run begins.
    * - `styleStartIndices.length === styleReferences.length + 1`
    * - the last entry is `descriptorTypes.length`
+   * - delta-encoded
    */
   styleStartIndices: Array<number>;
   styles: Array<VectorTileStyle>;
