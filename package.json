@@ -36,7 +36,7 @@
     "@typescript-eslint/parser": "8.67.0",
     "babel-loader": "10.1.1",
     "css-loader": "7.1.4",
-    "cssnano": "8.0.7",
+    "cssnano": "9.0.0",
     "eslint": "10.8.1",
     "html-webpack-plugin": "5.6.8",
     "jimp": "1.6.1",
