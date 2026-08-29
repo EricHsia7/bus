@@ -110,7 +110,12 @@ function colorKey(value: string | undefined, fallback: [number, number, number, 
   return `${c[0]},${c[1]},${c[2]},${c[3]}`;
 }
 
-function lineCapCode(cap: VectorTileStyle['stroke-linecap']): number {
+/**
+ * - 0: butt
+ * - 1: round
+ * - 2: bavel
+ */
+function lineCapCode(cap: VectorTileStyle['stroke-linecap']): 0 | 1 | 2 {
   switch (cap) {
     case 'round':
       return 1;
@@ -121,7 +126,12 @@ function lineCapCode(cap: VectorTileStyle['stroke-linecap']): number {
   }
 }
 
-function lineJoinCode(join: VectorTileStyle['stroke-linejoin']): number {
+/**
+ * - 0: miter
+ * - 1: round
+ * - 2: bavel
+ */
+function lineJoinCode(join: VectorTileStyle['stroke-linejoin']): 0 | 1 | 2 {
   switch (join) {
     case 'round':
       return 1;
