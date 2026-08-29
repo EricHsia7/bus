@@ -48,13 +48,18 @@ export interface VectorGPUPlan {
   polygonPositions: Int16Array;
   polygonStyles: Uint16Array;
   polygonIndices: Uint32Array;
-
   /**
-   * Per vertex: x, y, previous x, previous y, next x, next y, side.
+   * 8n+0: current x
+   * 8n+1: current y
+   * 8n+2: previous x
+   * 8n+3: previous y
+   * 8n+4: next x
+   * 8n+5: next y
+   * 8n+6: side
+   * 8n+7: style reference
    * The vertex shader expands this centerline into a stroke.
    */
   lineVertices: Int16Array;
-  lineStyles: Uint16Array;
   lineIndices: Uint32Array;
 
   /** Number of vertices/indices in each geometry stream. */
@@ -224,7 +229,7 @@ function buildPolygonGeometry(plan: VectorPlan, polygonParts: Array<number>, sty
   for (const index of localIndices) indices.push(pointBase + index);
 }
 
-function buildLineGeometry(plan: VectorPlan, lineParts: Array<number>, styleIndex: number, vertices: number[], styles: number[], indices: number[]): void {
+function buildLineGeometry(plan: VectorPlan, lineParts: Array<number>, styleIndex: number, vertices: number[], indices: number[]): void {
   const { coordinates, partStartIndices } = plan;
 
   for (const part of lineParts) {
@@ -233,7 +238,7 @@ function buildLineGeometry(plan: VectorPlan, lineParts: Array<number>, styleInde
     const count = end - start;
     if (count < 2) continue;
 
-    const base = vertices.length / 7;
+    const base = vertices.length / 8;
 
     for (let i = 0; i < count; i++) {
       const point = start + i;
@@ -242,12 +247,10 @@ function buildLineGeometry(plan: VectorPlan, lineParts: Array<number>, styleInde
 
       // a vertex carries current point, previous point, next point, and side indicator -> x, y, x_prev, y_prev, x_next, y_next, side
       // L
-      vertices.push(coordinates[point * 2], coordinates[point * 2 + 1], coordinates[prev * 2], coordinates[prev * 2 + 1], coordinates[next * 2], coordinates[next * 2 + 1], -1);
-      styles.push(styleIndex);
+      vertices.push(coordinates[point * 2], coordinates[point * 2 + 1], coordinates[prev * 2], coordinates[prev * 2 + 1], coordinates[next * 2], coordinates[next * 2 + 1], -1, styleIndex);
 
       // R
-      vertices.push(coordinates[point * 2], coordinates[point * 2 + 1], coordinates[prev * 2], coordinates[prev * 2 + 1], coordinates[next * 2], coordinates[next * 2 + 1], 1);
-      styles.push(styleIndex);
+      vertices.push(coordinates[point * 2], coordinates[point * 2 + 1], coordinates[prev * 2], coordinates[prev * 2 + 1], coordinates[next * 2], coordinates[next * 2 + 1], 1, styleIndex);
     }
 
     for (let i = 0; i < count - 1; i++) {
@@ -275,7 +278,6 @@ export function buildVectorGPUPlan(vectorPlan: VectorPlan): VectorGPUPlan {
   const polygonStyles: number[] = [];
   const polygonIndices: number[] = [];
   const lineVertices: number[] = [];
-  const lineStyles: number[] = [];
   const lineIndices: number[] = [];
 
   for (let styleRun = 0; styleRun < vectorPlan.styleReferences.length; styleRun++) {
@@ -291,7 +293,7 @@ export function buildVectorGPUPlan(vectorPlan: VectorPlan): VectorGPUPlan {
       if (vectorPlan.descriptorTypes[descriptor] === VECTOR_TILE_POLYGON) {
         buildPolygonGeometry(vectorPlan, parts, styleIndex, polygonPositions, polygonStyles, polygonIndices);
       } else if (vectorPlan.descriptorTypes[descriptor] === VECTOR_TILE_LINE) {
-        buildLineGeometry(vectorPlan, parts, styleIndex, lineVertices, lineStyles, lineIndices);
+        buildLineGeometry(vectorPlan, parts, styleIndex, lineVertices, lineIndices);
       }
     }
   }
@@ -301,11 +303,10 @@ export function buildVectorGPUPlan(vectorPlan: VectorPlan): VectorGPUPlan {
     polygonStyles: Uint16Array.from(polygonStyles),
     polygonIndices: Uint32Array.from(polygonIndices),
     lineVertices: Int16Array.from(lineVertices),
-    lineStyles: Uint16Array.from(lineStyles),
     lineIndices: Uint32Array.from(lineIndices),
     polygonVertexCount: polygonPositions.length / 2,
     polygonIndexCount: polygonIndices.length,
-    lineVertexCount: lineVertices.length / 7,
+    lineVertexCount: lineVertices.length / 8,
     lineIndexCount: lineIndices.length,
     palette,
     styleData,
@@ -317,7 +318,7 @@ export function buildVectorGPUPlan(vectorPlan: VectorPlan): VectorGPUPlan {
 }
 
 function estimateGPUBytes(gpu: VectorGPUPlan): number {
-  return gpu.polygonPositions.byteLength + gpu.polygonStyles.byteLength + gpu.polygonIndices.byteLength + gpu.lineVertices.byteLength + gpu.lineStyles.byteLength + gpu.lineIndices.byteLength + gpu.palette.byteLength + gpu.styleData.byteLength;
+  return gpu.polygonPositions.byteLength + gpu.polygonStyles.byteLength + gpu.polygonIndices.byteLength + gpu.lineVertices.byteLength + gpu.lineIndices.byteLength + gpu.palette.byteLength + gpu.styleData.byteLength;
 }
 
 export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {

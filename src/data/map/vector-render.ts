@@ -39,7 +39,6 @@ interface GPUResource {
   polygonStyle: WebGLBuffer | null;
   polygonIndex: WebGLBuffer | null;
   lineVertex: WebGLBuffer | null;
-  lineStyle: WebGLBuffer | null;
   lineIndex: WebGLBuffer | null;
   paletteTexture: WebGLTexture | null;
   styleTexture: WebGLTexture | null;
@@ -122,7 +121,6 @@ function createGPUResource(gl: WebGL2RenderingContext, plan: VectorPlan): GPURes
     polygonStyle: gpu.polygonVertexCount ? createBuffer(gl, gl.ARRAY_BUFFER, gpu.polygonStyles) : null,
     polygonIndex: gpu.polygonIndexCount ? createBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, gpu.polygonIndices) : null,
     lineVertex: gpu.lineVertexCount ? createBuffer(gl, gl.ARRAY_BUFFER, gpu.lineVertices) : null,
-    lineStyle: gpu.lineVertexCount ? createBuffer(gl, gl.ARRAY_BUFFER, gpu.lineStyles) : null,
     lineIndex: gpu.lineIndexCount ? createBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, gpu.lineIndices) : null,
     paletteTexture: createPaletteTexture(gl, gpu.palette, Math.max(1, gpu.paletteCount)),
     styleTexture: createStyleTexture(gl, gpu.styleData, gpu.styleTextureWidth)
@@ -134,7 +132,6 @@ function deleteGPUResource(gl: WebGL2RenderingContext, resource: GPUResource): v
   gl.deleteBuffer(resource.polygonStyle);
   gl.deleteBuffer(resource.polygonIndex);
   gl.deleteBuffer(resource.lineVertex);
-  gl.deleteBuffer(resource.lineStyle);
   gl.deleteBuffer(resource.lineIndex);
   gl.deleteTexture(resource.paletteTexture);
   gl.deleteTexture(resource.styleTexture);
@@ -366,20 +363,19 @@ export class VectorRenderer {
         gl.drawElements(gl.TRIANGLES, gpu.polygonIndexCount, gl.UNSIGNED_INT, 0);
       }
 
-      if (gpu.lineIndexCount && ready.lineVertex && ready.lineStyle && ready.lineIndex) {
+      if (gpu.lineIndexCount && ready.lineVertex && ready.lineIndex) {
         gl.uniform1f(this.uIsLine, 1);
         gl.bindBuffer(gl.ARRAY_BUFFER, ready.lineVertex);
         gl.enableVertexAttribArray(0);
-        gl.vertexAttribPointer(0, 2, gl.SHORT, false, 14, 0);
+        gl.vertexAttribPointer(0, 2, gl.SHORT, false, 16, 0); // 2 * 2 = 4 bytes
         gl.enableVertexAttribArray(1);
-        gl.vertexAttribPointer(1, 2, gl.SHORT, false, 14, 4);
+        gl.vertexAttribPointer(1, 2, gl.SHORT, false, 16, 4); // 2 * 2 = 4 bytes
         gl.enableVertexAttribArray(2);
-        gl.vertexAttribPointer(2, 2, gl.SHORT, false, 14, 8);
+        gl.vertexAttribPointer(2, 2, gl.SHORT, false, 16, 8); // 2 * 2 = 4 bytes
         gl.enableVertexAttribArray(3);
-        gl.vertexAttribPointer(3, 1, gl.SHORT, false, 14, 12);
-        gl.bindBuffer(gl.ARRAY_BUFFER, ready.lineStyle);
+        gl.vertexAttribPointer(3, 1, gl.SHORT, false, 16, 12); // 2 * 1 = 2 bytes
         gl.enableVertexAttribArray(4);
-        gl.vertexAttribPointer(4, 1, gl.UNSIGNED_SHORT, false, 0, 0);
+        gl.vertexAttribPointer(4, 1, gl.UNSIGNED_SHORT, false, 16, 14);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ready.lineIndex);
         gl.drawElements(gl.TRIANGLES, gpu.lineIndexCount, gl.UNSIGNED_INT, 0);
       }
