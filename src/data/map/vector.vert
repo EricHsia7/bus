@@ -21,10 +21,14 @@ uniform float u_extent;
 uniform float u_designTileSize;
 
 out float v_style;
+out vec2 v_pos;
+flat out vec2 v_capOut;
+flat out vec2 v_capCenter;
+flat out float v_capRadius;
 
 // Maximum factor a mitred join may stretch the half width before being cut
 // back, so sharp bends cannot spike arbitrarily far.
-const float MITER_LIMIT = 1.0f;
+const float MITER_LIMIT = 4.0f;
 
 // Squared length below which a segment counts as degenerate. Tile coordinates
 // are quantised to u_extent, so distinct source points routinely collapse onto
@@ -40,6 +44,8 @@ void main() {
     v_style = a_style;
 
     vec2 position = a_position;
+    v_capRadius = 0.0f;
+    v_capOut = vec2(0.0f, 0.0f);
 
     if(u_isLine > 0.5f) {
         vec4 widthData = styleTexel(a_style, 1.0f);
@@ -48,6 +54,9 @@ void main() {
         float scale1 = widthData.w;
         float zoomScale = mix(scale0, scale1, u_deltaZoom) * exp2(-u_deltaZoom);
         float halfWidth = width * zoomScale * (u_extent / u_designTileSize) * 0.5f;
+
+        v_capCenter = a_position * u_tileScale + u_tileOffset;
+        v_capRadius = halfWidth * u_tileScale.x;
 
         // Segment vectors. Lengths are tested before any normalize() so a
         // zero-length segment cannot yield NaN and silently delete triangles.
@@ -82,6 +91,7 @@ void main() {
             float mitreScale = 1.0f / max(abs(cosHalf), 1.0f / MITER_LIMIT);
 
             offset = mitreNormal * a_side * halfWidth * mitreScale;
+            v_capRadius = 0.0f;
         } else if(has0 || has1) {
             // Endpoint: extrude sideways AND extend along the line by one half
             // width, turning the butt cap into a square cap. Where a polyline
@@ -91,6 +101,7 @@ void main() {
             float along = has1 ? -1.0f : 1.0f;
             vec2 normal = vec2(-dir.y, dir.x);
             offset = (normal * a_side + dir * along) * halfWidth;
+            v_capOut = normalize(dir * along * u_tileScale);
         } else {
             // Fully degenerate vertex: no direction information at all.
             offset = vec2(0.0f);
@@ -102,4 +113,5 @@ void main() {
     vec2 pixel = position * u_tileScale + u_tileOffset;
     vec2 clip = pixel / u_viewport * 2.0f - 1.0f;
     gl_Position = vec4(clip.x, -clip.y, 0.0f, 1.0f);
+    v_pos = pixel;
 }

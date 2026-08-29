@@ -9,6 +9,10 @@ uniform float u_styleTexelWidth;
 uniform float u_isLine;
 
 in float v_style;
+in vec2 v_pos;
+flat in vec2 v_capOut;
+flat in vec2 v_capCenter;
+flat in float v_capRadius;   // 0.0 => not a cap
 out vec4 outColor;
 
 vec4 styleTexel(float style, float texel) {
@@ -24,12 +28,27 @@ vec4 paletteColor(float index) {
 void main() {
     vec4 colorData = styleTexel(v_style, 0.0f);
     vec4 opacityData = styleTexel(v_style, 1.0f);
+    vec4 capJoinData = styleTexel(v_style, 2.0f);
 
     float paletteIndex = u_isLine > 0.5f ? colorData.y : colorData.x;
     float localOpacity = u_isLine > 0.5f ? colorData.w : colorData.z;
 
     if(paletteIndex < -0.5f)
         discard;
+
+    vec2 d = v_pos - v_capCenter;      // v_pos must be smooth, not flat
+    float dist = length(d);
+    float r = dist / max(v_capRadius, 1e-6f);
+    float aa = fwidth(r);
+
+    float capCoverage = 1.0f;
+    if(capJoinData.x > 0.5f && capJoinData.x < 1.5f) {
+        if(v_capRadius > 0.0f && dot(d, v_capOut) > 0.0f) {
+            capCoverage = 1.0f - smoothstep(1.0f - aa, 1.0f, r);
+            if(capCoverage <= 0.0f)
+                discard;
+        }
+    }
 
     vec4 color = paletteColor(paletteIndex);
     float opacity = opacityData.x * localOpacity * color.a;
