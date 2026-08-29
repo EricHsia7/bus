@@ -230,19 +230,22 @@ function buildLineGeometry(plan: VectorPlan, lineParts: Array<number>, styleInde
       const prev = i === 0 ? point : point - 1;
       const next = i === count - 1 ? point : point + 1;
 
+      // a vertex carries current point, previous point, next point, and side indicator -> x, y, x_prev, y_prev, x_next, y_next, side
+      // L
       vertices.push(coordinates[point * 2], coordinates[point * 2 + 1], coordinates[prev * 2], coordinates[prev * 2 + 1], coordinates[next * 2], coordinates[next * 2 + 1], -1);
       styles.push(styleIndex);
 
+      // R
       vertices.push(coordinates[point * 2], coordinates[point * 2 + 1], coordinates[prev * 2], coordinates[prev * 2 + 1], coordinates[next * 2], coordinates[next * 2 + 1], 1);
       styles.push(styleIndex);
     }
 
     for (let i = 0; i < count - 1; i++) {
-      const a = base + i * 2;
-      const b = a + 1;
-      const c = a + 2;
-      const d = a + 3;
-      indices.push(a, b, c, c, b, d);
+      const a = base + i * 2; // base index of vertex(i); L(i)
+      const b = a + 1; // R(i)
+      const c = a + 2; // L(i+1)
+      const d = a + 3; // R(i+1)
+      indices.push(a, b, c, c, b, d); // ΔL(i) R(i) L(i+1), ΔL(i+1) R(i) R(i+1)
     }
   }
 }
