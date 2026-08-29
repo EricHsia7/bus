@@ -176,9 +176,12 @@ export class VectorRenderer {
     const gl = canvas.getContext('webgl2', {
       alpha: true,
       antialias: true,
-      preserveDrawingBuffer: true
+      preserveDrawingBuffer: true,
+      premultipliedAlpha: true
     }) as WebGL2RenderingContext | null;
     if (!gl) throw new Error('WebGL2 is not available');
+    gl.enable(gl.BLEND);
+    gl.blendFuncSeparate(gl.ONE, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     this.gl = gl;
     this.program = createProgram(gl);
     this.readUniformLocations();
@@ -359,6 +362,7 @@ export class VectorRenderer {
         gl.bindBuffer(gl.ARRAY_BUFFER, ready.polygonStyle);
         gl.enableVertexAttribArray(4);
         gl.vertexAttribPointer(4, 1, gl.UNSIGNED_SHORT, false, 0, 0);
+        gl.disableVertexAttribArray(5);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ready.polygonIndex);
         gl.drawElements(gl.TRIANGLES, gpu.polygonIndexCount, gl.UNSIGNED_INT, 0);
       }
@@ -367,15 +371,17 @@ export class VectorRenderer {
         gl.uniform1f(this.uIsLine, 1);
         gl.bindBuffer(gl.ARRAY_BUFFER, ready.lineVertex);
         gl.enableVertexAttribArray(0);
-        gl.vertexAttribPointer(0, 2, gl.SHORT, false, 16, 0); // 2 * 2 = 4 bytes
+        gl.vertexAttribPointer(0, 2, gl.SHORT, false, 18, 0); // 2 * 2 = 4 bytes
         gl.enableVertexAttribArray(1);
-        gl.vertexAttribPointer(1, 2, gl.SHORT, false, 16, 4); // 2 * 2 = 4 bytes
+        gl.vertexAttribPointer(1, 2, gl.SHORT, false, 18, 4); // 2 * 2 = 4 bytes
         gl.enableVertexAttribArray(2);
-        gl.vertexAttribPointer(2, 2, gl.SHORT, false, 16, 8); // 2 * 2 = 4 bytes
+        gl.vertexAttribPointer(2, 2, gl.SHORT, false, 18, 8); // 2 * 2 = 4 bytes
         gl.enableVertexAttribArray(3);
-        gl.vertexAttribPointer(3, 1, gl.SHORT, false, 16, 12); // 2 * 1 = 2 bytes
+        gl.vertexAttribPointer(3, 1, gl.SHORT, false, 18, 12); // 2 * 1 = 2 bytes
         gl.enableVertexAttribArray(4);
-        gl.vertexAttribPointer(4, 1, gl.UNSIGNED_SHORT, false, 16, 14);
+        gl.vertexAttribPointer(4, 1, gl.UNSIGNED_SHORT, false, 18, 14); // 2 * 1 = 2 bytes
+        gl.enableVertexAttribArray(5);
+        gl.vertexAttribPointer(5, 1, gl.SHORT, false, 18, 16); // 2 * 1 = 2 bytes
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ready.lineIndex);
         gl.drawElements(gl.TRIANGLES, gpu.lineIndexCount, gl.UNSIGNED_INT, 0);
       }
