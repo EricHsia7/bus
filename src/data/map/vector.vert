@@ -21,7 +21,6 @@ uniform float u_extent;
 uniform float u_designTileSize;
 
 out float v_style;
-out float v_lineDistance;
 
 // Maximum factor a mitred join may stretch the half width before being cut
 // back, so sharp bends cannot spike arbitrarily far.
@@ -103,5 +102,4 @@ void main() {
     vec2 pixel = position * u_tileScale + u_tileOffset;
     vec2 clip = pixel / u_viewport * 2.0f - 1.0f;
     gl_Position = vec4(clip.x, -clip.y, 0.0f, 1.0f);
-    v_lineDistance = 0.0f;
 }
