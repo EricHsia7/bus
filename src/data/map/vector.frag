@@ -41,6 +41,7 @@ void main() {
     float r = dist / max(v_capRadius, 1e-6f);
     float aa = fwidth(r);
 
+    // round cap
     float capCoverage = 1.0f;
     if(capJoinData.x > 0.5f && capJoinData.x < 1.5f) {
         if(v_capRadius > 0.0f && dot(d, v_capOut) > 0.0f) {

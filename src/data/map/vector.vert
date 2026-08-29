@@ -105,6 +105,7 @@ void main() {
         } else {
             // Fully degenerate vertex: no direction information at all.
             offset = vec2(0.0f);
+            v_capRadius = 0.0f;
         }
 
         position += offset;
