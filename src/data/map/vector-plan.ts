@@ -192,7 +192,7 @@ function buildLineGeometry(plan: VectorPlan, lineParts: Array<number>, styleInde
   };
 
   for (const part of lineParts) {
-    const start = partStartIndices[part];
+    const start = partStartIndices[part]; // TODO: simplify part iteration
     const end = partStartIndices[part + 1];
     const count = end - start;
     if (count < 2) continue;
