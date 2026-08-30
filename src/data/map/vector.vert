@@ -8,8 +8,7 @@ layout(location = 1) in vec2 a_previous;
 layout(location = 2) in vec2 a_next;
 layout(location = 3) in float a_side;
 layout(location = 4) in float a_style;
-// 0 = segment vertex, 1 = cap quad base, 2 = cap quad tip
-layout(location = 5) in float a_cap;
+layout(location = 5) in float a_cap; // 0: segment vertex, 1: cap quad base, 2: cap quad tip
 
 // uniforms
 uniform vec2 u_tileScale;
@@ -28,10 +27,10 @@ out float v_style;
 // interpolating them reproduces the constant exactly. Marking them flat would
 // let a segment triangle inherit cap values from whichever vertex happens to
 // be provoking, which is what painted whole segments in the debug pass.
-out vec2 v_pos;        // per-fragment position, pixel space  -- VARIES
-out vec2 v_capCenter;  // true endpoint, pixel space
-out float v_capRadius; // cap radius in PIXELS, 0 => not a cap
-out vec2 v_capOut;     // unit outward dir, pixel space, 0 => skip half-plane test
+out vec2 v_pos; // per-fragment position in pixels
+out vec2 v_capCenter; // true endpoint in pixels
+out float v_capRadius; // cap radius in pixels (0 -> not a cap)
+out vec2 v_capOut; // unit outward dir pixels (0 -> skip half-plane test)
 
 // Maximum factor a mitred join may stretch the half width before being cut
 // back, so sharp bends cannot spike arbitrarily far.
@@ -79,7 +78,7 @@ void main() {
         vec2 offset;
 
         if(a_cap > 0.5f) {
-            // ---- Cap quad -------------------------------------------------
+            // Cap quad
             float extend = a_cap - 1.0f; // 1 -> 0.0 (base), 2 -> 1.0 (tip)
 
             vec2 dir;
@@ -104,7 +103,7 @@ void main() {
                 v_capOut = normalize(dir * along * u_tileScale);
             }
         } else if(has0 && has1) {
-            // ---- Interior vertex: mitre the join --------------------------
+            // Interior vertex: mitre the join
             vec2 sum = t0 + t1;
             vec2 tangent;
             if(dot(sum, sum) > EPS2) {
@@ -125,7 +124,7 @@ void main() {
 
             offset = mitreNormal * a_side * halfWidth * mitreScale;
         } else if(has0 || has1) {
-            // ---- Segment endpoint: BUTT ------------------------------------
+            // Segment endpoint: BUTT
             // No along-the-line extension any more. The dedicated cap quad
             // supplies the end; extending here would double-cover it and leave
             // the circle carve nothing to bite on.
