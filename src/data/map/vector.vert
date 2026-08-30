@@ -16,7 +16,6 @@ uniform vec2 u_tileOffset;
 uniform vec2 u_viewport;
 uniform float u_deltaZoom;
 uniform sampler2D u_styleData;
-uniform float u_styleTexelWidth;
 uniform float u_isLine;
 uniform float u_extent;
 uniform float u_designTileSize;
@@ -42,8 +41,8 @@ const float MITER_LIMIT = 4.0f;
 const float EPS2 = 1e-12f; // 1e-6 * 1e-6
 
 vec4 styleTexel(float style, float texel) {
-    float x = (style * 4.0f + texel + 0.5f) / u_styleTexelWidth;
-    return texture(u_styleData, vec2(x, 0.5f));
+    int i = int(style * 4.0f + texel + 0.5f);
+    return texelFetch(u_styleData, ivec2(i, 0), 0);
 }
 
 void main() {

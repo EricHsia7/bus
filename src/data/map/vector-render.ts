@@ -164,8 +164,6 @@ export class VectorRenderer {
   private uIsLine: WebGLUniformLocation | null = null;
   private uPalette: WebGLUniformLocation | null = null;
   private uStyleData: WebGLUniformLocation | null = null;
-  private uPaletteWidth: WebGLUniformLocation | null = null;
-  private uStyleTexelWidth: WebGLUniformLocation | null = null;
 
   constructor(canvas: OffscreenCanvas | HTMLCanvasElement, options: VectorRendererOptions = {}) {
     this.canvas = canvas;
@@ -341,8 +339,6 @@ export class VectorRenderer {
       gl.uniform2f(this.uTileOffset, offsetX, offsetY);
       gl.uniform1f(this.uExtent, plan.extent);
       gl.uniform1f(this.uDeltaZoom, deltaZoom);
-      gl.uniform1f(this.uPaletteWidth, Math.max(1, gpu.paletteCount));
-      gl.uniform1f(this.uStyleTexelWidth, gpu.styleTextureWidth);
 
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, ready.paletteTexture);
@@ -418,8 +414,6 @@ export class VectorRenderer {
     this.uIsLine = gl.getUniformLocation(this.program, 'u_isLine');
     this.uPalette = gl.getUniformLocation(this.program, 'u_palette');
     this.uStyleData = gl.getUniformLocation(this.program, 'u_styleData');
-    this.uPaletteWidth = gl.getUniformLocation(this.program, 'u_paletteWidth');
-    this.uStyleTexelWidth = gl.getUniformLocation(this.program, 'u_styleTexelWidth');
   }
 
   private handleContextLost(): void {

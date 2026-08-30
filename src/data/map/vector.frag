@@ -4,8 +4,6 @@ precision highp int;
 
 uniform sampler2D u_palette;
 uniform sampler2D u_styleData;
-uniform float u_paletteWidth;
-uniform float u_styleTexelWidth;
 uniform float u_isLine;
 
 in float v_style;
@@ -21,13 +19,13 @@ const float CAP_ROUND = 1.0f;
 const float CAP_SQUARE = 2.0f;
 
 vec4 styleTexel(float style, float texel) {
-    float x = (style * 4.0f + texel + 0.5f) / u_styleTexelWidth;
-    return texture(u_styleData, vec2(x, 0.5f));
+    int i = int(style * 4.0f + texel + 0.5f);
+    return texelFetch(u_styleData, ivec2(i, 0), 0);
 }
 
 vec4 paletteColor(float index) {
-    float x = (index + 0.5f) / u_paletteWidth;
-    return texture(u_palette, vec2(x, 0.5f));
+    int i = int(index + 0.5f); // index arrives as a float; round, don't truncate
+    return texelFetch(u_palette, ivec2(i, 0), 0);
 }
 
 void main() {
