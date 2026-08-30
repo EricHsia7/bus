@@ -28,9 +28,15 @@ export type VectorTileLines = Array<VectorTileLine>;
 export type VectorTileScale = [s0: number, s1: number];
 
 export interface VectorTileStyle {
-  'fill'?: string;
+  /**
+   * palette reference
+   */
+  'fill'?: number;
   'fill-opacity'?: number;
-  'stroke'?: string;
+  /**
+   * palette reference
+   */
+  'stroke'?: number;
   'stroke-width'?: number;
   /**
    * Multiplier interval for `stroke-width` across `[zoom, zoom + 1]`.
@@ -92,6 +98,13 @@ export interface VectorTile {
    */
   styleStartIndices: Array<number>;
   styles: Array<VectorTileStyle>;
+  /**
+   * - 4n+0: red
+   * - 4n+1: green
+   * - 4n+2: blue
+   * - 4n+3: alpha
+   */
+  palette: Array<number>;
 }
 
 /**

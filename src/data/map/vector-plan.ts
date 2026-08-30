@@ -20,6 +20,7 @@ export interface VectorPlan {
   styleReferences: Int16Array;
   styleStartIndices: Int32Array;
   styles: Array<VectorTileStyle>;
+  palette: Uint8Array;
   gpu: VectorGPUPlan;
   geometryBytes: number;
   gpuBytes: number;
@@ -84,40 +85,6 @@ export interface VectorGPUPlan {
   paletteCount: number;
 }
 
-const EMPTY_STYLE = -1;
-const DEFAULT_BACKGROUND = '#f2f2f7';
-
-// TODO: serve [r,g,b,a]
-function parseRGBA(value: string | undefined, fallback: [number, number, number, number]): [number, number, number, number] {
-  if (!value) return fallback;
-  const text = value.trim().toLowerCase();
-
-  if (text[0] === '#') {
-    const hex = text.slice(1);
-    if (hex.length === 3 || hex.length === 4) {
-      return [parseInt(hex[0] + hex[0], 16), parseInt(hex[1] + hex[1], 16), parseInt(hex[2] + hex[2], 16), hex.length === 4 ? parseInt(hex[3] + hex[3], 16) : 255];
-    }
-    if (hex.length === 6 || hex.length === 8) {
-      return [parseInt(hex.slice(0, 2), 16), parseInt(hex.slice(2, 4), 16), parseInt(hex.slice(4, 6), 16), hex.length === 8 ? parseInt(hex.slice(6, 8), 16) : 255];
-    }
-  }
-
-  const match = text.match(/^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:[,\s/]+([\d.]+%?))?\s*\)$/);
-  if (match) {
-    const alpha = match[4] === undefined ? 255 : match[4].endsWith('%') ? Math.round(parseFloat(match[4]) * 2.55) : Math.round(parseFloat(match[4]) * 255);
-    return [Math.round(+match[1]), Math.round(+match[2]), Math.round(+match[3]), alpha];
-  }
-
-  // CSS named colors are deliberately not parsed here. Prefer compiling the palette
-  // from the style compiler, where named colors can be normalized once.
-  throw new Error(`Unsupported vector color: ${value}`);
-}
-
-function colorKey(value: string | undefined, fallback: [number, number, number, number]): string {
-  const c = parseRGBA(value, fallback);
-  return `${c[0]},${c[1]},${c[2]},${c[3]}`;
-}
-
 /**
  * - 0: butt
  * - 1: round
@@ -150,35 +117,7 @@ function lineJoinCode(join: VectorTileStyle['stroke-linejoin']): 0 | 1 | 2 {
   }
 }
 
-function createPalette(styles: Array<VectorTileStyle>): { palette: Uint8Array; indices: Map<string, number> } {
-  const colors: number[] = [];
-  const indices = new Map<string, number>();
-
-  const add = (value: string | undefined, fallback: [number, number, number, number]): number => {
-    if (!value) return EMPTY_STYLE;
-    const key = colorKey(value, fallback);
-    const existing = indices.get(key);
-    if (existing !== undefined) return existing;
-    const index = indices.size;
-    indices.set(key, index);
-    colors.push(...parseRGBA(value, fallback));
-    return index;
-  };
-
-  for (const style of styles) {
-    add(style.fill, [0, 0, 0, 255]);
-    add(style.stroke, [0, 0, 0, 255]);
-  }
-
-  return { palette: Uint8Array.from(colors), indices };
-}
-
-function paletteIndex(value: string | undefined, fallback: [number, number, number, number], indices: Map<string, number>): number {
-  if (!value) return EMPTY_STYLE;
-  return indices.get(colorKey(value, fallback)) ?? EMPTY_STYLE;
-}
-
-function buildStyleData(styles: Array<VectorTileStyle>, paletteIndices: Map<string, number>): Float32Array {
+function buildStyleData(styles: Array<VectorTileStyle>): Float32Array {
   // Four RGBA32F texels per style:
   // 0: fill palette index, stroke palette index, fill opacity, stroke opacity
   // 1: overall opacity, reference width, scale0, scale1
@@ -189,8 +128,8 @@ function buildStyleData(styles: Array<VectorTileStyle>, paletteIndices: Map<stri
   for (let i = 0; i < styles.length; i++) {
     const style = styles[i];
     const o = i * 16;
-    data[o + 0] = paletteIndex(style.fill, [0, 0, 0, 255], paletteIndices);
-    data[o + 1] = paletteIndex(style.stroke, [0, 0, 0, 255], paletteIndices);
+    data[o + 0] = style.fill ?? 0; // TODO: handle default value
+    data[o + 1] = style.stroke ?? 0;
     data[o + 2] = style['fill-opacity'] ?? 1;
     data[o + 3] = style['stroke-opacity'] ?? 1;
 
@@ -300,8 +239,8 @@ function buildLineGeometry(plan: VectorPlan, lineParts: Array<number>, styleInde
  * cap and join rules, so zoom never requires rebuilding the mesh.
  */
 export function buildVectorGPUPlan(vectorPlan: VectorPlan): VectorGPUPlan {
-  const { palette, indices: paletteIndices } = createPalette(vectorPlan.styles);
-  const styleData = buildStyleData(vectorPlan.styles, paletteIndices);
+  const styleData = buildStyleData(vectorPlan.styles);
+  const palette = vectorPlan.palette;
 
   const polygonPositions: number[] = [];
   const polygonStyles: number[] = [];
@@ -357,6 +296,7 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
   const descriptorTypes = new Uint8Array(vectorTile.descriptorTypes);
   const styleReferences = new Int16Array(vectorTile.styleReferences);
   const styleStartIndices = new Int32Array(vectorTile.styleStartIndices);
+  const palette = new Uint8Array(deltaDecode(vectorTile.palette, 4)); // decode before being converted to a typed array -> prevent negative overflow
 
   deltaDecode(coordinates, 2);
   deltaDecode(partStartIndices, 1);
@@ -378,6 +318,7 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
     styleReferences,
     styleStartIndices,
     styles: vectorTile.styles,
+    palette,
     gpu: undefined as unknown as VectorGPUPlan,
     geometryBytes,
     gpuBytes: 0,
