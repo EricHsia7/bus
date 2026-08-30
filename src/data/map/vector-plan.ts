@@ -42,19 +42,27 @@ export interface VectorGPUStyle {
   lineJoin: number;
 }
 
+const LINE_VERTEX_STRIDE = 9;
+
 /** GPU-ready geometry produced in the worker. */
 export interface VectorGPUPlan {
   /** x,y in tile extent units; one style index per vertex. */
   polygonPositions: Int16Array;
   polygonStyles: Uint16Array;
   polygonIndices: Uint32Array;
-
   /**
-   * Per vertex: x, y, previous x, previous y, next x, next y, side.
    * The vertex shader expands this centerline into a stroke.
+   * - 9n+0: current x
+   * - 9n+1: current y
+   * - 9n+2: previous x
+   * - 9n+3: previous y
+   * - 9n+4: next x
+   * - 9n+5: next y
+   * - 9n+6: side
+   * - 9n+7: style reference
+   * - 9n+8: cap
    */
   lineVertices: Int16Array;
-  lineStyles: Uint16Array;
   lineIndices: Uint32Array;
 
   /** Number of vertices/indices in each geometry stream. */
@@ -224,8 +232,25 @@ function buildPolygonGeometry(plan: VectorPlan, polygonParts: Array<number>, sty
   for (const index of localIndices) indices.push(pointBase + index);
 }
 
-function buildLineGeometry(plan: VectorPlan, lineParts: Array<number>, styleIndex: number, vertices: number[], styles: number[], indices: number[]): void {
+function buildLineGeometry(plan: VectorPlan, lineParts: Array<number>, styleIndex: number, vertices: number[], indices: number[]): void {
   const { coordinates, partStartIndices } = plan;
+
+  const pushVertex = (point: number, prev: number, next: number, side: number, cap: number): number => {
+    vertices.push(coordinates[point * 2], coordinates[point * 2 + 1], coordinates[prev * 2], coordinates[prev * 2 + 1], coordinates[next * 2], coordinates[next * 2 + 1], side, styleIndex, cap);
+    return vertices.length / LINE_VERTEX_STRIDE - 1;
+  };
+
+  // Four vertices sharing one (point, prev, next) triple, so the shader
+  // resolves has0/has1 identically at all of them and every vertex writes
+  // the same v_capCenter / v_capRadius / v_capOut. That constancy is what
+  // removes the dependence on which vertex is provoking.
+  const pushCapQuad = (point: number, prev: number, next: number): void => {
+    const bL = pushVertex(point, prev, next, -1, 1); // base, L
+    const bR = pushVertex(point, prev, next, 1, 1); // base, R
+    const tL = pushVertex(point, prev, next, -1, 2); // tip, L
+    const tR = pushVertex(point, prev, next, 1, 2); // tip, R
+    indices.push(bL, bR, tL, tL, bR, tR); // same winding pattern
+  };
 
   for (const part of lineParts) {
     const start = partStartIndices[part];
@@ -233,29 +258,36 @@ function buildLineGeometry(plan: VectorPlan, lineParts: Array<number>, styleInde
     const count = end - start;
     if (count < 2) continue;
 
-    const base = vertices.length / 7;
+    const first = start;
+    const last = end - 1;
+
+    // A ring must mitre across the seam instead of growing two caps.
+    const closed = count > 2 && coordinates[first * 2] === coordinates[last * 2] && coordinates[first * 2 + 1] === coordinates[last * 2 + 1];
+
+    const base = vertices.length / LINE_VERTEX_STRIDE;
 
     for (let i = 0; i < count; i++) {
       const point = start + i;
-      const prev = i === 0 ? point : point - 1;
-      const next = i === count - 1 ? point : point + 1;
+      const prev = i === 0 ? (closed ? last - 1 : point) : point - 1;
+      const next = i === count - 1 ? (closed ? first + 1 : point) : point + 1;
 
-      // a vertex carries current point, previous point, next point, and side indicator -> x, y, x_prev, y_prev, x_next, y_next, side
-      // L
-      vertices.push(coordinates[point * 2], coordinates[point * 2 + 1], coordinates[prev * 2], coordinates[prev * 2 + 1], coordinates[next * 2], coordinates[next * 2 + 1], -1);
-      styles.push(styleIndex);
-
-      // R
-      vertices.push(coordinates[point * 2], coordinates[point * 2 + 1], coordinates[prev * 2], coordinates[prev * 2 + 1], coordinates[next * 2], coordinates[next * 2 + 1], 1);
-      styles.push(styleIndex);
+      pushVertex(point, prev, next, -1, 0); // L
+      pushVertex(point, prev, next, 1, 0); // R
     }
 
     for (let i = 0; i < count - 1; i++) {
-      const a = base + i * 2; // base index of vertex(i); L(i)
+      const a = base + i * 2; // L(i)
       const b = a + 1; // R(i)
       const c = a + 2; // L(i+1)
       const d = a + 3; // R(i+1)
       indices.push(a, b, c, c, b, d); // ΔL(i) R(i) L(i+1), ΔL(i+1) R(i) R(i+1)
+    }
+
+    // Appended AFTER the segment loop so the `base + i * 2` arithmetic
+    // above never sees the cap vertices.
+    if (!closed) {
+      pushCapQuad(first, first, first + 1); // prev === point -> start
+      pushCapQuad(last, last - 1, last); // next === point -> end
     }
   }
 }
@@ -275,7 +307,6 @@ export function buildVectorGPUPlan(vectorPlan: VectorPlan): VectorGPUPlan {
   const polygonStyles: number[] = [];
   const polygonIndices: number[] = [];
   const lineVertices: number[] = [];
-  const lineStyles: number[] = [];
   const lineIndices: number[] = [];
 
   for (let styleRun = 0; styleRun < vectorPlan.styleReferences.length; styleRun++) {
@@ -291,7 +322,7 @@ export function buildVectorGPUPlan(vectorPlan: VectorPlan): VectorGPUPlan {
       if (vectorPlan.descriptorTypes[descriptor] === VECTOR_TILE_POLYGON) {
         buildPolygonGeometry(vectorPlan, parts, styleIndex, polygonPositions, polygonStyles, polygonIndices);
       } else if (vectorPlan.descriptorTypes[descriptor] === VECTOR_TILE_LINE) {
-        buildLineGeometry(vectorPlan, parts, styleIndex, lineVertices, lineStyles, lineIndices);
+        buildLineGeometry(vectorPlan, parts, styleIndex, lineVertices, lineIndices);
       }
     }
   }
@@ -301,11 +332,10 @@ export function buildVectorGPUPlan(vectorPlan: VectorPlan): VectorGPUPlan {
     polygonStyles: Uint16Array.from(polygonStyles),
     polygonIndices: Uint32Array.from(polygonIndices),
     lineVertices: Int16Array.from(lineVertices),
-    lineStyles: Uint16Array.from(lineStyles),
     lineIndices: Uint32Array.from(lineIndices),
     polygonVertexCount: polygonPositions.length / 2,
     polygonIndexCount: polygonIndices.length,
-    lineVertexCount: lineVertices.length / 7,
+    lineVertexCount: lineVertices.length / LINE_VERTEX_STRIDE,
     lineIndexCount: lineIndices.length,
     palette,
     styleData,
@@ -317,7 +347,7 @@ export function buildVectorGPUPlan(vectorPlan: VectorPlan): VectorGPUPlan {
 }
 
 function estimateGPUBytes(gpu: VectorGPUPlan): number {
-  return gpu.polygonPositions.byteLength + gpu.polygonStyles.byteLength + gpu.polygonIndices.byteLength + gpu.lineVertices.byteLength + gpu.lineStyles.byteLength + gpu.lineIndices.byteLength + gpu.palette.byteLength + gpu.styleData.byteLength;
+  return gpu.polygonPositions.byteLength + gpu.polygonStyles.byteLength + gpu.polygonIndices.byteLength + gpu.lineVertices.byteLength + gpu.lineIndices.byteLength + gpu.palette.byteLength + gpu.styleData.byteLength;
 }
 
 export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
