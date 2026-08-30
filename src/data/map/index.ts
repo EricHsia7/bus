@@ -363,7 +363,7 @@ export const MapDataVersion = `${now.getFullYear() * 100 + (now.getMonth() + 1)}
 export const MapVectorVersion = `${MapDataVersion}-8`;
 export const MapRasterVersion = `${MapDataVersion}-11`;
 export const MapLabelsVersion = `${MapDataVersion}-11`;
-export const MapRoutesVersion = `${MapDataVersion}-6`;
+export const MapRoutesVersion = `${MapDataVersion}-7`;
 
 export interface Box {
   minX: number;
