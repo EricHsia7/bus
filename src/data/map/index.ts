@@ -360,7 +360,7 @@ export class MapLoader {
 
 const now = new Date();
 export const MapDataVersion = `${now.getFullYear() * 100 + (now.getMonth() + 1)}`; // Monthly update
-export const MapVectorVersion = `${MapDataVersion}-8`;
+export const MapVectorVersion = `${MapDataVersion}-9`;
 export const MapRasterVersion = `${MapDataVersion}-11`;
 export const MapLabelsVersion = `${MapDataVersion}-11`;
 export const MapRoutesVersion = `${MapDataVersion}-7`;
