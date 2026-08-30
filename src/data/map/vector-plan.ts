@@ -296,7 +296,7 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
   const descriptorTypes = new Uint8Array(vectorTile.descriptorTypes);
   const styleReferences = new Int16Array(vectorTile.styleReferences);
   const styleStartIndices = new Int32Array(vectorTile.styleStartIndices);
-  const palette = new Uint8Array(deltaDecode(vectorTile.palette, 4)); // decode before being converted to a typed array -> prevent negative overflow
+  const palette = new Uint8Array(vectorTile.palette);
 
   deltaDecode(coordinates, 2);
   deltaDecode(partStartIndices, 1);
