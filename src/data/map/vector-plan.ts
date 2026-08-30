@@ -304,7 +304,7 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
   deltaDecode(styleReferences, 1);
   deltaDecode(styleStartIndices, 1);
 
-  const geometryBytes = coordinates.byteLength + partStartIndices.byteLength + descriptorStartIndices.byteLength + descriptorTypes.byteLength + styleReferences.byteLength + styleStartIndices.byteLength;
+  const geometryBytes = coordinates.byteLength + partStartIndices.byteLength + descriptorStartIndices.byteLength + descriptorTypes.byteLength + styleReferences.byteLength + styleStartIndices.byteLength + palette.byteLength;
 
   const base: VectorPlan = {
     type: 'Vector',
