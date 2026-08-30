@@ -240,7 +240,7 @@ function buildLineGeometry(plan: VectorPlan, lineParts: Array<number>, styleInde
  */
 export function buildVectorGPUPlan(vectorPlan: VectorPlan): VectorGPUPlan {
   const styleData = buildStyleData(vectorPlan.styles);
-  const palette = vectorPlan.palette;
+  const palette = new Uint8Array(vectorPlan.palette);
 
   const polygonPositions: number[] = [];
   const polygonStyles: number[] = [];
