@@ -145,14 +145,13 @@ function buildStyleData(styles: Array<VectorTileStyle>): Float32Array {
   return data;
 }
 
-function buildPolygonGeometry(plan: VectorPlan, polygonParts: Array<number>, styleIndex: number, positions: number[], styles: number[], indices: number[]): void {
+function buildPolygonGeometry(plan: VectorPlan, partStart: number, partEnd: number, styleIndex: number, positions: number[], styles: number[], indices: number[]): void {
   const { coordinates, partStartIndices } = plan;
   const flat: number[] = [];
   const holes: number[] = [];
   let pointBase = positions.length / 2;
 
-  for (let r = 0; r < polygonParts.length; r++) {
-    const part = polygonParts[r];
+  for (let part = partStart; part < partEnd; part++) {
     const start = partStartIndices[part];
     const end = partStartIndices[part + 1];
     if (end - start < 3) continue;
@@ -171,7 +170,7 @@ function buildPolygonGeometry(plan: VectorPlan, polygonParts: Array<number>, sty
   for (const index of localIndices) indices.push(pointBase + index);
 }
 
-function buildLineGeometry(plan: VectorPlan, lineParts: Array<number>, styleIndex: number, vertices: number[], indices: number[]): void {
+function buildLineGeometry(plan: VectorPlan, partStart: number, partEnd: number, styleIndex: number, vertices: number[], indices: number[]): void {
   const { coordinates, partStartIndices } = plan;
 
   const pushVertex = (point: number, prev: number, next: number, side: number, cap: number): number => {
@@ -191,8 +190,8 @@ function buildLineGeometry(plan: VectorPlan, lineParts: Array<number>, styleInde
     indices.push(bL, bR, tL, tL, bR, tR); // same winding pattern
   };
 
-  for (const part of lineParts) {
-    const start = partStartIndices[part]; // TODO: simplify part iteration
+  for (let part = partStart; part < partEnd; part++) {
+    const start = partStartIndices[part];
     const end = partStartIndices[part + 1];
     const count = end - start;
     if (count < 2) continue;
@@ -255,13 +254,10 @@ export function buildVectorGPUPlan(vectorPlan: VectorPlan): VectorGPUPlan {
     for (let descriptor = descriptorStart; descriptor < descriptorEnd; descriptor++) {
       const partStart = vectorPlan.descriptorStartIndices[descriptor];
       const partEnd = vectorPlan.descriptorStartIndices[descriptor + 1];
-      const parts: number[] = [];
-      for (let part = partStart; part < partEnd; part++) parts.push(part);
-
       if (vectorPlan.descriptorTypes[descriptor] === VECTOR_TILE_POLYGON) {
-        buildPolygonGeometry(vectorPlan, parts, styleIndex, polygonPositions, polygonStyles, polygonIndices);
+        buildPolygonGeometry(vectorPlan, partStart, partEnd, styleIndex, polygonPositions, polygonStyles, polygonIndices);
       } else if (vectorPlan.descriptorTypes[descriptor] === VECTOR_TILE_LINE) {
-        buildLineGeometry(vectorPlan, parts, styleIndex, lineVertices, lineIndices);
+        buildLineGeometry(vectorPlan, partStart, partEnd, styleIndex, lineVertices, lineIndices);
       }
     }
   }
