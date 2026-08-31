@@ -275,7 +275,7 @@ export function buildVectorGPUPlan(vectorPlan: VectorPlan): VectorGPUPlan {
     palette,
     styleData,
     styleTextureWidth: Math.max(1, vectorPlan.styles.length * 4),
-    paletteCount: palette.length / 4
+    paletteCount: palette.length / 8 // width = paletteCount; height = 2
   };
 
   return gpu;
@@ -292,7 +292,14 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
   const descriptorTypes = new Uint8Array(vectorTile.descriptorTypes);
   const styleReferences = new Int16Array(vectorTile.styleReferences);
   const styleStartIndices = new Int32Array(vectorTile.styleStartIndices);
-  const palette = new Uint8Array(vectorTile.palette);
+
+  const palette = new Uint8Array(vectorTile.palette0.length * 2);
+  palette.set(vectorTile.palette0, 0);
+  if (vectorTile.palette0.length === vectorTile.palette1.length) {
+    palette.set(vectorTile.palette1, vectorTile.palette0.length);
+  } else {
+    palette.set(vectorTile.palette0, vectorTile.palette0.length);
+  }
 
   deltaDecode(coordinates, 2);
   deltaDecode(partStartIndices, 1);

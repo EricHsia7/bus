@@ -99,12 +99,21 @@ export interface VectorTile {
   styleStartIndices: Array<number>;
   styles: Array<VectorTileStyle>;
   /**
+   * Color at z (integer zoom)
    * - 4n+0: red
    * - 4n+1: green
    * - 4n+2: blue
    * - 4n+3: alpha
    */
-  palette: Array<number>;
+  palette0: Array<number>;
+  /**
+   * Color at z+1
+   * - 4n+0: red
+   * - 4n+1: green
+   * - 4n+2: blue
+   * - 4n+3: alpha
+   */
+  palette1: Array<number>;
 }
 
 /**
