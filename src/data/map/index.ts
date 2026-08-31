@@ -185,7 +185,6 @@ export class MapLoader {
       case 'data': {
         const { x, y, z } = message.response;
         const key = this.getTileKey(x, y, z);
-        console.log(message.response)
 
         const existing = this.cache.get(key);
         let response = message.response;

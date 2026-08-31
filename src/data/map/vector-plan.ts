@@ -292,14 +292,7 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
   const descriptorTypes = new Uint8Array(vectorTile.descriptorTypes);
   const styleReferences = new Int16Array(vectorTile.styleReferences);
   const styleStartIndices = new Int32Array(vectorTile.styleStartIndices);
-
-  const palette = new Uint8Array(vectorTile.palette0.length * 2);
-  palette.set(vectorTile.palette0, 0);
-  if (vectorTile.palette0.length === vectorTile.palette1.length) {
-    palette.set(vectorTile.palette1, vectorTile.palette0.length);
-  } else {
-    palette.set(vectorTile.palette0, vectorTile.palette0.length);
-  }
+  const palette = new Uint8Array(deltaDecode(vectorTile.palette, vectorTile.palette.length / 2));
 
   deltaDecode(coordinates, 2);
   deltaDecode(partStartIndices, 1);
