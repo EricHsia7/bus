@@ -51,7 +51,7 @@
     "webpack-remove-empty-scripts": "1.1.1",
     "webpack-sources": "3.5.1",
     "webpack-subresource-integrity": "5.1.0",
-    "webpack": "5.109.2",
+    "webpack": "5.110.1",
     "workbox-webpack-plugin": "7.4.1"
   },
   "dependencies": {
