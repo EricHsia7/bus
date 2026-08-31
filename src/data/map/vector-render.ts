@@ -174,12 +174,9 @@ export class VectorRenderer {
     const gl = canvas.getContext('webgl2', {
       alpha: true,
       antialias: true,
-      preserveDrawingBuffer: true,
-      premultipliedAlpha: true
+      preserveDrawingBuffer: true
     }) as WebGL2RenderingContext | null;
     if (!gl) throw new Error('WebGL2 is not available');
-    gl.enable(gl.BLEND);
-    gl.blendFuncSeparate(gl.ONE, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     this.gl = gl;
     this.program = createProgram(gl);
     this.readUniformLocations();

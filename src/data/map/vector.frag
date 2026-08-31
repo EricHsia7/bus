@@ -47,10 +47,6 @@ void main() {
     // antialiasing band widens as lines get thinner and eats the whole cap at
     // small widths. In pixel units fwidth(sd) stays ~1.0 at every radius.
     vec2 d = v_pos - v_capCenter;
-    float sd = length(d) - v_capRadius;
-    float w = fwidth(sd);
-
-    float capAlpha = 1.0f;
 
     if(v_capRadius > 0.0f) {
         float capStyle = capJoinData.x;
@@ -60,26 +56,20 @@ void main() {
         bool beyondEnd = dot(d, v_capOut) > 0.0f;
 
         if(capStyle < CAP_ROUND - 0.5f) {
-            // Butt: throw the extension away.
+            // Butt: throw the extension away
             if(beyondEnd)
                 discard;
         } else if(capStyle < CAP_SQUARE - 0.5f) {
-            // Round: analytic coverage for a one-pixel band CENTRED on the rim
-            // (alpha 1 at sd = -w/2, 0.5 at sd = 0, 0 at sd = +w/2). Centring
-            // matters -- an inward-only ramp makes every cap smaller than
-            // halfWidth, so it pinches where it meets the segment.
+            // Round
             if(beyondEnd || v_capOut == vec2(0.0f)) {
-                capAlpha = clamp(0.5f - sd / max(w, 1e-6f), 0.0f, 1.0f);
-                if(capAlpha <= 0.0f)
+                if(dot(d, d) > v_capRadius * v_capRadius)
                     discard;
             }
         }
-        // Square: keep the quad as-is, capAlpha stays 1.0.
+        // Square: keep the quad as-is
     }
 
     vec4 color = paletteColor(paletteIndex);
-    float opacity = opacityData.x * localOpacity * color.a * capAlpha;
-
-    // pre-multiply the output to eliminate the seams
-    outColor = vec4(color.rgb * opacity, opacity);
+    float opacity = opacityData.x * localOpacity * color.a;
+    outColor = vec4(color.rgb, opacity);
 }
