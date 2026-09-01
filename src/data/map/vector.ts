@@ -25,7 +25,7 @@ export type VectorTileLines = Array<VectorTileLine>;
  * `marker-scale` on labels: the reference size is measured once and the client
  * interpolates the multiplier per frame.
  */
-export type VectorTileScale = [s0: number, s1: number];
+export type VectorTilePair = [s0: number, s1: number];
 
 export interface VectorTileStyle {
   /**
@@ -37,12 +37,7 @@ export interface VectorTileStyle {
    * palette reference
    */
   'stroke'?: number;
-  'stroke-width'?: number;
-  /**
-   * Multiplier interval for `stroke-width` across `[zoom, zoom + 1]`.
-   * Compiled from `--line-scale` (SCALE_TARGETS: `line-scale` -> `line-width`).
-   */
-  'stroke-width-scale'?: VectorTileScale;
+  'stroke-width'?: VectorTilePair;
   'stroke-opacity'?: number;
   'stroke-linejoin'?: LineJoin;
   'stroke-linecap'?: LineCap;
@@ -114,10 +109,10 @@ export interface VectorTile {
  * `deltaZoom` is `viewZoom - tile.zoom`, clamped to `[0, 1]`: the interval is
  * only defined over the octave during which this tile is on screen.
  */
-export function sampleScale(scale: VectorTileScale | undefined, deltaZoom: number): number {
-  if (scale === undefined) return 1;
+function interpolatePair(pair: VectorTilePair | undefined, deltaZoom: number): number {
+  if (pair === undefined) return 1;
   const t = clamp(deltaZoom, 0, 1);
-  return (scale[0] + (scale[1] - scale[0]) * t) * Math.pow(2, -t);
+  return (pair[0] + (pair[1] - pair[0]) * t) * Math.pow(2, -t);
 }
 
 /**
@@ -127,5 +122,5 @@ export function sampleScale(scale: VectorTileScale | undefined, deltaZoom: numbe
 export function resolveStrokeWidth(style: VectorTileStyle, deltaZoom: number): number {
   const width = style['stroke-width'];
   if (width === undefined) return 0;
-  return width * sampleScale(style['stroke-width-scale'], deltaZoom);
+  return interpolatePair(width, deltaZoom);
 }

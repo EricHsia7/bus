@@ -27,22 +27,6 @@ export interface VectorPlan {
   size: number;
 }
 
-/** One style record consumed by the palette data texture. */
-export interface VectorGPUStyle {
-  /** RGBA palette index for fill. -1 means no fill. */
-  fill: number;
-  /** RGBA palette index for stroke. -1 means no stroke. */
-  stroke: number;
-  fillOpacity: number;
-  strokeOpacity: number;
-  opacity: number;
-  strokeWidth: number;
-  strokeScale0: number;
-  strokeScale1: number;
-  lineCap: number;
-  lineJoin: number;
-}
-
 const LINE_VERTEX_STRIDE = 9;
 
 /** GPU-ready geometry produced in the worker. */
@@ -120,7 +104,7 @@ function lineJoinCode(join: VectorTileStyle['stroke-linejoin']): 0 | 1 | 2 {
 function buildStyleData(styles: Array<VectorTileStyle>): Float32Array {
   // Four RGBA32F texels per style:
   // 0: fill palette index, stroke palette index, fill opacity, stroke opacity
-  // 1: overall opacity, reference width, scale0, scale1
+  // 1: overall opacity, width0, width1, unused
   // 2: cap, join, unused, unused
   // 3: reserved for future style properties
   const data = new Float32Array(styles.length * 16);
@@ -134,9 +118,8 @@ function buildStyleData(styles: Array<VectorTileStyle>): Float32Array {
     data[o + 3] = style['stroke-opacity'] ?? 1;
 
     data[o + 4] = style.opacity ?? 1;
-    data[o + 5] = style['stroke-width'] ?? 0;
-    data[o + 6] = style['stroke-width-scale']?.[0] ?? 1;
-    data[o + 7] = style['stroke-width-scale']?.[1] ?? 1;
+    data[o + 5] = style['stroke-width']?.[0] ?? 0;
+    data[o + 6] = style['stroke-width']?.[1] ?? 0;
 
     data[o + 8] = lineCapCode(style['stroke-linecap']);
     data[o + 9] = lineJoinCode(style['stroke-linejoin']);

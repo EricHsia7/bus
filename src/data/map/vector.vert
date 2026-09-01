@@ -58,11 +58,10 @@ void main() {
 
     if(u_isLine > 0.5f) {
         vec4 widthData = styleTexel(a_style, 1.0f);
-        float width = widthData.y;
-        float scale0 = widthData.z;
-        float scale1 = widthData.w;
-        float zoomScale = mix(scale0, scale1, u_deltaZoom) * exp2(-u_deltaZoom);
-        float halfWidth = width * zoomScale * (u_extent / u_designTileSize) * 0.5f;
+        float width0 = widthData.y;
+        float width1 = widthData.z;
+        float width = mix(width0, width1, u_deltaZoom) * exp2(-u_deltaZoom);
+        float halfWidth = width * (u_extent / u_designTileSize) * 0.5f;
 
         // Segment vectors. Lengths are tested before any normalize() so a
         // zero-length segment cannot yield NaN and silently delete triangles.
