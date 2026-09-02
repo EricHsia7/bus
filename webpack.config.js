@@ -263,7 +263,8 @@ module.exports = (env, argv) => {
       concatenateModules: true,
       innerGraph: true,
       mangleExports: 'size',
-      usedExports: true
+      usedExports: true,
+      runtimeChunk: 'single'
     },
     devtool: 'source-map',
     devServer: {
