@@ -5,6 +5,7 @@ precision highp int;
 uniform sampler2D u_palette;
 uniform sampler2D u_styleData;
 uniform float u_isLine;
+uniform float u_deltaZoom;
 
 in float v_style;
 in vec2 v_pos;
@@ -25,7 +26,9 @@ vec4 styleTexel(float style, float texel) {
 
 vec4 paletteColor(float index) {
     int i = int(index + 0.5f); // index arrives as a float; round, don't truncate
-    return texelFetch(u_palette, ivec2(i, 0), 0);
+    vec4 color0 = texelFetch(u_palette, ivec2(i, 0), 0);
+    vec4 color1 = texelFetch(u_palette, ivec2(i, 1), 0);
+    return mix(color0, color1, u_deltaZoom);
 }
 
 void main() {

@@ -94,7 +94,7 @@ function createPaletteTexture(gl: WebGL2RenderingContext, palette: Uint8Array, w
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
   gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, palette);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, 2, 0, gl.RGBA, gl.UNSIGNED_BYTE, palette);
   gl.bindTexture(gl.TEXTURE_2D, null);
   return texture;
 }
