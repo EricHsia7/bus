@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-vector-tile-interpolatable-palette
 
 permissions:
   contents: read
