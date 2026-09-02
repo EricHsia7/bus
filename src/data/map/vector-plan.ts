@@ -2,35 +2,14 @@ import earcut from 'earcut';
 import { VectorTile, VectorTileStyle, VECTOR_TILE_LINE, VECTOR_TILE_POLYGON } from './vector';
 import { deltaDecode } from '../../tools/delta';
 
-/**
- * CPU-side vector plan plus a GPU-ready representation.
- *
- * The original tile geometry remains compact Int16/Int32 data.  The GPU plan is
- * produced once in the worker and consists only of transferable typed arrays.
- */
+const LINE_VERTEX_STRIDE = 9;
+
+/** GPU-ready geometry produced in the worker. */
 export interface VectorPlan {
   type: 'Vector';
   extent: number;
   buffer: number;
   zoom: number;
-  coordinates: Int16Array;
-  partStartIndices: Int32Array;
-  descriptorStartIndices: Int32Array;
-  descriptorTypes: Uint8Array;
-  styleReferences: Int16Array;
-  styleStartIndices: Int32Array;
-  styles: Array<VectorTileStyle>;
-  palette: Uint8Array;
-  gpu: VectorGPUPlan;
-  geometryBytes: number;
-  gpuBytes: number;
-  size: number;
-}
-
-const LINE_VERTEX_STRIDE = 9;
-
-/** GPU-ready geometry produced in the worker. */
-export interface VectorGPUPlan {
   /** x,y in tile extent units; one style index per vertex. */
   polygonPositions: Int16Array;
   polygonStyles: Uint16Array;
@@ -67,6 +46,7 @@ export interface VectorGPUPlan {
 
   /** Number of palette entries. */
   paletteCount: number;
+  size: number;
 }
 
 /**
@@ -128,8 +108,7 @@ function buildStyleData(styles: Array<VectorTileStyle>): Float32Array {
   return data;
 }
 
-function buildPolygonGeometry(plan: VectorPlan, partStart: number, partEnd: number, styleIndex: number, positions: number[], styles: number[], indices: number[]): void {
-  const { coordinates, partStartIndices } = plan;
+function buildPolygonGeometry(coordinates: Int16Array, partStartIndices: Int32Array, partStart: number, partEnd: number, styleIndex: number, positions: number[], styles: number[], indices: number[]): void {
   const flat: number[] = [];
   const holes: number[] = [];
   let pointBase = positions.length / 2;
@@ -153,9 +132,7 @@ function buildPolygonGeometry(plan: VectorPlan, partStart: number, partEnd: numb
   for (const index of localIndices) indices.push(pointBase + index);
 }
 
-function buildLineGeometry(plan: VectorPlan, partStart: number, partEnd: number, styleIndex: number, vertices: number[], indices: number[]): void {
-  const { coordinates, partStartIndices } = plan;
-
+function buildLineGeometry(coordinates: Int16Array, partStartIndices: Int32Array, partStart: number, partEnd: number, styleIndex: number, vertices: number[], indices: number[]): void {
   const pushVertex = (point: number, prev: number, next: number, side: number, cap: number): number => {
     vertices.push(coordinates[point * 2], coordinates[point * 2 + 1], coordinates[prev * 2], coordinates[prev * 2 + 1], coordinates[next * 2], coordinates[next * 2 + 1], side, styleIndex, cap);
     return vertices.length / LINE_VERTEX_STRIDE - 1;
@@ -220,54 +197,6 @@ function buildLineGeometry(plan: VectorPlan, partStart: number, partEnd: number,
  * per-point stroke representation; the vertex shader applies the current width,
  * cap and join rules, so zoom never requires rebuilding the mesh.
  */
-export function buildVectorGPUPlan(vectorPlan: VectorPlan): VectorGPUPlan {
-  const styleData = buildStyleData(vectorPlan.styles);
-  const palette = new Uint8Array(vectorPlan.palette);
-
-  const polygonPositions: number[] = [];
-  const polygonStyles: number[] = [];
-  const polygonIndices: number[] = [];
-  const lineVertices: number[] = [];
-  const lineIndices: number[] = [];
-
-  for (let styleRun = 0; styleRun < vectorPlan.styleReferences.length; styleRun++) {
-    const styleIndex = vectorPlan.styleReferences[styleRun];
-    const descriptorStart = vectorPlan.styleStartIndices[styleRun];
-    const descriptorEnd = vectorPlan.styleStartIndices[styleRun + 1];
-    for (let descriptor = descriptorStart; descriptor < descriptorEnd; descriptor++) {
-      const partStart = vectorPlan.descriptorStartIndices[descriptor];
-      const partEnd = vectorPlan.descriptorStartIndices[descriptor + 1];
-      if (vectorPlan.descriptorTypes[descriptor] === VECTOR_TILE_POLYGON) {
-        buildPolygonGeometry(vectorPlan, partStart, partEnd, styleIndex, polygonPositions, polygonStyles, polygonIndices);
-      } else if (vectorPlan.descriptorTypes[descriptor] === VECTOR_TILE_LINE) {
-        buildLineGeometry(vectorPlan, partStart, partEnd, styleIndex, lineVertices, lineIndices);
-      }
-    }
-  }
-
-  const gpu: VectorGPUPlan = {
-    polygonPositions: Int16Array.from(polygonPositions),
-    polygonStyles: Uint16Array.from(polygonStyles),
-    polygonIndices: Uint32Array.from(polygonIndices),
-    lineVertices: Int16Array.from(lineVertices),
-    lineIndices: Uint32Array.from(lineIndices),
-    polygonVertexCount: polygonPositions.length / 2,
-    polygonIndexCount: polygonIndices.length,
-    lineVertexCount: lineVertices.length / LINE_VERTEX_STRIDE,
-    lineIndexCount: lineIndices.length,
-    palette,
-    styleData,
-    styleTextureWidth: Math.max(1, vectorPlan.styles.length * 4),
-    paletteCount: palette.length / 8 // width = paletteCount; height = 2
-  };
-
-  return gpu;
-}
-
-function estimateGPUBytes(gpu: VectorGPUPlan): number {
-  return gpu.polygonPositions.byteLength + gpu.polygonStyles.byteLength + gpu.polygonIndices.byteLength + gpu.lineVertices.byteLength + gpu.lineIndices.byteLength + gpu.palette.byteLength + gpu.styleData.byteLength;
-}
-
 export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
   const coordinates = new Int16Array(vectorTile.coordinates);
   const partStartIndices = new Int32Array(vectorTile.partStartIndices);
@@ -283,29 +212,49 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
   deltaDecode(styleReferences, 1);
   deltaDecode(styleStartIndices, 1);
 
-  const geometryBytes = coordinates.byteLength + partStartIndices.byteLength + descriptorStartIndices.byteLength + descriptorTypes.byteLength + styleReferences.byteLength + styleStartIndices.byteLength + palette.byteLength;
+  const styleData = buildStyleData(vectorTile.styles);
 
-  const base: VectorPlan = {
+  const polygonPositions: number[] = [];
+  const polygonStyles: number[] = [];
+  const polygonIndices: number[] = [];
+  const lineVertices: number[] = [];
+  const lineIndices: number[] = [];
+
+  for (let styleRun = 0; styleRun < vectorTile.styleReferences.length; styleRun++) {
+    const styleIndex = styleReferences[styleRun];
+    const descriptorStart = styleStartIndices[styleRun];
+    const descriptorEnd = styleStartIndices[styleRun + 1];
+    for (let descriptor = descriptorStart; descriptor < descriptorEnd; descriptor++) {
+      const partStart = descriptorStartIndices[descriptor];
+      const partEnd = descriptorStartIndices[descriptor + 1];
+      if (descriptorTypes[descriptor] === VECTOR_TILE_POLYGON) {
+        buildPolygonGeometry(coordinates, partStartIndices, partStart, partEnd, styleIndex, polygonPositions, polygonStyles, polygonIndices);
+      } else if (descriptorTypes[descriptor] === VECTOR_TILE_LINE) {
+        buildLineGeometry(coordinates, partStartIndices, partStart, partEnd, styleIndex, lineVertices, lineIndices);
+      }
+    }
+  }
+
+  const plan: VectorPlan = {
     type: 'Vector',
     extent: vectorTile.extent,
     buffer: vectorTile.buffer,
     zoom: vectorTile.zoom,
-    coordinates,
-    partStartIndices,
-    descriptorStartIndices,
-    descriptorTypes,
-    styleReferences,
-    styleStartIndices,
-    styles: vectorTile.styles,
+    polygonPositions: Int16Array.from(polygonPositions),
+    polygonStyles: Uint16Array.from(polygonStyles),
+    polygonIndices: Uint32Array.from(polygonIndices),
+    lineVertices: Int16Array.from(lineVertices),
+    lineIndices: Uint32Array.from(lineIndices),
+    polygonVertexCount: polygonPositions.length / 2,
+    polygonIndexCount: polygonIndices.length,
+    lineVertexCount: lineVertices.length / LINE_VERTEX_STRIDE,
+    lineIndexCount: lineIndices.length,
     palette,
-    gpu: undefined as unknown as VectorGPUPlan,
-    geometryBytes,
-    gpuBytes: 0,
-    size: geometryBytes
+    styleData,
+    styleTextureWidth: Math.max(1, vectorTile.styles.length * 4),
+    paletteCount: palette.length / 8, // width = paletteCount; height = 2
+    size: 0
   };
-
-  base.gpu = buildVectorGPUPlan(base);
-  base.gpuBytes = estimateGPUBytes(base.gpu);
-  base.size = geometryBytes + base.gpuBytes;
-  return base;
+  plan.size = plan.polygonPositions.byteLength + plan.polygonStyles.byteLength + plan.polygonIndices.byteLength + plan.lineVertices.byteLength + plan.lineIndices.byteLength + plan.palette.byteLength + plan.styleData.byteLength;
+  return plan;
 }

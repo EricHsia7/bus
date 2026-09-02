@@ -33,13 +33,18 @@ export interface VectorRendererOptions {
 }
 
 interface GPUResource {
-  /** The plan this resource was uploaded from. Identity is the upload cache key. */
-  plan: VectorPlan;
+  extent: number;
+  buffer: number;
+  zoom: number;
   polygonPosition: WebGLBuffer | null;
   polygonStyle: WebGLBuffer | null;
+  polygonVertexCount: number;
   polygonIndex: WebGLBuffer | null;
+  polygonIndexCount: number;
   lineVertex: WebGLBuffer | null;
+  lineVertexCount: number;
   lineIndex: WebGLBuffer | null;
+  lineIndexCount: number;
   paletteTexture: WebGLTexture | null;
   styleTexture: WebGLTexture | null;
 }
@@ -114,16 +119,21 @@ function createStyleTexture(gl: WebGL2RenderingContext, styleData: Float32Array,
 }
 
 function createGPUResource(gl: WebGL2RenderingContext, plan: VectorPlan): GPUResource {
-  const gpu = plan.gpu;
   return {
-    plan,
-    polygonPosition: gpu.polygonVertexCount ? createBuffer(gl, gl.ARRAY_BUFFER, gpu.polygonPositions) : null,
-    polygonStyle: gpu.polygonVertexCount ? createBuffer(gl, gl.ARRAY_BUFFER, gpu.polygonStyles) : null,
-    polygonIndex: gpu.polygonIndexCount ? createBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, gpu.polygonIndices) : null,
-    lineVertex: gpu.lineVertexCount ? createBuffer(gl, gl.ARRAY_BUFFER, gpu.lineVertices) : null,
-    lineIndex: gpu.lineIndexCount ? createBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, gpu.lineIndices) : null,
-    paletteTexture: createPaletteTexture(gl, gpu.palette, Math.max(1, gpu.paletteCount)),
-    styleTexture: createStyleTexture(gl, gpu.styleData, gpu.styleTextureWidth)
+    extent: plan.extent,
+    buffer: plan.buffer,
+    zoom: plan.zoom,
+    polygonPosition: plan.polygonVertexCount ? createBuffer(gl, gl.ARRAY_BUFFER, plan.polygonPositions) : null,
+    polygonStyle: plan.polygonVertexCount ? createBuffer(gl, gl.ARRAY_BUFFER, plan.polygonStyles) : null,
+    polygonVertexCount: plan.polygonVertexCount,
+    polygonIndex: plan.polygonIndexCount ? createBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, plan.polygonIndices) : null,
+    polygonIndexCount: plan.polygonIndexCount,
+    lineVertex: plan.lineVertexCount ? createBuffer(gl, gl.ARRAY_BUFFER, plan.lineVertices) : null,
+    lineVertexCount: plan.lineVertexCount,
+    lineIndex: plan.lineIndexCount ? createBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, plan.lineIndices) : null,
+    lineIndexCount: plan.lineIndexCount,
+    paletteTexture: createPaletteTexture(gl, plan.palette, Math.max(1, plan.paletteCount)),
+    styleTexture: createStyleTexture(gl, plan.styleData, plan.styleTextureWidth)
   };
 }
 
@@ -250,7 +260,6 @@ export class VectorRenderer {
     if (this.isContextLost) return;
     const existing = this.resources.get(tile.key);
     if (existing) {
-      if (existing.plan === tile.plan) return;
       deleteGPUResource(this.gl, existing);
     }
     this.resources.set(tile.key, createGPUResource(this.gl, tile.plan));
@@ -297,11 +306,8 @@ export class VectorRenderer {
       if (!resource) {
         this.uploadTile(tile);
       }
-      const ready = resource ?? this.resources.get(tile.key);
-      if (!ready) continue;
-
-      const plan = ready.plan;
-      const gpu = plan.gpu;
+      const plan = resource ?? this.resources.get(tile.key);
+      if (!plan) continue;
 
       // `region` is a NORMALIZED sub-square of the plan: `x` / `y` are fractions of the
       // plan's extent and `size` is the fraction of it that fills the box. It is how a
@@ -338,31 +344,31 @@ export class VectorRenderer {
       gl.uniform1f(this.uDeltaZoom, deltaZoom);
 
       gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, ready.paletteTexture);
+      gl.bindTexture(gl.TEXTURE_2D, plan.paletteTexture);
       gl.uniform1i(this.uPalette, 0);
       gl.activeTexture(gl.TEXTURE1);
-      gl.bindTexture(gl.TEXTURE_2D, ready.styleTexture);
+      gl.bindTexture(gl.TEXTURE_2D, plan.styleTexture);
       gl.uniform1i(this.uStyleData, 1);
 
-      if (gpu.polygonIndexCount && ready.polygonPosition && ready.polygonStyle && ready.polygonIndex) {
+      if (plan.polygonIndexCount && plan.polygonPosition && plan.polygonStyle && plan.polygonIndex) {
         gl.uniform1f(this.uIsLine, 0);
-        gl.bindBuffer(gl.ARRAY_BUFFER, ready.polygonPosition);
+        gl.bindBuffer(gl.ARRAY_BUFFER, plan.polygonPosition);
         gl.enableVertexAttribArray(0);
         gl.vertexAttribPointer(0, 2, gl.SHORT, false, 0, 0);
         gl.disableVertexAttribArray(1);
         gl.disableVertexAttribArray(2);
         gl.disableVertexAttribArray(3);
-        gl.bindBuffer(gl.ARRAY_BUFFER, ready.polygonStyle);
+        gl.bindBuffer(gl.ARRAY_BUFFER, plan.polygonStyle);
         gl.enableVertexAttribArray(4);
         gl.vertexAttribPointer(4, 1, gl.UNSIGNED_SHORT, false, 0, 0);
         gl.disableVertexAttribArray(5);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ready.polygonIndex);
-        gl.drawElements(gl.TRIANGLES, gpu.polygonIndexCount, gl.UNSIGNED_INT, 0);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, plan.polygonIndex);
+        gl.drawElements(gl.TRIANGLES, plan.polygonIndexCount, gl.UNSIGNED_INT, 0);
       }
 
-      if (gpu.lineIndexCount && ready.lineVertex && ready.lineIndex) {
+      if (plan.lineIndexCount && plan.lineVertex && plan.lineIndex) {
         gl.uniform1f(this.uIsLine, 1);
-        gl.bindBuffer(gl.ARRAY_BUFFER, ready.lineVertex);
+        gl.bindBuffer(gl.ARRAY_BUFFER, plan.lineVertex);
         gl.enableVertexAttribArray(0);
         gl.vertexAttribPointer(0, 2, gl.SHORT, false, 18, 0); // 2 * 2 = 4 bytes
         gl.enableVertexAttribArray(1);
@@ -375,8 +381,8 @@ export class VectorRenderer {
         gl.vertexAttribPointer(4, 1, gl.UNSIGNED_SHORT, false, 18, 14); // 2 * 1 = 2 bytes
         gl.enableVertexAttribArray(5);
         gl.vertexAttribPointer(5, 1, gl.SHORT, false, 18, 16); // 2 * 1 = 2 bytes
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ready.lineIndex);
-        gl.drawElements(gl.TRIANGLES, gpu.lineIndexCount, gl.UNSIGNED_INT, 0);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, plan.lineIndex);
+        gl.drawElements(gl.TRIANGLES, plan.lineIndexCount, gl.UNSIGNED_INT, 0);
       }
     }
 
