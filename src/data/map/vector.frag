@@ -5,6 +5,7 @@ precision highp int;
 uniform sampler2D u_palette;
 uniform sampler2D u_styleData;
 uniform float u_isLine;
+uniform float u_isCircle;
 uniform float u_deltaZoom;
 
 in float v_style;

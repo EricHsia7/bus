@@ -102,6 +102,6 @@ async function loadTile(tile: MapLoaderTile) {
         route: routePlan
       }
     } as MapLoaderWorkerMessageData,
-    [vectorPlan.lineIndices.buffer, vectorPlan.lineVertices.buffer, vectorPlan.palette.buffer, vectorPlan.polygonIndices.buffer, vectorPlan.polygonPositions.buffer, vectorPlan.polygonStyles.buffer, labelPlan.sheet as ImageBitmap, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer, routePlan.features.buffer, routePlan.routeIds.buffer, routePlan.x.buffer, routePlan.y.buffer]
+    [vectorPlan.lineIndices.buffer, vectorPlan.lineVertices.buffer, vectorPlan.palette.buffer, vectorPlan.polygonIndices.buffer, vectorPlan.polygonPositions.buffer, vectorPlan.polygonStyles.buffer, vectorPlan.circleVertices.buffer, vectorPlan.circleIndices.buffer, labelPlan.sheet as ImageBitmap, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer, routePlan.features.buffer, routePlan.routeIds.buffer, routePlan.x.buffer, routePlan.y.buffer]
   );
 }

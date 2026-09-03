@@ -1,8 +1,9 @@
 import earcut from 'earcut';
-import { VectorTile, VectorTileStyle, VECTOR_TILE_LINE, VECTOR_TILE_POLYGON } from './vector';
+import { VectorTile, VectorTileStyle, VECTOR_TILE_LINE, VECTOR_TILE_POLYGON, VECTOR_TILE_CIRCLE } from './vector';
 import { deltaDecode } from '../../tools/delta';
 
 const LINE_VERTEX_STRIDE = 9;
+const CIRCLE_VERTEX_STRIDE = 5;
 
 /** GPU-ready geometry produced in the worker. */
 export interface VectorPlan {
@@ -29,11 +30,22 @@ export interface VectorPlan {
   lineVertices: Int16Array;
   lineIndices: Uint32Array;
 
+  /**
+   * 4n+0: x
+   * 4n+1: y
+   * 4n+2: style reference
+   * 4n+3: type
+   */
+  circleVertices: Int16Array;
+  circleIndices: Uint32Array;
+
   /** Number of vertices/indices in each geometry stream. */
   polygonVertexCount: number;
   polygonIndexCount: number;
   lineVertexCount: number;
   lineIndexCount: number;
+  circleVertexCount: number;
+  circleIndexCount: number;
 
   /** Packed RGBA palette, four bytes per entry. */
   palette: Uint8Array;
@@ -85,7 +97,7 @@ function buildStyleData(styles: Array<VectorTileStyle>): Float32Array {
   // Four RGBA32F texels per style:
   // 0: fill palette index, stroke palette index, fill opacity, stroke opacity
   // 1: overall opacity, width0, width1, unused
-  // 2: cap, join, unused, unused
+  // 2: cap, join, circle width0, circle width1
   // 3: reserved for future style properties
   const data = new Float32Array(styles.length * 16);
 
@@ -103,6 +115,8 @@ function buildStyleData(styles: Array<VectorTileStyle>): Float32Array {
 
     data[o + 8] = lineCapCode(style['stroke-linecap']);
     data[o + 9] = lineJoinCode(style['stroke-linejoin']);
+    data[o + 10] = style['circle-width']?.[0] ?? 0;
+    data[o + 11] = style['circle-width']?.[1] ?? 0;
   }
 
   return data;
@@ -190,6 +204,21 @@ function buildLineGeometry(coordinates: Int16Array, partStartIndices: Int32Array
   }
 }
 
+function buildCircleGeometry(coordinates: Int16Array, partStartIndices: Int32Array, partStart: number, partEnd: number, styleIndex: number, vertices: number[], indices: number[]): void {
+  for (let part = partStart; part < partEnd; part++) {
+    const start = partStartIndices[part];
+    const end = partStartIndices[part + 1];
+    for (let i = start; i < end; i++) {
+      const base = vertices.length / CIRCLE_VERTEX_STRIDE;
+      vertices.push(coordinates[i * 2], coordinates[i * 2 + 1], styleIndex, -1, 1); // top left
+      vertices.push(coordinates[i * 2], coordinates[i * 2 + 1], styleIndex, 1, 1); // top right
+      vertices.push(coordinates[i * 2], coordinates[i * 2 + 1], styleIndex, -1, -1); // bottom left
+      vertices.push(coordinates[i * 2], coordinates[i * 2 + 1], styleIndex, 1, -1); // bottom right
+      indices.push(base, base + 1, base + 2, base + 2, base + 3, base + 1);
+    }
+  }
+}
+
 /**
  * Build transferable GPU geometry in the worker.
  *
@@ -219,6 +248,8 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
   const polygonIndices: number[] = [];
   const lineVertices: number[] = [];
   const lineIndices: number[] = [];
+  const circleVertices: number[] = [];
+  const circleIndices: number[] = [];
 
   for (let styleRun = 0; styleRun < vectorTile.styleReferences.length; styleRun++) {
     const styleIndex = styleReferences[styleRun];
@@ -231,6 +262,8 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
         buildPolygonGeometry(coordinates, partStartIndices, partStart, partEnd, styleIndex, polygonPositions, polygonStyles, polygonIndices);
       } else if (descriptorTypes[descriptor] === VECTOR_TILE_LINE) {
         buildLineGeometry(coordinates, partStartIndices, partStart, partEnd, styleIndex, lineVertices, lineIndices);
+      } else if (descriptorTypes[descriptor] === VECTOR_TILE_CIRCLE) {
+        buildCircleGeometry(coordinates, partStartIndices, partStart, partEnd, styleIndex, circleVertices, circleIndices);
       }
     }
   }
@@ -245,16 +278,20 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
     polygonIndices: Uint32Array.from(polygonIndices),
     lineVertices: Int16Array.from(lineVertices),
     lineIndices: Uint32Array.from(lineIndices),
+    circleVertices: Int16Array.from(circleVertices),
+    circleIndices: Uint32Array.from(circleIndices),
     polygonVertexCount: polygonPositions.length / 2,
     polygonIndexCount: polygonIndices.length,
     lineVertexCount: lineVertices.length / LINE_VERTEX_STRIDE,
     lineIndexCount: lineIndices.length,
+    circleVertexCount: circleVertices.length / CIRCLE_VERTEX_STRIDE,
+    circleIndexCount: circleIndices.length,
     palette,
     styleData,
     styleTextureWidth: Math.max(1, vectorTile.styles.length * 4),
     paletteCount: palette.length / 8, // width = paletteCount; height = 2
     size: 0
   };
-  plan.size = plan.polygonPositions.byteLength + plan.polygonStyles.byteLength + plan.polygonIndices.byteLength + plan.lineVertices.byteLength + plan.lineIndices.byteLength + plan.palette.byteLength + plan.styleData.byteLength;
+  plan.size = plan.polygonPositions.byteLength + plan.polygonStyles.byteLength + plan.polygonIndices.byteLength + plan.lineVertices.byteLength + plan.lineIndices.byteLength + plan.circleVertices.byteLength + plan.circleIndices.byteLength + plan.palette.byteLength + plan.styleData.byteLength;
   return plan;
 }
