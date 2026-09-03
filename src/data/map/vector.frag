@@ -37,8 +37,8 @@ void main() {
     vec4 appearanceData = styleTexel(v_style, 0.0f);
     float paletteIndex = appearanceData.x; // fill = polygon-fill, circle-fill, stroke
 
-    if(paletteIndex < -0.5f)
-        discard;
+    // if(paletteIndex < -0.5f)
+    //     discard;
 
     // Derivatives must be evaluated in uniform control flow, so compute the
     // signed distance and its screen-space gradient before any cap branching.
