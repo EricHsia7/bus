@@ -4,6 +4,7 @@ import { deltaDecode } from '../../tools/delta';
 
 const LINE_VERTEX_STRIDE = 9;
 const CIRCLE_VERTEX_STRIDE = 5;
+const STYLE_WIDTH = 4;
 
 /** GPU-ready geometry produced in the worker. */
 export interface VectorPlan {
@@ -95,28 +96,26 @@ function lineJoinCode(join: VectorTileStyle['stroke-linejoin']): 0 | 1 | 2 {
 
 function buildStyleData(styles: Array<VectorTileStyle>): Float32Array {
   // Four RGBA32F texels per style:
-  // 0: fill palette index, stroke palette index, fill opacity, stroke opacity
-  // 1: overall opacity, width0, width1, unused
-  // 2: cap, join, circle width0, circle width1
-  // 3: reserved for future style properties
-  const data = new Float32Array(styles.length * 16);
+  // 0: palette reference (polygon-fill/stroke/circle-fill), palette opacity, overall opacity, unused
+  // 1: strokeWidth0, strokeWidth1, cap, join
+  // 2: circleWidth0, circleWidth1, unused, unused
+  // 3: unused, unused, unused, unused
+  const data = new Float32Array(styles.length * STYLE_WIDTH * 4);
 
   for (let i = 0; i < styles.length; i++) {
     const style = styles[i];
-    const o = i * 16;
-    data[o + 0] = style.fill ?? 0; // TODO: handle default value
-    data[o + 1] = style.stroke ?? 0;
-    data[o + 2] = style['fill-opacity'] ?? 1;
-    data[o + 3] = style['stroke-opacity'] ?? 1;
+    const o = i * STYLE_WIDTH * 4;
+    data[o + 0] = style.palette ?? 0;
+    data[o + 1] = style['palette-opacity'] ?? 1;
+    data[o + 2] = style.opacity ?? 1;
 
-    data[o + 4] = style.opacity ?? 1;
-    data[o + 5] = style['stroke-width']?.[0] ?? 0;
-    data[o + 6] = style['stroke-width']?.[1] ?? 0;
+    data[o + 4] = style['stroke-width']?.[0] ?? 0;
+    data[o + 5] = style['stroke-width']?.[1] ?? 0;
+    data[o + 6] = lineCapCode(style['stroke-linecap']);
+    data[o + 7] = lineJoinCode(style['stroke-linejoin']);
 
-    data[o + 8] = lineCapCode(style['stroke-linecap']);
-    data[o + 9] = lineJoinCode(style['stroke-linejoin']);
-    data[o + 10] = style['circle-width']?.[0] ?? 0;
-    data[o + 11] = style['circle-width']?.[1] ?? 0;
+    data[o + 8] = style['circle-width']?.[0] ?? 0;
+    data[o + 9] = style['circle-width']?.[1] ?? 0;
   }
 
   return data;
@@ -288,7 +287,7 @@ export function buildVectorPlan(vectorTile: VectorTile): VectorPlan {
     circleIndexCount: circleIndices.length,
     palette,
     styleData,
-    styleTextureWidth: Math.max(1, vectorTile.styles.length * 4),
+    styleTextureWidth: Math.max(1, vectorTile.styles.length * STYLE_WIDTH),
     paletteCount: palette.length / 8, // width = paletteCount; height = 2
     size: 0
   };

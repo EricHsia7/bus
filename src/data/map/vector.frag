@@ -34,12 +34,8 @@ vec4 paletteColor(float index) {
 }
 
 void main() {
-    vec4 colorData = styleTexel(v_style, 0.0f);
-    vec4 opacityData = styleTexel(v_style, 1.0f);
-    vec4 capJoinCircleData = styleTexel(v_style, 2.0f);
-
-    float paletteIndex = u_isLine > 0.5f ? colorData.y : colorData.x; // fill = polygon-fill or circle-fill; stroke = line-color
-    float localOpacity = u_isLine > 0.5f ? colorData.w : colorData.z;
+    vec4 appearanceData = styleTexel(v_style, 0.0f);
+    float paletteIndex = appearanceData.x; // fill = polygon-fill, circle-fill, stroke
 
     if(paletteIndex < -0.5f)
         discard;
@@ -51,11 +47,11 @@ void main() {
     // normalised radius here instead makes fwidth() equal 1/radius, so the
     // antialiasing band widens as lines get thinner and eats the whole cap at
     // small widths. In pixel units fwidth(sd) stays ~1.0 at every radius.
-    vec2 d = v_pos - v_capCenter;
 
     if(u_isLine > 0.5f && v_capRadius > 0.0f) {
         vec2 d = v_pos - v_capCenter;
-        float capStyle = capJoinCircleData.x;
+        vec4 strokeData = styleTexel(v_style, 1.0f);
+        float capStyle = strokeData.z;
 
         // v_capOut is zero only for an isolated point, where dot() == 0.0
         // fails and the full disc is carved instead of a semicircle.
@@ -82,6 +78,6 @@ void main() {
     }
 
     vec4 color = paletteColor(paletteIndex);
-    float opacity = opacityData.x * localOpacity * color.a;
+    float opacity = appearanceData.y * appearanceData.z * color.a;
     outColor = vec4(color.rgb, opacity);
 }

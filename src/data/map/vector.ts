@@ -31,20 +31,14 @@ export interface VectorTileStyle {
   /**
    * palette reference
    */
-  'fill'?: number;
-  'fill-opacity'?: number;
-  /**
-   * palette reference
-   */
-  'stroke'?: number;
+  'palette'?: number;
+  'palette-opacity'?: number;
+  'opacity'?: number;
   'stroke-width'?: VectorTilePair;
-  'stroke-opacity'?: number;
   'stroke-linejoin'?: LineJoin;
   'stroke-linecap'?: LineCap;
   'stroke-dasharray'?: LineDash;
   'circle-width'?: VectorTilePair;
-  'circle-fill': number;
-  'opacity'?: number;
 }
 
 export interface VectorTile {
