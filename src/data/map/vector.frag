@@ -13,7 +13,8 @@ in vec2 v_pos;
 in vec2 v_capCenter;
 in float v_capRadius; // PIXELS; 0.0 -> not a cap
 in vec2 v_capOut; // 0.0 -> skip the half-plane test (isolated point: full disc)
-
+in vec2 v_circleCenter;
+in float v_circleRadius;
 out vec4 outColor;
 
 // capJoinData.x cap style: 0 = butt, 1 = round, 2 = square
@@ -35,9 +36,9 @@ vec4 paletteColor(float index) {
 void main() {
     vec4 colorData = styleTexel(v_style, 0.0f);
     vec4 opacityData = styleTexel(v_style, 1.0f);
-    vec4 capJoinData = styleTexel(v_style, 2.0f);
+    vec4 capJoinCircleData = styleTexel(v_style, 2.0f);
 
-    float paletteIndex = u_isLine > 0.5f ? colorData.y : colorData.x;
+    float paletteIndex = u_isLine > 0.5f ? colorData.y : colorData.x; // fill = polygon-fill or circle-fill; stroke = line-color
     float localOpacity = u_isLine > 0.5f ? colorData.w : colorData.z;
 
     if(paletteIndex < -0.5f)
@@ -52,8 +53,9 @@ void main() {
     // small widths. In pixel units fwidth(sd) stays ~1.0 at every radius.
     vec2 d = v_pos - v_capCenter;
 
-    if(v_capRadius > 0.0f) {
-        float capStyle = capJoinData.x;
+    if(u_isLine > 0.5f && v_capRadius > 0.0f) {
+        vec2 d = v_pos - v_capCenter;
+        float capStyle = capJoinCircleData.x;
 
         // v_capOut is zero only for an isolated point, where dot() == 0.0
         // fails and the full disc is carved instead of a semicircle.
@@ -71,6 +73,12 @@ void main() {
             }
         }
         // Square: keep the quad as-is
+    }
+
+    if(u_isCircle > 0.5f && v_circleRadius > 0.0f) {
+        vec2 d = v_pos - v_circleCenter;
+        if(dot(d, d) > v_circleRadius * v_circleRadius)
+            discard;
     }
 
     vec4 color = paletteColor(paletteIndex);
