@@ -17,7 +17,6 @@ in vec2 v_circleCenter;
 in float v_circleRadius;
 out vec4 outColor;
 
-// capJoinData.x cap style: 0 = butt, 1 = round, 2 = square
 const float CAP_ROUND = 1.0f;
 const float CAP_SQUARE = 2.0f;
 
