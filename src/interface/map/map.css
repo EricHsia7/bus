@@ -16,11 +16,6 @@
   contain: layout;
 }
 
-.css_map_field .css_map_canvas {
-  background: #f2f2f7;
-  /* the color must be inlined */
-}
-
 .css_map_field .css_map_overlay {
   pointer-events: none;
 }

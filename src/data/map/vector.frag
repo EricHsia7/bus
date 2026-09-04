@@ -77,6 +77,6 @@ void main() {
     }
 
     vec4 color = paletteColor(paletteIndex);
-    float opacity = appearanceData.y * appearanceData.z * color.a;
+    float opacity = color.a * appearanceData.y * appearanceData.z;
     outColor = vec4(color.rgb, opacity);
 }
