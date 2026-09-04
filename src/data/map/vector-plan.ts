@@ -32,10 +32,11 @@ export interface VectorPlan {
   lineIndices: Uint32Array;
 
   /**
-   * 4n+0: x
-   * 4n+1: y
-   * 4n+2: style reference
-   * 4n+3: type
+   * 5n+0: x
+   * 5n+1: y
+   * 5n+2: style reference
+   * 5n+3: offset x
+   * 5n+4: offset y
    */
   circleVertices: Int16Array;
   circleIndices: Uint32Array;
