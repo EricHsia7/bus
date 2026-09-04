@@ -45,6 +45,10 @@ interface GPUResource {
   lineVertexCount: number;
   lineIndex: WebGLBuffer | null;
   lineIndexCount: number;
+  circleVertex: WebGLBuffer | null;
+  circleVertexCount: number;
+  circleIndex: WebGLBuffer | null;
+  circleIndexCount: number;
   paletteTexture: WebGLTexture | null;
   styleTexture: WebGLTexture | null;
 }
@@ -132,6 +136,10 @@ function createGPUResource(gl: WebGL2RenderingContext, plan: VectorPlan): GPURes
     lineVertexCount: plan.lineVertexCount,
     lineIndex: plan.lineIndexCount ? createBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, plan.lineIndices) : null,
     lineIndexCount: plan.lineIndexCount,
+    circleVertex: plan.circleVertexCount ? createBuffer(gl, gl.ARRAY_BUFFER, plan.circleVertices) : null,
+    circleVertexCount: plan.circleVertexCount,
+    circleIndex: plan.circleIndexCount ? createBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, plan.circleIndices) : null,
+    circleIndexCount: plan.circleIndexCount,
     paletteTexture: createPaletteTexture(gl, plan.palette, Math.max(1, plan.paletteCount)),
     styleTexture: createStyleTexture(gl, plan.styleData, plan.styleTextureWidth)
   };
@@ -172,6 +180,7 @@ export class VectorRenderer {
   private uDeltaZoom: WebGLUniformLocation | null = null;
   private uDesignTileSize: WebGLUniformLocation | null = null;
   private uIsLine: WebGLUniformLocation | null = null;
+  private uIsCircle: WebGLUniformLocation | null = null;
   private uPalette: WebGLUniformLocation | null = null;
   private uStyleData: WebGLUniformLocation | null = null;
 
@@ -352,6 +361,7 @@ export class VectorRenderer {
 
       if (plan.polygonIndexCount && plan.polygonPosition && plan.polygonStyle && plan.polygonIndex) {
         gl.uniform1f(this.uIsLine, 0);
+        gl.uniform1f(this.uIsCircle, 0);
         gl.bindBuffer(gl.ARRAY_BUFFER, plan.polygonPosition);
         gl.enableVertexAttribArray(0);
         gl.vertexAttribPointer(0, 2, gl.SHORT, false, 0, 0);
@@ -362,12 +372,14 @@ export class VectorRenderer {
         gl.enableVertexAttribArray(4);
         gl.vertexAttribPointer(4, 1, gl.UNSIGNED_SHORT, false, 0, 0);
         gl.disableVertexAttribArray(5);
+        gl.disableVertexAttribArray(6);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, plan.polygonIndex);
         gl.drawElements(gl.TRIANGLES, plan.polygonIndexCount, gl.UNSIGNED_INT, 0);
       }
 
       if (plan.lineIndexCount && plan.lineVertex && plan.lineIndex) {
         gl.uniform1f(this.uIsLine, 1);
+        gl.uniform1f(this.uIsCircle, 0);
         gl.bindBuffer(gl.ARRAY_BUFFER, plan.lineVertex);
         gl.enableVertexAttribArray(0);
         gl.vertexAttribPointer(0, 2, gl.SHORT, false, 18, 0); // 2 * 2 = 4 bytes
@@ -381,8 +393,27 @@ export class VectorRenderer {
         gl.vertexAttribPointer(4, 1, gl.UNSIGNED_SHORT, false, 18, 14); // 2 * 1 = 2 bytes
         gl.enableVertexAttribArray(5);
         gl.vertexAttribPointer(5, 1, gl.SHORT, false, 18, 16); // 2 * 1 = 2 bytes
+        gl.disableVertexAttribArray(6);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, plan.lineIndex);
         gl.drawElements(gl.TRIANGLES, plan.lineIndexCount, gl.UNSIGNED_INT, 0);
+      }
+
+      if (plan.circleIndexCount && plan.circleVertex && plan.circleIndex) {
+        gl.uniform1f(this.uIsLine, 0);
+        gl.uniform1f(this.uIsCircle, 1);
+        gl.bindBuffer(gl.ARRAY_BUFFER, plan.circleVertex);
+        gl.enableVertexAttribArray(0);
+        gl.vertexAttribPointer(0, 2, gl.SHORT, false, 10, 0); // 2 * 2 = 4 bytes
+        gl.disableVertexAttribArray(1);
+        gl.disableVertexAttribArray(2);
+        gl.disableVertexAttribArray(3);
+        gl.enableVertexAttribArray(4);
+        gl.vertexAttribPointer(4, 1, gl.UNSIGNED_SHORT, false, 10, 4); // 2 * 1 = 2 bytes
+        gl.disableVertexAttribArray(5);
+        gl.enableVertexAttribArray(6);
+        gl.vertexAttribPointer(6, 2, gl.SHORT, false, 10, 6); // 2 * 2 = 4 bytes
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, plan.circleIndex);
+        gl.drawElements(gl.TRIANGLES, plan.circleIndexCount, gl.UNSIGNED_INT, 0);
       }
     }
 
@@ -415,6 +446,7 @@ export class VectorRenderer {
     this.uDeltaZoom = gl.getUniformLocation(this.program, 'u_deltaZoom');
     this.uDesignTileSize = gl.getUniformLocation(this.program, 'u_designTileSize');
     this.uIsLine = gl.getUniformLocation(this.program, 'u_isLine');
+    this.uIsCircle = gl.getUniformLocation(this.program, 'u_isCircle');
     this.uPalette = gl.getUniformLocation(this.program, 'u_palette');
     this.uStyleData = gl.getUniformLocation(this.program, 'u_styleData');
   }

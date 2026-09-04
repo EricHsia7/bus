@@ -5,6 +5,7 @@ precision highp int;
 uniform sampler2D u_palette;
 uniform sampler2D u_styleData;
 uniform float u_isLine;
+uniform float u_isCircle;
 uniform float u_deltaZoom;
 
 in float v_style;
@@ -12,10 +13,10 @@ in vec2 v_pos;
 in vec2 v_capCenter;
 in float v_capRadius; // PIXELS; 0.0 -> not a cap
 in vec2 v_capOut; // 0.0 -> skip the half-plane test (isolated point: full disc)
-
+in vec2 v_circleCenter;
+in float v_circleRadius;
 out vec4 outColor;
 
-// capJoinData.x cap style: 0 = butt, 1 = round, 2 = square
 const float CAP_ROUND = 1.0f;
 const float CAP_SQUARE = 2.0f;
 
@@ -32,15 +33,11 @@ vec4 paletteColor(float index) {
 }
 
 void main() {
-    vec4 colorData = styleTexel(v_style, 0.0f);
-    vec4 opacityData = styleTexel(v_style, 1.0f);
-    vec4 capJoinData = styleTexel(v_style, 2.0f);
+    vec4 appearanceData = styleTexel(v_style, 0.0f);
+    float paletteIndex = appearanceData.x; // fill = polygon-fill, circle-fill, stroke
 
-    float paletteIndex = u_isLine > 0.5f ? colorData.y : colorData.x;
-    float localOpacity = u_isLine > 0.5f ? colorData.w : colorData.z;
-
-    if(paletteIndex < -0.5f)
-        discard;
+    // if(paletteIndex < -0.5f)
+    //     discard;
 
     // Derivatives must be evaluated in uniform control flow, so compute the
     // signed distance and its screen-space gradient before any cap branching.
@@ -49,10 +46,11 @@ void main() {
     // normalised radius here instead makes fwidth() equal 1/radius, so the
     // antialiasing band widens as lines get thinner and eats the whole cap at
     // small widths. In pixel units fwidth(sd) stays ~1.0 at every radius.
-    vec2 d = v_pos - v_capCenter;
 
-    if(v_capRadius > 0.0f) {
-        float capStyle = capJoinData.x;
+    if(u_isLine > 0.5f && v_capRadius > 0.0f) {
+        vec2 d = v_pos - v_capCenter;
+        vec4 strokeData = styleTexel(v_style, 1.0f);
+        float capStyle = strokeData.z;
 
         // v_capOut is zero only for an isolated point, where dot() == 0.0
         // fails and the full disc is carved instead of a semicircle.
@@ -72,7 +70,13 @@ void main() {
         // Square: keep the quad as-is
     }
 
+    if(u_isCircle > 0.5f && v_circleRadius > 0.0f) {
+        vec2 d = v_pos - v_circleCenter;
+        if(dot(d, d) > v_circleRadius * v_circleRadius)
+            discard;
+    }
+
     vec4 color = paletteColor(paletteIndex);
-    float opacity = opacityData.x * localOpacity * color.a;
+    float opacity = appearanceData.y * appearanceData.z * color.a;
     outColor = vec4(color.rgb, opacity);
 }

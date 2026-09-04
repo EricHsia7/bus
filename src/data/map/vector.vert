@@ -1,4 +1,5 @@
 #version 300 es
+
 precision highp float;
 precision highp int;
 
@@ -9,6 +10,7 @@ layout(location = 2) in vec2 a_next;
 layout(location = 3) in float a_side;
 layout(location = 4) in float a_style;
 layout(location = 5) in float a_cap; // 0: segment vertex, 1: cap quad base, 2: cap quad tip
+layout(location = 6) in vec2 a_circleOffset;
 
 // uniforms
 uniform vec2 u_tileScale;
@@ -17,6 +19,7 @@ uniform vec2 u_viewport;
 uniform float u_deltaZoom;
 uniform sampler2D u_styleData;
 uniform float u_isLine;
+uniform float u_isCircle;
 uniform float u_extent;
 uniform float u_designTileSize;
 
@@ -30,9 +33,10 @@ out vec2 v_pos; // per-fragment position in pixels
 out vec2 v_capCenter; // true endpoint in pixels
 out float v_capRadius; // cap radius in pixels (0 -> not a cap)
 out vec2 v_capOut; // unit outward dir pixels (0 -> skip half-plane test)
+out float v_circleRadius;
+out vec2 v_circleCenter;
 
-// Maximum factor a mitred join may stretch the half width before being cut
-// back, so sharp bends cannot spike arbitrarily far.
+// Maximum factor a mitred join may stretch the half width before being cut back, so sharp bends cannot spike arbitrarily far.
 const float MITER_LIMIT = 4.0f;
 
 // Squared length below which a segment counts as degenerate. Tile coordinates
@@ -55,11 +59,13 @@ void main() {
     v_capCenter = vec2(0.0f);
     v_capRadius = 0.0f;
     v_capOut = vec2(0.0f);
+    v_circleCenter = vec2(0.0f);
+    v_circleRadius = 0.0f;
 
     if(u_isLine > 0.5f) {
-        vec4 widthData = styleTexel(a_style, 1.0f);
-        float width0 = widthData.y;
-        float width1 = widthData.z;
+        vec4 strokeData = styleTexel(a_style, 1.0f);
+        float width0 = strokeData.x;
+        float width1 = strokeData.y;
         float width = mix(width0, width1, u_deltaZoom) * exp2(-u_deltaZoom);
         float halfWidth = width * (u_extent / u_designTileSize) * 0.5f;
 
@@ -135,6 +141,17 @@ void main() {
         }
 
         position += offset;
+    }
+
+    if(u_isCircle > 0.5f) {
+        vec4 circleData = styleTexel(a_style, 2.0f);
+        float width0 = circleData.x;
+        float width1 = circleData.y;
+        float width = mix(width0, width1, u_deltaZoom) * exp2(-u_deltaZoom);
+        float radius = width * (u_extent / u_designTileSize) * 0.5f;
+        position += a_circleOffset * radius;
+        v_circleCenter = a_position * u_tileScale + u_tileOffset;
+        v_circleRadius = radius * u_tileScale.x;
     }
 
     vec2 pixel = position * u_tileScale + u_tileOffset;

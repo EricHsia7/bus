@@ -1,4 +1,3 @@
-import { clamp } from '../../tools/math';
 import { LineCap, LineDash, LineJoin } from './style';
 
 /**
@@ -6,8 +5,9 @@ import { LineCap, LineDash, LineJoin } from './style';
  */
 export const VECTOR_TILE_POLYGON = 0;
 export const VECTOR_TILE_LINE = 1;
+export const VECTOR_TILE_CIRCLE = 2;
 
-export type VectorTileDescriptorType = typeof VECTOR_TILE_POLYGON | typeof VECTOR_TILE_LINE;
+export type VectorTileDescriptorType = typeof VECTOR_TILE_POLYGON | typeof VECTOR_TILE_LINE | typeof VECTOR_TILE_CIRCLE;
 
 export type VectorTilePoint = [x: number, y: number];
 
@@ -31,18 +31,14 @@ export interface VectorTileStyle {
   /**
    * palette reference
    */
-  'fill'?: number;
-  'fill-opacity'?: number;
-  /**
-   * palette reference
-   */
-  'stroke'?: number;
+  'palette'?: number;
+  'palette-opacity'?: number;
+  'opacity'?: number;
   'stroke-width'?: VectorTilePair;
-  'stroke-opacity'?: number;
   'stroke-linejoin'?: LineJoin;
   'stroke-linecap'?: LineCap;
   'stroke-dasharray'?: LineDash;
-  'opacity'?: number;
+  'circle-width'?: VectorTilePair;
 }
 
 export interface VectorTile {
@@ -101,26 +97,4 @@ export interface VectorTile {
    * - 4n+3: alpha
    */
   palette: Array<number>;
-}
-
-/**
- * Sample a shipped `[s0, s1]` interval at a fractional zoom offset.
- *
- * `deltaZoom` is `viewZoom - tile.zoom`, clamped to `[0, 1]`: the interval is
- * only defined over the octave during which this tile is on screen.
- */
-function interpolatePair(pair: VectorTilePair | undefined, deltaZoom: number): number {
-  if (pair === undefined) return 1;
-  const t = clamp(deltaZoom, 0, 1);
-  return (pair[0] + (pair[1] - pair[0]) * t) * Math.pow(2, -t);
-}
-
-/**
- * Effective stroke width for a style at a fractional zoom offset, before the
- * tile-space scale factor is applied.
- */
-export function resolveStrokeWidth(style: VectorTileStyle, deltaZoom: number): number {
-  const width = style['stroke-width'];
-  if (width === undefined) return 0;
-  return interpolatePair(width, deltaZoom);
 }
