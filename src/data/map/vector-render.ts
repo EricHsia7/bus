@@ -166,6 +166,8 @@ export class VectorRenderer {
    * rebuilt after a context loss without waiting for the tiles to be reloaded.
    */
   private lastViews = new Map<string, VectorTileView>();
+  private lastViewZoom: number = 0;
+  private lastDarkMode: number = 0;
   private contextLost = false;
   private readonly options: VectorRendererOptions;
   private readonly contextLostHandler?: (event: Event) => void;
@@ -181,6 +183,7 @@ export class VectorRenderer {
   private uDesignTileSize: WebGLUniformLocation | null = null;
   private uIsLine: WebGLUniformLocation | null = null;
   private uIsCircle: WebGLUniformLocation | null = null;
+  private uDarkMode: WebGLUniformLocation | null = null;
   private uPalette: WebGLUniformLocation | null = null;
   private uStyleData: WebGLUniformLocation | null = null;
 
@@ -215,6 +218,11 @@ export class VectorRenderer {
       target.addEventListener('webglcontextlost', this.contextLostHandler);
       target.addEventListener('webglcontextrestored', this.contextRestoredHandler);
     }
+
+    this.handleColorSchemeChange = this.handleColorSchemeChange.bind(this);
+    const colorSchemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    colorSchemeQuery.addEventListener('change', this.handleColorSchemeChange);
+    this.handleColorSchemeChange(colorSchemeQuery);
   }
 
   /** True while the GL context is unusable. Rendering is skipped rather than half-drawn. */
@@ -307,6 +315,7 @@ export class VectorRenderer {
 
     gl.uniform2f(this.uViewport, width, height);
     gl.uniform1f(this.uDesignTileSize, DESIGN_TILE_SIZE);
+    gl.uniform1f(this.uDarkMode, this.lastDarkMode);
 
     for (const tile of visibleTiles) {
       const resource = this.resources.get(tile.key);
@@ -330,6 +339,7 @@ export class VectorRenderer {
       const offsetX = tile.x - region.x * plan.extent * scale;
       const offsetY = tile.y - region.y * plan.extent * scale;
       const deltaZoom = clamp(viewZoom - plan.zoom, 0, 1);
+      this.lastViewZoom = viewZoom;
 
       // Every draw is clipped to its own box. Plans carry `buffer` worth of geometry past
       // the tile edge, and a stand-in covers only a sub-square of a much larger plan, so
@@ -447,6 +457,7 @@ export class VectorRenderer {
     this.uDesignTileSize = gl.getUniformLocation(this.program, 'u_designTileSize');
     this.uIsLine = gl.getUniformLocation(this.program, 'u_isLine');
     this.uIsCircle = gl.getUniformLocation(this.program, 'u_isCircle');
+    this.uDarkMode = gl.getUniformLocation(this.program, 'u_darkMode');
     this.uPalette = gl.getUniformLocation(this.program, 'u_palette');
     this.uStyleData = gl.getUniformLocation(this.program, 'u_styleData');
   }
@@ -466,6 +477,13 @@ export class VectorRenderer {
     this.resources.clear();
     for (const view of views) this.uploadTile(view);
     this.options.onContextRestored?.();
+  }
+
+  private handleColorSchemeChange(event: MediaQueryListEvent | MediaQueryList): void {
+    this.lastDarkMode = event.matches ? 1 : 0;
+    const views = Array.from(this.lastViews.values());
+    this.renderVectorTiles(views, this.lastViewZoom);
+    console.log(12);
   }
 }
 

@@ -6,6 +6,7 @@ uniform sampler2D u_palette;
 uniform sampler2D u_styleData;
 uniform float u_isLine;
 uniform float u_isCircle;
+uniform float u_darkMode;
 uniform float u_deltaZoom;
 
 in float v_style;
@@ -19,6 +20,7 @@ out vec4 outColor;
 
 const float CAP_ROUND = 1.0f;
 const float CAP_SQUARE = 2.0f;
+const float MIN_V = 0.12f;
 
 vec4 styleTexel(float style, float texel) {
     int i = int(style * 4.0f + texel + 0.5f);
@@ -30,6 +32,11 @@ vec4 paletteColor(float index) {
     vec4 color0 = texelFetch(u_palette, ivec2(i, 0), 0);
     vec4 color1 = texelFetch(u_palette, ivec2(i, 1), 0);
     return mix(color0, color1, u_deltaZoom);
+}
+
+vec3 saturate(vec3 color, float amount) {
+    float m = min(color.r, min(color.g, color.b));
+    return m + amount * (color - m);
 }
 
 void main() {
@@ -78,5 +85,12 @@ void main() {
 
     vec4 color = paletteColor(paletteIndex);
     float opacity = appearanceData.y * appearanceData.z * color.a;
-    outColor = vec4(color.rgb, opacity);
+
+    if(u_darkMode > 0.5f) {
+        float v = max(max(color.r, color.g), color.b);
+        float newV = 0.05f + 0.95f * pow(1.0f - v, 1.25f);
+        outColor = vec4(saturate(color.rgb * newV, 5.0f), opacity);
+    } else {
+        outColor = vec4(color.rgb, opacity);
+    }
 }

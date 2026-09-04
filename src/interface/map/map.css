@@ -10,17 +10,12 @@
   touch-action: none;
   -webkit-touch-callout: none;
   -webkit-user-drag: none;
-  filter: var(--b-cssvar-map-filter);
-  -webkit-filter: var(--b-cssvar-map-filter);
   will-change: transform;
   contain: layout;
 }
 
-.css_map_field .css_map_canvas {
-  background: #f2f2f7;
-  /* the color must be inlined */
-}
-
 .css_map_field .css_map_overlay {
   pointer-events: none;
+  filter: var(--b-cssvar-map-filter);
+  -webkit-filter: var(--b-cssvar-map-filter);
 }

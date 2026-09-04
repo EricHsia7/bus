@@ -20,6 +20,7 @@ uniform float u_deltaZoom;
 uniform sampler2D u_styleData;
 uniform float u_isLine;
 uniform float u_isCircle;
+uniform float u_darkMode;
 uniform float u_extent;
 uniform float u_designTileSize;
 

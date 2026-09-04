@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev-map-dark-mode
 
 permissions:
   contents: read
