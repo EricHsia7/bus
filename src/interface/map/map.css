@@ -12,7 +12,6 @@
   -webkit-user-drag: none;
   filter: var(--b-cssvar-map-filter);
   -webkit-filter: var(--b-cssvar-map-filter);
-  will-change: transform;
   contain: layout;
 }
 
