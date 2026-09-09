@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "earcut": "3.2.3",
-    "fast-equals": "6.0.2",
+    "fast-equals": "6.0.3",
     "fflate": "0.8.3",
     "js-levenshtein": "1.1.6",
     "js-sha512": "0.9.0",
