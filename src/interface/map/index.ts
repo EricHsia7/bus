@@ -727,10 +727,10 @@ function showFirstMapView(integration: MapViews): void {
     const firstView = integration[0];
     switch (firstView.type) {
       case 'point':
-        mapTileController.focusOn(firstView.centerLon, firstView.centerLat, 17, 500);
+        mapTileController.focusOn(firstView.centerLon, firstView.centerLat, 17, 0);
         break;
       case 'box':
-        mapTileController.fitTo(firstView.minLon, firstView.minLat, firstView.maxLon, firstView.maxLat, 50, 500);
+        mapTileController.fitTo(firstView.minLon, firstView.minLat, firstView.maxLon, firstView.maxLat, 50, 0);
         break;
       default:
         break;
