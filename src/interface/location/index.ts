@@ -1049,7 +1049,7 @@ async function refreshLocation(): Promise<number> {
     animateUpdateTimer(interval);
     return interval;
   } catch (err) {
-    promptMessage('error', `地點發生錯誤，將在${locationTickRetryInterval / 1000}秒後重試。`);
+    // promptMessage('error', `地點發生錯誤，將在${locationTickRetryInterval / 1000}秒後重試。`);
     animateUpdateTimer(locationTickRetryInterval);
     return locationTickRetryInterval;
   }

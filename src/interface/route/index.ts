@@ -1192,7 +1192,7 @@ async function refreshRoute(): Promise<number> {
     animateUpdateTimer(interval);
     return interval;
   } catch (err) {
-    promptMessage('error', `路線發生錯誤，將在${routeTickRetryInterval / 1000}秒後重試。`);
+    // promptMessage('error', `路線發生錯誤，將在${routeTickRetryInterval / 1000}秒後重試。`);
     animateUpdateTimer(routeTickRetryInterval);
     return routeTickRetryInterval;
   }

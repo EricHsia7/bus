@@ -242,7 +242,7 @@ async function refreshNotificationScheduleManager(): Promise<number> {
     animateUpdateTimer(interval);
     return interval;
   } catch (err) {
-    promptMessage('error', `通知發生錯誤，將在${notificationTickRetryInterval / 1000}秒後重試。`);
+    // promptMessage('error', `通知發生錯誤，將在${notificationTickRetryInterval / 1000}秒後重試。`);
     animateUpdateTimer(notificationTickRetryInterval);
     return notificationTickRetryInterval;
   }

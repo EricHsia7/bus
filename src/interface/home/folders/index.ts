@@ -582,7 +582,7 @@ async function refreshFolders(): Promise<number> {
     animateUpdateTimer(interval);
     return interval;
   } catch (err) {
-    promptMessage('error', `資料夾發生錯誤，將在${foldersTickRetryInterval / 1000}秒後重試。`);
+    // promptMessage('error', `資料夾發生錯誤，將在${foldersTickRetryInterval / 1000}秒後重試。`);
     animateUpdateTimer(foldersTickRetryInterval);
     return foldersTickRetryInterval;
   }
