@@ -629,7 +629,9 @@ export class MapTileController {
     if (duration <= 0) {
       this.center = targetCenter;
       this.zoom = targetZoom;
+      this.onMovementStart?.();
       this.onMovement?.();
+      this.onMovementEnd?.();
       return;
     }
 
