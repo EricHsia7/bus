@@ -1,3 +1,4 @@
+import { MaterialSymbol } from '../../../interface/icons/material-symbols-type';
 import { Progress } from '../../../tools/progress';
 import { lfGetItem, lfSetItem } from '../../storage/index';
 import { getMaterialSymbolsAPIURL } from '../getAPIURL/index';
@@ -15,7 +16,7 @@ export interface MaterialSymbolsList {
  * an array of symbols
  * @example ['symbol_1', 'symbol_2', 'symbol_3']
  */
-export type UnpackedMaterialSymbolsList = Array<string>;
+export type UnpackedMaterialSymbolsList = Array<MaterialSymbol>;
 
 let MaterialSymbolsListMemoryCache_available: boolean = false;
 let MaterialSymbolsListMemoryCache_data: UnpackedMaterialSymbolsList = [];

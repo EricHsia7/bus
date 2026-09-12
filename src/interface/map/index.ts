@@ -595,7 +595,7 @@ function updateMapField(overlays: Array<MapOverlay>, integration: MapViews): voi
       switch (thisItem.type) {
         case 'point':
           thisElement.onclick = function () {
-            mapTileController.focusOn(thisItem.centerLon, thisItem.centerLat, 17, 500);
+            mapTileController.focusOn(thisItem.centerLon, thisItem.centerLat, 16.5, 600);
             mapOverlays.show(thisItem.sources);
             currentViewIndex = index;
             hideMapPanel();
@@ -603,7 +603,7 @@ function updateMapField(overlays: Array<MapOverlay>, integration: MapViews): voi
           break;
         case 'box':
           thisElement.onclick = function () {
-            mapTileController.fitTo(thisItem.minLon, thisItem.minLat, thisItem.maxLon, thisItem.maxLat, 50, 500);
+            mapTileController.fitTo(thisItem.minLon, thisItem.minLat, thisItem.maxLon, thisItem.maxLat, 50, 600);
             mapOverlays.show(thisItem.sources);
             currentViewIndex = index;
             hideMapPanel();
