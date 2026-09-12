@@ -67,7 +67,7 @@ void main() {
         vec4 strokeData = styleTexel(a_style, 1.0f);
         float width0 = strokeData.x;
         float width1 = strokeData.y;
-        float width = mix(width0, width1, u_deltaZoom) * exp2(-u_deltaZoom);
+        float width = max(0.0f, mix(width0, width1, u_deltaZoom) * exp2(-u_deltaZoom));
         float halfWidth = width * (u_extent / u_designTileSize) * 0.5f;
 
         // Segment vectors. Lengths are tested before any normalize() so a
