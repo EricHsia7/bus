@@ -405,6 +405,7 @@ function renderFrame(now: number): void {
   protectedTileKeys.clear();
   fallbackOverlays.clear();
 
+  if (activeLayerZ !== nativeZoom) synchronizeQueue();
   activeLayerZ = nativeZoom;
 
   // Both passes run unconditionally. Which plan stands in for which box can change
