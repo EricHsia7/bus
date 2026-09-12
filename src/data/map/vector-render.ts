@@ -178,6 +178,7 @@ export class VectorRenderer {
   private uViewport: WebGLUniformLocation | null = null;
   private uExtent: WebGLUniformLocation | null = null;
   private uDeltaZoom: WebGLUniformLocation | null = null;
+  private uClampedDeltaZoom: WebGLUniformLocation | null = null;
   private uDesignTileSize: WebGLUniformLocation | null = null;
   private uIsLine: WebGLUniformLocation | null = null;
   private uIsCircle: WebGLUniformLocation | null = null;
@@ -329,7 +330,8 @@ export class VectorRenderer {
       const scale = tile.size / (plan.extent * regionSize);
       const offsetX = tile.x - region.x * plan.extent * scale;
       const offsetY = tile.y - region.y * plan.extent * scale;
-      const deltaZoom = clamp(viewZoom - plan.zoom, 0, 1);
+      const deltaZoom = viewZoom - plan.zoom;
+      const clampedDeltaZoom = clamp(deltaZoom, 0, 1);
 
       // Every draw is clipped to its own box. Plans carry `buffer` worth of geometry past
       // the tile edge, and a stand-in covers only a sub-square of a much larger plan, so
@@ -351,6 +353,7 @@ export class VectorRenderer {
       gl.uniform2f(this.uTileOffset, offsetX, offsetY);
       gl.uniform1f(this.uExtent, plan.extent);
       gl.uniform1f(this.uDeltaZoom, deltaZoom);
+      gl.uniform1f(this.uClampedDeltaZoom, clampedDeltaZoom);
 
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, plan.paletteTexture);
@@ -444,6 +447,7 @@ export class VectorRenderer {
     this.uViewport = gl.getUniformLocation(this.program, 'u_viewport');
     this.uExtent = gl.getUniformLocation(this.program, 'u_extent');
     this.uDeltaZoom = gl.getUniformLocation(this.program, 'u_deltaZoom');
+    this.uClampedDeltaZoom = gl.getUniformLocation(this.program, 'u_clampedDeltaZoom');
     this.uDesignTileSize = gl.getUniformLocation(this.program, 'u_designTileSize');
     this.uIsLine = gl.getUniformLocation(this.program, 'u_isLine');
     this.uIsCircle = gl.getUniformLocation(this.program, 'u_isCircle');

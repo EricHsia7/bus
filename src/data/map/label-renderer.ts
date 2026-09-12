@@ -95,7 +95,7 @@ export function resolveLabelScale(flags: number, tileZoom: number, viewZoom: num
   // Point labels are DYNAMIC: nothing about their layout is baked into extent
   // space, so the whole label may be interpolated across the zoom interval.
   if (!(flags & LabelFlatZoomScaled)) return scale0;
-  const t = clamp(viewZoom - tileZoom, 0, 1);
+  const t = viewZoom - tileZoom;
 
   // 1. The tile is stretched by 2^t across its own interval and `designToPixel` already carries that stretch.
   // 2. The interpolated design size therefore has to be divided by the same 2^t to survive the trip into pixels.

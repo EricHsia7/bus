@@ -17,6 +17,7 @@ uniform vec2 u_tileScale;
 uniform vec2 u_tileOffset;
 uniform vec2 u_viewport;
 uniform float u_deltaZoom;
+uniform float u_clampedDeltaZoom;
 uniform sampler2D u_styleData;
 uniform float u_isLine;
 uniform float u_isCircle;

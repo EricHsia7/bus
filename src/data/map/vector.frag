@@ -7,6 +7,7 @@ uniform sampler2D u_styleData;
 uniform float u_isLine;
 uniform float u_isCircle;
 uniform float u_deltaZoom;
+uniform float u_clampedDeltaZoom;
 
 in float v_style;
 in vec2 v_pos;
@@ -29,7 +30,7 @@ vec4 paletteColor(float index) {
     int i = int(index + 0.5f); // index arrives as a float; round, don't truncate
     vec4 color0 = texelFetch(u_palette, ivec2(i, 0), 0);
     vec4 color1 = texelFetch(u_palette, ivec2(i, 1), 0);
-    return mix(color0, color1, u_deltaZoom);
+    return mix(color0, color1, u_clampedDeltaZoom);
 }
 
 void main() {
