@@ -477,13 +477,6 @@ function renderFrame(now: number): void {
   // Stand-ins go down first, so where a stand-in and a native plan cover the same ground
   // the native one paints over it.
   for (const overlay of fallbackOverlays.values()) {
-    MapOverlayContext.save();
-    MapOverlayContext.beginPath();
-    for (const box of overlay.boxes) {
-      MapOverlayContext.rect(box.minX, box.minY, box.maxX - box.minX, box.maxY - box.minY);
-    }
-    MapOverlayContext.clip();
-
     if (routesVisible) {
       drawRouteTiles(MapOverlayContext, [{ plan: overlay.route, screenBBox: overlay.screenBBox }], {
         zoom: mapTileController.zoom,
@@ -492,16 +485,14 @@ function renderFrame(now: number): void {
       });
     }
 
-    if (labelsVisible) {
-      drawLabelTiles(MapOverlayContext, [{ plan: overlay.label, screenBBox: overlay.screenBBox }], {
-        zoom: mapTileController.zoom,
-        width,
-        height,
-        devicePixelRatio
-      });
-    }
-
-    MapOverlayContext.restore();
+    // if (labelsVisible) {
+    //   drawLabelTiles(MapOverlayContext, [{ plan: overlay.label, screenBBox: overlay.screenBBox }], {
+    //     zoom: mapTileController.zoom,
+    //     width,
+    //     height,
+    //     devicePixelRatio
+    //   });
+    // }
   }
 
   if (routeTileViews.length > 0 && routesVisible) {
