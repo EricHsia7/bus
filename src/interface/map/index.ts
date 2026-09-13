@@ -57,7 +57,7 @@ const vectorRenderer = new VectorRenderer(MapCanvas, {
   height: height * devicePixelRatio
 });
 
-const mapLoader = new MapLoader(3, handleTileResponse, {
+const mapLoader = new MapLoader(2, handleTileResponse, {
   maxCacheBytes,
   minCachedTiles,
   headroomFactor: cacheHeadroomFactor,

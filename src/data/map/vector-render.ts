@@ -255,7 +255,7 @@ export class VectorRenderer {
       this.uploadTile(tile);
     }
 
-    for (const key of Array.from(this.resources.keys())) {
+    for (const key of this.resources.keys()) {
       if (!views.has(key)) this.releaseTile(key);
     }
 
@@ -268,10 +268,7 @@ export class VectorRenderer {
    */
   uploadTile(tile: VectorTileView): void {
     if (this.isContextLost) return;
-    const existing = this.resources.get(tile.key);
-    if (existing) {
-      deleteGPUResource(this.gl, existing);
-    }
+    if (this.resources.has(tile.key)) return;
     this.resources.set(tile.key, createGPUResource(this.gl, tile.plan));
     this.lastViews.set(tile.key, tile);
   }
@@ -311,11 +308,8 @@ export class VectorRenderer {
 
     for (const tile of visibleTiles) {
       const resource = this.resources.get(tile.key);
-      // A missing resource means the tile was never uploaded for this frame. Uploading it
-      // here keeps a tile from blinking out for one frame after a sync/render race.
-      if (!resource) {
-        this.uploadTile(tile);
-      }
+      if (!resource) continue;
+
       const plan = resource ?? this.resources.get(tile.key);
       if (!plan) continue;
 
