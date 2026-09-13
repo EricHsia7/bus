@@ -34,7 +34,7 @@ interface DrawBatch {
 
 function resolveLineWidthScale(scale: PropertyScale | undefined, viewZoom: number, tileZoom: number): number {
   if (!scale) return 1;
-  const t = clamp(viewZoom - tileZoom, 0, 1);
+  const t = viewZoom - tileZoom;
   return scale[0] + (scale[1] - scale[0]) * t; // * Math.pow(2, -t);
 }
 

@@ -360,10 +360,10 @@ export class MapLoader {
 
 const now = new Date();
 export const MapDataVersion = `${now.getFullYear() * 100 + (now.getMonth() + 1)}`; // Monthly update
-export const MapVectorVersion = `${MapDataVersion}-18`;
-export const MapRasterVersion = `${MapDataVersion}-20`;
-export const MapLabelsVersion = `${MapDataVersion}-17`;
-export const MapRoutesVersion = `${MapDataVersion}-9`;
+export const MapVectorVersion = `${MapDataVersion}-21`;
+export const MapRasterVersion = `${MapDataVersion}-21`;
+export const MapLabelsVersion = `${MapDataVersion}-21`;
+export const MapRoutesVersion = `${MapDataVersion}-21`;
 
 export interface Box {
   minX: number;
