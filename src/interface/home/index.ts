@@ -14,7 +14,7 @@ const HeadButtonRightElement = elementQuerySelector(HeadElement, '.css_home_butt
 const ProgressElement = elementQuerySelector(HeadButtonRightElement, 'svg#download-svg path[component="progress"]');
 
 export async function downloadData() {
-  const progress = new Progress(6, function (message) {
+  const progress = new Progress(10, function (message) {
     const pixels = (1 - message.percent) * 189;
     ProgressElement.style.setProperty('--b-cssvar-stroke-dashoffset', `${pixels}px`);
     if (message.type === 'end') {
