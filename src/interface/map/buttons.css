@@ -6,8 +6,6 @@
   justify-content: center;
   align-items: center;
   touch-action: manipulation;
-  backdrop-filter: var(--b-cssvar-backdrop-filter);
-  -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
   background-color: var(--b-cssvar-ffffff-normal-50);
   border-radius: var(--b-cssvar-border-radius-normal);
 }
@@ -22,6 +20,13 @@
   position: absolute;
   right: 10px;
   top: calc(var(--b-cssvar-safe-area-top) + 10px);
+}
+
+/* moving: false */
+.css_map_field .css_map_button_left[moving="false"],
+.css_map_field .css_map_button_right[moving="false"] {
+  backdrop-filter: var(--b-cssvar-backdrop-filter);
+  -webkit-backdrop-filter: var(--b-cssvar-backdrop-filter);
 }
 
 .css_map_field .css_map_button_left span.css_material_symbols_rounded,

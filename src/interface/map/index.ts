@@ -121,6 +121,8 @@ const mapTileController = new MapTileController({
   maxNativeZoom: 17,
   tileSize: 256,
   onMovementStart: function () {
+    LeftButtonElement.setAttribute('moving', 'true');
+    RightButtonElement.setAttribute('moving', 'true');
     requestFrame();
   },
   onMovement: function () {
@@ -132,6 +134,8 @@ const mapTileController = new MapTileController({
     // The viewport has stopped, so this is the moment to pay for exact-resolution frames.
     requestFrame();
     mapLoader.runEviction();
+    LeftButtonElement.setAttribute('moving', 'false');
+    RightButtonElement.setAttribute('moving', 'false');
   },
   onResize: function () {
     resizeMapCanvas();
