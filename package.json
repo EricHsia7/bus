@@ -44,7 +44,7 @@
     "mini-css-extract-plugin": "2.10.2",
     "minimizer-webpack-plugin": "5.6.1",
     "stylelint-config-standard": "40.0.0",
-    "stylelint": "17.14.1",
+    "stylelint": "17.15.0",
     "typescript-eslint": "8.69.0",
     "webpack-cli": "7.2.3",
     "webpack-glsl-minify": "1.5.0",
