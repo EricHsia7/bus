@@ -25,7 +25,7 @@
   "devDependencies": {
     "@babel/core": "8.0.1",
     "@babel/plugin-transform-runtime": "8.0.1",
-    "@babel/preset-env": "8.0.2",
+    "@babel/preset-env": "8.0.5",
     "@babel/preset-typescript": "8.0.1",
     "@csstools/postcss-color-mix-function": "4.0.10",
     "@erichsia7/material-symbols-list": "github:EricHsia7/material-symbols-list#dist",
