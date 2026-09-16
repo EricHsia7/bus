@@ -590,7 +590,7 @@ function updateMapField(overlays: Array<MapOverlay>, integration: MapViews): voi
       switch (thisItem.type) {
         case 'point':
           thisElement.onclick = function () {
-            mapTileController.focusOn(thisItem.centerLon, thisItem.centerLat, 16.5, 600);
+            mapTileController.focusOn(thisItem.centerLon, thisItem.centerLat, 17, 600);
             mapOverlays.show(thisItem.sources);
             currentViewIndex = index;
             hideMapPanel();

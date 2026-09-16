@@ -57,9 +57,6 @@ export interface MapLoaderCacheOptions {
   onEvict?: (key: string, tile: MapLoaderTile) => void;
 }
 
-/** Bytes assumed for a bitmap whose dimensions are unavailable */
-const fallbackTileBytes = 256 * 256 * 4;
-
 export class MapLoader {
   tiles: Map<string, MapLoaderTile>;
   /**
