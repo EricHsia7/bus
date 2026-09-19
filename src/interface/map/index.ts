@@ -330,6 +330,39 @@ function resolveFallbackTiles(tile: TileInfo): Array<FallbackTile> {
   const boxSize = (tile.screenBBox.maxX - tile.screenBBox.minX) * devicePixelRatio;
   const fallbacks: Array<FallbackTile> = [];
 
+  // Coarser ancestor: full coverage from one plan, so the nearest one wins outright.
+  for (let depth = 1; depth <= maxFallbackDepth; depth++) {
+    const ancestorZ = z - depth;
+    if (ancestorZ < mapTileController.minNativeZoom) break;
+
+    const span = Math.pow(2, depth);
+    const ancestorX = Math.floor(x / span);
+    const ancestorY = Math.floor(y / span);
+    const cached = mapLoader.get(ancestorX, ancestorY, ancestorZ);
+    if (!cached) continue;
+
+    const key = getTileKey(ancestorX, ancestorY, ancestorZ);
+    fallbacks.push({
+      key,
+      response: cached,
+      screenBBox: mapTileController.getTileBoundingBox(ancestorX, ancestorY, ancestorZ).screenBBox,
+      view: {
+        key,
+        plan: cached.vector,
+        // The box is this tile's own, filled by the slice of the ancestor covering it.
+        x: boxX,
+        y: boxY,
+        size: boxSize,
+        region: {
+          x: (x - ancestorX * span) / span,
+          y: (y - ancestorY * span) / span,
+          size: 1 / span
+        }
+      }
+    });
+    if (fallbacks.length > 0) return fallbacks;
+  }
+
   // Finer descendants: coverage may be partial, so take the first depth that has any.
   for (let depth = 1; depth <= maxFallbackDepth; depth++) {
     const descendantZ = z + depth;
@@ -362,39 +395,6 @@ function resolveFallbackTiles(tile: TileInfo): Array<FallbackTile> {
       }
     }
 
-    if (fallbacks.length > 0) return fallbacks;
-  }
-
-  // Coarser ancestor: full coverage from one plan, so the nearest one wins outright.
-  for (let depth = 1; depth <= maxFallbackDepth; depth++) {
-    const ancestorZ = z - depth;
-    if (ancestorZ < mapTileController.minNativeZoom) break;
-
-    const span = Math.pow(2, depth);
-    const ancestorX = Math.floor(x / span);
-    const ancestorY = Math.floor(y / span);
-    const cached = mapLoader.get(ancestorX, ancestorY, ancestorZ);
-    if (!cached) continue;
-
-    const key = getTileKey(ancestorX, ancestorY, ancestorZ);
-    fallbacks.push({
-      key,
-      response: cached,
-      screenBBox: mapTileController.getTileBoundingBox(ancestorX, ancestorY, ancestorZ).screenBBox,
-      view: {
-        key,
-        plan: cached.vector,
-        // The box is this tile's own, filled by the slice of the ancestor covering it.
-        x: boxX,
-        y: boxY,
-        size: boxSize,
-        region: {
-          x: (x - ancestorX * span) / span,
-          y: (y - ancestorY * span) / span,
-          size: 1 / span
-        }
-      }
-    });
     if (fallbacks.length > 0) return fallbacks;
   }
 
