@@ -49,7 +49,7 @@
     "webpack-cli": "7.2.3",
     "webpack-glsl-minify": "1.5.0",
     "webpack-remove-empty-scripts": "1.1.1",
-    "webpack-sources": "3.5.1",
+    "webpack-sources": "3.5.3",
     "webpack-subresource-integrity": "5.1.0",
     "webpack": "5.110.1",
     "workbox-webpack-plugin": "7.4.1"
