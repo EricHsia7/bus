@@ -75,15 +75,57 @@ async function loadTile(tile: MapLoaderTile) {
   const routesURL = `https://erichsia7.github.io/bus-map-routes/routes/${tile.z}/${tile.x}/${tile.y}.gz?_=${MapRoutesVersion}`;
 
   const [vector, labels, routes] = await Promise.allSettled([getJSON<VectorTile>(vectorURL), getJSON<LabelFeatureCollection>(labelsURL), getJSON<RouteFeatureCollection>(routesURL)]);
-  if (vector.status !== 'fulfilled' || labels.status !== 'fulfilled') throw new Error('Error fetching tiles.');
-  const vectorPlan = buildVectorPlan(vector.value);
-  const labelPlan = buildLabelGlyphPlan(labels.value, cache);
+  if (vector.status !== 'fulfilled' && labels.status !== 'fulfilled' && routes.status !== 'fulfilled') throw new Error('Error fetching tiles.');
+  const vectorPlan =
+    vector.status === 'fulfilled'
+      ? buildVectorPlan(vector.value)
+      : {
+          type: 'Vector',
+          extent: 1,
+          buffer: 0,
+          zoom: tile.z,
+          polygonPositions: new Int16Array(),
+          polygonStyles: new Uint16Array(),
+          polygonIndices: new Uint32Array(),
+          lineVertices: new Int16Array(),
+          lineIndices: new Uint32Array(),
+          circleVertices: new Int16Array(),
+          circleIndices: new Uint32Array(),
+          polygonVertexCount: 0,
+          polygonIndexCount: 0,
+          lineVertexCount: 0,
+          lineIndexCount: 0,
+          circleVertexCount: 0,
+          circleIndexCount: 0,
+          palette: new Uint8Array(),
+          styleData: new Float32Array(),
+          styleTextureWidth: 0,
+          paletteCount: 0,
+          size: 0
+        };
+  const labelPlan =
+    labels.status === 'fulfilled'
+      ? buildLabelGlyphPlan(labels.value, cache)
+      : {
+          extent: 1,
+          zoom: tile.z,
+          designSize: 1,
+          sheet: null,
+          glyphs: new Float32Array(),
+          placements: new Float32Array(),
+          features: new Uint32Array(),
+          bounds: new Float32Array(),
+          collisions: new Float32Array(),
+          scales: new Float32Array(),
+          circleStyles: [],
+          size: 0
+        };
   const routePlan =
     routes.status === 'fulfilled'
       ? buildRoutePlan(routes.value)
       : {
-          extent: 2048,
-          buffer: 64,
+          extent: 1,
+          buffer: 0,
           zoom: tile.z,
           x: new Uint16Array(),
           y: new Uint16Array(),
