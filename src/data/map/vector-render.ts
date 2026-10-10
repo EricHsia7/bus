@@ -295,7 +295,7 @@ export class VectorRenderer {
     const height = this.height as number;
 
     gl.viewport(0, 0, width, height);
-    gl.clearColor(242 / 255, 242 / 255, 247 / 255, 1);
+    gl.clearColor(240 / 255, 240 / 255, 247 / 255, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
