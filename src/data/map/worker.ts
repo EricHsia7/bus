@@ -5,11 +5,11 @@ declare const self: DedicatedWorkerGlobalScope;
 import { Decompress } from 'fflate';
 import { MapLabelsVersion, MapLoaderTile, MapLoaderWorkerMessageData, MapLoaderWorkerMessageError, MapRoutesVersion, MapVectorVersion } from './index';
 import { LabelFeatureCollection } from './label';
-import { buildLabelGlyphPlan, LabelGlyphCache, LabelGlyphPlan } from './label-plan';
+import { buildLabelGlyphPlan, LabelGlyphCache } from './label-plan';
 import { RouteFeatureCollection } from './route';
-import { buildRoutePlan, RoutePlan } from './route-plan';
+import { buildRoutePlan } from './route-plan';
 import { VectorTile } from './vector';
-import { buildVectorPlan, VectorPlan } from './vector-plan';
+import { buildVectorPlan } from './vector-plan';
 
 self.onmessage = function (event: MessageEvent): void {
   const batch = event.data as Array<MapLoaderTile>;
@@ -75,73 +75,23 @@ async function loadTile(tile: MapLoaderTile) {
   const routesURL = `https://erichsia7.github.io/bus-map-routes/routes/${tile.z}/${tile.x}/${tile.y}.gz?_=${MapRoutesVersion}`;
 
   const [vector, labels, routes] = await Promise.allSettled([getJSON<VectorTile>(vectorURL), getJSON<LabelFeatureCollection>(labelsURL), getJSON<RouteFeatureCollection>(routesURL)]);
-  const vectorAvailable = vector.status === 'fulfilled';
-  const labelsAvailable = labels.status === 'fulfilled';
-  const routesAvailable = routes.status === 'fulfilled';
-  if (!vectorAvailable && !labelsAvailable && !routesAvailable) throw new Error('Error fetching tiles.');
-  const transfer = [];
-
-  const vectorPlan: VectorPlan = vectorAvailable
-    ? buildVectorPlan(vector.value)
-    : {
-        type: 'Vector',
-        extent: 1,
-        buffer: 0,
-        zoom: tile.z,
-        polygonPositions: new Int16Array(),
-        polygonStyles: new Uint16Array(),
-        polygonIndices: new Uint32Array(),
-        lineVertices: new Int16Array(),
-        lineIndices: new Uint32Array(),
-        circleVertices: new Int16Array(),
-        circleIndices: new Uint32Array(),
-        polygonVertexCount: 0,
-        polygonIndexCount: 0,
-        lineVertexCount: 0,
-        lineIndexCount: 0,
-        circleVertexCount: 0,
-        circleIndexCount: 0,
-        palette: new Uint8Array(),
-        styleData: new Float32Array(),
-        styleTextureWidth: 0,
-        paletteCount: 0,
-        size: 0
-      };
-  if (vectorAvailable) transfer.push(vectorPlan.lineIndices.buffer, vectorPlan.lineVertices.buffer, vectorPlan.palette.buffer, vectorPlan.polygonIndices.buffer, vectorPlan.polygonPositions.buffer, vectorPlan.polygonStyles.buffer, vectorPlan.circleVertices.buffer, vectorPlan.circleIndices.buffer);
-
-  const labelPlan: LabelGlyphPlan = labelsAvailable
-    ? buildLabelGlyphPlan(labels.value, cache)
-    : {
-        extent: 1,
-        zoom: tile.z,
-        designSize: 1,
-        sheet: null,
-        glyphs: new Float32Array(),
-        placements: new Float32Array(),
-        features: new Uint32Array(),
-        bounds: new Float32Array(),
-        collisions: new Float32Array(),
-        scales: new Float32Array(),
-        circleStyles: [],
-        size: 0
-      };
-  if (labelsAvailable) transfer.push(labelPlan.sheet as ImageBitmap, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer);
-
-  const routePlan: RoutePlan = routesAvailable
-    ? buildRoutePlan(routes.value)
-    : {
-        extent: 1,
-        buffer: 0,
-        zoom: tile.z,
-        x: new Uint16Array(),
-        y: new Uint16Array(),
-        features: new Uint32Array(),
-        routeIds: new Uint32Array(),
-        styles: [],
-        featureCount: 0
-      };
-  if (routesAvailable) transfer.push(routePlan.features.buffer, routePlan.routeIds.buffer, routePlan.x.buffer, routePlan.y.buffer);
-
+  if (vector.status !== 'fulfilled' || labels.status !== 'fulfilled') throw new Error('Error fetching tiles.');
+  const vectorPlan = buildVectorPlan(vector.value);
+  const labelPlan = buildLabelGlyphPlan(labels.value, cache);
+  const routePlan =
+    routes.status === 'fulfilled'
+      ? buildRoutePlan(routes.value)
+      : {
+          extent: 2048,
+          buffer: 64,
+          zoom: tile.z,
+          x: new Uint16Array(),
+          y: new Uint16Array(),
+          features: new Uint32Array(),
+          routeIds: new Uint32Array(),
+          styles: [],
+          featureCount: 0
+        };
   self.postMessage(
     {
       type: 'data',
@@ -152,6 +102,6 @@ async function loadTile(tile: MapLoaderTile) {
         route: routePlan
       }
     } as MapLoaderWorkerMessageData,
-    transfer
+    [vectorPlan.lineIndices.buffer, vectorPlan.lineVertices.buffer, vectorPlan.palette.buffer, vectorPlan.polygonIndices.buffer, vectorPlan.polygonPositions.buffer, vectorPlan.polygonStyles.buffer, vectorPlan.circleVertices.buffer, vectorPlan.circleIndices.buffer, labelPlan.sheet as ImageBitmap, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer, routePlan.features.buffer, routePlan.routeIds.buffer, routePlan.x.buffer, routePlan.y.buffer]
   );
 }
