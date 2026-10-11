@@ -17,7 +17,6 @@ import { getBlankIconElement, getIconElement, setIcon } from '../icons/index';
 import { GroupStyles, hidePreviousPage, pushPageHistory, querySize, revokePageHistory, showPreviousPage } from '../index';
 import { openLocationDetails } from '../location-details/index';
 import { openMap } from '../map';
-import { promptMessage } from '../prompt/index';
 import { openSaveToFolder } from '../save-to-folder/index';
 import { openScheduleNotification } from '../schedule-notification/index';
 
