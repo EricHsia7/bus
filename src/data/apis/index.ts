@@ -322,7 +322,6 @@ export interface FormattedBus {
   status: FormattedBusStatus;
   RouteName: string;
   onThisRoute: boolean;
-  index: number;
   position: FormattedBusPosition;
 }
 
@@ -339,7 +338,6 @@ export function formatBus(batchFoundBus: BatchFoundBus): FormattedBus {
     },
     RouteName: batchFoundBus.RouteName,
     onThisRoute: batchFoundBus.onThisRoute,
-    index: batchFoundBus.index,
     position: batchFoundBus.position
   };
 }

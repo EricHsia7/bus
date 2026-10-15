@@ -484,8 +484,8 @@ function setupLocationFieldSkeletonScreen(hash: IntegratedLocation['hash']): voi
       groupedItems: { g_0: items, g_1: items },
       groupQuantity: 2,
       groups: {
-        g_0: { name: '載入中', mapPreview: 'none', longitude: 0, latitude: 0, routeIds: [], properties: properties },
-        g_1: { name: '載入中', mapPreview: 'none', longitude: 0, latitude: 0, routeIds: [], properties: properties }
+        g_0: { name: '載入中', mapViews: [], mapPreview: 'none', properties: properties },
+        g_1: { name: '載入中', mapViews: [], mapPreview: 'none', properties: properties }
       },
       itemQuantity: { g_0: itemQuantity, g_1: itemQuantity },
       LocationName: '載入中',

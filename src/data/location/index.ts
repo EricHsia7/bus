@@ -8,7 +8,7 @@ import { Progress, ProgressCallback } from '../../tools/progress';
 import { BusArrivalTime, plotBusArrivalTime } from '../analytics/bus-arrival-time/index';
 import { getBusData } from '../apis/getBusData/index';
 import { getBusEvent } from '../apis/getBusEvent/index';
-import { BusShapeItem, getBusShape, SimplifiedBusShapeItem } from '../apis/getBusShape';
+import { getBusShape } from '../apis/getBusShape';
 import { EstimateTime, EstimateTimeItem, getEstimateTime } from '../apis/getEstimateTime/index';
 import { getLocation, MergedLocation } from '../apis/getLocation/index';
 import { getRoute, SimplifiedRoute, SimplifiedRouteItem } from '../apis/getRoute/index';
