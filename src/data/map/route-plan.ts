@@ -1,4 +1,4 @@
-import { LineStyleProperties, RouteFeatureCollection, RouteStyleRef } from './route';
+import { LineStyleProperties, RouteFeatureCollection } from './route';
 
 export const RouteFeatureStride = 4;
 

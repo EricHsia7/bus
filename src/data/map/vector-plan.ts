@@ -125,7 +125,7 @@ function buildStyleData(styles: Array<VectorTileStyle>): Float32Array {
 function buildPolygonGeometry(coordinates: Int16Array, partStartIndices: Int32Array, partStart: number, partEnd: number, styleIndex: number, positions: number[], styles: number[], indices: number[]): void {
   const flat: number[] = [];
   const holes: number[] = [];
-  let pointBase = positions.length / 2;
+  const pointBase = positions.length / 2;
 
   for (let part = partStart; part < partEnd; part++) {
     const start = partStartIndices[part];
