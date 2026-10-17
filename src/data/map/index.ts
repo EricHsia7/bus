@@ -359,7 +359,7 @@ const now = new Date();
 export const MapDataVersion = `${now.getFullYear() * 100 + (now.getMonth() + 1)}`; // Monthly update
 export const MapVectorVersion = `${MapDataVersion}-32`;
 export const MapRasterVersion = `${MapDataVersion}-32`;
-export const MapLabelsVersion = `${MapDataVersion}-32`;
+export const MapLabelsVersion = `${MapDataVersion}-33`;
 export const MapRoutesVersion = `${MapDataVersion}-24`;
 
 export interface Box {
