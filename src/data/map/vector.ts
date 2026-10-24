@@ -71,7 +71,7 @@ export interface VectorTile {
    */
   descriptorStartIndices: Array<number>;
   /**
-   * Kind of each descriptor: `0` polygon, `1` line.
+   * Kind of each descriptor: `0` polygon, `1` line, `2` circle.
    * - `descriptorTypes.length === descriptorCount`
    * - delta-encoded
    */
