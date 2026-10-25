@@ -116,7 +116,7 @@ const mapTileController = new MapTileController({
   centerLat: (24.8 + 25.3) / 2,
   zoom: 16,
   minZoom: 12,
-  maxZoom: 19,
+  maxZoom: 20,
   minNativeZoom: 12,
   maxNativeZoom: 17,
   tileSize: 256,

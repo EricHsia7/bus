@@ -1,6 +1,12 @@
 const { Resvg } = require('@resvg/resvg-js');
-const { Jimp } = require('jimp');
-const md5 = require('md5');
+const sharp = require('sharp');
+const crypto = require('crypto');
+
+function sha256(data) {
+  const hash = crypto.createHash('sha256');
+  hash.update(data);
+  return hash.digest('hex');
+}
 
 const { shortenHex } = require('./shorten-hex');
 const { writeTextFile, makeDirectory } = require('./files');
@@ -13,17 +19,22 @@ const outputDir = `./dist/${assetName}`;
 async function rasterize(svgText, outputPath, width, height, scale) {
   const svg = Buffer.from(svgText, 'utf-8');
   const options = {
+    shapeRendering: 2,
+    textRendering: 0,
+    imageRendering: 0,
+    dpi: 300,
     fitTo: {
       mode: 'width',
-      value: width * scale
+      value: width * scale * 2
+    },
+    font: {
+      loadSystemFonts: false
     }
   };
   const resvg = new Resvg(svg, options);
   const pngData = resvg.render();
   const pngBuffer = pngData.asPng();
-  const resizedImage = await Jimp.fromBuffer(pngBuffer);
-  resizedImage.resize({ w: width, h: height });
-  await resizedImage.write(outputPath);
+  await sharp(pngBuffer).resize(width * scale, height * scale).toFile(outputPath);
 }
 
 function getSVGText(width, height) {
@@ -48,12 +59,12 @@ async function main() {
       const height = deviceInfo.height;
       const scale = deviceInfo.scale;
 
-      const fileName = shortenHex(md5(`${width}x${height}@${scale}x`)).substring(0, 5);
+      const fileName = shortenHex(sha256(`${width}x${height}@${scale}x`)).substring(0, 5);
       if (!map.has(fileName)) {
         map.set(fileName, true);
         const svgText = getSVGText(width, height);
         const outputFilePath = `${outputDir}/${fileName}.png`;
-        await rasterize(svgText, outputFilePath, width * scale, height * scale, 2); // supersampling: 2x
+        await rasterize(svgText, outputFilePath, width, height, scale);
         htmlLinks.push(`<link rel="apple-touch-startup-image" href="./${assetName}/${fileName}.png" media="(device-width: ${width}px) and (device-height: ${height}px) and (-webkit-device-pixel-ratio: ${scale})"/>`);
       }
       console.log(`\x1b[32mSuccessfully\x1b[0m generated splash screen for \x1b[1m${deviceInfo.name}\x1b[0m.`);
