@@ -27,7 +27,7 @@
     "@babel/plugin-transform-runtime": "8.0.6",
     "@babel/preset-env": "8.0.7",
     "@babel/preset-typescript": "8.0.7",
-    "@csstools/postcss-color-mix-function": "4.0.15",
+    "@csstools/postcss-color-mix-function": "4.0.16",
     "@erichsia7/material-symbols-list": "github:EricHsia7/material-symbols-list#dist",
     "@erichsia7/webpack-plugins": "github:EricHsia7/webpack-plugins#v0.0.9",
     "@eslint/js": "10.0.1",
