@@ -1,4 +1,7 @@
 import { Glyph } from './glyph-types';
+import vertexShaderSource from './glyph.vert';
+import fragmentShaderSource from './glyph.frag';
+
 export interface RasterizedGlyph {
   pixels: Uint8Array;
   width: number;
@@ -102,17 +105,17 @@ export class GlyphRasterizer {
     const gl = this.canvas.getContext('webgl2', { antialias: false, depth: false, stencil: false, preserveDrawingBuffer: true });
     if (!gl) throw Error('Offscreen WebGL2 unavailable');
     this.gl = gl;
-    const vs = shader(gl, gl.VERTEX_SHADER, `#version 300 es\nconst vec2 p[3]=vec2[3](vec2(-1.,-1.),vec2(3.,-1.),vec2(-1.,3.));void main(){gl_Position=vec4(p[gl_VertexID],0.,1.);}`);
-    const fs = shader(gl, gl.FRAGMENT_SHADER, `#version 300 es\nprecision highp float;precision highp int;uniform sampler2D edges;uniform int count;uniform int texWidth;uniform vec2 origin;uniform float distRange;out vec4 color;void main(){vec2 p=origin+gl_FragCoord.xy;float md=distRange;int wind=0;for(int i=0;i<count;i++){vec4 e=texelFetch(edges,ivec2(i%texWidth,i/texWidth),0);vec2 a=e.xy,b=e.zw,v=b-a;float t=clamp(dot(p-a,v)/max(dot(v,v),1e-20),0.,1.);md=min(md,length(p-(a+t*v)));float side=(b.x-a.x)*(p.y-a.y)-(p.x-a.x)*(b.y-a.y);if(a.y<=p.y && b.y>p.y && side>0.)wind++;else if(a.y>p.y && b.y<=p.y && side<0.)wind--;}float signedD=wind!=0?md:-md;color=vec4(clamp(.5+signedD/(2.*distRange),0.,1.),0.,0.,1.);}`);
+    const vertexShader = shader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+    const fragmentShader = shader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
     const program = gl.createProgram(),
       vao = gl.createVertexArray(),
       tex = gl.createTexture();
     if (!program || !vao || !tex) throw Error('WebGL allocation failed');
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
     gl.linkProgram(program);
-    gl.deleteShader(vs);
-    gl.deleteShader(fs);
+    gl.deleteShader(vertexShader);
+    gl.deleteShader(fragmentShader);
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw Error(gl.getProgramInfoLog(program) || 'link');
     this.program = program;
     this.vao = vao;
