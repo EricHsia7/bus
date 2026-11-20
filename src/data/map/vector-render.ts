@@ -123,6 +123,8 @@ function createStyleTexture(gl: WebGL2RenderingContext, styleData: Float32Array,
 }
 
 function createGPUResource(gl: WebGL2RenderingContext, plan: VectorPlan): GPUResource {
+  // ELEMENT_ARRAY_BUFFER belongs to the bound VAO; never mutate a label VAO.
+  gl.bindVertexArray(null);
   return {
     extent: plan.extent,
     buffer: plan.buffer,
@@ -294,6 +296,9 @@ export class VectorRenderer {
     const width = this.width as number;
     const height = this.height as number;
 
+    // The vector pass configures attributes on the default VAO, not a label VAO.
+    gl.bindVertexArray(null);
+    gl.disable(gl.SCISSOR_TEST);
     gl.viewport(0, 0, width, height);
     gl.clearColor(240 / 255, 240 / 255, 247 / 255, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);

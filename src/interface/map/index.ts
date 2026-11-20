@@ -1,5 +1,8 @@
 import { MapLoader, MapLoaderResponse } from '../../data/map';
-import { drawLabelTiles, LabelTileView } from '../../data/map/label-renderer';
+import { GlyphManager } from '../../data/map/glyph-manager';
+import { GlyphFontInfo } from '../../data/map/glyph-types';
+import { LabelGlyphPlan } from '../../data/map/label-plan';
+import { LabelRenderer, LabelTileView } from '../../data/map/label-renderer';
 import { drawRouteTiles, RouteTileView } from '../../data/map/route-renderer';
 import { VectorRenderer, VectorTileView } from '../../data/map/vector-render';
 import { MapView, MapViews } from '../../data/map/views';
@@ -40,7 +43,7 @@ let displayed: boolean = false;
 const devicePixelRatio = window.devicePixelRatio;
 
 /** Decoded-tile budget handed to the loader's LRU cache, in bytes */
-const maxCacheBytes = 256 * 1024 * 1024;
+const maxCacheBytes = 300 * 1024 * 1024;
 /** Floor of the LRU budget, so small viewports still keep a useful history */
 const minCachedTiles = 16;
 /** The cache is never trimmed below this multiple of the tiles currently on screen */
@@ -49,12 +52,29 @@ const cacheHeadroomFactor = 2;
 const evictionIdleDelay = 200;
 
 const vectorTileViews: Array<VectorTileView> = [];
+let glyphFontInfo: GlyphFontInfo | null = null;
+let glyphManager: GlyphManager | null = null;
+let labelRenderer: LabelRenderer | null = null;
+let preparingLabels = new WeakSet<LabelGlyphPlan>();
+let failedLabels = new WeakSet<LabelGlyphPlan>();
 
 // Tile boxes are handed over in device pixels; the ratio is what scale-dependent styling
 // such as stroke width is measured against.
 const vectorRenderer = new VectorRenderer(MapCanvas, {
   width: width * devicePixelRatio,
-  height: height * devicePixelRatio
+  height: height * devicePixelRatio,
+  onContextLost: () => {
+    labelRenderer?.dispose();
+    labelRenderer = null;
+    glyphManager?.dispose();
+    glyphManager = null;
+    preparingLabels = new WeakSet();
+    failedLabels = new WeakSet();
+  },
+  onContextRestored: () => {
+    initializeGlyphRenderer();
+    requestFrame();
+  }
 });
 
 const mapLoader = new MapLoader(2, handleTileResponse, {
@@ -62,9 +82,16 @@ const mapLoader = new MapLoader(2, handleTileResponse, {
   minCachedTiles,
   headroomFactor: cacheHeadroomFactor,
   evictionDelay: evictionIdleDelay,
+  onInit: ({ font }) => {
+    glyphFontInfo = font;
+    initializeGlyphRenderer();
+    requestFrame();
+  },
+  onInitError: (error) => console.error('[map] glyph initialization failed:', error),
+  onTileError: (tile, error) => console.error('[map] tile failed:', tile, error),
   // Eviction waits while a frame is queued, so trimming never competes with drawing.
   shouldDeferEviction: () => frameId !== null,
-  // The loader owns the bitmap; the renderer only drops the state derived from it.
+  // The vector renderer drops GPU state when a decoded plan is evicted.
   onEvict: (key) => {
     vectorRenderer.releaseTile(key);
   }
@@ -241,6 +268,43 @@ export function resizeMapCanvas(): void {
 
 function getTileKey(x: number, y: number, z: number): string {
   return `${x}.${y}.${z}`;
+}
+
+/** The init message contains only font identity/metrics; glyph outlines arrive in tile plans. */
+function initializeGlyphRenderer(): void {
+  if (!glyphFontInfo || vectorRenderer.isContextLost) return;
+  labelRenderer?.dispose();
+  glyphManager?.dispose();
+  try {
+    glyphManager = new GlyphManager(vectorRenderer.gl, glyphFontInfo);
+    labelRenderer = new LabelRenderer(glyphManager);
+    preparingLabels = new WeakSet();
+    failedLabels = new WeakSet();
+  } catch (error) {
+    glyphManager?.dispose();
+    glyphManager = null;
+    labelRenderer = null;
+    console.error('[map] cannot create glyph renderer:', error);
+  }
+}
+
+/** Prepare each visible plan once. Failed plans are retried after context restoration. */
+function prepareLabelPlan(plan: LabelGlyphPlan): void {
+  const renderer = labelRenderer;
+  if (!renderer || renderer.isPrepared(plan) || preparingLabels.has(plan) || failedLabels.has(plan)) return;
+  preparingLabels.add(plan);
+  void renderer
+    .prepare(plan)
+    .then(() => {
+      if (renderer === labelRenderer) requestFrame();
+    })
+    .catch((error) => {
+      if (renderer === labelRenderer) {
+        failedLabels.add(plan);
+        console.error('[map] label preparation failed:', error);
+      }
+    })
+    .finally(() => preparingLabels.delete(plan));
 }
 
 function handleTileResponse(response: MapLoaderResponse): void {
@@ -474,25 +538,29 @@ function renderFrame(now: number): void {
   const routesVisible = mapOverlays.overlays[1].visible;
   const labelsVisible = mapOverlays.overlays[0].visible;
 
-  // Stand-ins go down first, so where a stand-in and a native plan cover the same ground
-  // the native one paints over it.
-  for (const overlay of fallbackOverlays.values()) {
-    if (routesVisible) {
-      drawRouteTiles(MapOverlayContext, [{ plan: overlay.route, screenBBox: overlay.screenBBox }], {
-        zoom: mapTileController.zoom,
-        devicePixelRatio,
-        selectedRoutes: previousIntegration[currentViewIndex]?.selection
-      });
-    }
-
-    // if (labelsVisible) {
-    //   drawLabelTiles(MapOverlayContext, [{ plan: overlay.label, screenBBox: overlay.screenBBox }], {
-    //     zoom: mapTileController.zoom,
-    //     width,
-    //     height,
-    //     devicePixelRatio
-    //   });
+  // Native views are considered first for seam/dedupe priority. Fallbacks are
+  // limited to the exact target boxes via the WebGL scissor test.
+  if (labelsVisible && labelRenderer) {
+    // for (const overlay of fallbackOverlays.values()) {
+    //   labelTileViews.push({ plan: overlay.label, screenBBox: overlay.screenBBox, clipBoxes: overlay.boxes });
     // }
+    for (const view of labelTileViews) prepareLabelPlan(view.plan);
+    labelRenderer.draw(labelTileViews, { zoom: mapTileController.zoom, width, height, devicePixelRatio });
+  }
+
+  // Routes remain on the separate Canvas2D overlay, above the WebGL map/labels.
+  for (const overlay of fallbackOverlays.values()) {
+    if (!routesVisible) continue;
+    // MapOverlayContext.save();
+    // MapOverlayContext.beginPath();
+    for (const box of overlay.boxes) MapOverlayContext.rect(box.minX, box.minY, box.maxX - box.minX, box.maxY - box.minY);
+    // MapOverlayContext.clip();
+    drawRouteTiles(MapOverlayContext, [{ plan: overlay.route, screenBBox: overlay.screenBBox }], {
+      zoom: mapTileController.zoom,
+      devicePixelRatio,
+      selectedRoutes: previousIntegration[currentViewIndex]?.selection
+    });
+    // MapOverlayContext.restore();
   }
 
   if (routeTileViews.length > 0 && routesVisible) {
@@ -500,15 +568,6 @@ function renderFrame(now: number): void {
       zoom: mapTileController.zoom,
       devicePixelRatio,
       selectedRoutes: previousIntegration[currentViewIndex]?.selection
-    });
-  }
-
-  if (labelTileViews.length > 0 && labelsVisible) {
-    drawLabelTiles(MapOverlayContext, labelTileViews, {
-      zoom: mapTileController.zoom,
-      width,
-      height,
-      devicePixelRatio
     });
   }
 

@@ -3,15 +3,28 @@ declare const self: DedicatedWorkerGlobalScope;
 // export {}; // make a script a module if no any export or import
 
 import { Decompress } from 'fflate';
-import { MapLabelsVersion, MapLoaderTile, MapLoaderWorkerMessageData, MapLoaderWorkerMessageError, MapRoutesVersion, MapVectorVersion } from './index';
+import { MapGlyphVersion, MapLabelsVersion, MapLoaderTile, MapLoaderWorkerMessageData, MapLoaderWorkerMessageError, MapLoaderWorkerMessageInit, MapLoaderWorkerMessageInitError, MapRoutesVersion, MapVectorVersion } from './index';
 import { LabelFeatureCollection } from './label';
-import { buildLabelGlyphPlan, LabelGlyphCache, LabelGlyphPlan } from './label-plan';
+import { buildLabelGlyphPlan, emptyLabelGlyphPlan, LabelGlyphPlan } from './label-plan';
+import { ContourFontSource } from './glyph-source';
 import { RouteFeatureCollection } from './route';
 import { buildRoutePlan, RoutePlan } from './route-plan';
 import { VectorTile } from './vector';
 import { buildVectorPlan, VectorPlan } from './vector-plan';
 
 self.onmessage = function (event: MessageEvent): void {
+  if (event.data?.type === 'init') {
+    if (fontPromise) return; // One immutable face per worker lifetime.
+    // The index uses id "index"; shards use ids "glyphs-0", "glyphs-1", etc.
+    const glyphUrl = (id: string): string => `https://erichsia7.github.io/bus-map/glyphs/${id}.gz?_=${MapGlyphVersion}`;
+    fontPromise = ContourFontSource.open(glyphUrl).then((font) => {
+      const { faceId, unitsPerEm, glyphCount } = font.index;
+      self.postMessage({ type: 'init', font: { faceId, unitsPerEm, glyphCount } } satisfies MapLoaderWorkerMessageInit);
+      return font;
+    });
+    void fontPromise.catch((error) => self.postMessage({ type: 'init-error', error: String(error?.message ?? error) } satisfies MapLoaderWorkerMessageInitError));
+    return;
+  }
   const batch = event.data as Array<MapLoaderTile>;
   for (const tile of batch) {
     loadTile(tile).catch((error: Error) => {
@@ -53,7 +66,7 @@ async function getJSON<T>(url: string): Promise<T> {
   return JSON.parse(decoder.decode(buffer)) as T;
 }
 
-const cache = new LabelGlyphCache(512, 3.5);
+let fontPromise: Promise<ContourFontSource> | null = null;
 
 // /** Sprite sheets are fetched once and shared by every tile that references an icon. */
 // const icons = new Map<string, ImageBitmap>();
@@ -109,23 +122,12 @@ async function loadTile(tile: MapLoaderTile) {
       };
   if (vectorAvailable) transfer.push(vectorPlan.lineIndices.buffer, vectorPlan.lineVertices.buffer, vectorPlan.palette.buffer, vectorPlan.polygonIndices.buffer, vectorPlan.polygonPositions.buffer, vectorPlan.polygonStyles.buffer, vectorPlan.circleVertices.buffer, vectorPlan.circleIndices.buffer);
 
-  const labelPlan: LabelGlyphPlan = labelsAvailable
-    ? buildLabelGlyphPlan(labels.value, cache)
-    : {
-        extent: 1,
-        zoom: tile.z,
-        designSize: 1,
-        sheet: null,
-        glyphs: new Float32Array(),
-        placements: new Float32Array(),
-        features: new Uint32Array(),
-        bounds: new Float32Array(),
-        collisions: new Float32Array(),
-        scales: new Float32Array(),
-        circleStyles: [],
-        size: 0
-      };
-  if (labelsAvailable) transfer.push(labelPlan.sheet as ImageBitmap, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.glyphs.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer);
+  let labelPlan: LabelGlyphPlan = emptyLabelGlyphPlan();
+  if (labelsAvailable) {
+    if (!fontPromise) throw Error('Contour font was not configured');
+    labelPlan = await buildLabelGlyphPlan(labels.value, await fontPromise);
+    transfer.push(labelPlan.glyphIds.buffer, labelPlan.bounds.buffer, labelPlan.features.buffer, labelPlan.placements.buffer, labelPlan.scales.buffer, labelPlan.collisions.buffer);
+  }
 
   const routePlan: RoutePlan = routesAvailable
     ? buildRoutePlan(routes.value)

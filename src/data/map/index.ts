@@ -1,4 +1,5 @@
 import { LabelGlyphPlan } from './label-plan';
+import { GlyphFontInfo } from './glyph-types';
 import { RoutePlan } from './route-plan';
 import { VectorPlan } from './vector-plan';
 
@@ -35,7 +36,22 @@ export interface MapLoaderWorkerMessageError {
   error: Error['message'];
 }
 
-export type MapLoaderWorkerMessage = MapLoaderWorkerMessageData | MapLoaderWorkerMessageError;
+/** Sent by the worker once its contour index is ready; it does not consume a tile slot. */
+export interface MapLoaderWorkerMessageInit {
+  type: 'init';
+  font: GlyphFontInfo;
+}
+
+export interface MapLoaderWorkerMessageInitError {
+  type: 'init-error';
+  error: string;
+}
+
+export interface MapLoaderWorkerRequestInit {
+  type: 'init';
+}
+
+export type MapLoaderWorkerMessage = MapLoaderWorkerMessageData | MapLoaderWorkerMessageError | MapLoaderWorkerMessageInit | MapLoaderWorkerMessageInitError;
 
 export interface MapLoaderCacheOptions {
   /**
@@ -48,10 +64,12 @@ export interface MapLoaderCacheOptions {
   headroomFactor?: number;
   /** Delay before a deferred eviction pass runs, in milliseconds. Defaults to 200. */
   evictionDelay?: number;
-  /**
-   * Return `true` to postpone eviction. The renderer passes a predicate that is true
-   * while a frame is pending, so trimming never competes with drawing for the frame.
-   */
+  /** The worker has loaded the font metadata; create the atlas from this message. */
+  onInit?: (message: MapLoaderWorkerMessageInit) => void;
+  onInitError?: (message: string) => void;
+  /** Called when a tile fails, including contour load, glyph or layout failures. */
+  onTileError?: (tile: MapLoaderTile, message: string) => void;
+  /** Postpone eviction while a frame is pending. */
   shouldDeferEviction?: () => boolean;
   /** Notified after a tile is dropped, so callers can discard derived per-tile state. */
   onEvict?: (key: string, tile: MapLoaderTile) => void;
@@ -63,20 +81,11 @@ export class MapLoader {
    * Decoded tiles in least-recently-used order. A Map preserves insertion order, so
    * reinserting on every `get` keeps the coldest entry at the front of the iteration.
    *
-   * The loader is the sole owner of these bitmaps: nothing else may call `close()` on
-   * them, and in exchange eviction can free the GPU texture immediately instead of
-   * waiting for a garbage collection that only sees the handle, not the texture.
+   * The label plan now contains transferable arrays, not a tile bitmap.
+   * Glyph atlas textures are owned separately by GlyphManager.
    */
   cache: Map<string, MapLoaderResponse>;
-  /**
-   * Rasterized frames in least-recently-used order, keyed by the tile box they are drawn
-   * as rather than by the plan they came from. A stand-in frame therefore sits under the
-   * key of the tile that is still loading, and is replaced in place once that tile
-   * arrives and can be rasterized from its own geometry.
-   *
-   * As with the decoded tiles, the loader is the sole owner of these bitmaps: only
-   * `evictFrame` may close them.
-   */
+  /** Pending tile keys. */
   queue: Array<string>;
   processing: number;
   worker: Worker;
@@ -88,6 +97,9 @@ export class MapLoader {
   headroomFactor: number;
   evictionDelay: number;
 
+  private onInit?: (message: MapLoaderWorkerMessageInit) => void;
+  private onInitError?: (message: string) => void;
+  private onTileError?: (tile: MapLoaderTile, message: string) => void;
   private shouldDeferEviction?: () => boolean;
   private onEvict?: (key: string, tile: MapLoaderTile) => void;
   /** Byte cost per cached tile, kept alongside the cache so the running total stays exact */
@@ -110,6 +122,9 @@ export class MapLoader {
     this.minCachedTiles = options.minCachedTiles ?? 16;
     this.headroomFactor = options.headroomFactor ?? 3;
     this.evictionDelay = options.evictionDelay ?? 200;
+    this.onInit = options.onInit;
+    this.onInitError = options.onInitError;
+    this.onTileError = options.onTileError;
     this.shouldDeferEviction = options.shouldDeferEviction;
     this.onEvict = options.onEvict;
 
@@ -119,6 +134,7 @@ export class MapLoader {
     this.evictionTimeoutId = null;
 
     this.worker.onmessage = this.handleWorkerMessage.bind(this);
+    this.worker.postMessage({ type: 'init' } satisfies MapLoaderWorkerRequestInit);
   }
 
   getTileKey(x: number, y: number, z: number): string {
@@ -176,8 +192,16 @@ export class MapLoader {
   }
 
   handleWorkerMessage(event: MessageEvent): void {
-    this.processing--;
     const message = event.data as MapLoaderWorkerMessage;
+    if (message.type === 'init') {
+      this.onInit?.(message);
+      return;
+    }
+    if (message.type === 'init-error') {
+      this.onInitError?.(message.error);
+      return;
+    }
+    this.processing--;
     switch (message.type) {
       case 'data': {
         const { x, y, z } = message.response;
@@ -186,11 +210,7 @@ export class MapLoader {
         const existing = this.cache.get(key);
         let response = message.response;
         if (existing && existing !== response) {
-          // The tile was decoded twice (a re-request raced an in-flight load). The cached bitmap stays authoritative and the duplicate is closed rather than leaked.
-          if (response.label.sheet) {
-            response.label.sheet.close?.();
-            response.label.sheet = null;
-          }
+          // A re-request raced an in-flight load; keep the existing cached plan.
           response = existing;
           this.touch(key);
         } else {
@@ -208,6 +228,7 @@ export class MapLoader {
         const key = this.getTileKey(x, y, z);
         const tile = this.tiles.get(key);
         if (tile) tile.state = 3;
+        this.onTileError?.(message.tile, message.error);
         break;
       }
       default:
@@ -318,12 +339,6 @@ export class MapLoader {
     this.tileBytes.delete(key);
     if (this.cacheBytes < 0) this.cacheBytes = 0;
 
-    // Owning the bitmap means the texture can be released now rather than whenever a GC happens to notice a handle that looks cheap on the JS heap.
-    if (response.label.sheet) {
-      response.label.sheet.close?.();
-      response.label.sheet = null;
-    }
-
     const tile = this.tiles.get(key);
     if (tile) {
       // Marked evicted rather than deleted, so `enqueue` can tell a re-request apart from a tile that was never seen and can refetch it.
@@ -360,6 +375,7 @@ export const MapDataVersion = `${now.getFullYear() * 100 + (now.getMonth() + 1)}
 export const MapVectorVersion = `${MapDataVersion}-43`;
 export const MapRasterVersion = `${MapDataVersion}-42`;
 export const MapLabelsVersion = `${MapDataVersion}-42`;
+export const MapGlyphVersion = `${MapDataVersion}-1`;
 export const MapRoutesVersion = `${MapDataVersion}-24`;
 
 export interface Box {
