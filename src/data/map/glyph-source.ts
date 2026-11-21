@@ -6,7 +6,7 @@ export class ContourFontSource {
   constructor(
     readonly glyphUrl: (id: string) => string,
     readonly index: FontIndex,
-    readonly maxShards = 16
+    readonly maxShards = 128
   ) {
     if (index.version !== 2 || index.weight !== 400 || !(index.unitsPerEm > 0) || !(index.shardSize > 0)) throw Error('Unsupported contour font');
     this.cmap = decodeCmap(index);
