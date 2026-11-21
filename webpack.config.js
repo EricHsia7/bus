@@ -128,6 +128,22 @@ module.exports = (env, argv) => {
             }
           },
           {
+            urlPattern: /^https:\/\/erichsia7.github.io\/bus-map\/glyphs\/[0-9]+\.gz/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'map-glyphs',
+              matchOptions: {
+                ignoreSearch: false
+              },
+              expiration: {
+                purgeOnQuotaError: true
+              },
+              cacheableResponse: {
+                statuses: [200]
+              }
+            }
+          },
+          {
             urlPattern: /^https:\/\/erichsia7.github.io\/bus-map-routes\/routes\/[0-9]+\/[0-9]+\/[0-9]+\.gz/,
             handler: 'CacheFirst',
             options: {
